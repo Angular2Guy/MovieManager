@@ -1,0 +1,21 @@
+.searchList {
+	padding-right: 20px;
+	position: absolute;
+	z-index: 1;
+	border: solid 1px black;	
+	background: #FFFFFF;
+	ul {
+		li:hover {
+			background: #BBBBBB;
+		}
+	}
+}
+
+.importMovie:hover {
+	background: #BBBBBB;
+}
+
+.authModal {	
+	display: block;
+	background-color: rgba(0,0,0,0.4);
+}

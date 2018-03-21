@@ -1,0 +1,42 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col">
+			<a [routerLink]="['/search']">Back</a> 
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			Title: {{actor?.name}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			Birthday: {{actor?.birthday | date:'dd.MM.yyyy'}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			Biography: {{actor?.biography}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col" [ngSwitch]="actor?.gender">
+			<span *ngSwitchCase="1">Gender: Female</span>
+			<span *ngSwitchCase="2">Gender: Male</span>
+			<span *ngSwitchDefault>Gender: Unknown</span>
+		</div>
+	</div>	
+	<div class="row">
+		<div class="col">
+			Place of birth: {{actor?.place_of_birth}}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col">
+			Cast: 
+			<ul *ngFor="let cast of actor?.myCasts">
+				<li>{{cast.character}} - <a [routerLink]="['/movie',cast.myMovie.id]">{{cast.myMovie.title}}</a></li>
+			</ul>
+		</div>
+	</div>	
+</div>
