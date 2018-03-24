@@ -1,6 +1,8 @@
 # MovieManager
 This is a toy project to manage my movies
 
+![Build Status](https://travis-ci.org/Angular2Guy/MovieManager.svg?branch=master)
+
 ## Features
 It imports movie data from the movie database. The imported movies can be searched by movie title and Genere. 
 The actors can be searched by actor name.
