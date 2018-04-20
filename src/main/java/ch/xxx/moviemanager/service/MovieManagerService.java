@@ -233,25 +233,6 @@ public class MovieManagerService {
 		return true;
 	}
 
-//	public boolean updateDB() {
-//		try {
-//			User user = getCurrentUser();
-//			this.crudMovieRep.findAll().forEach(m -> {
-//				if (m.getUsers().isEmpty()) {
-//					m.getUsers().add(user);
-//				}
-//			});
-//			this.crudActorRep.findAll().forEach(a -> {
-//				if (a.getUsers().isEmpty()) {
-//					a.getUsers().add(user);
-//				}
-//			});
-//		} catch (RuntimeException e) {
-//			return false;
-//		}
-//		return true;
-//	}
-
 	private String createQueryStr(String str) {
 		return str.replace(" ", "%20");
 	}

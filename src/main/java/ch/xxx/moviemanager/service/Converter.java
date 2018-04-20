@@ -15,7 +15,6 @@ public class Converter {
 		entity.getCast().forEach(c -> {
 			CastDto castDto = convert(c, true); 
 			dto.getMyCast().add(castDto);
-//			castDto.setMyMovie(dto);
 		});		
 		return dto;
 	}
