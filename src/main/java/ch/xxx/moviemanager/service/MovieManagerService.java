@@ -74,20 +74,20 @@ public class MovieManagerService {
 	}
 
 	public List<GenereDto> allGeneres() {
-		List<Genere> generes = this.crudGenereRep.findAll();
-		List<GenereDto> result = generes.stream().map(gen -> Converter.convert(gen)).collect(Collectors.toList());
+		List<GenereDto> result = this.crudGenereRep.findAll().stream()
+				.map(gen -> Converter.convert(gen)).collect(Collectors.toList());
 		return result;
 	}
 
 	public List<MovieDto> findMoviesByGenere(Long id) {
-		List<Movie> movies = this.customRep.findByGenereId(id);
-		List<MovieDto> result = movies.stream().map(m -> Converter.convert(m)).collect(Collectors.toList());
+		List<MovieDto> result = this.customRep.findByGenereId(id).stream()
+				.map(m -> Converter.convert(m)).collect(Collectors.toList());
 		return result;
 	}
 
 	public Optional<MovieDto> findMovieById(Long id) {
-		Optional<Movie> result = this.crudMovieRep.findById(id);
 		Optional<MovieDto> res = Optional.empty();
+		Optional<Movie> result = this.crudMovieRep.findById(id);
 		if (result.isPresent()) {
 			MovieDto movieDto = Converter.convert(result.get());
 			res = Optional.of(movieDto);
@@ -120,7 +120,7 @@ public class MovieManagerService {
 		Optional<Actor> result = this.crudActorRep.findById(id);
 		Optional<ActorDto> res = Optional.empty();
 		if (result.isPresent()) {
-			User user = getCurrentUser();
+			User user = getCurrentUser();			
 			List<Cast> casts = result.get().getCasts();
 			List<Cast> myCasts = result.get().getCasts().stream().filter(c -> c.getMovie().getUsers().contains(user))
 					.collect(Collectors.toList());
@@ -132,15 +132,15 @@ public class MovieManagerService {
 		return res;
 	}
 
-	public List<ActorDto> findActor(String name) {
-		List<Actor> actors = this.customRep.findByActorName(name);
-		List<ActorDto> result = actors.stream().map(a -> Converter.convert(a)).collect(Collectors.toList());
+	public List<ActorDto> findActor(String name) {		
+		List<ActorDto> result = this.customRep.findByActorName(name).stream()
+				.map(a -> Converter.convert(a)).collect(Collectors.toList());
 		return result;
 	}
 
-	public List<MovieDto> findMovie(String title) {
-		List<Movie> movies = this.customRep.findByTitle(title);
-		List<MovieDto> result = movies.stream().map(m -> Converter.convert(m)).collect(Collectors.toList());
+	public List<MovieDto> findMovie(String title) {		
+		List<MovieDto> result = this.customRep.findByTitle(title).stream()
+				.map(m -> Converter.convert(m)).collect(Collectors.toList());
 		return result;
 	}
 
