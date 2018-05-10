@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router, ParamMap } from '@angular/router';
-import 'rxjs/add/operator/switchMap';
+import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { Actor } from '../common/actor';
 import { ActorsService } from '../services/actors.service';
 
@@ -16,8 +15,7 @@ export class ActorsComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private actorService: ActorsService) { }
 
   ngOnInit() {
-      this.route.paramMap.switchMap((params: ParamMap) => 
-      this.actorService.findActorById(Number(params.get('id'))))
+      this.actorService.findActorById(Number(this.route.snapshot.paramMap.get('id')))
           .subscribe(actor => this.actor = actor);
   }
 

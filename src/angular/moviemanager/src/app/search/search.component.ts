@@ -5,12 +5,10 @@ import { Genere } from '../common/genere';
 import { ActorsService } from '../services/actors.service';
 import { MoviesService } from '../services/movies.service';
 import { UsersService } from '../services/users.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { FormControl } from "@angular/forms";
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/do';
+import { map, tap, debounceTime, distinctUntilChanged,switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-search',
@@ -36,18 +34,18 @@ export class SearchComponent implements OnInit {
   constructor(private actorService: ActorsService, private movieService: MoviesService, private userService: UsersService) { }
 
   ngOnInit() {      
-      this.actors = this.movieActor.valueChanges
-        .debounceTime(400)
-        .distinctUntilChanged()
-        .do(() => this.actorsLoading = true)
-        .switchMap(name => this.actorService.findActorByName(name))
-        .do(() => this.actorsLoading = false);
-      this.movies = this.movieTitle.valueChanges
-        .debounceTime(400)
-        .distinctUntilChanged()
-        .do(() => this.moviesLoading = true)
-        .switchMap(title => this.movieService.findMovieByTitle(title))
-        .do(() => this.moviesLoading = false);
+      this.actors = this.movieActor.valueChanges.pipe(
+              debounceTime(400),
+              distinctUntilChanged(),
+              tap(() => this.actorsLoading = true),
+              switchMap(name => this.actorService.findActorByName(name)),
+              tap(() => this.actorsLoading = false));
+      this.movies = this.movieTitle.valueChanges.pipe(
+              debounceTime(400),
+              distinctUntilChanged(),
+              tap(() => this.moviesLoading = true),
+              switchMap(title => this.movieService.findMovieByTitle(title)),
+              tap(() => this.moviesLoading = false));
         this.userService.allGeneres().subscribe(res => this.generes = res);
   }
   

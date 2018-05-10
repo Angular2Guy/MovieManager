@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MoviesService } from '../services/movies.service';
 import {ActivatedRoute, Router, ParamMap } from '@angular/router';
-import 'rxjs/add/operator/switchMap';
 import { Movie } from '../common/movie';
 
 @Component({
@@ -17,9 +16,8 @@ export class MoviesComponent implements OnInit {
   constructor(private route: ActivatedRoute, private router: Router, private movieService: MoviesService) { }
 
   ngOnInit() {
-      this.route.paramMap.switchMap((params: ParamMap) => 
-          this.movieService.findMovieById(Number(params.get('id'))))
-              .subscribe(movie => this.movie = movie);
+      this.movieService.findMovieById(Number(this.route.snapshot.paramMap.get('id')))
+          .subscribe(movie => this.movie = movie);      
   }
 
   deleteMovie() {
