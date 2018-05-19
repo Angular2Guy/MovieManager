@@ -132,9 +132,11 @@ public class MovieManagerService {
 		return res;
 	}
 
-	public List<ActorDto> findActor(String name) {		
-		List<ActorDto> result = this.customRep.findByActorName(name).stream()
-				.map(a -> Converter.convert(a)).collect(Collectors.toList());
+	public List<ActorDto> findActor(String name) {			
+		List<ActorDto> result = this.crudActorRep.findByActorName(name, getCurrentUser().getId()).stream()
+			.map(a -> Converter.convert(a)).collect(Collectors.toList());
+//		List<ActorDto> result = this.customRep.findByActorName(name).stream()
+//				.map(a -> Converter.convert(a)).collect(Collectors.toList());
 		return result;
 	}
 
@@ -211,9 +213,10 @@ public class MovieManagerService {
 				Optional<Actor> actorOpt = this.customRep.findByActorId(actor.getId().intValue());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : Converter.convert(actor);
 				actorEntity.getCasts().add(castEntity);
-				castEntity.setActor(actorEntity);				
+				castEntity.setActor(actorEntity);						
 				this.crudCastRep.save(castEntity);
 				if (!actorOpt.isPresent()) {
+					actorEntity.getUsers().add(user);
 					this.crudActorRep.save(actorEntity);
 				}
 				Thread.sleep(300);
