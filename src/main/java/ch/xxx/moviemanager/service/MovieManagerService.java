@@ -184,16 +184,16 @@ public class MovieManagerService {
 			if (!movies.isEmpty()) {
 				movieEntity = movies.get(0);
 				movieEntity.setMovieid(wrMovie.getResults()[number].getId().intValue());
-			}
-		} else {
-			movieEntity = Converter.convert(wrMovie.getResults()[number]);
-			for (int genId : wrMovie.getResults()[number].getGeneres()) {
-				Optional<Genere> result = this.customRep.findByGenereId(genId);
-				if (result.isPresent()) {
-					movieEntity.getGeneres().add(result.get());
+			} else {
+				movieEntity = Converter.convert(wrMovie.getResults()[number]);
+				for (int genId : wrMovie.getResults()[number].getGeneres()) {
+					Optional<Genere> result = this.customRep.findByGenereId(genId);
+					if (result.isPresent()) {
+						movieEntity.getGeneres().add(result.get());
+					}
 				}
+				this.crudMovieRep.save(movieEntity);
 			}
-			this.crudMovieRep.save(movieEntity);
 		}
 		if (!movieEntity.getUsers().contains(user)) {
 			movieEntity.getUsers().add(user);
@@ -211,7 +211,7 @@ public class MovieManagerService {
 				Optional<Actor> actorOpt = this.customRep.findByActorId(actor.getId().intValue());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : Converter.convert(actor);
 				actorEntity.getCasts().add(castEntity);
-				castEntity.setActor(actorEntity);
+				castEntity.setActor(actorEntity);				
 				this.crudCastRep.save(castEntity);
 				if (!actorOpt.isPresent()) {
 					this.crudActorRep.save(actorEntity);
