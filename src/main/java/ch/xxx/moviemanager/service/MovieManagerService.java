@@ -80,7 +80,7 @@ public class MovieManagerService {
 	}
 
 	public List<MovieDto> findMoviesByGenere(Long id) {
-		List<MovieDto> result = this.customRep.findByGenereId(id).stream()
+		List<MovieDto> result = this.crudMovieRep.findByGenereId(id.intValue(), this.getCurrentUser().getId()).stream()
 				.map(m -> Converter.convert(m)).collect(Collectors.toList());
 		return result;
 	}
@@ -141,7 +141,7 @@ public class MovieManagerService {
 	}
 
 	public List<MovieDto> findMovie(String title) {		
-		List<MovieDto> result = this.customRep.findByTitle(title).stream()
+		List<MovieDto> result = this.crudMovieRep.findByTitle(title, this.getCurrentUser().getId()).stream()
 				.map(m -> Converter.convert(m)).collect(Collectors.toList());
 		return result;
 	}
@@ -181,8 +181,8 @@ public class MovieManagerService {
 						WrapperMovieDto.class);
 		Movie movieEntity = this.customRep.findByMovieId(wrMovie.getResults()[number].getMovieId()).orElse(null);
 		if (movieEntity == null) {
-			List<Movie> movies = this.customRep.findByTitleAndRelDate(wrMovie.getResults()[number].getTitle(),
-					wrMovie.getResults()[number].getReleaseDate());
+			List<Movie> movies = this.crudMovieRep.findByTitleAndRelDate(wrMovie.getResults()[number].getTitle(),
+					wrMovie.getResults()[number].getReleaseDate(), this.getCurrentUser().getId());
 			if (!movies.isEmpty()) {
 				movieEntity = movies.get(0);
 				movieEntity.setMovieid(wrMovie.getResults()[number].getId().intValue());

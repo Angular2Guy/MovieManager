@@ -1,7 +1,5 @@
 package ch.xxx.moviemanager.repository;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -22,25 +20,7 @@ public class CustomRepository {
     @PersistenceContext
     private EntityManager em;
     @Autowired
-	private CrudUserRepository crudUserRep;
-    
-    public List<Movie> findByGenereId(Long id) {
-    	User user = getCurrentUser();
-    	List<Movie> result = em.createQuery("select m from Movie m join m.generes g join m.users u where g.genereId = :id and u.id = :userid", Movie.class).setParameter("id", id.intValue()).setParameter("userid", user.getId()).getResultList();
-    	return result;
-    }
-    
-    public List<Actor> findByActorName(String name) {
-    	User user = getCurrentUser();
-    	List<Actor> results = em.createQuery("select a from Actor a join a.users u where a.name like :name and u.id = :userid", Actor.class).setParameter("name", "%"+name+"%").setParameter("userid", user.getId()).getResultList();
-    	return results;
-    }
-    
-    public List<Movie> findByTitle(String title) {
-    	User user = getCurrentUser();
-    	List<Movie> results = em.createQuery("select e from Movie e join e.users u where e.title like :title and u.id = :userid", Movie.class).setParameter("title", "%"+title+"%").setParameter("userid", user.getId()).getResultList();
-    	return results;
-    }
+	private CrudUserRepository crudUserRep;        
     
     public Optional<Movie> findByMovieId(Integer movieId) {    	
     	try {
@@ -50,12 +30,6 @@ public class CustomRepository {
     	} catch(RuntimeException e) {
     		return Optional.empty();
     	}
-    }
-    
-    public List<Movie> findByTitleAndRelDate(String title, Date releaseDate) {
-    	User user = getCurrentUser();
-    	List<Movie> results = em.createQuery("select e from Movie e join e.users u where e.title like :title and e.releaseDate = :relDate and u.id = :userid", Movie.class).setParameter("title", "%"+title+"%").setParameter("relDate", releaseDate).setParameter("userid", user.getId()) .getResultList();
-    	return results;
     }
     
     public Optional<Actor> findByActorId(int actorId) {
