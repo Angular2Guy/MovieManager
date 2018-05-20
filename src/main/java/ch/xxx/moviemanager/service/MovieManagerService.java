@@ -5,13 +5,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -42,6 +39,7 @@ import ch.xxx.moviemanager.repository.CustomRepository;
 @Transactional
 @Service
 public class MovieManagerService {
+	private static final Logger LOG = LoggerFactory.getLogger(MovieManagerService.class);
 	@Autowired
 	private CrudMovieRepository crudMovieRep;
 	@Autowired
@@ -163,8 +161,10 @@ public class MovieManagerService {
 	public boolean importMovie(String title, int number) throws InterruptedException {
 		User user = this.crudUserRep
 				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+		LOG.info("Start import");
 		RestTemplate restTemplate = new RestTemplate();
 		if (this.crudGenereRep.findAll().isEmpty()) {
+			LOG.info("Start import generes");
 			WrapperGenereDto result = restTemplate.getForObject(
 					"https://api.themoviedb.org/3/genre/movie/list?api_key=" + user.getMoviedbkey() + "&language=en-US",
 					WrapperGenereDto.class);
@@ -173,6 +173,7 @@ public class MovieManagerService {
 				this.crudGenereRep.save(genereEntity);
 			}
 		}
+		LOG.info("Start import Movie");
 		String queryStr = this.createQueryStr(title);
 		WrapperMovieDto wrMovie = restTemplate
 				.getForObject(
@@ -181,12 +182,15 @@ public class MovieManagerService {
 						WrapperMovieDto.class);
 		Movie movieEntity = this.customRep.findByMovieId(wrMovie.getResults()[number].getMovieId()).orElse(null);
 		if (movieEntity == null) {
+			LOG.info("Movie not found by id");
 			List<Movie> movies = this.crudMovieRep.findByTitleAndRelDate(wrMovie.getResults()[number].getTitle(),
 					wrMovie.getResults()[number].getReleaseDate(), this.getCurrentUser().getId());
 			if (!movies.isEmpty()) {
+				LOG.info("Movie found by Title and Reldate");
 				movieEntity = movies.get(0);
 				movieEntity.setMovieid(wrMovie.getResults()[number].getId().intValue());
 			} else {
+				LOG.info("creating new Movie");
 				movieEntity = Converter.convert(wrMovie.getResults()[number]);
 				for (int genId : wrMovie.getResults()[number].getGeneres()) {
 					Optional<Genere> result = this.customRep.findByGenereId(genId);
@@ -198,6 +202,7 @@ public class MovieManagerService {
 			}
 		}
 		if (!movieEntity.getUsers().contains(user)) {
+			LOG.info("adding user to movie");
 			movieEntity.getUsers().add(user);
 		}
 		WrapperCastDto wrCast = restTemplate.getForObject("https://api.themoviedb.org/3/movie/"
@@ -205,6 +210,7 @@ public class MovieManagerService {
 				WrapperCastDto.class);
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto c : wrCast.getCast()) {
+				LOG.info("Creating new cast for movie");
 				Cast castEntity = Converter.convert(c);
 				movieEntity.getCast().add(castEntity);
 				castEntity.setMovie(movieEntity);
@@ -223,6 +229,7 @@ public class MovieManagerService {
 			}
 		} else {
 			for (CastDto c : wrCast.getCast()) {
+				LOG.info("update cast for movie");
 				ActorDto actor = restTemplate.getForObject("https://api.themoviedb.org/3/person/" + c.getId()
 						+ "?api_key=" + user.getMoviedbkey() + "&language=en-US", ActorDto.class);
 				Optional<Actor> actorOpt = this.customRep.findByActorId(actor.getId().intValue());

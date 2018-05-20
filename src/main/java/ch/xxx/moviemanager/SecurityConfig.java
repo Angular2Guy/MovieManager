@@ -9,8 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.session.ConcurrentSessionControlAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/rest/movie/**").authenticated();
 		http.authorizeRequests().antMatchers("/rest/actor/**").authenticated();
 		http.csrf().disable();
-		http.sessionManagement().invalidSessionUrl("/");		
+		http.sessionManagement().invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/"));			
 	}
 }
