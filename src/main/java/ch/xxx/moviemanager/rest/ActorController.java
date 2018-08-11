@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.ActorDto;
+import ch.xxx.moviemanager.dto.MovieDto;
 import ch.xxx.moviemanager.service.MovieManagerService;
 
 @RestController
@@ -35,5 +37,11 @@ public class ActorController {
 		} else {
 			return new ResponseEntity<ActorDto>(HttpStatus.NOT_FOUND);
 		}
+	}
+	
+	@RequestMapping(value="/pages", params = {"page"}, method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<List<ActorDto>> getPagesByNumber(@RequestParam("page") Integer page) throws InterruptedException {
+		List<ActorDto> actors = this.service.findActorsByPage(page);	
+		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);		
 	}
 }

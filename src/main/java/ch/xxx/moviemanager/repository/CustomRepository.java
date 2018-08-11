@@ -1,5 +1,6 @@
 package ch.xxx.moviemanager.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
@@ -53,6 +54,20 @@ public class CustomRepository {
     		result = Optional.empty();
     	}
     	return result;
+    }
+    
+    public List<Movie> findMoviesByPage(int page) {
+    	User user = getCurrentUser();
+    	List<Movie> movies = em.createQuery("select m from Movie m join m.users u where u.id = :userid order by m.title", Movie.class).setParameter("userid", user.getId())
+    		.setFirstResult(10 * (page-1)).setMaxResults(10).getResultList();
+    	return movies;
+    }
+    
+    public List<Actor> findActorsByPage(int page) {
+    	User user = getCurrentUser();
+    	List<Actor> actors = em.createQuery("select a from Actor a join a.users u where u.id = :userid order by a.name", Actor.class).setParameter("userid", user.getId())
+    		.setFirstResult(10 * (page-1)).setMaxResults(10).getResultList();
+    	return actors;
     }
     
     private User getCurrentUser() {

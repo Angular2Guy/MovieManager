@@ -144,6 +144,18 @@ public class MovieManagerService {
 		return result;
 	}
 
+	public List<MovieDto> findMoviesByPage(Integer page) {
+		List<MovieDto> result = this.customRep.findMoviesByPage(page).stream()
+				.map(m -> Converter.convert(m)).collect(Collectors.toList());
+		return result;
+	}
+	
+	public List<ActorDto> findActorsByPage(Integer page) {
+		List<ActorDto> result = this.customRep.findActorsByPage(page).stream()
+				.map(a -> Converter.convert(a)).collect(Collectors.toList());
+		return result;
+	}
+	
 	public List<MovieDto> findImportMovie(String title) {
 		User user = this.crudUserRep
 				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());

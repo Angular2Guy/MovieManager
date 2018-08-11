@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.xxx.moviemanager.dto.GenereDto;
 import ch.xxx.moviemanager.dto.MovieDto;
 import ch.xxx.moviemanager.service.MovieManagerService;
 
@@ -50,4 +49,11 @@ public class MovieController {
 		List<MovieDto> movies = this.service.findMoviesByGenere(id);	
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
 	}
+	
+	@RequestMapping(value="/pages", params = {"page"}, method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<List<MovieDto>> getPagesByNumber(@RequestParam("page") Integer page) throws InterruptedException {
+		List<MovieDto> movies = this.service.findMoviesByPage(page);	
+		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
+	}
+	
 }
