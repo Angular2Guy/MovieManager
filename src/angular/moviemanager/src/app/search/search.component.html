@@ -1,67 +1,101 @@
-<app-login></app-login>
+<app-login (loginClosed)="loginClosed($event)"></app-login>
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-4">
 			<div class="input-group-prepend">
-				<span class="input-group-text" id="importMovieByTitle">Import Movie by Title</span> 
-				<input type="text" class="form-control" placeholder="title" aria-describedby="importMovieByTitle" [formControl]="importMovieTitle">
-				<button class="btn btn-secondary" type="button" [disabled]="importMoviesLoading" (click)="importMovie()">Search</button>
-			</div>			
+				<span class="input-group-text" id="importMovieByTitle">Import
+					Movie by Title</span> <input type="text" class="form-control"
+					placeholder="title" aria-describedby="importMovieByTitle"
+					[formControl]="importMovieTitle">
+				<button class="btn btn-secondary" type="button"
+					[disabled]="importMoviesLoading" (click)="importMovie()">Search</button>
+			</div>
 		</div>
 		<div class="col-3">
 			<div class="input-group-prepend">
-				<span class="input-group-text" id="searchMovieTitle">Search	for Movie Title</span> 
-				<input type="text" class="form-control" placeholder="title" aria-describedby="searchMovieTitle" [formControl]="movieTitle">
+				<span class="input-group-text" id="searchMovieTitle">Search
+					for Movie Title</span> <input type="text" class="form-control"
+					placeholder="title" aria-describedby="searchMovieTitle"
+					[formControl]="movieTitle">
 			</div>
 			<div *ngIf="movieTitle.value" class="searchList">
-				<span *ngIf="moviesLoading">Loading</span>
-				<a class="dropdown-item" [routerLink]="['/movie',movie.id]" *ngFor="let movie of movies | async">{{movie.title}}</a>
-			</div>			
+				<span *ngIf="moviesLoading">Loading</span> <a class="dropdown-item"
+					[routerLink]="['/movie',movie.id]"
+					*ngFor="let movie of movies | async">{{movie.title}}</a>
+			</div>
 		</div>
 		<div class="col-3">
 			<div class="input-group-prepend">
-				<span class="input-group-text" id="searchMovieActor">Search for Movie Actor</span> 
-				<input type="text" class="form-control" placeholder="name" aria-describedby="searchMovieActor" [formControl]="movieActor">
+				<span class="input-group-text" id="searchMovieActor">Search
+					for Movie Actor</span> <input type="text" class="form-control"
+					placeholder="name" aria-describedby="searchMovieActor"
+					[formControl]="movieActor">
 			</div>
 			<div *ngIf="movieActor.value" class="searchList">
-				<span *ngIf="actorsLoading">Loading</span>
-				<a class="dropdown-item" [routerLink]="['/actor',actor.id]" *ngFor="let actor of actors | async">{{actor.name}}</a>
-			</div>			
+				<span *ngIf="actorsLoading">Loading</span> <a class="dropdown-item"
+					[routerLink]="['/actor',actor.id]"
+					*ngFor="let actor of actors | async">{{actor.name}}</a>
+			</div>
 		</div>
-		<div class="col-2">  				
+		<div class="col-2">
 			<div class="dropdown">
-  				<button class="btn btn-secondary dropdown-toggle" type="button" (click)="dropDown()">
-    				Generes
-  				</button>
-  				<div class="dropdown-menu" [class.show]="showMenu">
-    				<a class="dropdown-item" *ngFor="let gen of generes" (click)="showGenere(gen.id)">{{gen.name}}</a>    				
-  				</div>  				
-			</div>					
-			<div [style.display]="moviesByGenLoading ? 'block' : 'none'" class="searchList">
+				<button class="btn btn-secondary dropdown-toggle" type="button"
+					(click)="dropDown()">Generes</button>
+				<div class="dropdown-menu" [class.show]="showMenu">
+					<a class="dropdown-item" *ngFor="let gen of generes"
+						(click)="showGenere(gen.id)">{{gen.name}}</a>
+				</div>
+			</div>
+			<div [style.display]="moviesByGenLoading ? 'block' : 'none'"
+				class="searchList">
 				<span>Loading</span>
 			</div>
-			<div *ngIf="moviesByGenere.length > 0" class="searchList">								
-				<a class="dropdown-item" [routerLink]="['/movie',movie.id]" *ngFor="let movie of moviesByGenere">{{movie.title}}</a>				
-			</div>	
+			<div *ngIf="moviesByGenere.length > 0" class="searchList">
+				<a class="dropdown-item" [routerLink]="['/movie',movie.id]"
+					*ngFor="let movie of moviesByGenere">{{movie.title}}</a>
+			</div>
 		</div>
-	</div>		
+	</div>
 	<div class="row">
 		<div class="col">
-			<div *ngIf="importMoviesLoading">
-				Importing...
-			</div>
+			<div *ngIf="importMoviesLoading">Importing...</div>
 			<table class="table" *ngIf="importMovies.length > 0">
 				<tr>
 					<th>Title</th>
 					<th>Release</th>
 					<th>Overview</th>
 				</tr>
-				<tr *ngFor="let movie of importMovies" (click)="importSelMovie(movie)" class="importMovie">
+				<tr *ngFor="let movie of importMovies"
+					(click)="importSelMovie(movie)" class="importMovie">
 					<td>{{movie.title}}</td>
 					<td>{{movie.release_date | date:'dd.MM.yyyy'}}</td>
 					<td>{{movie.overview}}</td>
 				</tr>
 			</table>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col" #movies
+			*ngIf="!importMoviesLoading && importMovies.length === 0">						
+			<table class="table">
+				<tr>
+					<th>Title</th>
+					<th>Release</th>
+					<th>Generes</th>
+					<th>Overview</th>
+				</tr>
+				<tr *ngFor="let movie of scrollMovies" (click)="movieDetails(movie)"
+					class="importMovie">
+					<td>{{movie.title}}</td>
+					<td>{{movie.release_date | date:'dd.MM.yyyy'}}</td>
+					<td>
+						<ul *ngFor="let genere of movie?.myGenere">
+							<li>{{genere.name}}</li>
+						</ul>
+					</td>
+					<td>{{movie.overview}}</td>
+				</tr>
+			</table>			
 		</div>
 	</div>
 </div>

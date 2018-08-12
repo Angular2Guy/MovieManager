@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Movie } from '../common/movie';
 import { Actor } from '../common/actor';
 import { Genere } from '../common/genere';
@@ -15,7 +15,7 @@ import { map, tap, debounceTime, distinctUntilChanged,switchMap } from 'rxjs/ope
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.scss']
 })
-export class SearchComponent implements OnInit {
+export class SearchComponent implements OnInit, AfterViewInit {
       
   generes: Genere[];
   movieTitle = new FormControl();
@@ -30,6 +30,12 @@ export class SearchComponent implements OnInit {
   showMenu = false;
   moviesByGenere: Movie[] = [];
   moviesByGenLoading = false;  
+  scrollMovies: Movie[] = [];
+  scMoviesPage = 1;
+  scrollActors: Actor[] = [];
+  scActorsPage = 1;
+  @ViewChild('movies') moviesRef: ElementRef;
+  private actorListOffset = 0;
   
   constructor(private actorService: ActorsService, private movieService: MoviesService, private userService: UsersService) { }
 
@@ -46,7 +52,27 @@ export class SearchComponent implements OnInit {
               tap(() => this.moviesLoading = true),
               switchMap(title => this.movieService.findMovieByTitle(title)),
               tap(() => this.moviesLoading = false));
-        this.userService.allGeneres().subscribe(res => this.generes = res);
+        this.userService.allGeneres().subscribe(res => this.generes = res);        
+  }  
+
+  ngAfterViewInit(): void {
+      this.actorListOffset = this.moviesRef.nativeElement.getBoundingClientRect().y;
+  }
+  
+  @HostListener('window:scroll') 
+  scroll() {      
+      const ypos = window.pageYOffset + window.innerHeight;
+      const contentHeight = this.moviesRef.nativeElement.offsetHeight+this.actorListOffset;
+      if(ypos > (contentHeight -20)) {
+          this.scMoviesPage += 1;
+          this.movieService.findMoviesByPage(this.scMoviesPage).subscribe(res => this.scrollMovies = this.scrollMovies.concat(res));
+      }
+  }
+  
+  loginClosed(closed: boolean) {
+      if(closed) {
+          this.movieService.findMoviesByPage(this.scMoviesPage).subscribe(res => this.scrollMovies = this.scrollMovies.concat(res));          
+      }
   }
   
   importMovie() {

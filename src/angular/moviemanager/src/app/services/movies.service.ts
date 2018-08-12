@@ -12,6 +12,13 @@ export class MoviesService {
     
     constructor(private http: HttpClient) { }
     
+    public findMoviesByPage(page: number) : Observable<Movie[]> {
+        return this.http.get<Movie[]>('/rest/movie/pages?page='+page, this._reqOptionsArgs).pipe(catchError(error => {
+            console.error( JSON.stringify( error ) );
+            return Observable.throw( error );
+        }));
+    }
+    
     public findMoviesByGenereId(id: number) : Observable<Movie[]> {
         return this.http.get<Movie[]>('/rest/movie/genere/id/'+id, this._reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );

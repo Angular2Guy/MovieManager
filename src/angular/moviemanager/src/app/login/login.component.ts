@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../services/users.service';
 import { FormControl } from "@angular/forms";
 
@@ -9,6 +9,7 @@ import { FormControl } from "@angular/forms";
 })
 export class LoginComponent implements OnInit {
     
+    @Output() loginClosed = new EventEmitter<boolean>();
     showModal = true;
     loginName = new FormControl();
     password = new FormControl();  
@@ -25,7 +26,8 @@ export class LoginComponent implements OnInit {
       this.userService.login(this.loginName.value, this.password.value).subscribe((res: boolean) => {          
           this.showModal = !res;
           this.userService.loggedIn = res;
-          this.modalMsg = res ? '' : 'Login Failed';          
+          this.modalMsg = res ? '' : 'Login Failed';  
+          this.loginClosed.emit(res);
       });
   }
   
@@ -40,6 +42,7 @@ export class LoginComponent implements OnInit {
       this.userService.signin(this.loginName.value, this.password.value, this.movieDbKey.value).subscribe((res: boolean) =>{
           this.showModal = !res;
           this.modalMsg = res ? '' : 'Signin Failed';
+          this.loginClosed.emit(res);
       });
   }
   
