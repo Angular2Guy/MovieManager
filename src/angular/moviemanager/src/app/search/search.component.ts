@@ -65,7 +65,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     scroll() {
         const ypos = window.pageYOffset + window.innerHeight;
         const contentHeight = this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;
-        if ( window.pageYOffset <= this.actorListOffset && this.scrollDone ) {
+        if ( window.pageYOffset <= 1 && this.scrollDone ) {
             if ( this.scMoviesPageBegin >= 1 && this.scMoviesPageEnd > 1) {
                 this.scrollDone = false;
                 this.movieService.findMoviesByPage( this.scMoviesPageBegin ).subscribe( res => {
@@ -76,7 +76,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
                     }
                     this.scrollMovies = res.concat( this.scrollMovies );
                     setTimeout(() => {
-                        window.scrollTo( 0, window.pageYOffset + 100 );
+                        window.scrollTo( 0, window.pageYOffset + 5 );
                         this.scrollDone = true;
                     } );
                 } );
@@ -95,7 +95,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
                     this.scrollMovies = this.scrollMovies.concat( res );
                 }
                 setTimeout(() => {
-                    window.scrollTo( 0, window.pageYOffset - 100 );
+                    window.scrollTo( 0, this.actorListOffset );
                     this.scrollDone = true;
                 } );
             } );
