@@ -7,7 +7,7 @@ import { MoviesService } from '../services/movies.service';
 import { UsersService } from '../services/users.service';
 import { Observable } from 'rxjs';
 import { FormControl } from "@angular/forms";
-import { map, tap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { map, tap, debounceTime, distinctUntilChanged, switchMap, flatMap } from 'rxjs/operators';
 
 
 @Component( {
@@ -76,7 +76,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
                     }
                     this.scrollMovies = res.concat( this.scrollMovies );
                     setTimeout(() => {
-                        window.scrollTo( 0, window.pageYOffset + 5 );
+                        window.scrollTo( 0, this.actorListOffset + contentHeight / 2);
+                        console.log(this.scMoviesPageBegin);
+                        console.log(this.scMoviesPageEnd);
                         this.scrollDone = true;
                     } );
                 } );
@@ -95,7 +97,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
                     this.scrollMovies = this.scrollMovies.concat( res );
                 }
                 setTimeout(() => {
-                    window.scrollTo( 0, this.actorListOffset );
+                    window.scrollTo( 0, this.actorListOffset + window.pageYOffset / 2);
+                    console.log(this.scMoviesPageBegin);
+                    console.log(this.scMoviesPageEnd);
                     this.scrollDone = true;
                 } );
             } );
@@ -104,9 +108,20 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     loginClosed( closed: boolean ) {
         if ( closed ) {
-            this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {
+            this.scrollDone = false;
+            this.movieService.findMoviesByPage( this.scMoviesPageEnd ).pipe(
+                    flatMap(res => {
+                        this.scrollMovies = this.scrollMovies.concat(res);
+                        this.scMoviesPageEnd += 1;                        
+                        return this.movieService.findMoviesByPage(this.scMoviesPageEnd);
+                    })
+            ).subscribe( res => {                
                 this.scrollMovies = this.scrollMovies.concat( res );
                 this.scMoviesPageEnd += 1;
+                setTimeout(() => {
+                    window.scrollTo( 0, window.pageYOffset + 5 );
+                    this.scrollDone = true;
+                });                
             } );
         }
     }
