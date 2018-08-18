@@ -8,7 +8,7 @@ import { UsersService } from '../services/users.service';
 import { Observable } from 'rxjs';
 import { FormControl } from "@angular/forms";
 import { map, tap, debounceTime, distinctUntilChanged, switchMap, flatMap } from 'rxjs/operators';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 
 
 @Component( {
@@ -43,7 +43,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
     constructor( private actorService: ActorsService, 
             private movieService: MoviesService, 
             private userService: UsersService,
-            private route: ActivatedRoute) { }
+            private route: ActivatedRoute,
+            private router: Router) { }
 
     ngOnInit() {
         this.actors = this.movieActor.valueChanges.pipe(
@@ -180,5 +181,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
             this.moviesByGenere = res;
             this.moviesByGenLoading = false;
         } );
+    }
+    
+    movieDetails(movie: Movie) {
+        this.router.navigateByUrl('movie/'+movie.id);
     }
 }

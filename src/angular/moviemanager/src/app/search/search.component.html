@@ -84,7 +84,7 @@
 					<th>Generes</th>
 					<th>Overview</th>
 				</tr>
-				<tr *ngFor="let movie of scrollMovies" (click)="movieDetails(movie)"
+				<tr *ngFor="let movie of scrollMovies" (dblclick)="movieDetails(movie)"
 					class="importMovie">
 					<td>{{movie.title}}</td>
 					<td>{{movie.release_date | date:'dd.MM.yyyy'}}</td>
