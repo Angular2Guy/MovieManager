@@ -8,6 +8,7 @@ import { UsersService } from '../services/users.service';
 import { Observable } from 'rxjs';
 import { FormControl } from "@angular/forms";
 import { map, tap, debounceTime, distinctUntilChanged, switchMap, flatMap } from 'rxjs/operators';
+import { ActivatedRoute } from "@angular/router";
 
 
 @Component( {
@@ -39,7 +40,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
     private actorListOffset = 0;
     private scrollDone = true;
 
-    constructor( private actorService: ActorsService, private movieService: MoviesService, private userService: UsersService ) { }
+    constructor( private actorService: ActorsService, 
+            private movieService: MoviesService, 
+            private userService: UsersService,
+            private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.actors = this.movieActor.valueChanges.pipe(
@@ -55,6 +59,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
             switchMap( title => this.movieService.findMovieByTitle( title ) ),
             tap(() => this.moviesLoading = false ) );
         this.userService.allGeneres().subscribe( res => this.generes = res );
+        this.route.url.subscribe(res => {
+            if(this.userService.loggedIn) {
+                this.initScrollMovies();
+            }
+        });
     }
 
     ngAfterViewInit(): void {
@@ -108,24 +117,28 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     loginClosed( closed: boolean ) {
         if ( closed ) {
-            this.scrollDone = false;
-            this.movieService.findMoviesByPage( this.scMoviesPageEnd ).pipe(
-                    flatMap(res => {
-                        this.scrollMovies = this.scrollMovies.concat(res);
-                        this.scMoviesPageEnd += 1;                        
-                        return this.movieService.findMoviesByPage(this.scMoviesPageEnd);
-                    })
-            ).subscribe( res => {                
-                this.scrollMovies = this.scrollMovies.concat( res );
-                this.scMoviesPageEnd += 1;
-                setTimeout(() => {
-                    window.scrollTo( 0, window.pageYOffset + 5 );
-                    this.scrollDone = true;
-                });                
-            } );
+            this.initScrollMovies();
         }
     }
 
+    private initScrollMovies() {
+        this.scrollDone = false;
+        this.movieService.findMoviesByPage( this.scMoviesPageEnd ).pipe(
+                flatMap(res => {
+                    this.scrollMovies = this.scrollMovies.concat(res);
+                    this.scMoviesPageEnd += 1;                        
+                    return this.movieService.findMoviesByPage(this.scMoviesPageEnd);
+                })
+        ).subscribe( res => {                
+            this.scrollMovies = this.scrollMovies.concat( res );
+            this.scMoviesPageEnd += 1;
+            setTimeout(() => {
+                window.scrollTo( 0, window.pageYOffset + 5 );
+                this.scrollDone = true;
+            });                
+        } );
+    }
+    
     importMovie() {
         this.importMoviesLoading = true;
         let myTitle = this.importMovieTitle.value.replace( / /g, '+' );
