@@ -76,7 +76,13 @@
 	</div>
 	<div class="row">
 		<div class="col" #movies
-			*ngIf="!importMoviesLoading && importMovies.length === 0">						
+			*ngIf="!importMoviesLoading && importMovies.length === 0">
+			<!-- 
+			<virtual-scroller #scroll [items]="scrollMovies">
+    			<div *ngFor="let item of scroll.viewPortItems">{{item?.title}}</div>
+			</virtual-scroller>
+			 -->
+			 
 			<table class="table">
 				<tr>
 					<th>Title</th>
@@ -95,7 +101,8 @@
 					</td>
 					<td>{{movie.overview}}</td>
 				</tr>
-			</table>			
+			</table>
+						
 		</div>
 	</div>
 </div>
