@@ -73,4 +73,7 @@ public class ActorDto {
 	public void setPlaceOfBirth(String placeOfBirth) {
 		this.placeOfBirth = placeOfBirth;
 	}
+	public void setMyCasts(List<CastDto> myCasts) {
+		this.myCasts = myCasts;
+	}
 }

@@ -63,5 +63,11 @@ public class MovieDto {
 	}
 	public void setGeneres(int[] generes) {
 		this.generes = generes;
+	}
+	public void setMyCast(List<CastDto> myCast) {
+		this.myCast = myCast;
+	}
+	public void setMyGenere(List<GenereDto> myGenere) {
+		this.myGenere = myGenere;
 	}	
 }
