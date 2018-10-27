@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ViewChild, ElementRef, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Movie } from '../common/movie';
 import { Actor } from '../common/actor';
 import { Genere } from '../common/genere';
@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { FormControl } from "@angular/forms";
 import { map, tap, debounceTime, distinctUntilChanged, switchMap, flatMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from "@angular/router";
+import { ChangeEvent, VirtualScrollerComponent } from "ngx-virtual-scroller/dist/virtual-scroller";
 
 
 @Component( {
@@ -32,13 +33,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
     moviesByGenere: Movie[] = [];
     moviesByGenLoading = false;
     scrollMovies: Movie[] = [];
-    scMoviesPageBegin = 1;
     scMoviesPageEnd = 1;
-    scrollActors: Actor[] = [];
-    scActorsPage = 1;
     @ViewChild( 'movies' ) moviesRef: ElementRef;
+    loading = false;
+    allMoviesLoaded = false;
+    @ViewChild(VirtualScrollerComponent)
+    private virtualScroller: VirtualScrollerComponent;
     private actorListOffset = 0;
-    private scrollDone = true;
+    
 
     constructor( private actorService: ActorsService, 
             private movieService: MoviesService, 
@@ -74,46 +76,25 @@ export class SearchComponent implements OnInit, AfterViewInit {
     @HostListener( 'window:scroll' )
     scroll() {
         const ypos = window.pageYOffset + window.innerHeight;
-        const contentHeight = this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;
-        if ( window.pageYOffset <= 1 && this.scrollDone ) {
-            if ( this.scMoviesPageBegin >= 1 && this.scMoviesPageEnd > 1) {
-                this.scrollDone = false;
-                this.movieService.findMoviesByPage( this.scMoviesPageBegin ).subscribe( res => {
-                    this.scMoviesPageBegin -= 1;
-                    if ( this.scMoviesPageEnd - this.scMoviesPageBegin > 1 ) {
-                        this.scMoviesPageEnd -= 1;
-                        this.scrollMovies.splice( this.scrollMovies.length - 10, 10 );
-                    }
-                    this.scrollMovies = res.concat( this.scrollMovies );
-                    setTimeout(() => {
-                        window.scrollTo( 0, this.actorListOffset + contentHeight / 2);
-                        console.log(this.scMoviesPageBegin);
-                        console.log(this.scMoviesPageEnd);
-                        this.scrollDone = true;
-                    } );
-                } );
+        const contentHeight = this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;        
+        if(ypos >= contentHeight) {
+            this.fetchMore();
+        }
+    }
+    
+    fetchMore() {
+        if (this.allMoviesLoaded || this.loading) return;
+        this.loading = true;
+        this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {
+            if(res.length > 0) {
+                this.scrollMovies = this.scrollMovies.concat( res );
+                this.scMoviesPageEnd += 1;
+                this.virtualScroller.refresh();            
+            } else {
+                this.allMoviesLoaded = true;
             }
-        }
-        if ( ypos >= contentHeight && this.scrollDone ) {
-            this.scrollDone = false;
-            this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {
-                //console.log( this.scMoviesPageEnd );
-                if ( res.length > 0 ) {
-                    this.scMoviesPageEnd += 1;
-                    if ( this.scMoviesPageEnd > 1 ) {
-                        this.scrollMovies.splice( 0, 10 );
-                        this.scMoviesPageBegin += 1;
-                    }
-                    this.scrollMovies = this.scrollMovies.concat( res );
-                }
-                setTimeout(() => {
-                    window.scrollTo( 0, this.actorListOffset + window.pageYOffset / 2);
-                    console.log(this.scMoviesPageBegin);
-                    console.log(this.scMoviesPageEnd);
-                    this.scrollDone = true;
-                } );
-            } );
-        }
+            this.loading = false;
+        } );
     }
 
     loginClosed( closed: boolean ) {
@@ -123,20 +104,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
 
     private initScrollMovies() {
-        this.scrollDone = false;
-        this.movieService.findMoviesByPage( this.scMoviesPageEnd ).pipe(
-                flatMap(res => {
-                    this.scrollMovies = this.scrollMovies.concat(res);
-                    this.scMoviesPageEnd += 1;                        
-                    return this.movieService.findMoviesByPage(this.scMoviesPageEnd);
-                })
-        ).subscribe( res => {                
+        this.loading = false;
+        this.allMoviesLoaded = false;
+        this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {                
             this.scrollMovies = this.scrollMovies.concat( res );
             this.scMoviesPageEnd += 1;
-            setTimeout(() => {
-                window.scrollTo( 0, window.pageYOffset + 5 );
-                this.scrollDone = true;
-            });                
         } );
     }
     
