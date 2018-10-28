@@ -77,8 +77,6 @@
 	<div class="row">
 		<div class="col" #movies
 			*ngIf="!importMoviesLoading && importMovies.length === 0">
-			<virtual-scroller #scroll [items]="scrollMovies" [parentScroll]="scroll.window" [enableUnequalChildrenSizes]="true">
-    			<!-- <div *ngFor="let item of scroll.viewPortItems">{{item?.title}}</div>  -->
     			<table class="table">
     				<thead #header>
 					<tr>
@@ -88,7 +86,7 @@
 						<th>Overview</th>
 					</tr>
 					<tbody #container>
-					<tr *ngFor="let movie of scroll.viewPortItems" (dblclick)="movieDetails(movie)"
+					<tr *ngFor="let movie of scrollMovies" (dblclick)="movieDetails(movie)"
 						class="importMovie">
 						<td>{{movie.title}}</td>
 						<td>{{movie.release_date | date:'dd.MM.yyyy'}}</td>
@@ -100,30 +98,7 @@
 						<td>{{movie.overview}}</td>
 					</tr>
 					</tbody>
-				</table>
-			</virtual-scroller>
-			
-			 <!-- 
-			<table class="table">
-				<tr>
-					<th>Title</th>
-					<th>Release</th>
-					<th>Generes</th>
-					<th>Overview</th>
-				</tr>
-				<tr *ngFor="let movie of scrollMovies" (dblclick)="movieDetails(movie)"
-					class="importMovie">
-					<td>{{movie.title}}</td>
-					<td>{{movie.release_date | date:'dd.MM.yyyy'}}</td>
-					<td>
-						<ul *ngFor="let genere of movie?.myGenere">
-							<li>{{genere.name}}</li>
-						</ul>
-					</td>
-					<td>{{movie.overview}}</td>
-				</tr>
-			</table>
-			-->	
+				</table>				
 		</div>
 	</div>
 </div>

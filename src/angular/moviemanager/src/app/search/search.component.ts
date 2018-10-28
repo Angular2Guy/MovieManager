@@ -9,7 +9,6 @@ import { Observable } from 'rxjs';
 import { FormControl } from "@angular/forms";
 import { map, tap, debounceTime, distinctUntilChanged, switchMap, flatMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from "@angular/router";
-import { ChangeEvent, VirtualScrollerComponent } from "ngx-virtual-scroller/dist/virtual-scroller";
 
 
 @Component( {
@@ -36,9 +35,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     scMoviesPageEnd = 1;
     @ViewChild( 'movies' ) moviesRef: ElementRef;
     loading = false;
-    allMoviesLoaded = false;
-    @ViewChild(VirtualScrollerComponent)
-    private virtualScroller: VirtualScrollerComponent;
+    allMoviesLoaded = false;    
     private actorListOffset = 0;
     
 
@@ -73,8 +70,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.actorListOffset = this.moviesRef.nativeElement.getBoundingClientRect().y;
     }
 
-    @HostListener( 'window:scroll' )
-    scroll() {
+    @HostListener( 'window:scroll' ,['$event'])
+    scroll($event: any) {        
         const ypos = window.pageYOffset + window.innerHeight;
         const contentHeight = this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;        
         if(ypos >= contentHeight) {
@@ -88,8 +85,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {
             if(res.length > 0) {
                 this.scrollMovies = this.scrollMovies.concat( res );
-                this.scMoviesPageEnd += 1;
-                this.virtualScroller.refresh();            
+                this.scMoviesPageEnd += 1;                           
             } else {
                 this.allMoviesLoaded = true;
             }
