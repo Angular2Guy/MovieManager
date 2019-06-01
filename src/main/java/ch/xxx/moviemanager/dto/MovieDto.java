@@ -7,8 +7,6 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import ch.xxx.moviemanager.model.Cast;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDto {
 	private Long id;

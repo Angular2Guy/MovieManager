@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.ActorDto;
-import ch.xxx.moviemanager.dto.MovieDto;
 import ch.xxx.moviemanager.service.MovieManagerService;
 
 @RestController
