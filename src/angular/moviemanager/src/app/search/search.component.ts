@@ -20,9 +20,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     generes: Genere[];
     movieTitle = new FormControl();
-    movies: Observable<Movie[]>;
+    movies: Observable<Movie[] | Observable<Movie[]>>;
     movieActor = new FormControl();
-    actors: Observable<Actor[]>;
+    actors: Observable<Actor[] | Observable<Actor[]>>;
     importMovies: Movie[] = [];
     importMovieTitle = new FormControl();
     actorsLoading = false;
@@ -33,7 +33,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     moviesByGenLoading = false;
     scrollMovies: Movie[] = [];
     scMoviesPageEnd = 1;
-    @ViewChild( 'movies' ) moviesRef: ElementRef;
+    @ViewChild( 'movies',{ static: true } ) moviesRef: ElementRef;
     loading = false;
     allMoviesLoaded = false;    
     private actorListOffset = 0;
