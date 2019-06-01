@@ -33,7 +33,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     moviesByGenLoading = false;
     scrollMovies: Movie[] = [];
     scMoviesPageEnd = 1;
-    @ViewChild( 'movies',{ static: true } ) moviesRef: ElementRef;
+    @ViewChild( 'movies',{ static: false } ) moviesRef: ElementRef;
     loading = false;
     allMoviesLoaded = false;    
     private actorListOffset = 0;
