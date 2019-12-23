@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.ActorDto;
-import ch.xxx.moviemanager.execptions.ResourceNotFoundExecption;
+import ch.xxx.moviemanager.exceptions.ResourceNotFoundException;
 import ch.xxx.moviemanager.service.MovieManagerService;
 
 @RestController
@@ -36,7 +36,7 @@ public class ActorController {
 		if (actor.isPresent()) {
 			return new ResponseEntity<ActorDto>(actor.get(), HttpStatus.OK);
 		}
-		throw new ResourceNotFoundExecption(String.format("Failed to find actor with id: %s", id.toString()));
+		throw new ResourceNotFoundException(String.format("Failed to find actor with id: %s", id.toString()));
 	}
 
 	@RequestMapping(value = "/pages", params = {

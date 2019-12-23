@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.MovieDto;
-import ch.xxx.moviemanager.execptions.ResourceNotFoundExecption;
+import ch.xxx.moviemanager.exceptions.ResourceNotFoundException;
 import ch.xxx.moviemanager.service.MovieManagerService;
 
 @RestController
@@ -35,7 +35,7 @@ public class MovieController {
 		if(result.isPresent()) {
 			return new ResponseEntity<MovieDto>(result.get(), HttpStatus.OK);
 		} else {
-			throw new ResourceNotFoundExecption(String.format("Failed to find movie with id: %s", id.toString()));
+			throw new ResourceNotFoundException(String.format("Failed to find movie with id: %s", id.toString()));
 		}
 	}
 	

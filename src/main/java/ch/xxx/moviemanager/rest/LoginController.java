@@ -23,8 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.GenereDto;
 import ch.xxx.moviemanager.dto.UserDto;
-import ch.xxx.moviemanager.execptions.AccessForbiddenExecption;
-import ch.xxx.moviemanager.execptions.AccessUnauthorizedExecption;
+import ch.xxx.moviemanager.exceptions.AccessForbiddenException;
+import ch.xxx.moviemanager.exceptions.AccessUnauthorizedException;
 import ch.xxx.moviemanager.service.AppUserDetailsService;
 import ch.xxx.moviemanager.service.MovieManagerService;
 
@@ -52,15 +52,15 @@ public class LoginController {
 				return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
 			}
 		} catch (UsernameNotFoundException e) {
-			throw new AccessForbiddenExecption(userDto.toString());
+			throw new AccessForbiddenException(userDto.toString());
 		}
-		throw new AccessUnauthorizedExecption(userDto.toString());
+		throw new AccessUnauthorizedException(userDto.toString());
 	}
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Boolean> postSignin(@RequestBody UserDto userDto) throws InterruptedException {
 		if (!this.mmService.saveUser(userDto)) {
-			throw new AccessForbiddenExecption(userDto.toString());
+			throw new AccessForbiddenException(userDto.toString());
 		}
 		return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
 	}

@@ -1,4 +1,4 @@
-package ch.xxx.moviemanager.execptions;
+package ch.xxx.moviemanager.exceptions;
 
 public class ImportFailedException extends RuntimeException {
 
