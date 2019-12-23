@@ -1,4 +1,4 @@
-package exeptions;
+package ch.xxx.moviemanager.execptions;
 
 public class ResourceNotFoundExecption extends RuntimeException {
 

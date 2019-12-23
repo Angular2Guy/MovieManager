@@ -23,10 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.GenereDto;
 import ch.xxx.moviemanager.dto.UserDto;
+import ch.xxx.moviemanager.execptions.AccessForbiddenExecption;
+import ch.xxx.moviemanager.execptions.AccessUnauthorizedExecption;
 import ch.xxx.moviemanager.service.AppUserDetailsService;
 import ch.xxx.moviemanager.service.MovieManagerService;
-import exeptions.AccessForbiddenExecption;
-import exeptions.AccessUnauthorizedExecption;
 
 @RestController
 @RequestMapping("rest/user")

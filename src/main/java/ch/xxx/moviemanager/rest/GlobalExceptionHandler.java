@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import exeptions.AccessForbiddenExecption;
-import exeptions.AccessUnauthorizedExecption;
-import exeptions.ImportFailedException;
-import exeptions.ResourceNotFoundExecption;
+import ch.xxx.moviemanager.execptions.AccessForbiddenExecption;
+import ch.xxx.moviemanager.execptions.AccessUnauthorizedExecption;
+import ch.xxx.moviemanager.execptions.ImportFailedException;
+import ch.xxx.moviemanager.execptions.ResourceNotFoundExecption;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {

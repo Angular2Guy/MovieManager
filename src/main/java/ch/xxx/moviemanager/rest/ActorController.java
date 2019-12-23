@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.ActorDto;
+import ch.xxx.moviemanager.execptions.ResourceNotFoundExecption;
 import ch.xxx.moviemanager.service.MovieManagerService;
-import exeptions.ResourceNotFoundExecption;
 
 @RestController
 @RequestMapping("rest/actor")
