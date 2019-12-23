@@ -15,32 +15,35 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.ActorDto;
 import ch.xxx.moviemanager.service.MovieManagerService;
+import exeptions.ResourceNotFoundExecption;
 
 @RestController
 @RequestMapping("rest/actor")
 public class ActorController {
 	@Autowired
 	private MovieManagerService service;
-	
-	@RequestMapping(value="/{name}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<List<ActorDto>> getActorSearch(@PathVariable("name") String name) throws InterruptedException {
-		List<ActorDto> actors = this.service.findActor(name);		
-		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);		
+
+	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<List<ActorDto>> getActorSearch(@PathVariable("name") String name)
+			throws InterruptedException {
+		List<ActorDto> actors = this.service.findActor(name);
+		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/id/{id}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+
+	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<ActorDto> getActorSearchById(@PathVariable("id") Long id) throws InterruptedException {
 		Optional<ActorDto> actor = this.service.findActorById(id);
-		if(actor.isPresent()) {
+		if (actor.isPresent()) {
 			return new ResponseEntity<ActorDto>(actor.get(), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<ActorDto>(HttpStatus.NOT_FOUND);
 		}
+		throw new ResourceNotFoundExecption(String.format("Failed to find actor with id: %s", id.toString()));
 	}
-	
-	@RequestMapping(value="/pages", params = {"page"}, method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public ResponseEntity<List<ActorDto>> getPagesByNumber(@RequestParam("page") Integer page) throws InterruptedException {
-		List<ActorDto> actors = this.service.findActorsByPage(page);	
-		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);		
+
+	@RequestMapping(value = "/pages", params = {
+			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public ResponseEntity<List<ActorDto>> getPagesByNumber(@RequestParam("page") Integer page)
+			throws InterruptedException {
+		List<ActorDto> actors = this.service.findActorsByPage(page);
+		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}
 }

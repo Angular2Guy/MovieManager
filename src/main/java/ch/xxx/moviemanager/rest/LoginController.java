@@ -25,6 +25,8 @@ import ch.xxx.moviemanager.dto.GenereDto;
 import ch.xxx.moviemanager.dto.UserDto;
 import ch.xxx.moviemanager.service.AppUserDetailsService;
 import ch.xxx.moviemanager.service.MovieManagerService;
+import exeptions.AccessForbiddenExecption;
+import exeptions.AccessUnauthorizedExecption;
 
 @RestController
 @RequestMapping("rest/user")
@@ -50,15 +52,15 @@ public class LoginController {
 				return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
 			}
 		} catch (UsernameNotFoundException e) {
-			return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.FORBIDDEN);
+			throw new AccessForbiddenExecption(userDto.toString());
 		}
-		return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.UNAUTHORIZED);
+		throw new AccessUnauthorizedExecption(userDto.toString());
 	}
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public ResponseEntity<Boolean> postSignin(@RequestBody UserDto userDto) throws InterruptedException {
 		if (!this.mmService.saveUser(userDto)) {
-			return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.FORBIDDEN);
+			throw new AccessForbiddenExecption(userDto.toString());
 		}
 		return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
 	}

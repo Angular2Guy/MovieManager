@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.dto.MovieDto;
 import ch.xxx.moviemanager.service.MovieManagerService;
+import exeptions.ResourceNotFoundExecption;
 
 @RestController
 @RequestMapping("rest/movie")
@@ -34,7 +35,7 @@ public class MovieController {
 		if(result.isPresent()) {
 			return new ResponseEntity<MovieDto>(result.get(), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<MovieDto>(HttpStatus.NOT_FOUND);
+			throw new ResourceNotFoundExecption(String.format("Failed to find movie with id: %s", id.toString()));
 		}
 	}
 	
