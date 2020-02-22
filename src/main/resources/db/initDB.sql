@@ -1,25 +1,25 @@
-drop table Movie cascade;
+drop table IF EXISTS Movie cascade;
 create table if not exists Movie (
 	id BIGSERIAL PRIMARY KEY,
 	overview TEXT,
-	releaseDate DATE,
+	releaseDate TIMESTAMP,
 	title VARCHAR(255),
 	movieid int
 );
 ALTER SEQUENCE Movie_id_seq RESTART WITH 100;
-drop table Actor cascade;
+drop table IF EXISTS Actor cascade;
 create table if not exists Actor (
 	id BIGSERIAL PRIMARY KEY,
 	actorid int,
 	name VARCHAR(255),
 	gender int,
-	birthday DATE,
-	deathday DATE,
+	birthday TIMESTAMP,
+	deathday TIMESTAMP,
 	biography TEXT,
 	placeOfBirth VARCHAR(1024)
 );
 ALTER SEQUENCE Actor_id_seq RESTART WITH 100;
-drop table Cast1 cascade;
+drop table IF EXISTS Cast1 cascade;
 create table if not exists Cast1 (
 	id BIGSERIAL PRIMARY KEY,
 	movieChar VARCHAR(255),
@@ -30,21 +30,21 @@ create table if not exists Cast1 (
 	FOREIGN KEY (actor_id) REFERENCES Actor(id)	
 );
 ALTER SEQUENCE Cast1_id_seq RESTART WITH 100;
-drop table Genere cascade;
+drop table IF EXISTS Genere cascade;
 create table if not exists Genere (
 	id BIGSERIAL PRIMARY KEY,
 	genereid int,
 	name VARCHAR(255)
 );
 ALTER SEQUENCE Genere_id_seq RESTART WITH 100;
-drop table Movie_Genere cascade;
+drop table IF EXISTS Movie_Genere cascade;
 create table if not exists Movie_Genere (
 	movie_id BIGINT,
 	genere_id BIGINT,
 	FOREIGN KEY (movie_id) REFERENCES Movie(id),
 	FOREIGN KEY (genere_id) REFERENCES Genere(id)
 );
-drop table user1;
+drop table IF EXISTS user1;
 create table if not exists user1 (
 	id BIGSERIAL PRIMARY KEY,
 	username VARCHAR(255),
@@ -52,14 +52,14 @@ create table if not exists user1 (
 	moviedbkey VARCHAR(255),
 	roles VARCHAR(255)
 );
-drop table Movie_User cascade;
+drop table IF EXISTS Movie_User cascade;
 create table if not exists Movie_User (
 	movie_id BIGINT,
 	user_id BIGINT,
 	FOREIGN KEY (movie_id) REFERENCES Movie(id),
 	FOREIGN KEY (user_id) REFERENCES user1(id)
 );
-drop table Actor_User cascade;
+drop table IF EXISTS Actor_User cascade;
 create table if not exists Actor_User (
 	actor_id BIGINT,
 	user_id BIGINT,
