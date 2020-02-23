@@ -20,13 +20,13 @@ public class MovieImportContoller {
 	@Autowired
 	private MovieManagerService service;
 	
-	@RequestMapping(value="/{searchStr}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value="/{searchStr}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MovieDto>> getMovieImportSearch(@PathVariable("searchStr") String searchStr) throws InterruptedException {
 		List<MovieDto> movies = this.service.findImportMovie(searchStr);		
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
 	}
 	
-	@RequestMapping(value="/{searchStr}/number/{number}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value="/{searchStr}/number/{number}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> getMovieImport(@PathVariable("searchStr") String searchStr,@PathVariable("number") int number) throws InterruptedException {
 		boolean success = this.service.importMovie(searchStr, number);
 		if(success) {

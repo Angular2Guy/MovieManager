@@ -39,7 +39,7 @@ public class LoginController {
 	private MovieManagerService service;
 	private final List<GrantedAuthority> AUTHORITIES = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> postLogin(@RequestBody UserDto userDto) throws InterruptedException {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		try {
@@ -57,7 +57,7 @@ public class LoginController {
 		throw new AccessUnauthorizedException(userDto.toString());
 	}
 
-	@RequestMapping(value = "/signin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/signin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> postSignin(@RequestBody UserDto userDto) throws InterruptedException {
 		if (!this.mmService.saveUser(userDto)) {
 			throw new AccessForbiddenException(userDto.toString());
@@ -65,13 +65,13 @@ public class LoginController {
 		return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
 	}
 	
-	@RequestMapping(value="/genere", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value="/genere", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<GenereDto>> getGeneres() throws InterruptedException {
 		List<GenereDto> generes = this.service.allGeneres();		
 		return new ResponseEntity<List<GenereDto>>(generes, HttpStatus.OK);		
 	}
 	
-//	@RequestMapping(value="/updateDB", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+//	@RequestMapping(value="/updateDB", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 //	public ResponseEntity<Boolean> getUpdateDB() throws InterruptedException {
 //		boolean result = this.service.updateDB();
 //		return new ResponseEntity<Boolean>( result, result ? HttpStatus.OK : HttpStatus.NOT_IMPLEMENTED);	

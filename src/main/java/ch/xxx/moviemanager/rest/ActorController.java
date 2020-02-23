@@ -23,14 +23,14 @@ public class ActorController {
 	@Autowired
 	private MovieManagerService service;
 
-	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ActorDto>> getActorSearch(@PathVariable("name") String name)
 			throws InterruptedException {
 		List<ActorDto> actors = this.service.findActor(name);
 		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ActorDto> getActorSearchById(@PathVariable("id") Long id) throws InterruptedException {
 		Optional<ActorDto> actor = this.service.findActorById(id);
 		if (actor.isPresent()) {
@@ -40,7 +40,7 @@ public class ActorController {
 	}
 
 	@RequestMapping(value = "/pages", params = {
-			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ActorDto>> getPagesByNumber(@RequestParam("page") Integer page)
 			throws InterruptedException {
 		List<ActorDto> actors = this.service.findActorsByPage(page);
