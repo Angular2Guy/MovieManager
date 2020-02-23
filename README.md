@@ -15,6 +15,9 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, Postg
 ## Mission Statement
 The project has served its purpose to test Angular, Spring Boot with Jpa and Postgresql features and it is now used to manage my movies. The Angular frontend supports 2 languages and uses Ng-Bootstrap. The access to Postgesql uses Spring Repositories and Jpa. The import of the movies uses the Spring RestTemplate.
 
+## Postgresql Setup
+The Postgresql database can be setup to run in a Docker image. The steps for the setup can be found in the postgresql.sh file.
+
 ## Setup
 Postgresql 9.x or newer.
 
