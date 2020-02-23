@@ -1,5 +1,5 @@
-<app-login (loginClosed)="loginClosed($event)"></app-login>
-<div class="container-fluid">
+<app-login (loginClosed)="loginClosed($event)"></app-login><div class="container-fluid">
+<div>	
 	<div class="row">
 		<div class="col-4">
 			<div class="input-group-prepend">
@@ -30,7 +30,7 @@
 		</div>
 		<div class="col-2">
 			<div class="dropdown">
-				<button class="btn btn-secondary dropdown-toggle" type="button" (click)="dropDown()" 1i8n>Generes</button>
+				<button class="btn btn-secondary ngbDropdownToggle" type="button" (click)="dropDown()" i18n>Generes</button>
 				<div class="dropdown-menu" [class.show]="showMenu">
 					<a class="dropdown-item" *ngFor="let gen of generes" (click)="showGenere(gen.id)">{{gen.name}}</a>
 				</div>
@@ -42,7 +42,7 @@
 				<a class="dropdown-item" [routerLink]="['/movie',movie.id]" *ngFor="let movie of moviesByGenere">{{movie.title}}</a>
 			</div>
 		</div>
-	</div>	
+	</div>
 	<div class="row">
 		<div class="col">
 			<div *ngIf="importMoviesLoading">Importing...</div>
