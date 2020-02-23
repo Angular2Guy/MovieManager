@@ -14,7 +14,7 @@
     "prebuild": "rimraf ./dist && mkdirp ./dist",
     "postbuild": "npm run deploy",
     "predeploy": "rimraf ../../main/resources/static && mkdirp ../../main/resources/static",
-    "deploy": "cpx 'dist/**' ../../main/resources/static/"
+    "deploy": "cpx 'dist/testproject/**' ../../main/resources/static/"
   },
   "private": true,
   "dependencies": {

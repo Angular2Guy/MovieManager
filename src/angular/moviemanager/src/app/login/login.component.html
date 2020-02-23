@@ -2,7 +2,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Login / Signin</h5>
+        <h5 class="modal-title" id="exampleModalLabel" i18n>Login / Signin</h5>
         <!-- 
         <button type="button" class="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -10,18 +10,18 @@
          -->
       </div>
       <div class="modal-body">        
-        <input type="text" class="form-control" placeholder="login" [formControl]="loginName" >
+        <input type="text" class="form-control" i18n-placeholder placeholder="login" [formControl]="loginName" >
         <br/>
-        <input type="password" class="form-control" placeholder="password" [formControl]="password" >
+        <input type="password" class="form-control" i18n-placeholder placeholder="password" [formControl]="password" >
         <br/>
-        <input type="text" class="form-control" placeholder="movieDbKey" [formControl]="movieDbKey">
+        <input type="text" class="form-control" i18n-placeholder placeholder="movieDbKey" [formControl]="movieDbKey">
         <br/>
         <div *ngIf="modalMsg.length > 0" class="alert alert-danger">{{modalMsg}}</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="loginUser()">Login</button>
-        <button type="button" class="btn btn-secondary" (click)="cancelUser()">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="signinUser()">Signin</button>
+        <button type="button" class="btn btn-primary" (click)="loginUser()" i18n>Login</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelUser()" i18n>Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="signinUser()" i18n>Signin</button>
       </div>
     </div>
   </div>

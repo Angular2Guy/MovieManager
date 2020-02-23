@@ -3,36 +3,36 @@
 	<div class="row">
 		<div class="col-4">
 			<div class="input-group-prepend">
-				<span class="input-group-text" id="importMovieByTitle">Import
+				<span class="input-group-text" id="importMovieByTitle" i18n>Import
 					Movie by Title</span> <input type="text" class="form-control"
-					placeholder="title" aria-describedby="importMovieByTitle"
+					i18n-placeholder placeholder="title" aria-describedby="importMovieByTitle"
 					[formControl]="importMovieTitle">
 				<button class="btn btn-secondary" type="button"
-					[disabled]="importMoviesLoading" (click)="importMovie()">Search</button>
+					[disabled]="importMoviesLoading" (click)="importMovie()" i18n>Search</button>
 			</div>
 		</div>
 		<div class="col-3">
 			<div class="input-group-prepend">
-				<span class="input-group-text" id="searchMovieTitle">Search
+				<span class="input-group-text" id="searchMovieTitle" i18n>Search
 					for Movie Title</span> <input type="text" class="form-control"
-					placeholder="title" aria-describedby="searchMovieTitle"
+					i18n-placeholder placeholder="title" aria-describedby="searchMovieTitle"
 					[formControl]="movieTitle">
 			</div>
 			<div *ngIf="movieTitle.value" class="searchList">
-				<span *ngIf="moviesLoading">Loading</span> <a class="dropdown-item"
+				<span *ngIf="moviesLoading" i18n>Loading</span> <a class="dropdown-item"
 					[routerLink]="['/movie',movie.id]"
 					*ngFor="let movie of movies | async">{{movie.title}}</a>
 			</div>
 		</div>
 		<div class="col-3">
 			<div class="input-group-prepend">
-				<span class="input-group-text" id="searchMovieActor">Search
+				<span class="input-group-text" id="searchMovieActor" i18n>Search
 					for Movie Actor</span> <input type="text" class="form-control"
 					placeholder="name" aria-describedby="searchMovieActor"
 					[formControl]="movieActor">
 			</div>
 			<div *ngIf="movieActor.value" class="searchList">
-				<span *ngIf="actorsLoading">Loading</span> <a class="dropdown-item"
+				<span *ngIf="actorsLoading" 1i8n>Loading</span> <a class="dropdown-item"
 					[routerLink]="['/actor',actor.id]"
 					*ngFor="let actor of actors | async">{{actor.name}}</a>
 			</div>
@@ -40,7 +40,7 @@
 		<div class="col-2">
 			<div class="dropdown">
 				<button class="btn btn-secondary dropdown-toggle" type="button"
-					(click)="dropDown()">Generes</button>
+					(click)="dropDown()" 1i8n>Generes</button>
 				<div class="dropdown-menu" [class.show]="showMenu">
 					<a class="dropdown-item" *ngFor="let gen of generes"
 						(click)="showGenere(gen.id)">{{gen.name}}</a>
@@ -48,7 +48,7 @@
 			</div>
 			<div [style.display]="moviesByGenLoading ? 'block' : 'none'"
 				class="searchList">
-				<span>Loading</span>
+				<span i18n>Loading</span>
 			</div>
 			<div *ngIf="moviesByGenere.length > 0" class="searchList">
 				<a class="dropdown-item" [routerLink]="['/movie',movie.id]"
@@ -61,9 +61,9 @@
 			<div *ngIf="importMoviesLoading">Importing...</div>
 			<table class="table" *ngIf="importMovies.length > 0">
 				<tr>
-					<th>Title</th>
-					<th>Release</th>
-					<th>Overview</th>
+					<th i18n>Title</th>
+					<th i18n>Release</th>
+					<th i18n>Overview</th>
 				</tr>
 				<tr *ngFor="let movie of importMovies"
 					(click)="importSelMovie(movie)" class="importMovie">
@@ -80,10 +80,10 @@
     			<table class="table">
     				<thead #header>
 					<tr>
-						<th>Title</th>
-						<th>Release</th>
-						<th>Generes</th>
-						<th>Overview</th>
+						<th i18n>Title</th>
+						<th i18n>Release</th>
+						<th i18n>Generes</th>
+						<th i18n>Overview</th>
 					</tr>
 					<tbody #container>
 					<tr *ngFor="let movie of scrollMovies" (dblclick)="movieDetails(movie)"

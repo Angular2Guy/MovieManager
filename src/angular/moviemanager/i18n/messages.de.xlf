@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="3e8e30607eafb769e681c95bd490a909d7a92e92" datatype="html">
+        <source>Welcome to the movie database</source>
+        <target>Welcome to the movie database</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c" datatype="html">
+        <source>Back</source>
+        <target>Back</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="c6dcc6766b98d922dd32129d2719ed19bec46222" datatype="html">
+        <source>
+			Title: <x id="INTERPOLATION" equiv-text="{{movie?.title}}"/>
+		</source>
+		<target>
+			Title: <x id="INTERPOLATION" equiv-text="{{movie?.title}}"/>
+		</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="401e5cc4596ae3162dc1f8e06bc7538e1c7a3428" datatype="html">
+        <source>
+			Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.release_date | date:&apos;dd.MM.yyyy&apos;}}"/>
+		</source>
+		<target>
+			Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.release_date | date:&apos;dd.MM.yyyy&apos;}}"/>
+		</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8af0a929d99ff939ef31679b83e535deb3a15fe0" datatype="html">
+        <source>
+			Overview: <x id="INTERPOLATION" equiv-text="{{movie?.overview}}"/>
+		</source>
+		<target>
+			Overview: <x id="INTERPOLATION" equiv-text="{{movie?.overview}}"/>
+		</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e0f5fe5e9f11963547efa337782413d8df7ce538" datatype="html">
+        <source>Generes:</source>
+        <target>Generes:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="f60dff27acfc94332f150363d235e97a3fb80b4c" datatype="html">
+        <source>Cast:</source>
+        <target>Cast:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e544b38c1e4d537438f1a2deaaebe2d050fcaae1" datatype="html">
+        <source>
+			Title: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/>
+		</source>
+		<target>
+			Title: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/>
+		</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="74098385783c70675d90b28175e67ed84bec9f3e" datatype="html">
+        <source>
+			Birthday: <x id="INTERPOLATION" equiv-text="{{actor?.birthday | date:&apos;dd.MM.yyyy&apos;}}"/>
+		</source>
+		<target>
+			Birthday: <x id="INTERPOLATION" equiv-text="{{actor?.birthday | date:&apos;dd.MM.yyyy&apos;}}"/>
+		</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cab3b9b0d82bc481017f9f0f07fe20f4267feb8b" datatype="html">
+        <source>
+			Biography: <x id="INTERPOLATION" equiv-text="{{actor?.biography}}"/>
+		</source>
+		<target>
+			Biography: <x id="INTERPOLATION" equiv-text="{{actor?.biography}}"/>
+		</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5344679c91b0f4ce6a713ec1dad83c714d7fd690" datatype="html">
+        <source>Gender: Female</source>
+        <target>Gender: Female</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e18c88087e1cd6c2aeb6a686ec7681f7931d8d1b" datatype="html">
+        <source>Gender: Male</source>
+        <target>Gender: Male</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="85a39ff263ed6fad57b77f4660ea4f3c0d910862" datatype="html">
+        <source>Gender: Unknown</source>
+        <target>Gender: Unknown</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ad3450267b936fec41400c48a4866509577ff01e" datatype="html">
+        <source>
+			Place of birth: <x id="INTERPOLATION" equiv-text="{{actor?.place_of_birth}}"/>
+		</source>
+		<target>
+			Place of birth: <x id="INTERPOLATION" equiv-text="{{actor?.place_of_birth}}"/>
+		</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="db25272b20eb4eea09e7ff2419ce05f5577fc778" datatype="html">
+        <source>Import Movie by Title</source>
+        <target>Import Movie by Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="a817ef2e565053d06453d5b831a730da41223092" datatype="html">
+        <source>title</source>
+        <target>title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="7e892ba15f2c6c17e83510e273b3e10fc32ea016" datatype="html">
+        <source>Search</source>
+        <target>Search</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6b389fd480bdde12eba4add66e4f52bcd612d6de" datatype="html">
+        <source>Search for Movie Title</source>
+        <target>Search for Movie Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="def755457793d5ad40597886d2d317bc5f415a2f" datatype="html">
+        <source>Loading</source>
+        <target>Loading</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6c707b3a310999a4c20a31826632bef833095e3d" datatype="html">
+        <source>Search for Movie Actor</source>
+        <target>Search for Movie Actor</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="fdf7cbdc140d0aab0f0b6c06065a0fd448ed6a2e" datatype="html">
+        <source>Title</source>
+        <target>Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">83</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="87026d98a68f73af07214f606a9cc9a27458d50d" datatype="html">
+        <source>Release</source>
+        <target>Release</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e95ae009d0bdb45fcc656e8b65248cf7396080d5" datatype="html">
+        <source>Overview</source>
+        <target>Overview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d5d5363b5ebb6e56c798b438e5a2d219c11332a9" datatype="html">
+        <source>Generes</source>
+        <target>Generes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="3bb83c5e1d1de861152506f69516691d6fc5c810" datatype="html">
+        <source>Login / Signin</source>
+        <target>Login / Signin</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="801c464dfaabb8eb2c16f2cc0bf81435030174dd" datatype="html">
+        <source>login</source>
+        <target>login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d8b81951d25439864e92f750f7c99d7426d6517c" datatype="html">
+        <source>password</source>
+        <target>password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="9c87bac7f07f439681cfd4f8d3c43232e7fdb29b" datatype="html">
+        <source>movieDbKey</source>
+        <target>movieDbKey</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="6765b4c916060f6bc42d9bb69e80377dbcb5e4e9" datatype="html">
+        <source>Login</source>
+        <target>Login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="5a49f221378f8688a0cf91b1a3207407623f1918" datatype="html">
+        <source>Signin</source>
+        <target>Signin</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
