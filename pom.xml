@@ -137,6 +137,7 @@
 							<arguments>
 								<argument>run</argument>
 								<argument>test</argument>
+								<!-- <argument>test-chromium</argument> -->
 							</arguments>
 							<workingDirectory>src/angular/moviemanager</workingDirectory>
 						</configuration>
