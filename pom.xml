@@ -127,7 +127,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>angular-cli build</id>
+						<id>angular-cli test</id>
 						<goals>
 							<goal>exec</goal>
 						</goals>
