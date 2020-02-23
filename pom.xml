@@ -15,7 +15,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.4.RELEASE</version>
+		<version>2.2.4.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
@@ -112,7 +112,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>angular-cli build de</id>
+						<id>angular-cli build</id>
 						<goals>
 							<goal>exec</goal>
 						</goals>
@@ -122,6 +122,21 @@
 							<arguments>
 								<argument>run</argument>
 								<argument>build</argument>
+							</arguments>
+							<workingDirectory>src/angular/moviemanager</workingDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>angular-cli build</id>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<phase>test</phase>
+						<configuration>
+							<executable>npm</executable>
+							<arguments>
+								<argument>run</argument>
+								<argument>test</argument>
 							</arguments>
 							<workingDirectory>src/angular/moviemanager</workingDirectory>
 						</configuration>

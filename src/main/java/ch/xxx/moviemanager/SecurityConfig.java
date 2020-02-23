@@ -25,12 +25,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.httpBasic();
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS);
-		http.antMatcher("**").anonymous();		
-		http.authorizeRequests().antMatchers("/rest/movie/**").authenticated();
-		http.authorizeRequests().antMatchers("/rest/actor/**").authenticated();
-		http.csrf().disable();
-		http.sessionManagement().invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/"));			
+		http.httpBasic().and()
+		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS).and()
+		.antMatcher("**").anonymous().and()		
+		.authorizeRequests().antMatchers("/rest/movie/**").authenticated().and()
+		.authorizeRequests().antMatchers("/rest/actor/**").authenticated().and()
+		.csrf().disable()
+		.sessionManagement().invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/"));			
 	}
 }
