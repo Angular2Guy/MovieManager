@@ -7,7 +7,7 @@
         <target>Welcome to the movie database</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c" datatype="html">
@@ -150,7 +150,7 @@
           <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="db25272b20eb4eea09e7ff2419ce05f5577fc778" datatype="html">
+      <trans-unit id="51dd9f3095c9aa0c734391b637f975d8371893f2" datatype="html">
         <source>Import Movie by Title</source>
         <target>Import Movie by Title</target>
         <context-group purpose="location">
@@ -163,11 +163,11 @@
         <target>title</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit id="7e892ba15f2c6c17e83510e273b3e10fc32ea016" datatype="html">
@@ -175,15 +175,15 @@
         <target>Search</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6b389fd480bdde12eba4add66e4f52bcd612d6de" datatype="html">
+      <trans-unit id="7b5c74dfee10ec53ae975f164b279c4b5101e61a" datatype="html">
         <source>Search for Movie Title</source>
         <target>Search for Movie Title</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit>
       <trans-unit id="def755457793d5ad40597886d2d317bc5f415a2f" datatype="html">
@@ -191,55 +191,19 @@
         <target>Loading</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6c707b3a310999a4c20a31826632bef833095e3d" datatype="html">
+      <trans-unit id="f584a8b8113d60588752a09b8f2382af0ad359c9" datatype="html">
         <source>Search for Movie Actor</source>
         <target>Search for Movie Actor</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="fdf7cbdc140d0aab0f0b6c06065a0fd448ed6a2e" datatype="html">
-        <source>Title</source>
-        <target>Title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">64</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">83</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="87026d98a68f73af07214f606a9cc9a27458d50d" datatype="html">
-        <source>Release</source>
-        <target>Release</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">65</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="e95ae009d0bdb45fcc656e8b65248cf7396080d5" datatype="html">
-        <source>Overview</source>
-        <target>Overview</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d5d5363b5ebb6e56c798b438e5a2d219c11332a9" datatype="html">
@@ -247,7 +211,47 @@
         <target>Generes</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="fdf7cbdc140d0aab0f0b6c06065a0fd448ed6a2e" datatype="html">
+        <source>Title</source>
+        <target>Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="87026d98a68f73af07214f606a9cc9a27458d50d" datatype="html">
+        <source>Release</source>
+        <target>Release</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="e95ae009d0bdb45fcc656e8b65248cf7396080d5" datatype="html">
+        <source>Overview</source>
+        <target>Overview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">71</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3bb83c5e1d1de861152506f69516691d6fc5c810" datatype="html">
@@ -263,7 +267,7 @@
         <target>login</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d8b81951d25439864e92f750f7c99d7426d6517c" datatype="html">
@@ -271,7 +275,7 @@
         <target>password</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">15</context>
+          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit id="9c87bac7f07f439681cfd4f8d3c43232e7fdb29b" datatype="html">
@@ -279,7 +283,7 @@
         <target>movieDbKey</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6765b4c916060f6bc42d9bb69e80377dbcb5e4e9" datatype="html">
@@ -287,7 +291,7 @@
         <target>Login</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit>
       <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
@@ -295,7 +299,7 @@
         <target>Cancel</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit id="5a49f221378f8688a0cf91b1a3207407623f1918" datatype="html">
@@ -303,7 +307,7 @@
         <target>Signin</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
     </body>
