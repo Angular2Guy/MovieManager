@@ -18,6 +18,9 @@ The project has served its purpose to test Angular, Spring Boot with Jpa and Pos
 ## Postgresql Setup
 The Postgresql database can be setup to run in a Docker image. The steps for the setup can be found in the postgresql.sh file.
 
+## Movie import
+To import movies a key needs to be provieded at signin. To get such a key according to this [Faq](https://www.themoviedb.org/faq/api)
+
 ## Setup
 Postgresql 9.x or newer.
 
