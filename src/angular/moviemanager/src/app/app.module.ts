@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { VirtualScrollerModule } from 'ngx-virtual-scroller';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -30,7 +29,6 @@ import { LoginComponent } from './login/login.component';
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
-    VirtualScrollerModule
   ],
   providers: [
     ActorsService,
