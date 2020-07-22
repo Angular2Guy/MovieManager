@@ -1,0 +1,2 @@
+id,username,password,moviedbkey,roles
+1,john,doe,dummyKey,ROLE_USER

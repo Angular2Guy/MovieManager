@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<changeSet id="init-data" author="angular2guy">
+		<loadData file="data/movie.csv" tableName="movie"
+			relativeToChangelogFile="true" />
+		<loadData file="data/actor.csv" tableName="actor"
+			relativeToChangelogFile="true" />
+		<loadData file="data/cast1.csv" tableName="cast1"
+			relativeToChangelogFile="true" />
+		<loadData file="data/genere.csv" tableName="genere"
+			relativeToChangelogFile="true" />
+		<loadData file="data/movie_genere.csv"
+			tableName="movie_genere" relativeToChangelogFile="true" />		
+		<loadData file="data/user1.csv" tableName="user1"
+			relativeToChangelogFile="true" />
+		<loadData file="data/movie_user.csv" tableName="movie_user"
+			relativeToChangelogFile="true" />
+		<loadData file="data/actor_user.csv" tableName="actor_user"
+			relativeToChangelogFile="true" />
+	</changeSet>
+</databaseChangeLog>
