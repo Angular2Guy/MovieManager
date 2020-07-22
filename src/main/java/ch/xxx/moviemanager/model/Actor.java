@@ -5,44 +5,43 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Actor {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
-	@Column(name="actorid")
-	private int actorId;
+	private Long actorId;
 	private String name;
 	private Integer gender;
 	private Date birthday;
 	private Date deathday;
+	@Lob
 	private String biography;
-	@Column(name="placeofbirth")
 	private String placeOfBirth;
 	@OneToMany(mappedBy="actor", cascade = CascadeType.ALL, orphanRemoval=true)	
 	private List<Cast> casts = new ArrayList<>();
 	@ManyToMany
-	@JoinTable(name = "Actor_User", 
+	@JoinTable(name = "actor_user", 
 		joinColumns = @JoinColumn(name = "actor_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<User> users = new ArrayList<>();
 	
 	public List<User> getUsers() {
 		return users;
 	}
-	public int getActorId() {
+	public Long getActorId() {
 		return actorId;
 	}
-	public void setActorId(int actorId) {
+	public void setActorId(Long actorId) {
 		this.actorId = actorId;
 	}
 	public Long getId() {

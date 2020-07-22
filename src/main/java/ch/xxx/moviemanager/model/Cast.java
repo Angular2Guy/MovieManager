@@ -1,6 +1,5 @@
 package ch.xxx.moviemanager.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,14 +10,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="Cast1")
+@Table(name="cast1")
 public class Cast {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
-	@Column(name="moviechar")
 	private String movieChar;
-	@Column(name="charactername")
 	private String characterName;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="movie_id")

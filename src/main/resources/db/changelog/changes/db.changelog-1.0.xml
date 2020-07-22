@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<changeSet author="angular2guy" id="1">
+		<createSequence sequenceName="hibernate_sequence" startValue="1000" />
+		<createTable tableName="movie">
+			<column name="id" type="bigint">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="overview" type="clob" />
+			<column name="release_date" type="timestamp" />
+			<column name="title" type="varchar(255)" />
+			<column name="movie_id" type="bigint" />
+		</createTable>
+		<createTable tableName="actor">
+			<column name="id" type="bigint">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="actor_id" type="bigint" />
+			<column name="name" type="varchar(255)" />
+			<column name="gender" type="int" />
+			<column name="birthday" type="timestamp" />
+			<column name="deathday" type="timestamp" />
+			<column name="biography" type="clob" />
+			<column name="place_of_birth" type="varchar(1024)" />
+		</createTable>		
+		<createTable tableName="cast1">
+			<column name="id" type="bigint">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="movie_char" type="varchar(255)" />
+			<column name="character_name" type="varchar(255)" />
+			<column name="movie_id" type="bigint" />
+			<column name="actor_id" type="bigint" />
+		</createTable>
+		<createTable tableName="genere">
+			<column name="id" type="bigint">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="genere_id" type="bigint" />
+			<column name="name" type="varchar(255)" />
+		</createTable>
+		<createTable tableName="movie_genere">
+			<column name="genere_id" type="bigint">
+				<constraints nullable="false"
+					foreignKeyName="fk_genere_id" references="genere(id)" />
+			</column>
+			<column name="movie_id" type="bigint">
+				<constraints nullable="false"
+					foreignKeyName="fk_movie_id1" references="movie(id)" />
+			</column>
+		</createTable>
+		<createTable tableName="user1">
+			<column name="id" type="bigint">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="username" type="varchar(255)" />
+			<column name="password" type="varchar(255)" />
+			<column name="moviedbkey" type="varchar(255)" />
+			<column name="roles" type="varchar(255)" />
+		</createTable>
+		<createTable tableName="movie_user">
+			<column name="user_id" type="bigint">
+				<constraints nullable="false"
+					foreignKeyName="fk_user1_id" references="user1(id)" />
+			</column>
+			<column name="movie_id" type="bigint">
+				<constraints nullable="false"
+					foreignKeyName="fk_movie_id2" references="movie(id)" />
+			</column>
+		</createTable>
+		<createTable tableName="actor_user">
+			<column name="actor_id" type="bigint">
+				<constraints nullable="false"
+					foreignKeyName="fk_actor_id" references="actor(id)" />
+			</column>
+			<column name="user_id" type="bigint">
+				<constraints nullable="false"
+					foreignKeyName="fk_user_id2" references="user1(id)" />
+			</column>
+		</createTable>
+		<createIndex indexName="ix_movie_title" tableName="movie">
+			<column name="title" />
+		</createIndex>
+		<createIndex indexName="ix_actor_name" tableName="actor">
+			<column name="name" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

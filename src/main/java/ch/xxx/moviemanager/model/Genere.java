@@ -13,18 +13,17 @@ import javax.persistence.ManyToMany;
 @Entity
 public class Genere {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
-	@Column(name="genereid")
-	private int genereId;
+	private Long genereId;
 	private String name;
 	@ManyToMany(mappedBy="generes")
 	private List<Movie> movies = new ArrayList<>();
 	
-	public int getGenereId() {
+	public Long getGenereId() {
 		return genereId;
 	}
-	public void setGenereId(int genereId) {
+	public void setGenereId(Long genereId) {
 		this.genereId = genereId;
 	}
 	public Long getId() {

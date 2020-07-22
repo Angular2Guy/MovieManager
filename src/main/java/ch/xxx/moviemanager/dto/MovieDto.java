@@ -14,16 +14,16 @@ public class MovieDto {
 	@JsonProperty("release_date")
 	private Date releaseDate;
 	private String title;	
-	private Integer movieId;
+	private Long movieId;
 	@JsonProperty("genre_ids")
 	private int[] generes;
 	private List<CastDto> myCast = new ArrayList<>();
 	private List<GenereDto> myGenere = new ArrayList<>();
 	
-	public Integer getMovieId() {
+	public Long getMovieId() {
 		return movieId;
 	}
-	public void setMovieId(Integer movieId) {
+	public void setMovieId(Long movieId) {
 		this.movieId = movieId;
 	}
 	public List<CastDto> getMyCast() {

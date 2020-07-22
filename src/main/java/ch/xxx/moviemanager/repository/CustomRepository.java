@@ -23,7 +23,7 @@ public class CustomRepository {
     @Autowired
 	private CrudUserRepository crudUserRep;        
     
-    public Optional<Movie> findByMovieId(Integer movieId) {    	
+    public Optional<Movie> findByMovieId(Long movieId) {    	
     	try {
         	User user = getCurrentUser();
     		Movie result = em.createQuery("select m from Movie m join m.users u where m.movieid = :movieid and u.id = :userid", Movie.class).setParameter("movieid", movieId).setParameter("userid", user.getId()).getSingleResult();

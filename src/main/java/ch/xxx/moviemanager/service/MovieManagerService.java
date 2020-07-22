@@ -200,7 +200,7 @@ public class MovieManagerService {
 			if (!movies.isEmpty()) {
 				LOG.info("Movie found by Title and Reldate");
 				movieEntity = movies.get(0);
-				movieEntity.setMovieid(wrMovie.getResults()[number].getId().intValue());
+				movieEntity.setMovieId(wrMovie.getResults()[number].getId());
 			} else {
 				LOG.info("creating new Movie");
 				movieEntity = Converter.convert(wrMovie.getResults()[number]);

@@ -18,13 +18,13 @@ public class ActorDto {
 	@JsonProperty("place_of_birth")
 	private String placeOfBirth;
 	@JsonProperty("actorId")
-	private int actorId;
+	private Long actorId;
 	private List<CastDto> myCasts = new ArrayList<>();
 	
-	public int getActorId() {
+	public Long getActorId() {
 		return actorId;
 	}
-	public void setActorId(int actorId) {
+	public void setActorId(Long actorId) {
 		this.actorId = actorId;
 	}
 	

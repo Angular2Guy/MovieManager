@@ -5,35 +5,34 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Movie {
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
+	@Lob
 	private String overview;
-	@Column(name="releasedate")
 	private Date releaseDate;
 	private String title;
-	@Column(name="movieid")
-	private Integer movieid;
+	private Long movieId;
 	@OneToMany(mappedBy="movie", cascade = CascadeType.ALL, orphanRemoval=true)	
 	private List<Cast> cast = new ArrayList<>();
 	@ManyToMany
-	@JoinTable(name = "Movie_Genere", 
+	@JoinTable(name = "movie_genere", 
 		joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "genere_id"))
 	private List<Genere> generes = new ArrayList<>();
 	@ManyToMany
-	@JoinTable(name = "Movie_User", 
+	@JoinTable(name = "movie_user", 
 		joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private List<User> users = new ArrayList<>();
 	
@@ -41,11 +40,11 @@ public class Movie {
 	public List<User> getUsers() {
 		return users;
 	}
-	public Integer getMovieid() {
-		return movieid;
+	public Long getMovieId() {
+		return movieId;
 	}
-	public void setMovieid(Integer movieid) {
-		this.movieid = movieid;
+	public void setMovieId(Long movieid) {
+		this.movieId = movieid;
 	}
 	public Long getId() {
 		return id;

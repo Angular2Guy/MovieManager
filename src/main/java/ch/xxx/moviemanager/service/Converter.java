@@ -52,7 +52,7 @@ public class Converter {
 		dto.setOverview(entity.getOverview());
 		dto.setReleaseDate(entity.getReleaseDate());
 		dto.setTitle(entity.getTitle());
-		dto.setMovieId(entity.getMovieid());
+		dto.setMovieId(entity.getMovieId());
 		entity.getGeneres().forEach(g -> {
 			GenereDto genereDto = convert(g);
 			dto.getMyGenere().add(genereDto);
@@ -85,7 +85,7 @@ public class Converter {
 		entity.setOverview(dto.getOverview());
 		entity.setReleaseDate(dto.getReleaseDate());
 		entity.setTitle(dto.getTitle());
-		entity.setMovieid(dto.getId().intValue());
+		entity.setMovieId(dto.getId());
 		return entity;
 	}
 	
