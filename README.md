@@ -1,5 +1,5 @@
 # MovieManager
-This is a project to manage my movies
+This is a project to manage my movies. It shows howto use Angular with Spring Boot and Jpa. For development it uses a H2 database. For persistent data it uses Postgresql. The databases are initialized and updated with Liquibase.
 
 ![Build Status](https://travis-ci.org/Angular2Guy/MovieManager.svg?branch=master)
 
@@ -13,13 +13,16 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 -The project manages its users with a login/signin and can import different movies for different users. 
 
 ## Mission Statement
-The project has served its purpose to test Angular, Spring Boot with Jpa and Postgresql features and it is now used to manage my movies. The Angular frontend supports 2 languages and uses Ng-Bootstrap. The access to H2/Postgresql uses Spring Repositories and Jpa. The import of the movies uses the Spring RestTemplate.
+The project serves as example for the integration of Angular, Spring Boot with Jpa and relational databases. The Angular frontend uses the Ng-Bootstrap components. The backend manages/initialzies the H2/Postgresql databases with Liquibase. The data access is done with Jpa and Spring Repositories. The movies are imported with Spring RestTemplates. 
 
-## Postgresql Setup
-The Postgresql database can be setup to run in a Docker image. The steps for the setup can be found in the postgresql.sh file.
+## Postgresql setup
+To build a Jar with Postgresql setup build it with 'mvnw clean install -Dpostgresql=true'. In Eclipse the maven profile 'standalone-postgresql' has to be activated and a run/debug configuration with the VM parameter '-Dspring.profiles.active=prod' has to started. The database will be initialized by Liquibase.
 
 ## Movie import
 To import movies a key needs to be provieded at signin. To get such a key according to this [Faq](https://www.themoviedb.org/faq/api)
+
+## Testdata
+It is test data provided for the User 'John' and the Password 'Doe'. Then a movie with an actor is availiable for testing. The login data is also needed for the /h2-console. 
 
 ## Setup
 Postgresql 9.x or newer.
