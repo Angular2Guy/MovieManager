@@ -5,21 +5,36 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 	<changeSet id="init-data" author="angular2guy">
-		<loadData file="data/movie.csv" tableName="movie"
+		<loadData file="data/movie.csv" tableName="movie" 
+			relativeToChangelogFile="true" >
+			<column name="id" type="numeric"/>
+			<column name="overview" type="string" />
+			<column name="release_date" type="date" />
+			<column name="title" type="string" />
+			<column name="movie_id" type="numeric" />
+		</loadData>
+		<loadData file="data/actor.csv" tableName="actor" 
+			relativeToChangelogFile="true" >
+			<column name="id" type="numeric"/>
+			<column name="actor_id" type="numeric" />
+			<column name="name" type="string" />
+			<column name="gender" type="numeric" />
+			<column name="birthday" type="date" />
+			<column name="deathday" type="date" />
+			<column name="biography" type="string" />
+			<column name="place_of_birth" type="string" />
+		</loadData>
+		<loadData file="data/cast1.csv" tableName="cast1" 
 			relativeToChangelogFile="true" />
-		<loadData file="data/actor.csv" tableName="actor"
+		<loadData file="data/genere.csv" tableName="genere" 
 			relativeToChangelogFile="true" />
-		<loadData file="data/cast1.csv" tableName="cast1"
-			relativeToChangelogFile="true" />
-		<loadData file="data/genere.csv" tableName="genere"
-			relativeToChangelogFile="true" />
-		<loadData file="data/movie_genere.csv"
+		<loadData file="data/movie_genere.csv" 
 			tableName="movie_genere" relativeToChangelogFile="true" />		
-		<loadData file="data/user1.csv" tableName="user1"
+		<loadData file="data/user1.csv" tableName="user1" 
 			relativeToChangelogFile="true" />
-		<loadData file="data/movie_user.csv" tableName="movie_user"
+		<loadData file="data/movie_user.csv" tableName="movie_user" 
 			relativeToChangelogFile="true" />
-		<loadData file="data/actor_user.csv" tableName="actor_user"
+		<loadData file="data/actor_user.csv" tableName="actor_user" 
 			relativeToChangelogFile="true" />
 	</changeSet>
 </databaseChangeLog>

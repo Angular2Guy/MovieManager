@@ -1,4 +1,4 @@
-package ch.xxx.moviemanager;
+package ch.xxx.moviemanager.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

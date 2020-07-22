@@ -1,4 +1,4 @@
-package ch.xxx.moviemanager;
+package ch.xxx.moviemanager.config;
 
 import java.io.IOException;
 

@@ -1,11 +1,11 @@
 # MovieManager
-This is a toy project to manage my movies
+This is a project to manage my movies
 
 ![Build Status](https://travis-ci.org/Angular2Guy/MovieManager.svg?branch=master)
 
 Author: Sven Loesekann
 
-Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, Postgresql, Jpa, Maven
+Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, Postgresql, Liquibase, Jpa, Maven, Java
 
 ## Features
 -It imports movie data from the movie database. The imported movies can be searched by movie title and Genere. 
@@ -13,7 +13,7 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, Postg
 -The project manages its users with a login/signin and can import different movies for different users. 
 
 ## Mission Statement
-The project has served its purpose to test Angular, Spring Boot with Jpa and Postgresql features and it is now used to manage my movies. The Angular frontend supports 2 languages and uses Ng-Bootstrap. The access to Postgesql uses Spring Repositories and Jpa. The import of the movies uses the Spring RestTemplate.
+The project has served its purpose to test Angular, Spring Boot with Jpa and Postgresql features and it is now used to manage my movies. The Angular frontend supports 2 languages and uses Ng-Bootstrap. The access to H2/Postgresql uses Spring Repositories and Jpa. The import of the movies uses the Spring RestTemplate.
 
 ## Postgresql Setup
 The Postgresql database can be setup to run in a Docker image. The steps for the setup can be found in the postgresql.sh file.
