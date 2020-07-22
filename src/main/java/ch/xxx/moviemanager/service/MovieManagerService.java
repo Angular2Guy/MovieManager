@@ -78,7 +78,7 @@ public class MovieManagerService {
 	}
 
 	public List<MovieDto> findMoviesByGenere(Long id) {
-		List<MovieDto> result = this.crudMovieRep.findByGenereId(id.intValue(), this.getCurrentUser().getId()).stream()
+		List<MovieDto> result = this.crudMovieRep.findByGenereId(id, this.getCurrentUser().getId()).stream()
 				.map(m -> Converter.convert(m)).collect(Collectors.toList());
 		return result;
 	}

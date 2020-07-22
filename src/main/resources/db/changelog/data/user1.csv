@@ -1,2 +1,2 @@
 id,username,password,moviedbkey,roles
-1,john,doe,dummyKey,ROLE_USER
+1,John,$2a$10$TQa2veikvN75exjW8R1VfuPRgc6kUxvS1WhZWDcjz38m69kNBrXz6,dummyKey,ROLE_USER

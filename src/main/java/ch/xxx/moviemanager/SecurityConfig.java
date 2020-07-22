@@ -30,7 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatcher("**").anonymous().and()		
 		.authorizeRequests().antMatchers("/rest/movie/**").authenticated().and()
 		.authorizeRequests().antMatchers("/rest/actor/**").authenticated().and()
+		.authorizeRequests().antMatchers("/h2-console/**").authenticated().and()
 		.csrf().disable()
+		.headers().frameOptions().sameOrigin().and()
 		.sessionManagement().invalidSessionStrategy(new SimpleRedirectInvalidSessionStrategy("/"));			
 	}
 }
