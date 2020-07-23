@@ -6,6 +6,9 @@ jdk:
 services:
   - docker
   
+addons:  
+  chrome: stable 
+  
 notifications:
   email:
     - angular2guy@gmx.ch
