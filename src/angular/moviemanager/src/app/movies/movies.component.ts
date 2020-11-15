@@ -24,23 +24,23 @@ export class MoviesComponent implements OnInit {
 
   movie: Movie = null;
   delMovie = false;
-  
+
   constructor(private route: ActivatedRoute, private router: Router, private movieService: MoviesService) { }
 
   ngOnInit() {
       this.movieService.findMovieById(Number(this.route.snapshot.paramMap.get('id')))
-          .subscribe(movie => this.movie = movie);      
+          .subscribe(movie => this.movie = movie);
   }
 
   deleteMovie() {
-      console.log("delete movie id: "+this.movie.id+" title: "+this.movie.title);
+      console.log('delete movie id: '+this.movie.id+' title: '+this.movie.title);
       this.delMovie = true;
       this.movieService.deleteMovieById(this.movie.id).subscribe(result => {
           this.delMovie = false;
           if(!result) {
-              console.log("Delete of movie id: "+this.movie.id+" failed.");
+              console.log('Delete of movie id: '+this.movie.id+' failed.');
           } else {
-              this.router.navigateByUrl("/search");
+              this.router.navigateByUrl('/search');
           }
       });
   }

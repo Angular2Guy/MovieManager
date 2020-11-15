@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Observable,of } from "rxjs";
+import { Observable,of } from 'rxjs';
 import { Actor } from '../common/actor';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -21,24 +21,24 @@ import { Genere } from '../common/genere';
 @Injectable()
 export class MoviesService {
     private _reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
-    
+
     constructor(private http: HttpClient) { }
-    
-    public findMoviesByPage(page: number) : Observable<Movie[]> {
+
+    public findMoviesByPage(page: number): Observable<Movie[]> {
         return this.http.get<Movie[]>('/rest/movie/pages?page='+page, this._reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return Observable.throw( error );
         }));
     }
-    
-    public findMoviesByGenereId(id: number) : Observable<Movie[]> {
+
+    public findMoviesByGenereId(id: number): Observable<Movie[]> {
         return this.http.get<Movie[]>('/rest/movie/genere/id/'+id, this._reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return Observable.throw( error );
         }));
     }
-    
-    public findMovieById(id: number) :Observable<Movie> {
+
+    public findMovieById(id: number): Observable<Movie> {
         if(!id && id !== 0) {
             return of(null);
         }
@@ -48,7 +48,7 @@ export class MoviesService {
             }));
     }
 
-    public deleteMovieById(id: number) :Observable<boolean> {
+    public deleteMovieById(id: number): Observable<boolean> {
         if(!id && id !== 0) {
             return of(false);
         }
@@ -57,8 +57,8 @@ export class MoviesService {
             return Observable.throw( error );
         }));
     }
-    
-    public findMovieByTitle(title: string) :Observable<Movie[]> {
+
+    public findMovieByTitle(title: string): Observable<Movie[]> {
         if(!title) {
             return of([]);
         }
@@ -67,8 +67,8 @@ export class MoviesService {
             return Observable.throw( error );
             }));
     }
-    
-    public importMoveByTitle(title: string) :Observable<Movie[]> {
+
+    public importMoveByTitle(title: string): Observable<Movie[]> {
         if(!title) {
             return of([]);
         }
@@ -77,10 +77,10 @@ export class MoviesService {
             return Observable.throw( error );
             }));
     }
-    
-    public importMoveByTitleAndId(title: string, id: number) :Observable<boolean> {
+
+    public importMoveByTitleAndId(title: string, id: number): Observable<boolean> {
         if(!title) {
-            console.log("title: "+title+" id: "+id);
+            console.log('title: '+title+' id: '+id);
             return of(false);
         }
         return this.http.get<boolean>('/rest/movie/import/'+title+'/number/'+id, this._reqOptionsArgs).pipe(catchError(error => {

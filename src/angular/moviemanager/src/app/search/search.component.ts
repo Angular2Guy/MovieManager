@@ -18,9 +18,9 @@ import { ActorsService } from '../services/actors.service';
 import { MoviesService } from '../services/movies.service';
 import { UsersService } from '../services/users.service';
 import { Observable } from 'rxjs';
-import { FormControl } from "@angular/forms";
+import { FormControl } from '@angular/forms';
 import { map, tap, debounceTime, distinctUntilChanged, switchMap, flatMap } from 'rxjs/operators';
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component( {
@@ -47,12 +47,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
     scMoviesPageEnd = 1;
     @ViewChild('movies') moviesRef: ElementRef;
     loading = false;
-    allMoviesLoaded = false;    
+    allMoviesLoaded = false;
     private actorListOffset = 0;
-    
 
-    constructor( private actorService: ActorsService, 
-            private movieService: MoviesService, 
+
+    constructor( private actorService: ActorsService,
+            private movieService: MoviesService,
             private userService: UsersService,
             private route: ActivatedRoute,
             private router: Router) { }
@@ -83,21 +83,21 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
 
     @HostListener( 'window:scroll' ,['$event'])
-    scroll($event: any) {        
+    scroll($event: any) {
         const ypos = window.pageYOffset + window.innerHeight;
-        const contentHeight = this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;        
+        const contentHeight = this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;
         if(ypos >= contentHeight) {
             this.fetchMore();
         }
     }
-    
+
     fetchMore() {
-        if (this.allMoviesLoaded || this.loading) return;
+        if (this.allMoviesLoaded || this.loading) {return;}
         this.loading = true;
         this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {
             if(res.length > 0) {
                 this.scrollMovies = this.scrollMovies.concat( res );
-                this.scMoviesPageEnd += 1;                           
+                this.scMoviesPageEnd += 1;
             } else {
                 this.allMoviesLoaded = true;
             }
@@ -114,15 +114,15 @@ export class SearchComponent implements OnInit, AfterViewInit {
     private initScrollMovies() {
         this.loading = false;
         this.allMoviesLoaded = false;
-        this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {                
+        this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {
             this.scrollMovies = this.scrollMovies.concat( res );
             this.scMoviesPageEnd += 1;
         } );
     }
-    
+
     importMovie() {
         this.importMoviesLoading = true;
-        let myTitle = this.importMovieTitle.value.replace( / /g, '+' );
+        const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
         this.movieService.importMoveByTitle( myTitle ).subscribe( m => {
             this.importMovies = this.addNums( m );
             this.importMoviesLoading = false;
@@ -139,10 +139,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
     importSelMovie( movie: Movie ) {
         this.importMoviesLoading = true;
         this.importMovies = [];
-        let myTitle = this.importMovieTitle.value.replace( / /g, '+' );
+        const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
         this.movieService.importMoveByTitleAndId( myTitle, movie.num ).subscribe( imported => {
             if ( imported )
-                this.importMoviesLoading = false;
+                {this.importMoviesLoading = false;}
         } );
     }
 
@@ -162,7 +162,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
             this.moviesByGenLoading = false;
         } );
     }
-    
+
     movieDetails(movie: Movie) {
         this.router.navigateByUrl('movie/'+movie.id);
     }

@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Observable,of } from "rxjs";
+import { Observable,of } from 'rxjs';
 import { Actor } from '../common/actor';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -19,10 +19,10 @@ import { catchError, map, tap } from 'rxjs/operators';
 @Injectable()
 export class ActorsService {
   private _reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
-  
+
   constructor(private http: HttpClient) { }
 
-  public findActorById(id: number) :Observable<Actor> {
+  public findActorById(id: number): Observable<Actor> {
       if(!id && id !== 0) {
           return of(null);
       }
@@ -31,8 +31,8 @@ export class ActorsService {
           return Observable.throw( error );
           }));
   }
-  
-  public findActorByName(name: string) :Observable<Actor[]> {
+
+  public findActorByName(name: string): Observable<Actor[]> {
       if(!name) {
           return of([]);
       }

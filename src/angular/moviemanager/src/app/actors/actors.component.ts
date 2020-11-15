@@ -23,7 +23,7 @@ import { ActorsService } from '../services/actors.service';
 export class ActorsComponent implements OnInit {
 
   actor: Actor = null;
-    
+
   constructor(private route: ActivatedRoute, private router: Router, private actorService: ActorsService) { }
 
   ngOnInit() {
