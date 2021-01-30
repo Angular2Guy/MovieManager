@@ -11,6 +11,7 @@
     "test-local": "ng test --browsers Chromium --watch=true",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "postinstall": "ngcc",
     "prebuild": "rimraf ./dist && mkdirp ./dist",
     "postbuild": "npm run deploy",
     "predeploy": "rimraf ../../main/resources/static/*",
@@ -31,7 +32,7 @@
     "core-js": "^2.5.7",
     "jquery": "^3.5.0",
     "popper.js": "^1.16.0",
-    "rxjs": "^6.5.4",
+    "rxjs": "^6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.3"
   },
