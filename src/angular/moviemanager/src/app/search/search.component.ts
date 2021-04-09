@@ -30,6 +30,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 } )
 export class SearchComponent implements OnInit, AfterViewInit {
 
+    @ViewChild('movies') moviesRef: ElementRef;
     generes: Genere[];
     movieTitle = new FormControl();
     movies: Observable<Movie[] | Observable<Movie[]>>;
@@ -45,7 +46,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     moviesByGenLoading = false;
     scrollMovies: Movie[] = [];
     scMoviesPageEnd = 1;
-    @ViewChild('movies') moviesRef: ElementRef;
     loading = false;
     allMoviesLoaded = false;
     private actorListOffset = 0;
@@ -56,6 +56,55 @@ export class SearchComponent implements OnInit, AfterViewInit {
             private userService: UsersService,
             private route: ActivatedRoute,
             private router: Router) { }
+
+	@HostListener( 'window:scroll' ,['$event'])
+    scroll($event: any) {
+        const ypos = window.pageYOffset + window.innerHeight;
+        const contentHeight = !this.moviesRef ? 100000000 : this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;
+        if(ypos >= contentHeight) {
+            this.fetchMore();
+        }
+    }
+
+	importMovie() {
+        this.importMoviesLoading = true;
+        const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
+        this.movieService.importMoveByTitle( myTitle ).subscribe( m => {
+            this.importMovies = this.addNums( m );
+            this.importMoviesLoading = false;
+        } );
+    }
+
+	importSelMovie( movie: Movie ) {
+        this.importMoviesLoading = true;
+        this.importMovies = [];
+        const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
+        this.movieService.importMoveByTitleAndId( myTitle, movie.num ).subscribe( imported => {
+            if ( imported )
+                {this.importMoviesLoading = false;}
+        } );
+    }
+
+    dropDown() {
+        this.showMenu = !this.showMenu;
+        if ( this.moviesByGenere.length > 0 ) {
+            this.showMenu = false;
+        }
+        this.moviesByGenere = [];
+    }
+
+    showGenere( id: number ) {
+        this.showMenu = false;
+        this.moviesByGenLoading = true;
+        this.movieService.findMoviesByGenereId( id ).subscribe( res => {
+            this.moviesByGenere = res;
+            this.moviesByGenLoading = false;
+        } );
+    }
+
+    movieDetails(movie: Movie) {
+        this.router.navigateByUrl('movie/'+movie.id);
+    }
 
     ngOnInit() {
         this.actors = this.movieActor.valueChanges.pipe(
@@ -80,15 +129,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         this.actorListOffset = this.moviesRef.nativeElement.getBoundingClientRect().y;
-    }
-
-    @HostListener( 'window:scroll' ,['$event'])
-    scroll($event: any) {
-        const ypos = window.pageYOffset + window.innerHeight;
-        const contentHeight = this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;
-        if(ypos >= contentHeight) {
-            this.fetchMore();
-        }
     }
 
     fetchMore() {
@@ -120,50 +160,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
         } );
     }
 
-    importMovie() {
-        this.importMoviesLoading = true;
-        const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
-        this.movieService.importMoveByTitle( myTitle ).subscribe( m => {
-            this.importMovies = this.addNums( m );
-            this.importMoviesLoading = false;
-        } );
-    }
-
     private addNums( movies: Movie[] ): Movie[] {
         for ( let i = 0; i < movies.length; i++ ) {
             movies[i].num = i;
         }
         return movies;
-    }
-
-    importSelMovie( movie: Movie ) {
-        this.importMoviesLoading = true;
-        this.importMovies = [];
-        const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
-        this.movieService.importMoveByTitleAndId( myTitle, movie.num ).subscribe( imported => {
-            if ( imported )
-                {this.importMoviesLoading = false;}
-        } );
-    }
-
-    dropDown() {
-        this.showMenu = !this.showMenu;
-        if ( this.moviesByGenere.length > 0 ) {
-            this.showMenu = false;
-        }
-        this.moviesByGenere = [];
-    }
-
-    showGenere( id: number ) {
-        this.showMenu = false;
-        this.moviesByGenLoading = true;
-        this.movieService.findMoviesByGenereId( id ).subscribe( res => {
-            this.moviesByGenere = res;
-            this.moviesByGenLoading = false;
-        } );
-    }
-
-    movieDetails(movie: Movie) {
-        this.router.navigateByUrl('movie/'+movie.id);
     }
 }
