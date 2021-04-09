@@ -11,17 +11,16 @@
    limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Observable,of } from 'rxjs';
-import { Actor } from '../common/actor';
+import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { User } from '../common/user';
 import { Genere } from '../common/genere';
 
 @Injectable()
 export class UsersService {
-  private _reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
   public loggedIn = false;
+  private reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
 
   constructor(private http: HttpClient) { }
 
@@ -32,7 +31,7 @@ export class UsersService {
       const u = new User();
       u.username = login;
       u.password = password;
-      return this.http.post<boolean>('/rest/user/login', u, this._reqOptionsArgs).pipe(catchError(error => {
+      return this.http.post<boolean>('/rest/user/login', u, this.reqOptionsArgs).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return of(false);
           }));
@@ -46,16 +45,16 @@ export class UsersService {
       u.username = login;
       u.password = password;
       u.moviedbkey = movieDbKey;
-      return this.http.post<boolean>('/rest/user/signin', u, this._reqOptionsArgs).pipe(catchError(error => {
+      return this.http.post<boolean>('/rest/user/signin', u, this.reqOptionsArgs).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return of(false);
           }));
   }
 
   public allGeneres(): Observable<Genere[]> {
-      return this.http.get<Genere[]>('/rest/user/genere', this._reqOptionsArgs).pipe(catchError(error => {
+      return this.http.get<Genere[]>('/rest/user/genere', this.reqOptionsArgs).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
-          return Observable.throw( error );
+          return throwError( error );
       }));
   }
 }

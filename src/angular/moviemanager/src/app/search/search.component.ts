@@ -19,7 +19,7 @@ import { MoviesService } from '../services/movies.service';
 import { UsersService } from '../services/users.service';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { map, tap, debounceTime, distinctUntilChanged, switchMap, flatMap } from 'rxjs/operators';
+import { tap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
@@ -120,7 +120,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
             switchMap( title => this.movieService.findMovieByTitle( title ) ),
             tap(() => this.moviesLoading = false ) );
         this.userService.allGeneres().subscribe( res => this.generes = res );
-        this.route.url.subscribe(res => {
+        this.route.url.subscribe(() => {
             if(this.userService.loggedIn) {
                 this.initScrollMovies();
             }

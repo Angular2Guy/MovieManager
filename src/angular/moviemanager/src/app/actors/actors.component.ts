@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Actor } from '../common/actor';
 import { ActorsService } from '../services/actors.service';
 
@@ -24,7 +24,7 @@ export class ActorsComponent implements OnInit {
 
   actor: Actor = null;
 
-  constructor(private route: ActivatedRoute, private router: Router, private actorService: ActorsService) { }
+  constructor(private route: ActivatedRoute, private actorService: ActorsService) { }
 
   ngOnInit() {
       this.actorService.findActorById(Number(this.route.snapshot.paramMap.get('id')))

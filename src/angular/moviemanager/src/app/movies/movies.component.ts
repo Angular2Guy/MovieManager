@@ -12,7 +12,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { MoviesService } from '../services/movies.service';
-import {ActivatedRoute, Router, ParamMap } from '@angular/router';
+import {ActivatedRoute, Router } from '@angular/router';
 import { Movie } from '../common/movie';
 
 @Component({
