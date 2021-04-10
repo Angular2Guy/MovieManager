@@ -16,7 +16,19 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 	<changeSet author="angular2guy" id="1">
+		<preConditions onFail="MARK_RAN">
+        	<not>
+				<sequenceExists sequenceName="hibernate_sequence" />
+        	</not>
+        </preConditions>        
 		<createSequence sequenceName="hibernate_sequence" startValue="1000" />
+	</changeSet>
+	<changeSet author="angular2guy" id="2">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="movie"/>
+            </not>
+        </preConditions>	
 		<createTable tableName="movie">
 			<column name="id" type="bigint">
 				<constraints primaryKey="true" />
@@ -26,6 +38,14 @@
 			<column name="title" type="varchar(255)" />
 			<column name="movie_id" type="bigint" />
 		</createTable>
+		
+	</changeSet>
+	<changeSet id="3" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="actor"/>
+            </not>
+        </preConditions>
 		<createTable tableName="actor">
 			<column name="id" type="bigint">
 				<constraints primaryKey="true" />
@@ -37,7 +57,14 @@
 			<column name="deathday" type="timestamp" />
 			<column name="biography" type="clob" />
 			<column name="place_of_birth" type="varchar(1024)" />
-		</createTable>		
+		</createTable>			
+	</changeSet>
+	<changeSet id="4" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="cast1"/>
+            </not>
+        </preConditions>
 		<createTable tableName="cast1">
 			<column name="id" type="bigint">
 				<constraints primaryKey="true" />
@@ -47,6 +74,13 @@
 			<column name="movie_id" type="bigint" />
 			<column name="actor_id" type="bigint" />
 		</createTable>
+	</changeSet>
+	<changeSet id="5" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="genere"/>
+            </not>
+        </preConditions>
 		<createTable tableName="genere">
 			<column name="id" type="bigint">
 				<constraints primaryKey="true" />
@@ -54,6 +88,13 @@
 			<column name="genere_id" type="bigint" />
 			<column name="name" type="varchar(255)" />
 		</createTable>
+	</changeSet>
+	<changeSet id="6" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="movie_genere"/>
+            </not>
+        </preConditions>
 		<createTable tableName="movie_genere">
 			<column name="genere_id" type="bigint">
 				<constraints nullable="false"
@@ -64,6 +105,13 @@
 					foreignKeyName="fk_movie_id1" references="movie(id)" />
 			</column>
 		</createTable>
+	</changeSet>
+	<changeSet id="7" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="user1"/>
+            </not>
+        </preConditions>	
 		<createTable tableName="user1">
 			<column name="id" type="bigint">
 				<constraints primaryKey="true" />
@@ -73,6 +121,13 @@
 			<column name="moviedbkey" type="varchar(255)" />
 			<column name="roles" type="varchar(255)" />
 		</createTable>
+	</changeSet>
+	<changeSet id="8" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="movie_user"/>
+            </not>
+        </preConditions>	
 		<createTable tableName="movie_user">
 			<column name="user_id" type="bigint">
 				<constraints nullable="false"
@@ -83,6 +138,13 @@
 					foreignKeyName="fk_movie_id2" references="movie(id)" />
 			</column>
 		</createTable>
+	</changeSet>
+	<changeSet id="9" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="actor_user"/>
+            </not>
+        </preConditions>
 		<createTable tableName="actor_user">
 			<column name="actor_id" type="bigint">
 				<constraints nullable="false"
@@ -93,11 +155,45 @@
 					foreignKeyName="fk_user_id2" references="user1(id)" />
 			</column>
 		</createTable>
+	</changeSet>
+	<changeSet id="10" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+            	<indexExists tableName="movie" indexName="ix_movie_title"/>                
+            </not>
+        </preConditions>
 		<createIndex indexName="ix_movie_title" tableName="movie">
 			<column name="title" />
 		</createIndex>
+	</changeSet>
+	<changeSet id="11" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="actor" indexName="ix_actor_name"/>
+            </not>
+        </preConditions>		
 		<createIndex indexName="ix_actor_name" tableName="actor">
 			<column name="name" />
 		</createIndex>
 	</changeSet>
+	<changeSet id="12" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="movie_genere" indexName="ix_movie_genere_genere_id"/>
+            </not>
+        </preConditions>		
+		<createIndex indexName="ix_movie_genere_genere_id" tableName="movie_genere">
+			<column name="genere_id" />
+		</createIndex>
+	</changeSet>
+	<changeSet id="13" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="movie_genere" indexName="ix_movie_genere_movie_id"/>
+            </not>
+        </preConditions>		
+		<createIndex indexName="ix_movie_genere_movie_id" tableName="movie_genere">
+			<column name="movie_id" />
+		</createIndex>
+	</changeSet>	
 </databaseChangeLog>
