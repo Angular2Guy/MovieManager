@@ -12,6 +12,7 @@
  */
 package ch.xxx.moviemanager.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -191,7 +192,7 @@ public class MovieManagerService {
 		WrapperGenereDto result = restTemplate.getForObject(
 				"https://api.themoviedb.org/3/genre/movie/list?api_key=" + user.getMoviedbkey() + "&language=en-US",
 				WrapperGenereDto.class);
-		List<Genere> generes = this.crudGenereRep.findAll();
+		List<Genere> generes = new ArrayList<>(this.crudGenereRep.findAll());
 		for (GenereDto g : result.getGenres()) {
 			Genere genereEntity = generes.stream()
 					.filter(myGenere -> myGenere.getGenereId() != null && myGenere.getGenereId().equals(g.getId()))

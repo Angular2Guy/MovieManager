@@ -38,7 +38,7 @@ public class CustomRepository {
     public Optional<Movie> findByMovieId(Long movieId) {    	
     	try {
         	User user = getCurrentUser();
-    		Movie result = em.createQuery("select m from Movie m join m.users u where m.movieid = :movieid and u.id = :userid", Movie.class).setParameter("movieid", movieId).setParameter("userid", user.getId()).getSingleResult();
+    		Movie result = em.createQuery("select m from Movie m join m.users u where m.movieId = :movieid and u.id = :userid", Movie.class).setParameter("movieid", movieId).setParameter("userid", user.getId()).getSingleResult();
     		return Optional.ofNullable(result);
     	} catch(RuntimeException e) {
     		return Optional.empty();
