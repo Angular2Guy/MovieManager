@@ -84,8 +84,8 @@ public class MovieManagerService {
 	}
 
 	public List<GenereDto> allGeneres() {
-		List<GenereDto> result = this.crudGenereRep.findAll().stream()
-				.map(gen -> Converter.convert(gen)).collect(Collectors.toList());
+		List<GenereDto> result = this.crudGenereRep.findAll().stream().map(gen -> Converter.convert(gen))
+				.collect(Collectors.toList());
 		return result;
 	}
 
@@ -130,7 +130,7 @@ public class MovieManagerService {
 		Optional<Actor> result = this.crudActorRep.findById(id);
 		Optional<ActorDto> res = Optional.empty();
 		if (result.isPresent()) {
-			User user = getCurrentUser();			
+			User user = getCurrentUser();
 			List<Cast> casts = result.get().getCasts();
 			List<Cast> myCasts = result.get().getCasts().stream().filter(c -> c.getMovie().getUsers().contains(user))
 					.collect(Collectors.toList());
@@ -142,32 +142,32 @@ public class MovieManagerService {
 		return res;
 	}
 
-	public List<ActorDto> findActor(String name) {			
+	public List<ActorDto> findActor(String name) {
 		List<ActorDto> result = this.crudActorRep.findByActorName(name, getCurrentUser().getId()).stream()
-			.map(a -> Converter.convert(a)).collect(Collectors.toList());
+				.map(a -> Converter.convert(a)).collect(Collectors.toList());
 //		List<ActorDto> result = this.customRep.findByActorName(name).stream()
 //				.map(a -> Converter.convert(a)).collect(Collectors.toList());
 		return result;
 	}
 
-	public List<MovieDto> findMovie(String title) {		
+	public List<MovieDto> findMovie(String title) {
 		List<MovieDto> result = this.crudMovieRep.findByTitle(title, this.getCurrentUser().getId()).stream()
 				.map(m -> Converter.convert(m)).collect(Collectors.toList());
 		return result;
 	}
 
 	public List<MovieDto> findMoviesByPage(Integer page) {
-		List<MovieDto> result = this.customRep.findMoviesByPage(page).stream()
-				.map(m -> Converter.convert(m)).collect(Collectors.toList());
+		List<MovieDto> result = this.customRep.findMoviesByPage(page).stream().map(m -> Converter.convert(m))
+				.collect(Collectors.toList());
 		return result;
 	}
-	
+
 	public List<ActorDto> findActorsByPage(Integer page) {
-		List<ActorDto> result = this.customRep.findActorsByPage(page).stream()
-				.map(a -> Converter.convert(a)).collect(Collectors.toList());
+		List<ActorDto> result = this.customRep.findActorsByPage(page).stream().map(a -> Converter.convert(a))
+				.collect(Collectors.toList());
 		return result;
 	}
-	
+
 	public List<MovieDto> findImportMovie(String title) {
 		User user = this.crudUserRep
 				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
@@ -187,14 +187,19 @@ public class MovieManagerService {
 				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 		LOG.info("Start import");
 		RestTemplate restTemplate = new RestTemplate();
-		if (this.crudGenereRep.findAll().isEmpty()) {
-			LOG.info("Start import generes");
-			WrapperGenereDto result = restTemplate.getForObject(
-					"https://api.themoviedb.org/3/genre/movie/list?api_key=" + user.getMoviedbkey() + "&language=en-US",
-					WrapperGenereDto.class);
-			for (GenereDto g : result.getGenres()) {
-				Genere genereEntity = Converter.convert(g);
-				this.crudGenereRep.save(genereEntity);
+		LOG.info("Start import generes");
+		WrapperGenereDto result = restTemplate.getForObject(
+				"https://api.themoviedb.org/3/genre/movie/list?api_key=" + user.getMoviedbkey() + "&language=en-US",
+				WrapperGenereDto.class);
+		List<Genere> generes = this.crudGenereRep.findAll();
+		for (GenereDto g : result.getGenres()) {
+			Genere genereEntity = generes.stream()
+					.filter(myGenere -> myGenere.getGenereId() != null && myGenere.getGenereId().equals(g.getId()))
+					.findFirst().orElse(Converter.convert(g));
+			if (genereEntity.getId() == null) {
+				genereEntity = crudGenereRep.save(genereEntity);
+				generes.add(genereEntity);
+
 			}
 		}
 		LOG.info("Start import Movie");
@@ -217,9 +222,11 @@ public class MovieManagerService {
 				LOG.info("creating new Movie");
 				movieEntity = Converter.convert(wrMovie.getResults()[number]);
 				for (int genId : wrMovie.getResults()[number].getGeneres()) {
-					Optional<Genere> result = this.customRep.findByGenereId(genId);
-					if (result.isPresent()) {
-						movieEntity.getGeneres().add(result.get());
+					Optional<Genere> myResult = generes.stream().filter(
+							myGenere -> Long.valueOf(Integer.valueOf(genId).longValue()).equals(myGenere.getGenereId()))
+							.findFirst();
+					if (myResult.isPresent()) {
+						movieEntity.getGeneres().add(myResult.get());
 					}
 				}
 				this.crudMovieRep.save(movieEntity);
@@ -240,12 +247,12 @@ public class MovieManagerService {
 				castEntity.setMovie(movieEntity);
 				ActorDto actor = restTemplate.getForObject("https://api.themoviedb.org/3/person/" + c.getId()
 						+ "?api_key=" + user.getMoviedbkey() + "&language=en-US", ActorDto.class);
-				Optional<Actor> actorOpt = this.customRep.findByActorId(actor.getId().intValue());
+				Optional<Actor> actorOpt = this.customRep.findByActorId(actor.getId());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : Converter.convert(actor);
 				actorEntity.getCasts().add(castEntity);
-				castEntity.setActor(actorEntity);						
+				castEntity.setActor(actorEntity);
 				this.crudCastRep.save(castEntity);
-				if (!actorOpt.isPresent()) {
+				if (actorOpt.isEmpty()) {
 					actorEntity.getUsers().add(user);
 					this.crudActorRep.save(actorEntity);
 				}
@@ -256,7 +263,7 @@ public class MovieManagerService {
 				LOG.info("update cast for movie");
 				ActorDto actor = restTemplate.getForObject("https://api.themoviedb.org/3/person/" + c.getId()
 						+ "?api_key=" + user.getMoviedbkey() + "&language=en-US", ActorDto.class);
-				Optional<Actor> actorOpt = this.customRep.findByActorId(actor.getId().intValue());
+				Optional<Actor> actorOpt = this.customRep.findByActorId(actor.getId());
 				Actor actorEntity = actorOpt.get();
 				if (!actorEntity.getUsers().contains(user)) {
 					actorEntity.getUsers().add(user);

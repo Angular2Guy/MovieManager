@@ -25,39 +25,39 @@ public class Converter {
 	public static MovieDto convert(Movie entity) {
 		MovieDto dto = convertMovie(entity);
 		entity.getCast().forEach(c -> {
-			CastDto castDto = convert(c, true); 
+			CastDto castDto = convert(c, true);
 			dto.getMyCast().add(castDto);
-		});		
+		});
 		return dto;
 	}
-	
+
 	public static ActorDto convert(Actor entity) {
 		ActorDto dto = convertActor(entity);
 		entity.getCasts().forEach(c -> {
 			CastDto castDto = convert(c, false);
-			dto.getMyCasts().add(castDto);			
+			dto.getMyCasts().add(castDto);
 		});
 		return dto;
 	}
-	
+
 	public static GenereDto convert(Genere entity) {
 		GenereDto dto = new GenereDto();
 		dto.setId(entity.getGenereId());
 		dto.setName(entity.getName());
 		return dto;
 	}
-	
+
 	private static CastDto convert(Cast entity, boolean fromMovie) {
 		CastDto dto = new CastDto();
 		dto.setCharacter(entity.getMovieChar());
 		dto.setName(entity.getCharacterName());
-		if(fromMovie) 
+		if (fromMovie)
 			dto.setMyActor(convertActor(entity.getActor()));
-		else 
+		else
 			dto.setMyMovie(convertMovie(entity.getMovie()));
 		return dto;
 	}
-	
+
 	private static MovieDto convertMovie(Movie entity) {
 		MovieDto dto = new MovieDto();
 		dto.setId(entity.getId());
@@ -71,7 +71,7 @@ public class Converter {
 		});
 		return dto;
 	}
-	
+
 	private static ActorDto convertActor(Actor entity) {
 		ActorDto dto = new ActorDto();
 		dto.setBiography(entity.getBiography());
@@ -84,14 +84,14 @@ public class Converter {
 		dto.setActorId(entity.getActorId());
 		return dto;
 	}
-	
+
 	public static Genere convert(GenereDto dto) {
 		Genere entity = new Genere();
 		entity.setName(dto.getName());
 		entity.setGenereId(dto.getId());
 		return entity;
 	}
-	
+
 	public static Movie convert(MovieDto dto) {
 		Movie entity = new Movie();
 		entity.setOverview(dto.getOverview());
@@ -100,17 +100,18 @@ public class Converter {
 		entity.setMovieId(dto.getId());
 		return entity;
 	}
-	
+
 	public static Cast convert(CastDto dto) {
 		Cast entity = new Cast();
 		entity.setCharacterName(dto.getName());
 		entity.setMovieChar(dto.getCharacter());
 		return entity;
 	}
-	
+
 	public static Actor convert(ActorDto dto) {
 		Actor entity = new Actor();
-		entity.setActorId(dto.getActorId() == 0 ? dto.getId().intValue() : dto.getActorId());
+		entity.setActorId(
+				dto.getActorId() == null || dto.getActorId() == 0 ? dto.getId().intValue() : dto.getActorId());
 		entity.setBiography(dto.getBiography());
 		entity.setBirthday(dto.getBirthday());
 		entity.setDeathday(dto.getDeathday());

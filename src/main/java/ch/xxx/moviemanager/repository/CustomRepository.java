@@ -45,7 +45,7 @@ public class CustomRepository {
     	}
     }
     
-    public Optional<Actor> findByActorId(int actorId) {
+    public Optional<Actor> findByActorId(Long actorId) {
     	Optional<Actor> result;
     	try {
     		User user = getCurrentUser();
@@ -53,17 +53,6 @@ public class CustomRepository {
     		result = Optional.of(res);
     	}catch(NoResultException e) {
     		result  = Optional.empty();
-    	}
-    	return result;
-    }
-    
-    public Optional<Genere> findByGenereId(int genereId) {
-    	Optional<Genere> result;
-    	try {    		
-    		Genere res = em.createQuery("select g from Genere g where g.genereId = :genereId",Genere.class).setParameter("genereId", genereId).getSingleResult();
-    		result = Optional.of(res);
-    	} catch(NoResultException e) {
-    		result = Optional.empty();
     	}
     	return result;
     }
