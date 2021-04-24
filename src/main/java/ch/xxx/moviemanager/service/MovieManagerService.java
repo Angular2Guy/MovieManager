@@ -227,9 +227,10 @@ public class MovieManagerService {
 							.findFirst();
 					if (myResult.isPresent()) {
 						movieEntity.getGeneres().add(myResult.get());
+						myResult.get().getMovies().add(movieEntity);
 					}
 				}
-				this.crudMovieRep.save(movieEntity);
+				movieEntity = this.crudMovieRep.save(movieEntity);
 			}
 		}
 		if (!movieEntity.getUsers().contains(user)) {
@@ -249,13 +250,13 @@ public class MovieManagerService {
 						+ "?api_key=" + user.getMoviedbkey() + "&language=en-US", ActorDto.class);
 				Optional<Actor> actorOpt = this.customRep.findByActorId(actor.getId());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : Converter.convert(actor);
+				castEntity = this.crudCastRep.save(castEntity);
+				if (actorOpt.isEmpty()) {
+					actorEntity = this.crudActorRep.save(actorEntity);
+					actorEntity.getUsers().add(user);
+				}
 				actorEntity.getCasts().add(castEntity);
 				castEntity.setActor(actorEntity);
-				this.crudCastRep.save(castEntity);
-				if (actorOpt.isEmpty()) {
-					actorEntity.getUsers().add(user);
-					this.crudActorRep.save(actorEntity);
-				}
 				Thread.sleep(300);
 			}
 		} else {
@@ -270,7 +271,7 @@ public class MovieManagerService {
 				}
 				Thread.sleep(300);
 			}
-		}
+		}	
 		return true;
 	}
 
