@@ -111,7 +111,7 @@ public class MovieManagerService {
 		try {
 			User user = getCurrentUser();
 			Optional<Movie> movieOpt = this.crudMovieRep.findById(id);
-			if (movieOpt.isPresent()) {
+			if (movieOpt.isPresent() && movieOpt.get().getUsers().contains(user)) {
 				Movie movie = movieOpt.get();
 				movie.getUsers().remove(user);
 				if (movie.getUsers().isEmpty()) {
