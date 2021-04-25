@@ -15,16 +15,20 @@ package ch.xxx.moviemanager.repository;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import ch.xxx.moviemanager.model.Actor;
 
-public interface CrudActorRepository extends JpaRepository<Actor,Long>{
+public interface CrudActorRepository extends PagingAndSortingRepository<Actor,Long>{
 	@Query("select a from Actor a join a.users u where lower(a.name) like lower(concat('%',:name,'%')) and u.id = :userid order by a.name")
 	List<Actor> findByActorName(@Param("name") String name, @Param("userid") Long userId);
 	
 	@Query("select a from Actor a join a.users u where a.actorId = :actorId and u.id = :userid")
 	Optional<Actor> findByActorId(Long actorId, Long userId);
+	
+	@Query("select a from Actor a join a.users u where u.id = :userId order by a.name")
+	List<Actor> findActorsByPage(Long userId, Pageable pageble);
 }

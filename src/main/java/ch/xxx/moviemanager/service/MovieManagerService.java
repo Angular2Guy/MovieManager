@@ -110,16 +110,19 @@ public class MovieManagerService {
 		boolean result = true;
 		try {
 			User user = getCurrentUser();
-			Movie movie = this.crudMovieRep.getOne(id);
-			movie.getUsers().remove(user);
-			if (movie.getUsers().isEmpty()) {
-				for (Cast c : movie.getCast()) {
-					c.getActor().getCasts().remove(c);
-					if (c.getActor().getCasts().isEmpty()) {
-						this.crudActorRep.deleteById(c.getActor().getId());
+			Optional<Movie> movieOpt = this.crudMovieRep.findById(id);
+			if (movieOpt.isPresent()) {
+				Movie movie = movieOpt.get();
+				movie.getUsers().remove(user);
+				if (movie.getUsers().isEmpty()) {
+					for (Cast c : movie.getCast()) {
+						c.getActor().getCasts().remove(c);
+						if (c.getActor().getCasts().isEmpty()) {
+							this.crudActorRep.deleteById(c.getActor().getId());
+						}
 					}
+					this.crudMovieRep.deleteById(id);
 				}
-				this.crudMovieRep.deleteById(id);
 			}
 		} catch (RuntimeException re) {
 			result = false;
@@ -272,7 +275,7 @@ public class MovieManagerService {
 				}
 				Thread.sleep(300);
 			}
-		}	
+		}
 		return true;
 	}
 

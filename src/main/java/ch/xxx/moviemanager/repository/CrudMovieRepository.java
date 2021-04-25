@@ -16,14 +16,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import ch.xxx.moviemanager.model.Movie;
-import ch.xxx.moviemanager.model.User;
 
-public interface CrudMovieRepository extends JpaRepository<Movie,Long>{
+public interface CrudMovieRepository extends PagingAndSortingRepository<Movie,Long>{
 
 	@Query("select e from Movie e join e.users u where lower(e.title) like lower(concat('%',:title,'%')) and u.id = :userid order by e.title")
 	List<Movie> findByTitle(@Param("title") String title, @Param("userid") Long userid);
@@ -34,6 +34,9 @@ public interface CrudMovieRepository extends JpaRepository<Movie,Long>{
 	@Query("select e from Movie e join e.users u where lower(e.title) like lower(concat('%',:title,'%')) and e.releaseDate = :relDate and u.id = :userid order by e.title")
 	List<Movie> findByTitleAndRelDate(@Param("title") String title, @Param("relDate") Date releaseDate, @Param("userid") Long userid);
 	
-	@Query("select m from Movie m join m.users u where m.movieId = :movieid and u.id = :userId")
+	@Query("select m from Movie m join m.users u where m.movieId = :movieId and u.id = :userId")
 	Optional<Movie> findByMovieId(Long movieId, Long userId);
+	
+	@Query("select m from Movie m join m.users u where u.id = :userId order by m.title")
+	List<Movie> findMoviesByPage(Long userId, Pageable pageable);
 }

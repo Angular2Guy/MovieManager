@@ -15,8 +15,7 @@ package ch.xxx.moviemanager.repository;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
@@ -29,14 +28,12 @@ public class CustomRepository {
 	private final CrudUserRepository crudUserRep;
 	private final CrudActorRepository crudActorRepository;
 	private final CrudMovieRepository crudMovieRepository;
-	private final EntityManager entityManager;
 
 	public CustomRepository(CrudUserRepository crudUserRep, CrudActorRepository crudActorRepository,
-			CrudMovieRepository crudMovieRepository, EntityManager entityManager) {
+			CrudMovieRepository crudMovieRepository) {
 		this.crudActorRepository = crudActorRepository;
 		this.crudMovieRepository = crudMovieRepository;
 		this.crudUserRep = crudUserRep;
-		this.entityManager = entityManager;
 	}
 
 	public Optional<Movie> findByMovieId(Long movieId) {
@@ -51,18 +48,12 @@ public class CustomRepository {
 
 	public List<Movie> findMoviesByPage(int page) {
 		User user = getCurrentUser();
-		List<Movie> movies = this.entityManager
-				.createQuery("select m from Movie m join m.users u where u.id = :userid order by m.title", Movie.class)
-				.setParameter("userid", user.getId()).setFirstResult(10 * (page - 1)).setMaxResults(10).getResultList();
-		return movies;
+		return this.crudMovieRepository.findMoviesByPage(user.getId(), PageRequest.of((10 * (page - 1)), 10));
 	}
 
 	public List<Actor> findActorsByPage(int page) {
 		User user = getCurrentUser();
-		List<Actor> actors = this.entityManager
-				.createQuery("select a from Actor a join a.users u where u.id = :userid order by a.name", Actor.class)
-				.setParameter("userid", user.getId()).setFirstResult(10 * (page - 1)).setMaxResults(10).getResultList();
-		return actors;
+		return this.crudActorRepository.findActorsByPage(user.getId(), PageRequest.of((10 * (page - 1)), 10));
 	}
 
 	private User getCurrentUser() {
