@@ -26,7 +26,7 @@ public interface CrudActorRepository extends PagingAndSortingRepository<Actor,Lo
 	@Query("select a from Actor a join a.users u where lower(a.name) like lower(concat('%',:name,'%')) and u.id = :userid order by a.name")
 	List<Actor> findByActorName(@Param("name") String name, @Param("userid") Long userId);
 	
-	@Query("select a from Actor a join a.users u where a.actorId = :actorId and u.id = :userid")
+	@Query("select a from Actor a join a.users u where a.actorId = :actorId and u.id = :userId")
 	Optional<Actor> findByActorId(Long actorId, Long userId);
 	
 	@Query("select a from Actor a join a.users u where u.id = :userId order by a.name")
