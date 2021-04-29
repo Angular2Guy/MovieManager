@@ -48,12 +48,12 @@ public class CustomRepository {
 
 	public List<Movie> findMoviesByPage(int page) {
 		User user = getCurrentUser();
-		return this.crudMovieRepository.findMoviesByPage(user.getId(), PageRequest.of((10 * (page - 1)), 10));
+		return this.crudMovieRepository.findMoviesByPage(user.getId(), PageRequest.of((page - 1), 10));
 	}
 
 	public List<Actor> findActorsByPage(int page) {
 		User user = getCurrentUser();
-		return this.crudActorRepository.findActorsByPage(user.getId(), PageRequest.of((10 * (page - 1)), 10));
+		return this.crudActorRepository.findActorsByPage(user.getId(), PageRequest.of((page - 1), 10));
 	}
 
 	private User getCurrentUser() {
