@@ -80,8 +80,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.importMovies = [];
         const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
         this.movieService.importMovieByTitleAndId( myTitle, movie.num ).subscribe( imported => {
-            if ( imported )
-                {this.importMoviesLoading = false;}
+            if ( imported ) {
+				this.importMoviesLoading = false;
+				this.scMoviesPageEnd = 1;
+				this.initScrollMovies();
+			}
         } );
     }
 
