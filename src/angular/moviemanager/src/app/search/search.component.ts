@@ -69,7 +69,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
 	importMovie() {
         this.importMoviesLoading = true;
         const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
-        this.movieService.importMoveByTitle( myTitle ).subscribe( m => {
+        this.movieService.importMovieByTitle( myTitle ).subscribe( m => {
             this.importMovies = this.addNums( m );
             this.importMoviesLoading = false;
         } );
@@ -79,7 +79,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.importMoviesLoading = true;
         this.importMovies = [];
         const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
-        this.movieService.importMoveByTitleAndId( myTitle, movie.num ).subscribe( imported => {
+        this.movieService.importMovieByTitleAndId( myTitle, movie.num ).subscribe( imported => {
             if ( imported )
                 {this.importMoviesLoading = false;}
         } );

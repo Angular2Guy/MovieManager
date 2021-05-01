@@ -67,7 +67,7 @@ export class MoviesService {
             }));
     }
 
-    public importMoveByTitle(title: string): Observable<Movie[]> {
+    public importMovieByTitle(title: string): Observable<Movie[]> {
         if(!title) {
             return of([]);
         }
@@ -77,7 +77,7 @@ export class MoviesService {
             }));
     }
 
-    public importMoveByTitleAndId(title: string, id: number): Observable<boolean> {
+    public importMovieByTitleAndId(title: string, id: number): Observable<boolean> {
         if(!title) {
             console.log('title: '+title+' id: '+id);
             return of(false);
