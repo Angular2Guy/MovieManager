@@ -83,6 +83,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
             if ( imported ) {
 				this.importMoviesLoading = false;
 				this.scMoviesPageEnd = 1;
+				this.scrollMovies = [];
 				this.initScrollMovies();
 			}
         } );
