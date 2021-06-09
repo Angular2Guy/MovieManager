@@ -1,0 +1,115 @@
+package ch.xxx.moviemanager.usecase.mapper;
+
+import org.springframework.stereotype.Service;
+
+import ch.xxx.moviemanager.domain.model.Actor;
+import ch.xxx.moviemanager.domain.model.Cast;
+import ch.xxx.moviemanager.domain.model.Genere;
+import ch.xxx.moviemanager.domain.model.Movie;
+import ch.xxx.moviemanager.usecase.model.ActorDto;
+import ch.xxx.moviemanager.usecase.model.CastDto;
+import ch.xxx.moviemanager.usecase.model.GenereDto;
+import ch.xxx.moviemanager.usecase.model.MovieDto;
+
+@Service
+public class DefaultMapper {
+
+	public MovieDto convert(Movie entity) {
+		MovieDto dto = convertMovie(entity);
+		entity.getCast().forEach(c -> {
+			CastDto castDto = convert(c, true);
+			dto.getMyCast().add(castDto);
+		});
+		return dto;
+	}
+
+	public ActorDto convert(Actor entity) {
+		ActorDto dto = convertActor(entity);
+		entity.getCasts().forEach(c -> {
+			CastDto castDto = convert(c, false);
+			dto.getMyCasts().add(castDto);
+		});
+		return dto;
+	}
+
+	public GenereDto convert(Genere entity) {
+		GenereDto dto = new GenereDto();
+		dto.setId(entity.getGenereId());
+		dto.setName(entity.getName());
+		return dto;
+	}
+
+	private CastDto convert(Cast entity, boolean fromMovie) {
+		CastDto dto = new CastDto();
+		dto.setCharacter(entity.getMovieChar());
+		dto.setName(entity.getCharacterName());
+		if (fromMovie)
+			dto.setMyActor(convertActor(entity.getActor()));
+		else
+			dto.setMyMovie(convertMovie(entity.getMovie()));
+		return dto;
+	}
+
+	private MovieDto convertMovie(Movie entity) {
+		MovieDto dto = new MovieDto();
+		dto.setId(entity.getId());
+		dto.setOverview(entity.getOverview());
+		dto.setReleaseDate(entity.getReleaseDate());
+		dto.setTitle(entity.getTitle());
+		dto.setMovieId(entity.getMovieId());
+		entity.getGeneres().forEach(g -> {
+			GenereDto genereDto = convert(g);
+			dto.getMyGenere().add(genereDto);
+		});
+		return dto;
+	}
+
+	private ActorDto convertActor(Actor entity) {
+		ActorDto dto = new ActorDto();
+		dto.setBiography(entity.getBiography());
+		dto.setBirthday(entity.getBirthday());
+		dto.setDeathday(entity.getDeathday());
+		dto.setGender(entity.getGender());
+		dto.setName(entity.getName());
+		dto.setPlaceOfBirth(entity.getPlaceOfBirth());
+		dto.setId(entity.getId());
+		dto.setActorId(entity.getActorId());
+		return dto;
+	}
+
+	public Genere convert(GenereDto dto) {
+		Genere entity = new Genere();
+		entity.setName(dto.getName());
+		entity.setGenereId(dto.getId());
+		return entity;
+	}
+
+	public Movie convert(MovieDto dto) {
+		Movie entity = new Movie();
+		entity.setOverview(dto.getOverview());
+		entity.setReleaseDate(dto.getReleaseDate());
+		entity.setTitle(dto.getTitle());
+		entity.setMovieId(dto.getId());
+		return entity;
+	}
+
+	public Cast convert(CastDto dto) {
+		Cast entity = new Cast();
+		entity.setCharacterName(dto.getName());
+		entity.setMovieChar(dto.getCharacter());
+		return entity;
+	}
+
+	public Actor convert(ActorDto dto) {
+		Actor entity = new Actor();
+		entity.setActorId(
+				dto.getActorId() == null || dto.getActorId() == 0 ? dto.getId().intValue() : dto.getActorId());
+		entity.setBiography(dto.getBiography());
+		entity.setBirthday(dto.getBirthday());
+		entity.setDeathday(dto.getDeathday());
+		entity.setGender(dto.getGender());
+		entity.setName(dto.getName());
+		entity.setPlaceOfBirth(dto.getPlaceOfBirth());
+		return entity;
+	}
+}
