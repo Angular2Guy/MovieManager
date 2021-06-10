@@ -43,14 +43,15 @@ import ch.xxx.moviemanager.usecase.service.MovieManagerService;
 @RestController
 @RequestMapping("rest/user")
 public class LoginController {
-	@Autowired
-	private AppUserDetailsService auds;
-	@Autowired
-	private MovieManagerService mmService;
-	@Autowired
-	private MovieManagerService service;
+	private final AppUserDetailsService auds;
+	private final MovieManagerService service;
 	private final List<GrantedAuthority> AUTHORITIES = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
 
+	public LoginController(AppUserDetailsService auds, MovieManagerService service) {
+		this.auds = auds;
+		this.service = service;
+	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> postLogin(@RequestBody UserDto userDto) throws InterruptedException {
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -71,7 +72,7 @@ public class LoginController {
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> postSignin(@RequestBody UserDto userDto) throws InterruptedException {
-		if (!this.mmService.saveUser(userDto)) {
+		if (!this.service.saveUser(userDto)) {
 			throw new AccessForbiddenException(userDto.toString());
 		}
 		return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);

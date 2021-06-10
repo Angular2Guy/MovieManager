@@ -16,21 +16,22 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import ch.xxx.moviemanager.adapter.repository.JpaUserRepository;
 import ch.xxx.moviemanager.domain.model.User;
+import ch.xxx.moviemanager.domain.model.UserRepository;
 
 @Service
 public class AppUserDetailsService implements UserDetailsService {
-
-	@Autowired
-	private JpaUserRepository userRepository;
+	private UserRepository userRepository;
+	
+	public AppUserDetailsService(UserRepository userRepository) {
+		this.userRepository = userRepository;
+	}
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -32,8 +32,11 @@ import ch.xxx.moviemanager.usecase.service.MovieManagerService;
 @RestController
 @RequestMapping("rest/actor")
 public class ActorController {
-	@Autowired
-	private MovieManagerService service;
+	private final MovieManagerService service;
+	
+	public ActorController(MovieManagerService service) {
+		this.service = service;
+	}
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ActorDto>> getActorSearch(@PathVariable("name") String name)

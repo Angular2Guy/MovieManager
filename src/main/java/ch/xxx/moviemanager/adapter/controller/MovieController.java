@@ -15,7 +15,6 @@ package ch.xxx.moviemanager.adapter.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +31,11 @@ import ch.xxx.moviemanager.usecase.service.MovieManagerService;
 @RestController
 @RequestMapping("rest/movie")
 public class MovieController {
-	@Autowired
-	private MovieManagerService service;
+	private final MovieManagerService service;
+	
+	public MovieController(MovieManagerService service) {
+		this.service = service;
+	}
 	
 	@RequestMapping(value="/{title}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MovieDto>> getMovieSearch(@PathVariable("title") String titleStr) throws InterruptedException {
