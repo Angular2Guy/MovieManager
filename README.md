@@ -1,8 +1,6 @@
 # MovieManager
 This is a project to manage my movies. It shows howto use Angular with Spring Boot and Jpa. For development it uses a H2 database. For persistent data it uses Postgresql. The databases are initialized and updated with Liquibase.
 
-![Build Status](https://travis-ci.org/Angular2Guy/MovieManager.svg?branch=master)
-
 Author: Sven Loesekann
 
 Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, Postgresql, Liquibase, Jpa, Maven, Java
@@ -13,7 +11,7 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 3. The project manages its users with a login/signin and can import different movies for different users. 
 
 ## Mission Statement
-The project serves as example for the integration of Angular, Spring Boot with Jpa and relational databases in clean architecture. The Angular frontend uses the Ng-Bootstrap components. The backend manages/initialzies the H2/Postgresql databases with Liquibase. The data access is done with Jpa and Spring Repositories. The movies are imported with Spring RestTemplates. 
+The project serves as example for the integration of Angular, Spring Boot with Jpa and relational databases in clean architecture. The Angular frontend uses the Ng-Bootstrap components. The backend manages/initialzies the H2/Postgresql databases with Liquibase. The data access is done with Jpa and Spring Repositories. The movies are imported with Spring RestTemplates. The architecture is checked with ArchUnit in a test. 
 
 ## Postgresql setup
 In the postgresql.sh file are the commands to pull and run Postgresql in a Docker image locally. To build a Jar with Postgresql setup build it with 'mvnw clean install -Dpostgresql=true'. In Eclipse the maven profile 'standalone-postgresql' has to be activated and a run/debug configuration with the VM parameter '-Dspring.profiles.active=prod' has to started. The database will be initialized by Liquibase. The Liquibase scripts are setup with preconditions that the tables/sequences/indexes are only created if they do not exist. 
@@ -31,10 +29,14 @@ Eclipse Oxygen JEE or newer.
 
 Install Eclipse Plugin 'Eclipse Wild Web Developer' of the Eclipse Marketplace.
 
+Install Eclipse Plugin 'Java 16 Support for Eclipse 2021-03' of the Eclipse Marktplace.(free)
+
+Java 16 or newer
+
 Maven 3.3.3 or newer.
 
-Nodejs 12.16.x or newer
+Nodejs 14.15.x or newer
 
-Npm 6.13.x or newer
+Npm 6.14.x or newer
 
-Angular Cli 9 or newer.
+Angular Cli 12 or newer.
