@@ -14,7 +14,9 @@ package ch.xxx.moviemanager.domain.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,9 +47,9 @@ public class Actor {
 	@ManyToMany
 	@JoinTable(name = "actor_user", 
 		joinColumns = @JoinColumn(name = "actor_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-	private List<User> users = new ArrayList<>();
+	private Set<User> users = new HashSet<>();
 	
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		return users;
 	}
 	public Long getActorId() {

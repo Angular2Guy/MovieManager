@@ -12,8 +12,9 @@
  */
 package ch.xxx.moviemanager.domain.model;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,7 +30,7 @@ public class Genere {
 	private Long genereId;
 	private String name;
 	@ManyToMany(mappedBy="generes")
-	private List<Movie> movies = new ArrayList<>();
+	private Set<Movie> movies = new HashSet<>();
 	
 	public Long getGenereId() {
 		return genereId;
@@ -49,10 +50,10 @@ public class Genere {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public List<Movie> getMovies() {
+	public Set<Movie> getMovies() {
 		return movies;
 	}
-	public void setMovies(List<Movie> movies) {
+	public void setMovies(Set<Movie> movies) {
 		this.movies = movies;
 	}
 	

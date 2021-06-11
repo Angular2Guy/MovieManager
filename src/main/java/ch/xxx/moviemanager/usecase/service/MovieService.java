@@ -146,6 +146,11 @@ public class MovieService {
 		return result;
 	}
 
+	public boolean cleanup() {
+		
+		return true;
+	}
+	
 	public boolean importMovie(String title, int number) throws InterruptedException {
 		User user = this.auds.getCurrentUser();
 		LOG.info("Start import");

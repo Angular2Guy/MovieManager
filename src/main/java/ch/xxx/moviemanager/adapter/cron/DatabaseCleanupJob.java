@@ -17,15 +17,27 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import ch.xxx.moviemanager.usecase.service.ActorService;
+import ch.xxx.moviemanager.usecase.service.MovieService;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 
 @Component
 public class DatabaseCleanupJob {
 	private static final Logger LOG = LoggerFactory.getLogger(DatabaseCleanupJob.class);
+	private final ActorService actorService;
+	private final MovieService movieService;
+	
+	public DatabaseCleanupJob(ActorService actorService, MovieService movieService) {
+		this.actorService = actorService;
+		this.movieService = movieService;
+	}
 
 	@Scheduled(cron = "5 0 * * * ?")
 	@SchedulerLock(name = "CleanUp_scheduledTask", lockAtLeastFor = "PT2H", lockAtMostFor = "PT3H")
 	public void dbCleanup() {
-		LOG.info("Cleanup Job");
+		LOG.info("Start cleanup Job");
+		this.movieService.cleanup();
+		this.actorService.cleanup();
+		LOG.info("End cleanup Job");
 	}
 }

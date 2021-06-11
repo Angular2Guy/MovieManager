@@ -43,6 +43,10 @@ public class ActorService {
 		this.auds = auds;
 	}
 	
+	public boolean cleanup() {
+		return true;
+	}
+	
 	public List<ActorDto> findActor(String name) {
 		List<ActorDto> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser().getId()).stream()
 				.map(a -> this.mapper.convert(a)).collect(Collectors.toList());
