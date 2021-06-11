@@ -132,8 +132,7 @@ public class MovieService {
 	}
 
 	public List<MovieDto> findImportMovie(String title) {
-		User user = this.userRep
-				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+		User user = this.auds.getCurrentUser();
 		RestTemplate restTemplate = new RestTemplate();
 		String queryStr = this.createQueryStr(title);
 		WrapperMovieDto wrMovie = restTemplate

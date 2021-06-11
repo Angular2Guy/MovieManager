@@ -40,8 +40,7 @@ import ch.xxx.moviemanager.usecase.service.AppUserDetailsService;
 @RestController
 @RequestMapping("rest/user")
 public class LoginController {
-	private final AppUserDetailsService auds;
-	private final List<GrantedAuthority> AUTHORITIES = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+	private final AppUserDetailsService auds;	
 
 	public LoginController(AppUserDetailsService auds) {
 		this.auds = auds;
@@ -49,20 +48,7 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> postLogin(@RequestBody UserDto userDto) throws InterruptedException {
-		PasswordEncoder encoder = new BCryptPasswordEncoder();
-		try {
-			UserDetails userDetails = this.auds.loadUserByUsername(userDto.getUsername());
-			if (userDto.getUsername().equals(userDetails.getUsername())
-					&& encoder.matches(userDto.getPassword(), userDetails.getPassword())) {
-				Authentication result1 = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
-						userDetails.getPassword(), AUTHORITIES);
-				SecurityContextHolder.getContext().setAuthentication(result1);
-				return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
-			}
-		} catch (UsernameNotFoundException e) {
-			throw new AccessForbiddenException(userDto.toString());
-		}
-		throw new AccessUnauthorizedException(userDto.toString());
+		return new ResponseEntity<Boolean>(this.auds.loginUser(userDto), HttpStatus.ACCEPTED);
 	}
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)

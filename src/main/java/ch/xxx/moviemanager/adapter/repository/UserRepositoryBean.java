@@ -12,6 +12,8 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Repository;
 
 import ch.xxx.moviemanager.domain.model.User;
@@ -25,7 +27,7 @@ public class UserRepositoryBean implements UserRepository {
 		this.jpaUserRepository = jpaUserRepository;
 	}
 	
-	public User findByUsername(String username) {
+	public Optional<User> findByUsername(String username) {
 		return this.jpaUserRepository.findByUsername(username);
 	}
 	

@@ -12,10 +12,12 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.repository.CrudRepository;
 
 import ch.xxx.moviemanager.domain.model.User;
 
 public interface JpaUserRepository extends CrudRepository<User, Long> {
-	User findByUsername(String username);
+	Optional<User> findByUsername(String username);
 }

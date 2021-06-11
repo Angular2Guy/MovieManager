@@ -18,6 +18,9 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +30,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ch.xxx.moviemanager.domain.exceptions.AccessForbiddenException;
+import ch.xxx.moviemanager.domain.exceptions.AccessUnauthorizedException;
 import ch.xxx.moviemanager.domain.model.User;
 import ch.xxx.moviemanager.domain.model.UserRepository;
 import ch.xxx.moviemanager.usecase.model.UserDto;
@@ -34,6 +39,7 @@ import ch.xxx.moviemanager.usecase.model.UserDto;
 @Service
 @Transactional
 public class AppUserDetailsService implements UserDetailsService {
+	private final List<GrantedAuthority> AUTHORITIES = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
 	private final UserRepository userRepository;
 
 	public AppUserDetailsService(UserRepository userRepository) {
@@ -42,10 +48,8 @@ public class AppUserDetailsService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = this.userRepository.findByUsername(username);
-		if (user == null) {
-			throw new UsernameNotFoundException(String.format("The username %s doesn't exist", username));
-		}
+		User user = this.userRepository.findByUsername(username).orElseThrow(
+				() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", username)));
 		List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRoles().split(","))
 				.map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
 		UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(),
@@ -53,15 +57,31 @@ public class AppUserDetailsService implements UserDetailsService {
 		return userDetails;
 	}
 
-	public User getCurrentUser() {
-		return this.userRepository
-				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
-	}
-	
-	public boolean saveUser(UserDto userDto) {
+	public boolean loginUser(UserDto userDto) {
+		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		try {
-			this.loadUserByUsername(userDto.getUsername());
+			UserDetails userDetails = this.loadUserByUsername(userDto.getUsername());
+			if (userDto.getUsername().equals(userDetails.getUsername())
+					&& encoder.matches(userDto.getPassword(), userDetails.getPassword())) {
+				Authentication result1 = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
+						userDetails.getPassword(), AUTHORITIES);
+				SecurityContextHolder.getContext().setAuthentication(result1);
+				return true;
+			}
 		} catch (UsernameNotFoundException e) {
+			throw new AccessForbiddenException(userDto.toString());
+		}
+		throw new AccessUnauthorizedException(userDto.toString());
+	}
+
+	public User getCurrentUser() {
+		final String userName = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+		return this.userRepository.findByUsername(userName).orElseThrow(
+				() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", userName)));
+	}
+
+	public boolean saveUser(UserDto userDto) {
+		if(this.userRepository.findByUsername(userDto.getUsername()).isEmpty()) {
 			PasswordEncoder encoder = new BCryptPasswordEncoder();
 			User user = new User();
 			user.setMoviedbkey(userDto.getMoviedbkey());
