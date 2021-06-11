@@ -22,23 +22,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
 import ch.xxx.moviemanager.domain.model.entity.User;
-import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 
 @Service
 @Transactional
 public class ActorService {
 	private static final Logger LOG = LoggerFactory.getLogger(ActorService.class);
-	private final DefaultMapper mapper;
 	private final ActorRepository actorRep;
 	private final UserDetailsMgmtService auds;
 
-	public ActorService(DefaultMapper mapper, ActorRepository actorRep, UserDetailsMgmtService auds) {
-		this.mapper = mapper;
+	public ActorService(ActorRepository actorRep, UserDetailsMgmtService auds) {
 		this.actorRep = actorRep;
 		this.auds = auds;
 	}
