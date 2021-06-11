@@ -35,9 +35,9 @@ public class ActorService {
 	private static final Logger LOG = LoggerFactory.getLogger(ActorService.class);
 	private final DefaultMapper mapper;
 	private final ActorRepository actorRep;
-	private final AppUserDetailsService auds;
+	private final UserDetailsMgmtService auds;
 
-	public ActorService(DefaultMapper mapper, ActorRepository actorRep, AppUserDetailsService auds) {
+	public ActorService(DefaultMapper mapper, ActorRepository actorRep, UserDetailsMgmtService auds) {
 		this.mapper = mapper;
 		this.actorRep = actorRep;
 		this.auds = auds;

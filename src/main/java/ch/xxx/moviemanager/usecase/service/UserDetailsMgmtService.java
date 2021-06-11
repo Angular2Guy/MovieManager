@@ -38,11 +38,11 @@ import ch.xxx.moviemanager.usecase.model.UserDto;
 
 @Service
 @Transactional
-public class AppUserDetailsService implements UserDetailsService {
-	private final List<GrantedAuthority> AUTHORITIES = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+public class UserDetailsMgmtService implements UserDetailsService {
+	private final List<GrantedAuthority> AUTHORITIES = List.of(new SimpleGrantedAuthority("ROLE_USER"));
 	private final UserRepository userRepository;
 
-	public AppUserDetailsService(UserRepository userRepository) {
+	public UserDetailsMgmtService(UserRepository userRepository) {
 		this.userRepository = userRepository;
 	}
 
