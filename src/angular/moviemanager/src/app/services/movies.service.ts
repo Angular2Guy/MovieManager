@@ -11,11 +11,12 @@
    limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Observable,of } from 'rxjs';
+import { Observable,of, throwError } from 'rxjs';
 import { Actor } from '../common/actor';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Movie } from '../common/movie';
+import { Genere } from '../common/genere';
 
 @Injectable()
 export class MoviesService {
@@ -87,4 +88,10 @@ export class MoviesService {
             return Observable.throw( error );
             }));
     }
+  	public allGeneres(): Observable<Genere[]> {
+      return this.http.get<Genere[]>('rest/movie/generes', this.reqOptionsArgs).pipe(catchError(error => {
+          console.error( JSON.stringify( error ) );
+          return throwError( error );
+      }));
+  	}
 }

@@ -38,18 +38,16 @@ import ch.xxx.moviemanager.domain.exceptions.AccessUnauthorizedException;
 import ch.xxx.moviemanager.usecase.model.GenereDto;
 import ch.xxx.moviemanager.usecase.model.UserDto;
 import ch.xxx.moviemanager.usecase.service.AppUserDetailsService;
-import ch.xxx.moviemanager.usecase.service.MovieManagerService;
+import ch.xxx.moviemanager.usecase.service.MovieService;
 
 @RestController
 @RequestMapping("rest/user")
 public class LoginController {
 	private final AppUserDetailsService auds;
-	private final MovieManagerService service;
 	private final List<GrantedAuthority> AUTHORITIES = Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
 
-	public LoginController(AppUserDetailsService auds, MovieManagerService service) {
+	public LoginController(AppUserDetailsService auds) {
 		this.auds = auds;
-		this.service = service;
 	}
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,16 +70,10 @@ public class LoginController {
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> postSignin(@RequestBody UserDto userDto) throws InterruptedException {
-		if (!this.service.saveUser(userDto)) {
+		if (!this.auds.saveUser(userDto)) {
 			throw new AccessForbiddenException(userDto.toString());
 		}
 		return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
-	}
-	
-	@RequestMapping(value="/genere", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<GenereDto>> getGeneres() throws InterruptedException {
-		List<GenereDto> generes = this.service.allGeneres();		
-		return new ResponseEntity<List<GenereDto>>(generes, HttpStatus.OK);		
 	}
 	
 //	@RequestMapping(value="/updateDB", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

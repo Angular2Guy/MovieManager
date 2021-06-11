@@ -15,7 +15,6 @@ package ch.xxx.moviemanager.adapter.controller;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,14 +26,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
 import ch.xxx.moviemanager.usecase.model.ActorDto;
-import ch.xxx.moviemanager.usecase.service.MovieManagerService;
+import ch.xxx.moviemanager.usecase.service.ActorService;
 
 @RestController
 @RequestMapping("rest/actor")
 public class ActorController {
-	private final MovieManagerService service;
+	private final ActorService service;
 	
-	public ActorController(MovieManagerService service) {
+	public ActorController(ActorService service) {
 		this.service = service;
 	}
 

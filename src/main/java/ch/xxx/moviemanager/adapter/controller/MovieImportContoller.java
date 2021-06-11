@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.usecase.model.MovieDto;
-import ch.xxx.moviemanager.usecase.service.MovieManagerService;
+import ch.xxx.moviemanager.usecase.service.MovieService;
 
 @RestController
 @RequestMapping("rest/movie/import")
 public class MovieImportContoller {
-	private final MovieManagerService service;
+	private final MovieService service;
 	
-	public MovieImportContoller(MovieManagerService service) {
+	public MovieImportContoller(MovieService service) {
 		this.service = service;
 	}
 	

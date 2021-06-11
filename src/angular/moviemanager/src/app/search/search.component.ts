@@ -123,7 +123,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
             tap(() => this.moviesLoading = true ),
             switchMap( title => this.movieService.findMovieByTitle( title ) ),
             tap(() => this.moviesLoading = false ) );
-        this.userService.allGeneres().subscribe( res => this.generes = res );
+        this.movieService.allGeneres().subscribe( res => this.generes = res );
         this.route.url.subscribe(() => {
             if(this.userService.loggedIn) {
                 this.initScrollMovies();

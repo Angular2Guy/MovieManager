@@ -25,15 +25,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
+import ch.xxx.moviemanager.usecase.model.GenereDto;
 import ch.xxx.moviemanager.usecase.model.MovieDto;
-import ch.xxx.moviemanager.usecase.service.MovieManagerService;
+import ch.xxx.moviemanager.usecase.service.MovieService;
 
 @RestController
 @RequestMapping("rest/movie")
 public class MovieController {
-	private final MovieManagerService service;
+	private final MovieService service;
 	
-	public MovieController(MovieManagerService service) {
+	public MovieController(MovieService service) {
 		this.service = service;
 	}
 	
@@ -63,6 +64,12 @@ public class MovieController {
 	public ResponseEntity<List<MovieDto>> getGeneresById(@PathVariable("id") Long id) throws InterruptedException {
 		List<MovieDto> movies = this.service.findMoviesByGenere(id);	
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
+	}
+	
+	@RequestMapping(value="/generes", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<GenereDto>> getGeneres() throws InterruptedException {
+		List<GenereDto> generes = this.service.findAllGeneres();		
+		return new ResponseEntity<List<GenereDto>>(generes, HttpStatus.OK);		
 	}
 	
 	@RequestMapping(value="/pages", params = {"page"}, method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
