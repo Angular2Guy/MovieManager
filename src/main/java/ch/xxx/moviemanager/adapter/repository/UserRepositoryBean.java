@@ -16,8 +16,8 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
-import ch.xxx.moviemanager.domain.model.User;
-import ch.xxx.moviemanager.domain.model.UserRepository;
+import ch.xxx.moviemanager.domain.model.entity.User;
+import ch.xxx.moviemanager.domain.model.entity.UserRepository;
 
 @Repository
 public class UserRepositoryBean implements UserRepository {

@@ -16,8 +16,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import ch.xxx.moviemanager.domain.model.Genere;
-import ch.xxx.moviemanager.domain.model.GenereRepository;
+import ch.xxx.moviemanager.domain.model.entity.Genere;
+import ch.xxx.moviemanager.domain.model.entity.GenereRepository;
 
 @Repository
 public class GenereRepositoryBean implements GenereRepository {

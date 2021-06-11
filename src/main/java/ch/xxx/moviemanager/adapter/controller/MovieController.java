@@ -13,6 +13,7 @@
 package ch.xxx.moviemanager.adapter.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,30 +25,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
-import ch.xxx.moviemanager.usecase.model.GenereDto;
-import ch.xxx.moviemanager.usecase.model.MovieDto;
+import ch.xxx.moviemanager.domain.model.dto.GenereDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieDto;
+import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.MovieService;
 
 @RestController
 @RequestMapping("rest/movie")
 public class MovieController {
 	private final MovieService service;
+	private final DefaultMapper mapper;
 
-	public MovieController(MovieService service) {
+	public MovieController(MovieService service, DefaultMapper mapper) {
 		this.service = service;
+		this.mapper = mapper;
 	}
 
 	@RequestMapping(value = "/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MovieDto>> getMovieSearch(@PathVariable("title") String titleStr)
 			throws InterruptedException {
-		List<MovieDto> movies = this.service.findMovie(titleStr);
+		List<MovieDto> movies = this.service.findMovie(titleStr).stream().map(m -> this.mapper.convert(m))
+				.collect(Collectors.toList());
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<MovieDto> getMovieSearchById(@PathVariable("id") Long id) throws InterruptedException {
-		MovieDto result = this.service.findMovieById(id).orElseThrow(
-				() -> new ResourceNotFoundException(String.format("Failed to find movie with id: %d", id)));
+		MovieDto result = this.mapper.convert(this.service.findMovieById(id).orElseThrow(
+				() -> new ResourceNotFoundException(String.format("Failed to find movie with id: %d", id))));
 		return new ResponseEntity<MovieDto>(result, HttpStatus.OK);
 	}
 
@@ -60,13 +65,15 @@ public class MovieController {
 
 	@RequestMapping(value = "/genere/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MovieDto>> getGeneresById(@PathVariable("id") Long id) throws InterruptedException {
-		List<MovieDto> movies = this.service.findMoviesByGenere(id);
+		List<MovieDto> movies = this.service.findMoviesByGenere(id).stream().map(m -> this.mapper.convert(m))
+				.collect(Collectors.toList());
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/generes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<GenereDto>> getGeneres() throws InterruptedException {
-		List<GenereDto> generes = this.service.findAllGeneres();
+		List<GenereDto> generes = this.service.findAllGeneres().stream().map(gen -> this.mapper.convert(gen))
+				.collect(Collectors.toList());
 		return new ResponseEntity<List<GenereDto>>(generes, HttpStatus.OK);
 	}
 
@@ -74,7 +81,8 @@ public class MovieController {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MovieDto>> getPagesByNumber(@RequestParam("page") Integer page)
 			throws InterruptedException {
-		List<MovieDto> movies = this.service.findMoviesByPage(page);
+		List<MovieDto> movies = this.service.findMoviesByPage(page).stream().map(m -> this.mapper.convert(m))
+				.collect(Collectors.toList());
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
 	}
 

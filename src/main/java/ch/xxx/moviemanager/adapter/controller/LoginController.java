@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.AccessForbiddenException;
-import ch.xxx.moviemanager.usecase.model.UserDto;
+import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.usecase.service.UserDetailsMgmtService;
 
 @RestController

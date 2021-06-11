@@ -18,8 +18,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ch.xxx.moviemanager.domain.model.Actor;
-import ch.xxx.moviemanager.domain.model.ActorRepository;
+import ch.xxx.moviemanager.domain.model.entity.Actor;
+import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 
 @Repository
 public class ActorRepositoryBean implements ActorRepository {

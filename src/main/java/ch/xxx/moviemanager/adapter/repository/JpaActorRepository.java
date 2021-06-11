@@ -20,7 +20,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import ch.xxx.moviemanager.domain.model.Actor;
+import ch.xxx.moviemanager.domain.model.entity.Actor;
 
 public interface JpaActorRepository extends PagingAndSortingRepository<Actor,Long>{
 	@Query("select a from Actor a join a.users u where lower(a.name) like lower(concat('%',:name,'%')) and u.id = :userid order by a.name")

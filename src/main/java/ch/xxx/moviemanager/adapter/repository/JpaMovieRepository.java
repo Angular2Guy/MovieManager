@@ -21,7 +21,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import ch.xxx.moviemanager.domain.model.Movie;
+import ch.xxx.moviemanager.domain.model.entity.Movie;
 
 public interface JpaMovieRepository extends PagingAndSortingRepository<Movie,Long>{
 

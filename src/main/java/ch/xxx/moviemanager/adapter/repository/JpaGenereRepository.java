@@ -14,7 +14,7 @@ package ch.xxx.moviemanager.adapter.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ch.xxx.moviemanager.domain.model.Genere;
+import ch.xxx.moviemanager.domain.model.entity.Genere;
 
 public interface JpaGenereRepository extends JpaRepository<Genere,Long> {
 

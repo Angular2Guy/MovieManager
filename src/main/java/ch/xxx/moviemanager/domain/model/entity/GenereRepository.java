@@ -10,8 +10,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.domain.model;
+package ch.xxx.moviemanager.domain.model.entity;
 
-public interface CastRepository {
-	Cast save(Cast cast);
+import java.util.List;
+
+public interface GenereRepository {	
+	public List<Genere> findAll();
+	public Genere save(Genere genere);
 }

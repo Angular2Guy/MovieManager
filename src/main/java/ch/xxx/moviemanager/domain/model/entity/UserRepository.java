@@ -10,25 +10,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.usecase.model;
+package ch.xxx.moviemanager.domain.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.Optional;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class WrapperCastDto {
-	private int id;
-	private CastDto[] cast;
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
-	public CastDto[] getCast() {
-		return cast;
-	}
-	public void setCast(CastDto[] cast) {
-		this.cast = cast;
-	}
-	
+public interface UserRepository {
+	Optional<User> findByUsername(String username);
+
+	User save(User user);
 }

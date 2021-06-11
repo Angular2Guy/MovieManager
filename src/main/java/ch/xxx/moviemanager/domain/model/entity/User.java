@@ -10,30 +10,25 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.usecase.model;
+package ch.xxx.moviemanager.domain.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class UserDto {
+@Entity
+@Table(name="user1")
+public class User {
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private Long id;
 	private String username;
 	private String password;
 	private String moviedbkey;
 	private String roles;
 	
-	public UserDto() {		
-	}
-	
-	public UserDto(Long id, String username, String password, String moviedbkey, String roles) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.moviedbkey = moviedbkey;
-		this.roles = roles;
-	}
-
 	public Long getId() {
 		return id;
 	}
@@ -64,11 +59,27 @@ public class UserDto {
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
-
 	@Override
-	public String toString() {
-		return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", moviedbkey=" + moviedbkey
-				+ ", roles=" + roles + "]";
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
-	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
 }

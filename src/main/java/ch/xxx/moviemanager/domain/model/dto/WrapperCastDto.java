@@ -10,46 +10,25 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.usecase.model;
+package ch.xxx.moviemanager.domain.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CastDto {
+public class WrapperCastDto {
 	private int id;
-	private String character;
-	private String name;
-	private MovieDto myMovie;
-	private ActorDto myActor;
-	
-	public ActorDto getMyActor() {
-		return myActor;
-	}
-	public void setMyActor(ActorDto myActor) {
-		this.myActor = myActor;
-	}
-	public MovieDto getMyMovie() {
-		return myMovie;
-	}
-	public void setMyMovie(MovieDto myMovie) {
-		this.myMovie = myMovie;
-	}
+	private CastDto[] cast;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getCharacter() {
-		return character;
+	public CastDto[] getCast() {
+		return cast;
 	}
-	public void setCharacter(String character) {
-		this.character = character;
+	public void setCast(CastDto[] cast) {
+		this.cast = cast;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
+	
 }

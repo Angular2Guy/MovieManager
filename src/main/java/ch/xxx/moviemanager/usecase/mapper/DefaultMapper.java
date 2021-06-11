@@ -14,14 +14,14 @@ package ch.xxx.moviemanager.usecase.mapper;
 
 import org.springframework.stereotype.Service;
 
-import ch.xxx.moviemanager.domain.model.Actor;
-import ch.xxx.moviemanager.domain.model.Cast;
-import ch.xxx.moviemanager.domain.model.Genere;
-import ch.xxx.moviemanager.domain.model.Movie;
-import ch.xxx.moviemanager.usecase.model.ActorDto;
-import ch.xxx.moviemanager.usecase.model.CastDto;
-import ch.xxx.moviemanager.usecase.model.GenereDto;
-import ch.xxx.moviemanager.usecase.model.MovieDto;
+import ch.xxx.moviemanager.domain.model.dto.ActorDto;
+import ch.xxx.moviemanager.domain.model.dto.CastDto;
+import ch.xxx.moviemanager.domain.model.dto.GenereDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieDto;
+import ch.xxx.moviemanager.domain.model.entity.Actor;
+import ch.xxx.moviemanager.domain.model.entity.Cast;
+import ch.xxx.moviemanager.domain.model.entity.Genere;
+import ch.xxx.moviemanager.domain.model.entity.Movie;
 
 @Service
 public class DefaultMapper {

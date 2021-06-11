@@ -22,12 +22,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ch.xxx.moviemanager.domain.model.Actor;
-import ch.xxx.moviemanager.domain.model.ActorRepository;
-import ch.xxx.moviemanager.domain.model.Cast;
-import ch.xxx.moviemanager.domain.model.User;
+import ch.xxx.moviemanager.domain.model.dto.ActorDto;
+import ch.xxx.moviemanager.domain.model.entity.Actor;
+import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
+import ch.xxx.moviemanager.domain.model.entity.Cast;
+import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
-import ch.xxx.moviemanager.usecase.model.ActorDto;
 
 @Service
 @Transactional
@@ -49,32 +49,27 @@ public class ActorService {
 		return true;
 	}
 
-	public List<ActorDto> findActor(String name) {
-		List<ActorDto> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser().getId()).stream()
-				.map(a -> this.mapper.convert(a)).collect(Collectors.toList());
+	public List<Actor> findActor(String name) {
+		List<Actor> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser().getId());
 		return result;
 	}
 
-	public List<ActorDto> findActorsByPage(Integer page) {
+	public List<Actor> findActorsByPage(Integer page) {
 		User currentUser = this.auds.getCurrentUser();
-		List<ActorDto> result = this.actorRep.findActorsByPage(currentUser.getId(), PageRequest.of((page - 1), 10))
-				.stream().map(a -> this.mapper.convert(a)).collect(Collectors.toList());
+		List<Actor> result = this.actorRep.findActorsByPage(currentUser.getId(), PageRequest.of((page - 1), 10));
 		return result;
 	}
 
-	public Optional<ActorDto> findActorById(Long id) {
+	public Optional<Actor> findActorById(Long id) {
 		Optional<Actor> result = this.actorRep.findById(id);
-		Optional<ActorDto> res = Optional.empty();
 		if (result.isPresent()) {
 			User user = this.auds.getCurrentUser();
-			List<Cast> casts = result.get().getCasts();
 			List<Cast> myCasts = result.get().getCasts().stream().filter(c -> c.getMovie().getUsers().contains(user))
 					.collect(Collectors.toList());
 			result.get().setCasts(myCasts);
-			ActorDto actorDto = this.mapper.convert(result.get());
-			result.get().setCasts(casts);
-			res = Optional.of(actorDto);
+			result = result.get().getUsers().stream().filter(myUser -> user.getId().equals(myUser.getId())).findFirst()
+					.isEmpty() ? Optional.empty() : result;			
 		}
-		return res;
+		return result;
 	}
 }

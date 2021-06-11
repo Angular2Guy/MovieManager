@@ -13,6 +13,7 @@
 package ch.xxx.moviemanager.adapter.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,29 +25,34 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
-import ch.xxx.moviemanager.usecase.model.ActorDto;
+import ch.xxx.moviemanager.domain.model.dto.ActorDto;
+import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.ActorService;
 
 @RestController
 @RequestMapping("rest/actor")
 public class ActorController {
 	private final ActorService service;
+	private final DefaultMapper mapper;
 
-	public ActorController(ActorService service) {
+	public ActorController(ActorService service, DefaultMapper mapper) {
 		this.service = service;
+		this.mapper = mapper;
 	}
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ActorDto>> getActorSearch(@PathVariable("name") String name)
 			throws InterruptedException {
-		List<ActorDto> actors = this.service.findActor(name);
+		List<ActorDto> actors = this.service.findActor(name).stream().map(a -> this.mapper.convert(a))
+				.collect(Collectors.toList());
 		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ActorDto> getActorSearchById(@PathVariable("id") Long id) throws InterruptedException {
-		ActorDto actor = this.service.findActorById(id).orElseThrow(
-				() -> new ResourceNotFoundException(String.format("Failed to find actor with id: %d", id)));
+		ActorDto actor = this.service.findActorById(id).stream().map(a -> this.mapper.convert(a)).findFirst()
+				.orElseThrow(
+						() -> new ResourceNotFoundException(String.format("Failed to find actor with id: %d", id)));
 		return new ResponseEntity<ActorDto>(actor, HttpStatus.OK);
 	}
 
@@ -54,7 +60,8 @@ public class ActorController {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ActorDto>> getPagesByNumber(@RequestParam("page") Integer page)
 			throws InterruptedException {
-		List<ActorDto> actors = this.service.findActorsByPage(page);
+		List<ActorDto> actors = this.service.findActorsByPage(page).stream().map(a -> this.mapper.convert(a))
+				.collect(Collectors.toList());
 		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}
 }

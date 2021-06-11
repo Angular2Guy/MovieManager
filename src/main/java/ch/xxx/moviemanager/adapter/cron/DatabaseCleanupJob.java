@@ -32,8 +32,8 @@ public class DatabaseCleanupJob {
 		this.movieService = movieService;
 	}
 
-//	@Scheduled(cron = "5 0 * * * ?")
-	@Scheduled(fixedRate = 10000)
+	@Scheduled(cron = "5 0 * * * ?")
+//	@Scheduled(fixedRate = 10000)
 	@SchedulerLock(name = "CleanUp_scheduledTask", lockAtLeastFor = "PT2H", lockAtMostFor = "PT3H")
 	public void dbCleanup() {
 		LOG.info("Start cleanup Job");

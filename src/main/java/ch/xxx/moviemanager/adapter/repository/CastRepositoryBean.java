@@ -14,8 +14,8 @@ package ch.xxx.moviemanager.adapter.repository;
 
 import org.springframework.stereotype.Repository;
 
-import ch.xxx.moviemanager.domain.model.Cast;
-import ch.xxx.moviemanager.domain.model.CastRepository;
+import ch.xxx.moviemanager.domain.model.entity.Cast;
+import ch.xxx.moviemanager.domain.model.entity.CastRepository;
 
 @Repository
 public class CastRepositoryBean implements CastRepository {

@@ -10,11 +10,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.domain.model;
+package ch.xxx.moviemanager.domain.model.dto;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public interface GenereRepository {	
-	public List<Genere> findAll();
-	public Genere save(Genere genere);
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class WrapperGenereDto {
+	private GenereDto[] genres;
+
+	public GenereDto[] getGenres() {
+		return genres;
+	}
+
+	public void setGenres(GenereDto[] genres) {
+		this.genres = genres;
+	}
+
+	
 }

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.xxx.moviemanager.usecase.model.MovieDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieDto;
 import ch.xxx.moviemanager.usecase.service.MovieService;
 
 @RestController

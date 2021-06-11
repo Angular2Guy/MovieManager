@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import ch.xxx.moviemanager.domain.model.User;
+import ch.xxx.moviemanager.domain.model.entity.User;
 
 public interface JpaUserRepository extends CrudRepository<User, Long> {
 	Optional<User> findByUsername(String username);

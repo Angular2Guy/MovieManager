@@ -32,9 +32,9 @@ import org.springframework.stereotype.Service;
 
 import ch.xxx.moviemanager.domain.exceptions.AccessForbiddenException;
 import ch.xxx.moviemanager.domain.exceptions.AccessUnauthorizedException;
-import ch.xxx.moviemanager.domain.model.User;
-import ch.xxx.moviemanager.domain.model.UserRepository;
-import ch.xxx.moviemanager.usecase.model.UserDto;
+import ch.xxx.moviemanager.domain.model.dto.UserDto;
+import ch.xxx.moviemanager.domain.model.entity.User;
+import ch.xxx.moviemanager.domain.model.entity.UserRepository;
 
 @Service
 @Transactional

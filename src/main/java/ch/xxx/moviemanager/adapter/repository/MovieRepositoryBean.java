@@ -19,8 +19,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ch.xxx.moviemanager.domain.model.Movie;
-import ch.xxx.moviemanager.domain.model.MovieRepository;
+import ch.xxx.moviemanager.domain.model.entity.Movie;
+import ch.xxx.moviemanager.domain.model.entity.MovieRepository;
 
 @Repository
 public class MovieRepositoryBean implements MovieRepository {

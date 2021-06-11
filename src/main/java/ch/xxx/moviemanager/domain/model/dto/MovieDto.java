@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.usecase.model;
+package ch.xxx.moviemanager.domain.model.dto;
 
 import java.util.ArrayList;
 import java.util.Date;

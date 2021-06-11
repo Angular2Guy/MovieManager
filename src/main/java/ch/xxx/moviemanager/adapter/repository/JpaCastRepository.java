@@ -14,7 +14,7 @@ package ch.xxx.moviemanager.adapter.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import ch.xxx.moviemanager.domain.model.Cast;
+import ch.xxx.moviemanager.domain.model.entity.Cast;
 
 public interface JpaCastRepository extends JpaRepository<Cast,Long>{
 

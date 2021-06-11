@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,23 +24,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import ch.xxx.moviemanager.domain.model.Actor;
-import ch.xxx.moviemanager.domain.model.ActorRepository;
-import ch.xxx.moviemanager.domain.model.Cast;
-import ch.xxx.moviemanager.domain.model.CastRepository;
-import ch.xxx.moviemanager.domain.model.Genere;
-import ch.xxx.moviemanager.domain.model.GenereRepository;
-import ch.xxx.moviemanager.domain.model.Movie;
-import ch.xxx.moviemanager.domain.model.MovieRepository;
-import ch.xxx.moviemanager.domain.model.User;
+import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
+import ch.xxx.moviemanager.domain.model.dto.ActorDto;
+import ch.xxx.moviemanager.domain.model.dto.CastDto;
+import ch.xxx.moviemanager.domain.model.dto.GenereDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieDto;
+import ch.xxx.moviemanager.domain.model.dto.WrapperCastDto;
+import ch.xxx.moviemanager.domain.model.dto.WrapperGenereDto;
+import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
+import ch.xxx.moviemanager.domain.model.entity.Actor;
+import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
+import ch.xxx.moviemanager.domain.model.entity.Cast;
+import ch.xxx.moviemanager.domain.model.entity.CastRepository;
+import ch.xxx.moviemanager.domain.model.entity.Genere;
+import ch.xxx.moviemanager.domain.model.entity.GenereRepository;
+import ch.xxx.moviemanager.domain.model.entity.Movie;
+import ch.xxx.moviemanager.domain.model.entity.MovieRepository;
+import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
-import ch.xxx.moviemanager.usecase.model.ActorDto;
-import ch.xxx.moviemanager.usecase.model.CastDto;
-import ch.xxx.moviemanager.usecase.model.GenereDto;
-import ch.xxx.moviemanager.usecase.model.MovieDto;
-import ch.xxx.moviemanager.usecase.model.WrapperCastDto;
-import ch.xxx.moviemanager.usecase.model.WrapperGenereDto;
-import ch.xxx.moviemanager.usecase.model.WrapperMovieDto;
 
 @Transactional
 @Service
@@ -53,37 +53,32 @@ public class MovieService {
 	private final GenereRepository genereRep;
 	private final UserDetailsMgmtService auds;
 	private final DefaultMapper mapper;
+	private final MovieDbRestClient movieDbRestClient;
 
 	public MovieService(MovieRepository movieRep, CastRepository castRep, ActorRepository actorRep,
-			GenereRepository genereRep, UserDetailsMgmtService auds, DefaultMapper mapper) {
+			GenereRepository genereRep, UserDetailsMgmtService auds, DefaultMapper mapper, MovieDbRestClient movieDbRestClient) {
 		this.auds = auds;
 		this.actorRep = actorRep;
 		this.castRep = castRep;
 		this.genereRep = genereRep;
 		this.movieRep = movieRep;
 		this.mapper = mapper;
+		this.movieDbRestClient = movieDbRestClient;
 	}
 
-	public List<GenereDto> findAllGeneres() {
-		List<GenereDto> result = this.genereRep.findAll().stream().map(gen -> this.mapper.convert(gen))
-				.collect(Collectors.toList());
+	public List<Genere> findAllGeneres() {
+		List<Genere> result = this.genereRep.findAll();
 		return result;
 	}
 
-	public List<MovieDto> findMoviesByGenere(Long id) {
-		List<MovieDto> result = this.movieRep.findByGenereId(id, this.auds.getCurrentUser().getId()).stream()
-				.map(m -> this.mapper.convert(m)).collect(Collectors.toList());
+	public List<Movie> findMoviesByGenere(Long id) {
+		List<Movie> result = this.movieRep.findByGenereId(id, this.auds.getCurrentUser().getId());
 		return result;
 	}
 
-	public Optional<MovieDto> findMovieById(Long id) {
-		Optional<MovieDto> res = Optional.empty();
+	public Optional<Movie> findMovieById(Long id) {
 		Optional<Movie> result = this.movieRep.findById(id);
-		if (result.isPresent()) {
-			MovieDto movieDto = this.mapper.convert(result.get());
-			res = Optional.of(movieDto);
-		}
-		return res;
+		return result;
 	}
 
 	public boolean deleteMovieById(Long id) {
@@ -110,16 +105,14 @@ public class MovieService {
 		return result;
 	}
 
-	public List<MovieDto> findMovie(String title) {
-		List<MovieDto> result = this.movieRep.findByTitle(title, this.auds.getCurrentUser().getId()).stream()
-				.map(m -> this.mapper.convert(m)).collect(Collectors.toList());
+	public List<Movie> findMovie(String title) {
+		List<Movie> result = this.movieRep.findByTitle(title, this.auds.getCurrentUser().getId());
 		return result;
 	}
 
-	public List<MovieDto> findMoviesByPage(Integer page) {
+	public List<Movie> findMoviesByPage(Integer page) {
 		User currentUser = this.auds.getCurrentUser();
-		List<MovieDto> result = this.movieRep.findMoviesByPage(currentUser.getId(), PageRequest.of((page - 1), 10))
-				.stream().map(m -> this.mapper.convert(m)).collect(Collectors.toList());
+		List<Movie> result = this.movieRep.findMoviesByPage(currentUser.getId(), PageRequest.of((page - 1), 10));
 		return result;
 	}
 
@@ -147,9 +140,7 @@ public class MovieService {
 		LOG.info("Start import");
 		RestTemplate restTemplate = new RestTemplate();
 		LOG.info("Start import generes");
-		WrapperGenereDto result = restTemplate.getForObject(
-				"https://api.themoviedb.org/3/genre/movie/list?api_key=" + user.getMoviedbkey() + "&language=en-US",
-				WrapperGenereDto.class);
+		WrapperGenereDto result = this.movieDbRestClient.fetchAllGeneres(user.getMoviedbkey());
 		List<Genere> generes = new ArrayList<>(this.genereRep.findAll());
 		for (GenereDto g : result.getGenres()) {
 			Genere genereEntity = generes.stream()
@@ -163,11 +154,7 @@ public class MovieService {
 		}
 		LOG.info("Start import Movie");
 		String queryStr = this.createQueryStr(title);
-		WrapperMovieDto wrMovie = restTemplate
-				.getForObject(
-						"https://api.themoviedb.org/3/search/movie?api_key=" + user.getMoviedbkey()
-								+ "&language=en-US&query=" + queryStr + "&page=1&include_adult=false",
-						WrapperMovieDto.class);
+		WrapperMovieDto wrMovie = this.movieDbRestClient.fetchMovie(user.getMoviedbkey(), queryStr);
 		Movie movieEntity = this.movieRep.findByMovieId(wrMovie.getResults()[number].getMovieId(), user.getId())
 				.orElse(null);
 		if (movieEntity == null) {
@@ -197,17 +184,14 @@ public class MovieService {
 			LOG.info("adding user to movie");
 			movieEntity.getUsers().add(user);
 		}
-		WrapperCastDto wrCast = restTemplate.getForObject("https://api.themoviedb.org/3/movie/"
-				+ wrMovie.getResults()[number].getId() + "/credits?api_key=" + user.getMoviedbkey(),
-				WrapperCastDto.class);
+		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(user.getMoviedbkey(), wrMovie.getResults()[number].getId());
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
 				Cast castEntity = this.mapper.convert(c);
 				movieEntity.getCast().add(castEntity);
 				castEntity.setMovie(movieEntity);
-				ActorDto actor = restTemplate.getForObject("https://api.themoviedb.org/3/person/" + c.getId()
-						+ "?api_key=" + user.getMoviedbkey() + "&language=en-US", ActorDto.class);
+				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId());				
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : this.mapper.convert(actor);
 				castEntity = this.castRep.save(castEntity);
@@ -222,8 +206,7 @@ public class MovieService {
 		} else {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("update cast for movie");
-				ActorDto actor = restTemplate.getForObject("https://api.themoviedb.org/3/person/" + c.getId()
-						+ "?api_key=" + user.getMoviedbkey() + "&language=en-US", ActorDto.class);
+				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId());				
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.get();
 				if (!actorEntity.getUsers().contains(user)) {

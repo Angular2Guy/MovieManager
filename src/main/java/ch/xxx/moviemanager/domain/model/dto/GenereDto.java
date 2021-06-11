@@ -10,12 +10,26 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.domain.model;
+package ch.xxx.moviemanager.domain.model.dto;
 
-import java.util.Optional;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-public interface UserRepository {
-	Optional<User> findByUsername(String username);
-
-	User save(User user);
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class GenereDto {
+	private Long id;
+	private String name;
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 }
