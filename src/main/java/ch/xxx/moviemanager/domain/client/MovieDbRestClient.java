@@ -13,4 +13,6 @@ public interface MovieDbRestClient {
 	ActorDto fetchActor(String moviedbkey, Integer castId);
 	
 	WrapperGenereDto fetchAllGeneres(String moviedbkey);
+	
+	WrapperMovieDto fetchImportMovie(String moviedbkey, String queryStr);
 }

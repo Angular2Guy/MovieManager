@@ -44,4 +44,14 @@ public class MovieDbRestClientBean implements MovieDbRestClient {
 		+ "?api_key=" + moviedbkey + "&language=en-US", ActorDto.class);
 		return actor;
 	}
+	
+	public WrapperMovieDto fetchImportMovie(String moviedbkey, String queryStr) {
+		RestTemplate restTemplate = new RestTemplate();
+		WrapperMovieDto wrMovie = restTemplate
+				.getForObject(
+						"https://api.themoviedb.org/3/search/movie?api_key=" + moviedbkey
+								+ "&language=en-US&query=" + queryStr + "&page=1&include_adult=false",
+						WrapperMovieDto.class);
+		return wrMovie;
+	}
 }

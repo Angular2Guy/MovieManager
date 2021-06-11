@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
@@ -118,13 +117,8 @@ public class MovieService {
 
 	public List<MovieDto> findImportMovie(String title) {
 		User user = this.auds.getCurrentUser();
-		RestTemplate restTemplate = new RestTemplate();
 		String queryStr = this.createQueryStr(title);
-		WrapperMovieDto wrMovie = restTemplate
-				.getForObject(
-						"https://api.themoviedb.org/3/search/movie?api_key=" + user.getMoviedbkey()
-								+ "&language=en-US&query=" + queryStr + "&page=1&include_adult=false",
-						WrapperMovieDto.class);
+		WrapperMovieDto wrMovie = this.movieDbRestClient.fetchImportMovie(user.getMoviedbkey(), queryStr);
 		List<MovieDto> result = Arrays.asList(wrMovie.getResults());
 		return result;
 	}
@@ -138,7 +132,6 @@ public class MovieService {
 	public boolean importMovie(String title, int number) throws InterruptedException {
 		User user = this.auds.getCurrentUser();
 		LOG.info("Start import");
-		RestTemplate restTemplate = new RestTemplate();
 		LOG.info("Start import generes");
 		WrapperGenereDto result = this.movieDbRestClient.fetchAllGeneres(user.getMoviedbkey());
 		List<Genere> generes = new ArrayList<>(this.genereRep.findAll());
