@@ -21,10 +21,6 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -38,13 +34,11 @@ import ch.xxx.moviemanager.domain.model.GenereRepository;
 import ch.xxx.moviemanager.domain.model.Movie;
 import ch.xxx.moviemanager.domain.model.MovieRepository;
 import ch.xxx.moviemanager.domain.model.User;
-import ch.xxx.moviemanager.domain.model.UserRepository;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.model.ActorDto;
 import ch.xxx.moviemanager.usecase.model.CastDto;
 import ch.xxx.moviemanager.usecase.model.GenereDto;
 import ch.xxx.moviemanager.usecase.model.MovieDto;
-import ch.xxx.moviemanager.usecase.model.UserDto;
 import ch.xxx.moviemanager.usecase.model.WrapperCastDto;
 import ch.xxx.moviemanager.usecase.model.WrapperGenereDto;
 import ch.xxx.moviemanager.usecase.model.WrapperMovieDto;
@@ -57,18 +51,16 @@ public class MovieService {
 	private final CastRepository castRep;
 	private final ActorRepository actorRep;
 	private final GenereRepository genereRep;
-	private final UserRepository userRep;
 	private final AppUserDetailsService auds;
 	private final DefaultMapper mapper;
 
 	public MovieService(MovieRepository movieRep, CastRepository castRep, ActorRepository actorRep,
-			GenereRepository genereRep, UserRepository userRep, AppUserDetailsService auds, DefaultMapper mapper) {
+			GenereRepository genereRep, AppUserDetailsService auds, DefaultMapper mapper) {
 		this.auds = auds;
 		this.actorRep = actorRep;
 		this.castRep = castRep;
 		this.genereRep = genereRep;
 		this.movieRep = movieRep;
-		this.userRep = userRep;
 		this.mapper = mapper;
 	}
 
