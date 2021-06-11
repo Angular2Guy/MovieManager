@@ -15,7 +15,6 @@ package ch.xxx.moviemanager.adapter.controller;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,10 +34,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.AccessForbiddenException;
 import ch.xxx.moviemanager.domain.exceptions.AccessUnauthorizedException;
-import ch.xxx.moviemanager.usecase.model.GenereDto;
 import ch.xxx.moviemanager.usecase.model.UserDto;
 import ch.xxx.moviemanager.usecase.service.AppUserDetailsService;
-import ch.xxx.moviemanager.usecase.service.MovieService;
 
 @RestController
 @RequestMapping("rest/user")

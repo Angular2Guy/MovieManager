@@ -13,7 +13,6 @@
 package ch.xxx.moviemanager.adapter.controller;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,7 +31,7 @@ import ch.xxx.moviemanager.usecase.service.ActorService;
 @RequestMapping("rest/actor")
 public class ActorController {
 	private final ActorService service;
-	
+
 	public ActorController(ActorService service) {
 		this.service = service;
 	}
@@ -46,11 +45,9 @@ public class ActorController {
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ActorDto> getActorSearchById(@PathVariable("id") Long id) throws InterruptedException {
-		Optional<ActorDto> actor = this.service.findActorById(id);
-		if (actor.isPresent()) {
-			return new ResponseEntity<ActorDto>(actor.get(), HttpStatus.OK);
-		}
-		throw new ResourceNotFoundException(String.format("Failed to find actor with id: %s", id.toString()));
+		ActorDto actor = this.service.findActorById(id).orElseThrow(
+				() -> new ResourceNotFoundException(String.format("Failed to find actor with id: %d", id)));
+		return new ResponseEntity<ActorDto>(actor, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/pages", params = {

@@ -33,49 +33,50 @@ import ch.xxx.moviemanager.usecase.service.MovieService;
 @RequestMapping("rest/movie")
 public class MovieController {
 	private final MovieService service;
-	
+
 	public MovieController(MovieService service) {
 		this.service = service;
 	}
-	
-	@RequestMapping(value="/{title}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MovieDto>> getMovieSearch(@PathVariable("title") String titleStr) throws InterruptedException {
-		List<MovieDto> movies = this.service.findMovie(titleStr);		
-		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
+
+	@RequestMapping(value = "/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<MovieDto>> getMovieSearch(@PathVariable("title") String titleStr)
+			throws InterruptedException {
+		List<MovieDto> movies = this.service.findMovie(titleStr);
+		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/id/{id}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<MovieDto> getMovieSearchById(@PathVariable("id") Long id) throws InterruptedException {
-		Optional<MovieDto> result = this.service.findMovieById(id);
-		if(result.isPresent()) {
-			return new ResponseEntity<MovieDto>(result.get(), HttpStatus.OK);
-		} else {
-			throw new ResourceNotFoundException(String.format("Failed to find movie with id: %s", id.toString()));
-		}
+		MovieDto result = this.service.findMovieById(id).orElseThrow(
+				() -> new ResourceNotFoundException(String.format("Failed to find movie with id: %d", id)));
+		return new ResponseEntity<MovieDto>(result, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/id/{id}", method=RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> deleteMovieById(@PathVariable("id") Long id) throws InterruptedException {
 		boolean result = this.service.deleteMovieById(id);
-		return result ? new ResponseEntity<Boolean>(result, HttpStatus.OK) : new ResponseEntity<Boolean>(result, HttpStatus.NOT_FOUND);		
+		return result ? new ResponseEntity<Boolean>(result, HttpStatus.OK)
+				: new ResponseEntity<Boolean>(result, HttpStatus.NOT_FOUND);
 	}
-	
-	@RequestMapping(value="/genere/id/{id}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/genere/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MovieDto>> getGeneresById(@PathVariable("id") Long id) throws InterruptedException {
-		List<MovieDto> movies = this.service.findMoviesByGenere(id);	
-		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
+		List<MovieDto> movies = this.service.findMoviesByGenere(id);
+		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/generes", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+
+	@RequestMapping(value = "/generes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<GenereDto>> getGeneres() throws InterruptedException {
-		List<GenereDto> generes = this.service.findAllGeneres();		
-		return new ResponseEntity<List<GenereDto>>(generes, HttpStatus.OK);		
+		List<GenereDto> generes = this.service.findAllGeneres();
+		return new ResponseEntity<List<GenereDto>>(generes, HttpStatus.OK);
 	}
-	
-	@RequestMapping(value="/pages", params = {"page"}, method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MovieDto>> getPagesByNumber(@RequestParam("page") Integer page) throws InterruptedException {
-		List<MovieDto> movies = this.service.findMoviesByPage(page);	
-		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
+
+	@RequestMapping(value = "/pages", params = {
+			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<MovieDto>> getPagesByNumber(@RequestParam("page") Integer page)
+			throws InterruptedException {
+		List<MovieDto> movies = this.service.findMoviesByPage(page);
+		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
 	}
-	
+
 }
