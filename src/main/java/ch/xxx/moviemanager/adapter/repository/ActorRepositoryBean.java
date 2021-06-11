@@ -52,4 +52,9 @@ public class ActorRepositoryBean implements ActorRepository {
 	public List<Actor> findActorsByPage(Long userId, Pageable pageble) {
 		return this.findActorsByPage(userId, pageble);
 	}
+
+	@Override
+	public List<Actor> findUnusedActors() {		
+		return this.jpaActorRepository.findUnusedActors();
+	}
 }

@@ -27,4 +27,5 @@ public interface MovieRepository {
 	Optional<Movie> findById(Long id);
 	void deleteById(Long id);
 	Movie save(Movie movieEntity);
+	List<Movie> findUnusedMovies();
 }

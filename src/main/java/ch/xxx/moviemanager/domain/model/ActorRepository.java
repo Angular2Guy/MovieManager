@@ -24,4 +24,5 @@ public interface ActorRepository {
 	void deleteById(Long id);
 	Optional<Actor> findById(Long id);
 	Actor save(Actor actorEntity);
+	List<Actor> findUnusedActors();
 }

@@ -61,4 +61,9 @@ public class MovieRepositoryBean implements MovieRepository {
 	public List<Movie> findMoviesByPage(Long userId, Pageable pageable) {
 		return this.jpaMovieRepository.findMoviesByPage(userId, pageable);
 	}
+
+	@Override
+	public List<Movie> findUnusedMovies() {
+		return this.jpaMovieRepository.findUnusedMovies();
+	}
 }

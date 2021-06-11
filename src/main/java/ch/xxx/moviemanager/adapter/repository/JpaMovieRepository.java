@@ -39,4 +39,7 @@ public interface JpaMovieRepository extends PagingAndSortingRepository<Movie,Lon
 	
 	@Query("select m from Movie m join m.users u where u.id = :userId order by m.title")
 	List<Movie> findMoviesByPage(Long userId, Pageable pageable);
+	
+	@Query("select m from Movie m where m.users is empty")
+	List<Movie> findUnusedMovies();
 }

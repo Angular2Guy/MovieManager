@@ -31,4 +31,7 @@ public interface JpaActorRepository extends PagingAndSortingRepository<Actor,Lon
 	
 	@Query("select a from Actor a join a.users u where u.id = :userId order by a.name")
 	List<Actor> findActorsByPage(Long userId, Pageable pageble);
+	
+	@Query("select a from Actor a where a.users is empty and a.casts is empty")
+	List<Actor> findUnusedActors();
 }

@@ -62,8 +62,7 @@ public class MovieService {
 	private final DefaultMapper mapper;
 
 	public MovieService(MovieRepository movieRep, CastRepository castRep, ActorRepository actorRep,
-			GenereRepository genereRep, UserRepository userRep, AppUserDetailsService auds,
-			DefaultMapper mapper) {
+			GenereRepository genereRep, UserRepository userRep, AppUserDetailsService auds, DefaultMapper mapper) {
 		this.auds = auds;
 		this.actorRep = actorRep;
 		this.castRep = castRep;
@@ -147,10 +146,11 @@ public class MovieService {
 	}
 
 	public boolean cleanup() {
-		
+		this.movieRep.findUnusedMovies().forEach(
+				movie -> LOG.info(String.format("Unused Movie id: %d title: %s", movie.getId(), movie.getTitle())));
 		return true;
 	}
-	
+
 	public boolean importMovie(String title, int number) throws InterruptedException {
 		User user = this.auds.getCurrentUser();
 		LOG.info("Start import");
@@ -176,9 +176,9 @@ public class MovieService {
 				.getForObject(
 						"https://api.themoviedb.org/3/search/movie?api_key=" + user.getMoviedbkey()
 								+ "&language=en-US&query=" + queryStr + "&page=1&include_adult=false",
-						WrapperMovieDto.class);		
-		Movie movieEntity = this.movieRep
-				.findByMovieId(wrMovie.getResults()[number].getMovieId(), user.getId()).orElse(null);
+						WrapperMovieDto.class);
+		Movie movieEntity = this.movieRep.findByMovieId(wrMovie.getResults()[number].getMovieId(), user.getId())
+				.orElse(null);
 		if (movieEntity == null) {
 			LOG.info("Movie not found by id");
 			List<Movie> movies = this.movieRep.findByTitleAndRelDate(wrMovie.getResults()[number].getTitle(),

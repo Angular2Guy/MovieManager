@@ -36,30 +36,32 @@ public class ActorService {
 	private final DefaultMapper mapper;
 	private final ActorRepository actorRep;
 	private final AppUserDetailsService auds;
-	
+
 	public ActorService(DefaultMapper mapper, ActorRepository actorRep, AppUserDetailsService auds) {
 		this.mapper = mapper;
 		this.actorRep = actorRep;
 		this.auds = auds;
 	}
-	
+
 	public boolean cleanup() {
+		this.actorRep.findUnusedActors().forEach(
+				actor -> LOG.info(String.format("Unused Actor id: %d name: %s", actor.getId(), actor.getName())));
 		return true;
 	}
-	
+
 	public List<ActorDto> findActor(String name) {
 		List<ActorDto> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser().getId()).stream()
 				.map(a -> this.mapper.convert(a)).collect(Collectors.toList());
 		return result;
 	}
-	
+
 	public List<ActorDto> findActorsByPage(Integer page) {
 		User currentUser = this.auds.getCurrentUser();
 		List<ActorDto> result = this.actorRep.findActorsByPage(currentUser.getId(), PageRequest.of((page - 1), 10))
 				.stream().map(a -> this.mapper.convert(a)).collect(Collectors.toList());
 		return result;
 	}
-	
+
 	public Optional<ActorDto> findActorById(Long id) {
 		Optional<Actor> result = this.actorRep.findById(id);
 		Optional<ActorDto> res = Optional.empty();
