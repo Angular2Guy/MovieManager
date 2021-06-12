@@ -112,6 +112,7 @@
 			<plugin>
 				<artifactId>exec-maven-plugin</artifactId>
 				<groupId>org.codehaus.mojo</groupId>
+				<version>3.0.0</version>
 				<executions>
 					<execution>
 						<id>npm install</id>
@@ -183,7 +184,7 @@
 									<pluginExecutionFilter>
 										<artifactId>exec-maven-plugin</artifactId>
 										<groupId>org.codehaus.mojo</groupId>
-										<versionRange>[1.4.0,)</versionRange>
+										<versionRange>[3.0.0,)</versionRange>
 										<goals>
 											<goal>exec</goal>
 										</goals>
