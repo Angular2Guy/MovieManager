@@ -32,6 +32,6 @@ public class GenereRepositoryBean implements GenereRepository {
 	}
 	
 	public Genere save(Genere genere) {
-		return this.save(genere);
+		return this.jpaGenereRepository.save(genere);
 	}
 }
