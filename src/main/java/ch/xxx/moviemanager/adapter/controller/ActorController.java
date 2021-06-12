@@ -26,18 +26,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
+import ch.xxx.moviemanager.domain.model.entity.Cast;
+import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.ActorService;
+import ch.xxx.moviemanager.usecase.service.UserDetailsMgmtService;
 
 @RestController
 @RequestMapping("rest/actor")
 public class ActorController {
 	private final ActorService service;
 	private final DefaultMapper mapper;
+	private final UserDetailsMgmtService auds;
 
-	public ActorController(ActorService service, DefaultMapper mapper) {
+	public ActorController(ActorService service, DefaultMapper mapper, UserDetailsMgmtService auds) {
 		this.service = service;
 		this.mapper = mapper;
+		this.auds = auds;
 	}
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -50,8 +55,11 @@ public class ActorController {
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ActorDto> getActorSearchById(@PathVariable("id") Long id) throws InterruptedException {
-		ActorDto actor = this.service.findActorById(id).stream().map(a -> this.mapper.convert(a)).findFirst()
-				.orElseThrow(
+		final User currentUser = this.auds.getCurrentUser();
+		ActorDto actor = this.service.findActorById(id).stream()
+				.filter(myActor -> myActor.getCasts().stream()
+						.filter(c -> c.getMovie().getUsers().contains(currentUser)).findFirst().isPresent())
+				.map(a -> this.mapper.convert(a)).findFirst().orElseThrow(
 						() -> new ResourceNotFoundException(String.format("Failed to find actor with id: %d", id)));
 		return new ResponseEntity<ActorDto>(actor, HttpStatus.OK);
 	}

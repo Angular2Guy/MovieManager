@@ -60,9 +60,6 @@ public class ActorService {
 		Optional<Actor> result = this.actorRep.findById(id);
 		if (result.isPresent()) {
 			User user = this.auds.getCurrentUser();
-			List<Cast> myCasts = result.get().getCasts().stream().filter(c -> c.getMovie().getUsers().contains(user))
-					.collect(Collectors.toList());
-			result.get().setCasts(myCasts);
 			result = result.get().getUsers().stream().filter(myUser -> user.getId().equals(myUser.getId())).findFirst()
 					.isEmpty() ? Optional.empty() : result;			
 		}
