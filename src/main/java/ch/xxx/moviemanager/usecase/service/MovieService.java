@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,6 +113,7 @@ public class MovieService {
 	public List<Movie> findMoviesByPage(Integer page) {
 		User currentUser = this.auds.getCurrentUser();
 		List<Movie> result = this.movieRep.findMoviesByPage(currentUser.getId(), PageRequest.of((page - 1), 10));
+		result = this.movieRep.findByIdsWithCollections(result.stream().map(movie -> movie.getId()).collect(Collectors.toList()));
 		return result;
 	}
 

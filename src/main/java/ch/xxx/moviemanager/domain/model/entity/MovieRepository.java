@@ -28,4 +28,5 @@ public interface MovieRepository {
 	void deleteById(Long id);
 	Movie save(Movie movieEntity);
 	List<Movie> findUnusedMovies();
+	List<Movie> findByIdsWithCollections(List<Long> ids);
 }

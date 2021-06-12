@@ -24,6 +24,9 @@ import org.springframework.data.repository.query.Param;
 import ch.xxx.moviemanager.domain.model.entity.Movie;
 
 public interface JpaMovieRepository extends PagingAndSortingRepository<Movie,Long>{
+	
+	@Query("select m from Movie m join fetch m.cast c join fetch c.actor a join fetch m.generes where m.id in :ids")
+	List<Movie> findByIdsWithCollections(List<Long> ids);
 
 	@Query("select e from Movie e join e.users u where lower(e.title) like lower(concat('%',:title,'%')) and u.id = :userid order by e.title")
 	List<Movie> findByTitle(@Param("title") String title, @Param("userid") Long userId);
@@ -37,7 +40,7 @@ public interface JpaMovieRepository extends PagingAndSortingRepository<Movie,Lon
 	@Query("select m from Movie m join m.users u where m.movieId = :movieId and u.id = :userId")
 	Optional<Movie> findByMovieId(Long movieId, Long userId);
 	
-	@Query("select m from Movie m join m.users u join fetch m.cast c join fetch c.actor where u.id = :userId order by m.title")
+	@Query("select m from Movie m join m.users u where u.id = :userId order by m.title")	
 	List<Movie> findMoviesByPage(Long userId, Pageable pageable);
 	
 	@Query("select m from Movie m where m.users is empty")
