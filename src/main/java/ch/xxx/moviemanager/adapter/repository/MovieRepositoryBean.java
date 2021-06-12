@@ -76,7 +76,7 @@ public class MovieRepositoryBean implements MovieRepository {
 	}
 	
 	@Override
-	public List<Movie> findByIdsWithCollections(List<Long> ids) {
-		return this.jpaMovieRepository.findByIdsWithCollections(ids);
+	public Optional<Movie> findByIdWithCollections(Long ids) {
+		return this.jpaMovieRepository.findByIdWithCollections(ids);
 	}
 }

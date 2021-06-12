@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,8 @@ public class MovieService {
 	private final MovieDbRestClient movieDbRestClient;
 
 	public MovieService(MovieRepository movieRep, CastRepository castRep, ActorRepository actorRep,
-			GenereRepository genereRep, UserDetailsMgmtService auds, DefaultMapper mapper, MovieDbRestClient movieDbRestClient) {
+			GenereRepository genereRep, UserDetailsMgmtService auds, DefaultMapper mapper,
+			MovieDbRestClient movieDbRestClient) {
 		this.auds = auds;
 		this.actorRep = actorRep;
 		this.castRep = castRep;
@@ -113,7 +115,8 @@ public class MovieService {
 	public List<Movie> findMoviesByPage(Integer page) {
 		User currentUser = this.auds.getCurrentUser();
 		List<Movie> result = this.movieRep.findMoviesByPage(currentUser.getId(), PageRequest.of((page - 1), 10));
-		result = this.movieRep.findByIdsWithCollections(result.stream().map(movie -> movie.getId()).collect(Collectors.toList()));
+		result = result.stream().flatMap(movie -> Stream.of(this.movieRep.findByIdWithCollections(movie.getId())))
+				.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 		return result;
 	}
 
@@ -179,14 +182,15 @@ public class MovieService {
 			LOG.info("adding user to movie");
 			movieEntity.getUsers().add(user);
 		}
-		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(user.getMoviedbkey(), wrMovie.getResults()[number].getId());
+		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(user.getMoviedbkey(),
+				wrMovie.getResults()[number].getId());
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
 				Cast castEntity = this.mapper.convert(c);
 				movieEntity.getCast().add(castEntity);
 				castEntity.setMovie(movieEntity);
-				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId());				
+				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId());
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : this.mapper.convert(actor);
 				castEntity = this.castRep.save(castEntity);
@@ -201,7 +205,7 @@ public class MovieService {
 		} else {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("update cast for movie");
-				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId());				
+				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId());
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.get();
 				if (!actorEntity.getUsers().contains(user)) {
