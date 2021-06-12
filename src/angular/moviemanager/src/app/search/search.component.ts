@@ -151,6 +151,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     loginClosed( closed: boolean ) {
         if ( closed ) {
+			this.movieService.allGeneres().subscribe( res => this.generes = res );
             this.initScrollMovies();
         }
     }
