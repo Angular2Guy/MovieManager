@@ -25,6 +25,11 @@ import ch.xxx.moviemanager.domain.model.entity.Movie;
 
 @Service
 public class DefaultMapper {
+	
+	public MovieDto convertMovieWithGenere(Movie entity) {
+		MovieDto dto = convertMovie(entity);
+		return dto;
+	}
 
 	public MovieDto convert(Movie entity) {
 		MovieDto dto = convertMovie(entity);
