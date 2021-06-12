@@ -25,7 +25,7 @@ import ch.xxx.moviemanager.domain.model.entity.Movie;
 
 public interface JpaMovieRepository extends PagingAndSortingRepository<Movie,Long>{
 	
-	@Query("select m from Movie m join fetch m.cast c join fetch c.actor a join fetch m.generes where m.id in :ids")
+	@Query("select distinct m from Movie m join fetch m.cast c join fetch c.actor a join fetch m.generes where m.id in :ids")
 	List<Movie> findByIdsWithCollections(List<Long> ids);
 
 	@Query("select e from Movie e join e.users u where lower(e.title) like lower(concat('%',:title,'%')) and u.id = :userid order by e.title")
