@@ -89,7 +89,7 @@ export class MoviesService {
             }));
     }
   	public allGeneres(): Observable<Genere[]> {
-      return this.http.get<Genere[]>('rest/movie/generes', this.reqOptionsArgs).pipe(catchError(error => {
+      return this.http.get<Genere[]>('/rest/movie/generes', this.reqOptionsArgs).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return throwError( error );
       }));
