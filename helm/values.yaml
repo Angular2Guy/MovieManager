@@ -21,6 +21,7 @@ envDb:
   secret:
     POSTGRES_USER: dbuser
     POSTGRES_PASSWORD: passwordtoreplace
+    POSTGRES_DB: movies
     
 envApp:
   normal: 
