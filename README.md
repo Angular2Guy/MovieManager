@@ -14,7 +14,10 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 The project serves as example for the integration of Angular, Spring Boot with Jpa and relational databases in clean architecture. The Angular frontend uses the Ng-Bootstrap components. The backend manages/initialzies the H2/Postgresql databases with Liquibase. The data access is done with Jpa and Spring Repositories. The movies are imported with Spring RestTemplates. The architecture is checked with ArchUnit in a test. 
 
 ## Postgresql setup
-In the postgresql.sh file are the commands to pull and run Postgresql in a Docker image locally. To build a Jar with Postgresql setup build it with 'mvnw clean install -Dpostgresql=true'. In Eclipse the maven profile 'standalone-postgresql' has to be activated and a run/debug configuration with the VM parameter '-Dspring.profiles.active=prod' has to started. The database will be initialized by Liquibase. The Liquibase scripts are setup with preconditions that the tables/sequences/indexes are only created if they do not exist. 
+In the postgresql.sh file are the commands to pull and run Postgresql in a Docker image locally. To build a Jar with Postgresql setup build it with 'mvnw clean install -Ddocker=true'. In Eclipse the maven profile 'standalone-postgresql' has to be activated and a run/debug configuration with the VM parameter '-Dspring.profiles.active=prod' has to started. The database will be initialized by Liquibase. The Liquibase scripts are setup with preconditions that the tables/sequences/indexes are only created if they do not exist. 
+
+## Kubernetes setup
+In the helm directory is a kubernetes setup to run the moviemanager project with minikube. The Helm chart deployes the postgres database and the moviemanager with the needed parameters to run.
 
 ## Movie import
 To import movies a key needs to be provided at signin. To get such a key according to this [Faq](https://www.themoviedb.org/faq/api)
