@@ -51,7 +51,7 @@ Create envApp values
 Create envDb values
 */}}
 {{- define "helpers.list-envDb-variables"}}
-{{- $secretName := .Values.secretDb.name -}}
+{{- $secretName := .Values.secret.nameDb -}}
 {{- range $key, $val := .Values.envDb.secret }}
 - name: {{ $key }}
   valueFrom:

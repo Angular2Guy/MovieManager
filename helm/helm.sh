@@ -1,3 +1,3 @@
 #!/bin/sh
-helm delete messenger
-helm install messenger ./  --set serviceType=NodePort
+helm delete moviemanager
+helm install moviemanager ./  --set serviceType=NodePort
