@@ -1,0 +1,30 @@
+webAppName: moviemanagerapp
+dbName: postgresserver
+webImageName: angular2guy/moviemanager
+webImageVersion: latest
+dbImageName: postgres
+dbImageVersion: 13
+volumeClaimName: postgres-pv-claim
+persistentVolumeName: task-pv-volume
+webServiceName: moviemanagerservice
+dbServiceName: postgresservice
+#for production use replace the jwtTokenSecrect value with a random alphanumeric string of the same length or longer
+jwtTokenSecrect: secret-key1234567890abcdefghijklmnopqrstuvpxyz
+
+secret:
+  nameApp: app-env-secret
+  nameDb: db-env-secret
+
+envDb:
+  normal: 
+    POSTGRES_URL: "jdbc:postgresql://postgresservice:5432/movies"
+  secret:
+    POSTGRES_USER: dbuser
+    POSTGRES_PASSWORD: passwordtoreplace
+    
+envApp:
+  normal: 
+    JPA_SHOW_SQL: true
+    H2_CONSOLE: false
+  secret:
+    JWTTOKEN_SECRET: secret-key1234567890abcdefghijklmnopqrstuvwxyz

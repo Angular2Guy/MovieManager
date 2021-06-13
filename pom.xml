@@ -205,7 +205,7 @@
 			<id>standalone-h2</id>
 			<activation>
 				<property>
-					<name>postgresql</name>
+					<name>docker</name>
 					<value>!true</value>
 				</property>
 			</activation>
