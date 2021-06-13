@@ -29,3 +29,6 @@ envApp:
     H2_CONSOLE: false
   secret:
     JWTTOKEN_SECRET: secret-key1234567890abcdefghijklmnopqrstuvwxyz
+    POSTGRES_USER: dbuser
+    POSTGRES_PASSWORD: passwordtoreplace
+    POSTGRES_URL: "jdbc:postgresql://postgresservice:5432/movies"
