@@ -46,8 +46,8 @@ public class MovieRepositoryBean implements MovieRepository {
 	}
 	
 	@Override
-	public List<Movie> findByTitle(String title, Long userId) {
-		return this.jpaMovieRepository.findByTitle(title, userId);
+	public List<Movie> findByTitle(String title, Long userId, Pageable pageable) {
+		return this.jpaMovieRepository.findByTitle(title, userId, pageable);
 	}
 
 	@Override

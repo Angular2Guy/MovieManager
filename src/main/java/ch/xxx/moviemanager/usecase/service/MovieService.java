@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -108,7 +109,8 @@ public class MovieService {
 	}
 
 	public List<Movie> findMovie(String title) {
-		List<Movie> result = this.movieRep.findByTitle(title, this.auds.getCurrentUser().getId());
+		PageRequest pageRequest = PageRequest.of(0, 15, Sort.by("title").ascending());
+		List<Movie> result = this.movieRep.findByTitle(title, this.auds.getCurrentUser().getId(), pageRequest);
 		return result;
 	}
 

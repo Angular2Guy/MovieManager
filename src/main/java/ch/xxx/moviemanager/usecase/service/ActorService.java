@@ -14,17 +14,16 @@ package ch.xxx.moviemanager.usecase.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
-import ch.xxx.moviemanager.domain.model.entity.Cast;
 import ch.xxx.moviemanager.domain.model.entity.User;
 
 @Service
@@ -46,7 +45,8 @@ public class ActorService {
 	}
 
 	public List<Actor> findActor(String name) {
-		List<Actor> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser().getId());
+		PageRequest pageRequest = PageRequest.of(0, 15, Sort.by("name").ascending());
+		List<Actor> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser().getId(), pageRequest);
 		return result;
 	}
 

@@ -19,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ActorRepository {
 	List<Actor> findActorsByPage(Long userId, Pageable pageble);
-	List<Actor> findByActorName(String name, Long userId);
+	List<Actor> findByActorName(String name, Long userId, Pageable pageable);
 	Optional<Actor> findByActorId(Long actorId, Long userId);
 	void deleteById(Long id);
 	Optional<Actor> findById(Long id);

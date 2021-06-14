@@ -19,7 +19,7 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 
 public interface MovieRepository {
-	List<Movie> findByTitle(String title, Long userId);
+	List<Movie> findByTitle(String title, Long userId, Pageable pageable);
 	List<Movie> findByGenereId(Long id, Long userId);
 	List<Movie> findByTitleAndRelDate(String title, Date releaseDate, Long userId);
 	Optional<Movie> findByMovieId(Long movieId, Long userId);

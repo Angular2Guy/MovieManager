@@ -41,8 +41,8 @@ public class ActorRepositoryBean implements ActorRepository {
 		this.jpaActorRepository.deleteById(id);
 	}
 	
-	public List<Actor> findByActorName(String name, Long userId) {
-		return this.jpaActorRepository.findByActorName(name, userId);
+	public List<Actor> findByActorName(String name, Long userId, Pageable pageable) {
+		return this.jpaActorRepository.findByActorName(name, userId, pageable);
 	}
 	
 	public Optional<Actor> findByActorId(Long actorId, Long userId) {
