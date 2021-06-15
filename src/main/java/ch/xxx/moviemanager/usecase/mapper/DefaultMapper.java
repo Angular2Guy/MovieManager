@@ -25,14 +25,19 @@ import ch.xxx.moviemanager.domain.model.entity.Movie;
 
 @Service
 public class DefaultMapper {
-	
+
 	public MovieDto convertMovieWithGenere(Movie entity) {
-		MovieDto dto = convertMovie(entity);
+		MovieDto dto = convertMovie(entity, false);
 		return dto;
 	}
 
+	public MovieDto convertOnlyMovie(Movie entity) {
+		MovieDto dto = convertMovie(entity, true);
+		return dto;
+	}
+	
 	public MovieDto convert(Movie entity) {
-		MovieDto dto = convertMovie(entity);
+		MovieDto dto = convertMovie(entity, false);
 		entity.getCast().forEach(c -> {
 			CastDto castDto = convert(c, true);
 			dto.getMyCast().add(castDto);
@@ -40,6 +45,11 @@ public class DefaultMapper {
 		return dto;
 	}
 
+	public ActorDto convertOnlyActor(Actor entity) {
+		ActorDto dto = convertActor(entity);
+		return dto;
+	}
+	
 	public ActorDto convert(Actor entity) {
 		ActorDto dto = convertActor(entity);
 		entity.getCasts().forEach(c -> {
@@ -63,21 +73,23 @@ public class DefaultMapper {
 		if (fromMovie)
 			dto.setMyActor(convertActor(entity.getActor()));
 		else
-			dto.setMyMovie(convertMovie(entity.getMovie()));
+			dto.setMyMovie(convertMovie(entity.getMovie(), false));
 		return dto;
 	}
 
-	private MovieDto convertMovie(Movie entity) {
+	private MovieDto convertMovie(Movie entity, boolean noGeneres) {
 		MovieDto dto = new MovieDto();
 		dto.setId(entity.getId());
 		dto.setOverview(entity.getOverview());
 		dto.setReleaseDate(entity.getReleaseDate());
 		dto.setTitle(entity.getTitle());
 		dto.setMovieId(entity.getMovieId());
-		entity.getGeneres().forEach(g -> {
-			GenereDto genereDto = convert(g);
-			dto.getMyGenere().add(genereDto);
-		});
+		if (!noGeneres) {
+			entity.getGeneres().forEach(g -> {
+				GenereDto genereDto = convert(g);
+				dto.getMyGenere().add(genereDto);
+			});
+		}
 		return dto;
 	}
 

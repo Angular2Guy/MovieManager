@@ -44,7 +44,7 @@ public class MovieController {
 	@RequestMapping(value = "/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MovieDto>> getMovieSearch(@PathVariable("title") String titleStr)
 			throws InterruptedException {
-		List<MovieDto> movies = this.service.findMovie(titleStr).stream().map(m -> this.mapper.convert(m))
+		List<MovieDto> movies = this.service.findMovie(titleStr).stream().map(m -> this.mapper.convertOnlyMovie(m))
 				.collect(Collectors.toList());
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
 	}

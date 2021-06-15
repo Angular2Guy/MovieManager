@@ -47,7 +47,7 @@ public class ActorController {
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ActorDto>> getActorSearch(@PathVariable("name") String name)
 			throws InterruptedException {
-		List<ActorDto> actors = this.service.findActor(name).stream().map(a -> this.mapper.convert(a))
+		List<ActorDto> actors = this.service.findActor(name).stream().map(a -> this.mapper.convertOnlyActor(a))
 				.collect(Collectors.toList());
 		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}
