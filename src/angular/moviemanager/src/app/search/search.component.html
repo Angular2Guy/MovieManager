@@ -15,7 +15,9 @@
 			</div>
 			<div *ngIf="movieTitle.value" class="searchList">
 				<span *ngIf="moviesLoading" i18n>Loading</span>
-				<a class="dropdown-item" [routerLink]="['/movie',movie.id]" *ngFor="let movie of movies | async">{{movie.title}}</a>
+				<ng-container  *ngFor="let movie of movies | async">
+					<a class="dropdown-item" *ngIf="!moviesLoading" [routerLink]="['/movie',movie.id]">{{movie.title}}</a>
+				</ng-container>
 			</div>
 		</div>
 		<div class="col-3">
@@ -25,7 +27,9 @@
 			</div>
 			<div *ngIf="movieActor.value" class="searchList">
 				<span *ngIf="actorsLoading" 1i8n>Loading</span>
-				<a class="dropdown-item" [routerLink]="['/actor',actor.id]" *ngFor="let actor of actors | async">{{actor.name}}</a>
+				<ng-container *ngFor="let actor of actors | async">
+					<a class="dropdown-item" *ngIf="!actorsLoading" [routerLink]="['/actor',actor.id]">{{actor.name}}</a>
+				</ng-container>
 			</div>
 		</div>
 		<div class="col-2">
