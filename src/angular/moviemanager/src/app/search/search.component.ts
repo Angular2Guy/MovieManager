@@ -17,9 +17,9 @@ import { Genere } from '../common/genere';
 import { ActorsService } from '../services/actors.service';
 import { MoviesService } from '../services/movies.service';
 import { UsersService } from '../services/users.service';
-import { Observable } from 'rxjs';
+import { iif, of, Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { tap, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { tap, debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
@@ -115,13 +115,13 @@ export class SearchComponent implements OnInit, AfterViewInit {
             debounceTime( 400 ),
             distinctUntilChanged(),
             tap(() => this.actorsLoading = true ),
-            switchMap( name => this.actorService.findActorByName( name ) ),
+            switchMap( name => iif(() => name.length > 2,  this.actorService.findActorByName( name ), of([]))),
             tap(() => this.actorsLoading = false ) );
         this.movies = this.movieTitle.valueChanges.pipe(
             debounceTime( 400 ),
             distinctUntilChanged(),
             tap(() => this.moviesLoading = true ),
-            switchMap( title => this.movieService.findMovieByTitle( title ) ),
+			switchMap(title => iif(() => title.length > 2, this.movieService.findMovieByTitle( title ), of([]))),
             tap(() => this.moviesLoading = false ) );
         this.movieService.allGeneres().subscribe( res => this.generes = res );
         this.route.url.subscribe(() => {
