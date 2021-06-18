@@ -16,9 +16,10 @@ import { Cast } from './cast';
 export interface Movie {
     id: number;
     overview: string;
-    release_date: Date;
+    releaseDate: Date;
     title: string;
     num: number;
+	genreIds: number[];
     myCast: Cast[];
     myGenere: Genere[];
 }

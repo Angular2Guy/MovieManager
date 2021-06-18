@@ -23,11 +23,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class MovieDto {
 	private Long id;
 	private String overview;
-	@JsonProperty("release_date")
+	@JsonProperty("releaseDate")
 	private Date releaseDate;
 	private String title;	
 	private Long movieId;
-	@JsonProperty("genre_ids")
+	@JsonProperty("genreIds")
 	private int[] generes;
 	private List<CastDto> myCast = new ArrayList<>();
 	private List<GenereDto> myGenere = new ArrayList<>();

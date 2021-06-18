@@ -27,7 +27,7 @@ public class ActorDto {
 	private Date birthday;
 	private Date deathday;
 	private String biography;
-	@JsonProperty("place_of_birth")
+	@JsonProperty("placeOfBirth")
 	private String placeOfBirth;
 	@JsonProperty("actorId")
 	private Long actorId;
