@@ -1,3 +1,7 @@
+ol, ul, dl {
+	margin: 0;
+}
+
 .searchList {
 	padding-right: 20px;
 	position: absolute;
@@ -15,6 +19,15 @@
 	background: #BBBBBB;
 }
 
+.my-text-center {
+	vertical-align: middle;
+}
+
+.my-list-center {
+	margin-top: auto;
+	margin-bottom: auto;
+}
+
 .authModal {	
 	display: block;
 	background-color: rgba(0,0,0,0.4);
@@ -22,4 +35,27 @@
 .scrollMovies {
 	height: 500px;
 	overflow-y: scroll;
+}
+
+.add-button {
+	display: flex;
+	flex: 1 1;
+	align-items: center;
+}
+
+.my-floating-labels {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 100%;
+}
+
+.my-dropdown {
+	display: flex;
+	align-items: center;
+}
+
+.searchImportMovie {
+	flex: 1 0;
+	margin-right: var(--bs-gutter-x);	
 }
