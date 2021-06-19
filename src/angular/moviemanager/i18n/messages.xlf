@@ -310,6 +310,62 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="4176feecc0a1a0f8b292601792b24cdc42b3cae5" datatype="html">
+        <source> Name: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/> </source>
+        <target> Name: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">8,10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cfa3c646944d920b388981fbc26d16aa6ef10563" datatype="html">
+        <source>Import Movie Title</source>
+        <target>Import Movie Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="ad82543ba81450a51ffd7d91f6ab2980fd19b415" datatype="html">
+        <source>Search for Movie by Title</source>
+        <target>Search for Movie by Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="62982a9137e84a04eb1e9b44ef1e180e62d573ba" datatype="html">
+        <source>Search for Actor by Name</source>
+        <target>Search for Actor by Name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="06057777856d25f0aa59f910bb3af88c71417b15" datatype="html">
+        <source> Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.releaseDate | date:&apos;dd.MM.yyyy&apos;}}"/> </source>
+        <target> Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.releaseDate | date:&apos;dd.MM.yyyy&apos;}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="2602830bf21dfceef37f349d44cbb9411be765e5" datatype="html">
+        <source> Place of birth: <x id="INTERPOLATION" equiv-text="{{actor?.placeOfBirth}}"/> </source>
+        <target> Place of birth: <x id="INTERPOLATION" equiv-text="{{actor?.placeOfBirth}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">30,32</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="b31649274e1b4a9000a373ec3ab67a6e815c0c90" datatype="html">
+        <source>Search for Movie</source>
+        <target>Search for Movie</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
     </body>
   </file>
 </xliff>
