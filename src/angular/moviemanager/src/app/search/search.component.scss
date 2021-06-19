@@ -3,20 +3,34 @@ ol, ul, dl {
 }
 
 .searchList {
-	padding-right: 20px;
 	position: absolute;
 	z-index: 1;
 	border: solid 1px black;	
-	background: #FFFFFF;
+	background: #FFFFFF;	
+	min-width: 10rem;
 	ul {
 		li:hover {
 			background: #BBBBBB;
 		}
 	}
 }
+.my-dropdown-menu {
+	padding: 0;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	border-radius: 0.25rem;
+	cursor: pointer;
+}
+.my-genere-menu-margin {	
+	margin-top: 3.5rem;
+	width: inherit;
+	box-sizing:border-box;		
+}
 
-.importMovie:hover {
-	background: #BBBBBB;
+.my-dropdown-item {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 100%;
 }
 
 .my-text-center {
@@ -58,4 +72,10 @@ ol, ul, dl {
 .searchImportMovie {
 	flex: 1 0;
 	margin-right: var(--bs-gutter-x);	
+}
+.import-movie {
+	cursor: pointer;
+	&:hover {
+		background: #BBBBBB;
+	}
 }

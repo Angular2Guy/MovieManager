@@ -33,7 +33,7 @@
               "src/assets"
             ],
             "styles": [
-              "bootstrap/dist/css/bootstrap.css",
+              "bootstrap/scss/bootstrap.scss",
               "src/styles.scss"
             ],
             "scripts": [],

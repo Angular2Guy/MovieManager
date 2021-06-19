@@ -15,7 +15,7 @@
 				<input type="text" id="MovieByTitle" class="form-control" placeholder="xxx" aria-describedby="searchMovieTitle" [formControl]="movieTitle">				
 				<label class="my-floating-labels" for="MovieByTitle" i18n>Search for Movie by Title</label> 				
 			</div>
-			<div *ngIf="movieTitle.value" class="searchList">
+			<div *ngIf="movieTitle.value" class="searchList my-dropdown-menu">
 				<span *ngIf="moviesLoading" i18n>Loading</span>
 				<ng-container  *ngFor="let movie of movies | async">
 					<a class="dropdown-item" *ngIf="!moviesLoading" [routerLink]="['/movie',movie.id]">{{movie.title}}</a>
@@ -27,7 +27,7 @@
 				<input type="text" id="MovieByActor" class="form-control" placeholder="name" aria-describedby="searchMovieActor" [formControl]="movieActor">
 				<label class="my-floating-labels" for="MovieByActor" i18n>Search for Actor by Name</label>
 			</div>
-			<div *ngIf="movieActor.value" class="searchList">
+			<div *ngIf="movieActor.value" class="searchList my-dropdown-menu">
 				<span *ngIf="actorsLoading" 1i8n>Loading</span>
 				<ng-container *ngFor="let actor of actors | async">
 					<a class="dropdown-item" *ngIf="!actorsLoading" [routerLink]="['/actor',actor.id]">{{actor.name}}</a>
@@ -37,15 +37,15 @@
 		<div class="col-2 my-dropdown">
 			<div class="dropdown mb-3">
 				<button class="btn btn-secondary ngbDropdownToggle" type="button" (click)="dropDown()" i18n>Generes</button>
-				<div class="dropdown-menu" [class.show]="showMenu">
-					<a class="dropdown-item" *ngFor="let gen of generes" (click)="showGenere(gen.id)">{{gen.name}}</a>
+				<div class="dropdown-menu my-dropdown-menu" [class.show]="showMenu">
+					<a class="dropdown-item my-dropdown-item" *ngFor="let gen of generes" (click)="showGenere(gen.id)">{{gen.name}}</a>
 				</div>
 			</div>
-			<div [style.display]="moviesByGenLoading ? 'block' : 'none'" class="searchList">
+			<div [style.display]="moviesByGenLoading ? 'block' : 'none'" class="searchList my-dropdown-menu my-genere-menu-margin">
 				<span i18n>Loading</span>
 			</div>
-			<div *ngIf="moviesByGenere.length > 0" class="searchList">
-				<a class="dropdown-item" [routerLink]="['/movie',movie.id]" *ngFor="let movie of moviesByGenere">{{movie.title}}</a>
+			<div *ngIf="moviesByGenere.length > 0" class="searchList my-dropdown-menu my-genere-menu-margin">
+				<a class="dropdown-item my-dropdown-item" [routerLink]="['/movie',movie.id]" *ngFor="let movie of moviesByGenere">{{movie.title}}</a>
 			</div>
 		</div>
 	</div>
@@ -58,7 +58,7 @@
 					<th i18n>Release</th>
 					<th i18n>Overview</th>
 				</tr>
-				<tr *ngFor="let movie of importMovies" (click)="importSelMovie(movie)" class="importMovie">
+				<tr *ngFor="let movie of importMovies" (click)="importSelMovie(movie)" class="import-movie">
 					<td class="my-text-center">{{movie.title}}</td>
 					<td class="my-text-center">{{movie.releaseDate | date:'dd.MM.yyyy'}}</td>
 					<td class="my-text-center">{{movie.overview}}</td>
@@ -77,7 +77,7 @@
 						<th i18n>Overview</th>
 					</tr>
 				<tbody #container>
-					<tr *ngFor="let movie of scrollMovies" (dblclick)="movieDetails(movie)" class="importMovie">
+					<tr *ngFor="let movie of scrollMovies" (dblclick)="movieDetails(movie)" class="import-movie">
 						<td class="my-text-center">{{movie.title}}</td>
 						<td class="my-text-center">{{movie.releaseDate | date:'dd.MM.yyyy'}}</td>
 						<td class="my-list-center">
