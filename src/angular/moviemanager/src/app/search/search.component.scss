@@ -23,7 +23,8 @@ ol, ul, dl {
 .my-genere-menu-margin {	
 	margin-top: 3.5rem;
 	width: calc(16.6666666% - (var(--bs-gutter-x)));
-	box-sizing:border-box;		
+	box-sizing:border-box;	
+	top: 3rem;	
 }
 
 .my-dropdown-item {
