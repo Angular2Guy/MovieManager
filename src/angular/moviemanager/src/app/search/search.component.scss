@@ -7,7 +7,7 @@ ol, ul, dl {
 	z-index: 1;
 	border: solid 1px black;	
 	background: #FFFFFF;	
-	min-width: 10rem;
+	//min-width: 10rem;
 	ul {
 		li:hover {
 			background: #BBBBBB;
@@ -22,7 +22,7 @@ ol, ul, dl {
 }
 .my-genere-menu-margin {	
 	margin-top: 3.5rem;
-	width: inherit;
+	width: calc(16.6666666% - (var(--bs-gutter-x)));
 	box-sizing:border-box;		
 }
 
