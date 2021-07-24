@@ -29,7 +29,7 @@ public class ActorDto {
 	private String biography;
 	@JsonProperty("place_of_birth")
 	private String placeOfBirth;
-	@JsonProperty("imdb_id")
+	@JsonProperty("actor_id")
 	private Long actorId;
 	private List<CastDto> myCasts = new ArrayList<>();
 	
