@@ -27,9 +27,9 @@ public class ActorDto {
 	private Date birthday;
 	private Date deathday;
 	private String biography;
-	@JsonProperty("placeOfBirth")
+	@JsonProperty("place_of_birth")
 	private String placeOfBirth;
-	@JsonProperty("actorId")
+	@JsonProperty("imdb_id")
 	private Long actorId;
 	private List<CastDto> myCasts = new ArrayList<>();
 	
