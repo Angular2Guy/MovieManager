@@ -6,7 +6,7 @@ Author: Sven Loesekann
 Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, Postgresql, Liquibase, Jpa, Maven, Java
 
 ## Articles
-* [An Angular Autocomplete From UI to DB](https://dzone.com/articles/a-angular-autocomplete-from-ui-to-db)
+* [An Angular Autocomplete From UI to DB](https://angular2guy.wordpress.com/2021/07/31/an-angular-autocomplete-from-ui-to-db/)
 * [Advanced Kubernetes setup for Spring Boot App with Postgresql DB](https://angular2guy.wordpress.com/2021/07/30/advanced-kubernetes-setup-for-spring-boot-app-with-postgresql-db/)
 
 ## Features
