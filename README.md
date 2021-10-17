@@ -29,6 +29,13 @@ To import movies a key needs to be provided at signin. To get such a key accordi
 ## Testdata
 It is test data provided for the User 'John' and the Password 'Doe'. Then a movie with an actor is availiable for testing. The login data is also needed for the /h2-console. 
 
+## Monitoring
+The Spring Actuator interface with Prometheus interface can be used as it is described in this article: 
+
+[Monitoring Spring Boot with Prometheus and Grafana](https://ordina-jworks.github.io/monitoring/2020/11/16/monitoring-spring-prometheus-grafana.html)
+
+To test the setup the application has to be started and the Docker Images for Prometheus and Grafana have to be started and configured. The scripts 'runGraphana.sh' and 'runPrometheus.sh' can be used as a starting point.
+
 ## Setup
 Postgresql 9.x or newer.
 
