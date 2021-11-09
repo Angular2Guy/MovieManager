@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Observable,of } from 'rxjs';
+import { Observable,of,throwError } from 'rxjs';
 import { Actor } from '../common/actor';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
@@ -28,7 +28,7 @@ export class ActorsService {
       }
       return this.http.get<Actor>('/rest/actor/id/'+id, this.reqOptionsArgs).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
-          return Observable.throw( error );
+          return throwError( error );
           }));
   }
 
@@ -38,7 +38,7 @@ export class ActorsService {
       }
       return this.http.get<Actor[]>('/rest/actor/'+name, this.reqOptionsArgs).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
-          return Observable.throw( error );
+          return throwError( error );
           }));
   }
 }

@@ -27,14 +27,14 @@ export class MoviesService {
     public findMoviesByPage(page: number): Observable<Movie[]> {
         return this.http.get<Movie[]>('/rest/movie/pages?page='+page, this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
-            return Observable.throw( error );
+            return throwError( error);
         }));
     }
 
     public findMoviesByGenereId(id: number): Observable<Movie[]> {
         return this.http.get<Movie[]>('/rest/movie/genere/id/'+id, this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
-            return Observable.throw( error );
+            return throwError( error);
         }));
     }
 
@@ -44,7 +44,7 @@ export class MoviesService {
         }
         return this.http.get<Movie>('/rest/movie/id/'+id, this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
-            return Observable.throw( error );
+            return throwError( error);
             }));
     }
 
@@ -54,7 +54,7 @@ export class MoviesService {
         }
         return this.http.delete<boolean>('/rest/movie/id/'+id, this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
-            return Observable.throw( error );
+            return throwError( error);
         }));
     }
 
@@ -64,7 +64,7 @@ export class MoviesService {
         }
         return this.http.get<Movie[]>('/rest/movie/'+title, this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
-            return Observable.throw( error );
+            return throwError( error);
             }));
     }
 
@@ -74,7 +74,7 @@ export class MoviesService {
         }
         return this.http.get<Movie[]>('/rest/movie/import/'+title, this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
-            return Observable.throw( error );
+            return throwError( error);
             }));
     }
 
@@ -85,7 +85,7 @@ export class MoviesService {
         }
         return this.http.get<boolean>('/rest/movie/import/'+title+'/number/'+id, this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
-            return Observable.throw( error );
+            return throwError( error);
             }));
     }
   	public allGeneres(): Observable<Genere[]> {
