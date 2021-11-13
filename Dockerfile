@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk16:alpine-jre
+FROM eclipse-temurin:17-jdk-alpine
 VOLUME /tmp
 ARG SPRING_PROFILE=prod
 ENV MY_SPRING_PROFILE=$SPRING_PROFILE
