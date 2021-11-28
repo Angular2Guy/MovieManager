@@ -12,36 +12,21 @@
  */
 package ch.xxx.moviemanager.domain.model.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-
-@Entity
-public class Genere extends EntityBase {
-	private Long genereId;
-	private String name;
-	@ManyToMany(mappedBy="generes")
-	private Set<Movie> movies = new HashSet<>();
+@MappedSuperclass
+public abstract class EntityBase {
+	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	private Long id;
 	
-	public Long getGenereId() {
-		return genereId;
+	public Long getId() {
+		return id;
 	}
-	public void setGenereId(Long genereId) {
-		this.genereId = genereId;
+	public void setId(Long id) {
+		this.id = id;
 	}
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	public Set<Movie> getMovies() {
-		return movies;
-	}
-	public void setMovies(Set<Movie> movies) {
-		this.movies = movies;
-	}
-	
 }

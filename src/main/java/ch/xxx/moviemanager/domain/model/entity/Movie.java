@@ -21,19 +21,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
-public class Movie {
-	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private Long id;
+public class Movie extends EntityBase {
 	@Column(columnDefinition = "clob")
 	private String overview;
 	private Date releaseDate;
@@ -59,12 +53,6 @@ public class Movie {
 	}
 	public void setMovieId(Long movieid) {
 		this.movieId = movieid;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
 	}
 	public String getOverview() {
 		return overview;
