@@ -32,10 +32,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
     @ViewChild('movies') moviesRef: ElementRef;
     generes: Genere[];
-    movieTitle = new FormControl();
-    movies: Observable<Movie[] | Observable<Movie[]>>;
-    movieActor = new FormControl();
-    actors: Observable<Actor[] | Observable<Actor[]>>;
+    movieTitle = new FormControl('');
+    movies: Observable<Movie[]>;
+    movieActor = new FormControl('');
+    actors: Observable<Actor[]>;
     importMovies: Movie[] = [];
     importMovieTitle = new FormControl();
     actorsLoading = false;
@@ -115,14 +115,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
             debounceTime( 400 ),
             distinctUntilChanged(),
             tap(() => this.actorsLoading = true ),
-            switchMap( name => iif(() => name.length > 2,
-				this.actorService.findActorByName( name ).pipe(catchError(() => of([]))), of([]))),
+            switchMap((name: string) => iif(() => name.length > 2,
+				this.actorService.findActorByName( name).pipe(catchError(() => of([]))), of([]))),
             tap(() => this.actorsLoading = false ) );
         this.movies = this.movieTitle.valueChanges.pipe(
             debounceTime( 400 ),
             distinctUntilChanged(),
             tap(() => this.moviesLoading = true ),
-			switchMap(title => iif(() => title.length > 2,
+			switchMap((title: string) => iif(() => title.length > 2,
 				this.movieService.findMovieByTitle( title ).pipe(catchError(() => of([]))), of([]))),
             tap(() => this.moviesLoading = false ) );
         this.movieService.allGeneres().subscribe( res => this.generes = res );
