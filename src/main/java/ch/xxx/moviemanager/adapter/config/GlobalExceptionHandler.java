@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import ch.xxx.moviemanager.domain.exceptions.AccessForbiddenException;
 import ch.xxx.moviemanager.domain.exceptions.AccessUnauthorizedException;
 import ch.xxx.moviemanager.domain.exceptions.ImportFailedException;
+import ch.xxx.moviemanager.domain.exceptions.JwtTokenValidationException;
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -45,7 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.FORBIDDEN);
 	}
 	
-	@ExceptionHandler(AccessUnauthorizedException.class) 
+	@ExceptionHandler({AccessUnauthorizedException.class, JwtTokenValidationException.class}) 
 	ResponseEntity<Boolean> accessUnauthorizedHandler(Exception ex, WebRequest request) {
 		super.logger.warn("Access unauthorized.", ex);
 		return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.UNAUTHORIZED);
