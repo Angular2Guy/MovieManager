@@ -15,10 +15,12 @@ package ch.xxx.moviemanager.adapter.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -45,17 +47,17 @@ public class ActorController {
 	}
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ActorDto>> getActorSearch(@PathVariable("name") String name)
+	public ResponseEntity<List<ActorDto>> getActorSearch(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("name") String name)
 			throws InterruptedException {
-		List<ActorDto> actors = this.service.findActor(name).stream().map(a -> this.mapper.convertOnlyActor(a))
+		List<ActorDto> actors = this.service.findActor(name, bearerStr).stream().map(a -> this.mapper.convertOnlyActor(a))
 				.collect(Collectors.toList());
 		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ActorDto> getActorSearchById(@PathVariable("id") Long id) throws InterruptedException {
-		final User currentUser = this.auds.getCurrentUser();
-		ActorDto actor = this.service.findActorById(id).stream()
+	public ResponseEntity<ActorDto> getActorSearchById(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("id") Long id) throws InterruptedException {
+		final User currentUser = this.auds.getCurrentUser(bearerStr);
+		ActorDto actor = this.service.findActorById(id, bearerStr).stream()
 				.filter(myActor -> myActor.getCasts().stream()
 						.filter(c -> c.getMovie().getUsers().contains(currentUser)).findFirst().isPresent())
 				.map(a -> this.mapper.convert(a)).findFirst().orElseThrow(
@@ -65,9 +67,9 @@ public class ActorController {
 
 	@RequestMapping(value = "/pages", params = {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ActorDto>> getPagesByNumber(@RequestParam("page") Integer page)
+	public ResponseEntity<List<ActorDto>> getPagesByNumber(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @RequestParam("page") Integer page)
 			throws InterruptedException {
-		List<ActorDto> actors = this.service.findActorsByPage(page).stream().map(a -> this.mapper.convert(a))
+		List<ActorDto> actors = this.service.findActorsByPage(page, bearerStr).stream().map(a -> this.mapper.convert(a))
 				.collect(Collectors.toList());
 		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}

@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
@@ -28,10 +27,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.AuthorizationServiceException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import ch.xxx.moviemanager.domain.common.Role;
+import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
 import ch.xxx.moviemanager.domain.model.dto.RefreshTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
@@ -104,6 +105,13 @@ public class UserDetailsMgmtService {
 		return List.of();
 	}
 
+	public User getCurrentUser(String bearerStr) {
+		final String userName = this.jwtTokenService.resolveToken(bearerStr)
+				.orElseThrow(() -> new AuthenticationException("Invalid bearer string."));
+		return this.userRepository.findByUsername(userName).orElseThrow(
+				() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", userName)));
+	}
+
 	public RefreshTokenDto refreshToken(String bearerToken) {
 		Optional<String> tokenOpt = this.jwtTokenService.resolveToken(bearerToken);
 		if (tokenOpt.isEmpty()) {
@@ -171,8 +179,8 @@ public class UserDetailsMgmtService {
 				.findAny();
 		if (myRole.isPresent() && entityOpt.get().isEnabled()) {
 			if (this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
-				String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(), Arrays.asList(myRole.get()),
-						Optional.empty());
+				String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(),
+						Arrays.asList(myRole.get()), Optional.empty());
 				user = this.userMapper.convert(entityOpt.get(), jwtToken);
 				return user;
 			}
@@ -196,14 +204,14 @@ public class UserDetailsMgmtService {
 	}
 
 	public UserDto load(Long id) {
-		return this.userMapper.convert(this.userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found")), "");
+		return this.userMapper.convert(this.userRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found")), "");
 	}
 
 	/*
-	public List<UserDto> loadAll() {
-		return this.userRepository.findAll().stream()
-				.flatMap(entity -> Stream.of(this.appUserMapper.convert(Optional.of(entity))))
-				.collect(Collectors.toList());
-	}
-	*/
+	 * public List<UserDto> loadAll() { return
+	 * this.userRepository.findAll().stream() .flatMap(entity ->
+	 * Stream.of(this.appUserMapper.convert(Optional.of(entity))))
+	 * .collect(Collectors.toList()); }
+	 */
 }

@@ -44,22 +44,22 @@ public class ActorService {
 		return true;
 	}
 
-	public List<Actor> findActor(String name) {
+	public List<Actor> findActor(String name, String bearerStr) {
 		PageRequest pageRequest = PageRequest.of(0, 15, Sort.by("name").ascending());
-		List<Actor> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser().getId(), pageRequest);
+		List<Actor> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser(bearerStr).getId(), pageRequest);
 		return result;
 	}
 
-	public List<Actor> findActorsByPage(Integer page) {
-		User currentUser = this.auds.getCurrentUser();
+	public List<Actor> findActorsByPage(Integer page, String bearerStr) {
+		User currentUser = this.auds.getCurrentUser(bearerStr);
 		List<Actor> result = this.actorRep.findActorsByPage(currentUser.getId(), PageRequest.of((page - 1), 10));
 		return result;
 	}
 
-	public Optional<Actor> findActorById(Long id) {
+	public Optional<Actor> findActorById(Long id, String bearerStr) {
 		Optional<Actor> result = this.actorRep.findById(id);
 		if (result.isPresent()) {
-			User user = this.auds.getCurrentUser();
+			User user = this.auds.getCurrentUser(bearerStr);
 			result = result.get().getUsers().stream().filter(myUser -> user.getId().equals(myUser.getId())).findFirst()
 					.isEmpty() ? Optional.empty() : result;			
 		}

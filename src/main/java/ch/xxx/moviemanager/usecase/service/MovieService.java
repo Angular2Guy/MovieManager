@@ -74,8 +74,8 @@ public class MovieService {
 		return result;
 	}
 
-	public List<Movie> findMoviesByGenere(Long id) {
-		List<Movie> result = this.movieRep.findByGenereId(id, this.auds.getCurrentUser().getId());
+	public List<Movie> findMoviesByGenere(Long id, String bearerStr) {
+		List<Movie> result = this.movieRep.findByGenereId(id, this.auds.getCurrentUser(bearerStr).getId());
 		return result;
 	}
 
@@ -84,10 +84,10 @@ public class MovieService {
 		return result;
 	}
 
-	public boolean deleteMovieById(Long id) {
+	public boolean deleteMovieById(Long id, String bearerStr) {
 		boolean result = true;
 		try {
-			User user = this.auds.getCurrentUser();
+			User user = this.auds.getCurrentUser(bearerStr);
 			Optional<Movie> movieOpt = this.movieRep.findById(id);
 			if (movieOpt.isPresent() && movieOpt.get().getUsers().contains(user)) {
 				Movie movie = movieOpt.get();
@@ -108,22 +108,22 @@ public class MovieService {
 		return result;
 	}
 
-	public List<Movie> findMovie(String title) {
+	public List<Movie> findMovie(String title, String bearerStr) {
 		PageRequest pageRequest = PageRequest.of(0, 15, Sort.by("title").ascending());
-		List<Movie> result = this.movieRep.findByTitle(title, this.auds.getCurrentUser().getId(), pageRequest);
+		List<Movie> result = this.movieRep.findByTitle(title, this.auds.getCurrentUser(bearerStr).getId(), pageRequest);
 		return result;
 	}
 
-	public List<Movie> findMoviesByPage(Integer page) {
-		User currentUser = this.auds.getCurrentUser();
+	public List<Movie> findMoviesByPage(Integer page, String bearerStr) {
+		User currentUser = this.auds.getCurrentUser(bearerStr);
 		List<Movie> result = this.movieRep.findMoviesByPage(currentUser.getId(), PageRequest.of((page - 1), 10));
 		result = result.stream().flatMap(movie -> Stream.of(this.movieRep.findByIdWithCollections(movie.getId())))
 				.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
 		return result;
 	}
 
-	public List<MovieDto> findImportMovie(String title) {
-		User user = this.auds.getCurrentUser();
+	public List<MovieDto> findImportMovie(String title, String bearerStr) {
+		User user = this.auds.getCurrentUser(bearerStr);
 		String queryStr = this.createQueryStr(title);
 		WrapperMovieDto wrMovie = this.movieDbRestClient.fetchImportMovie(user.getMoviedbkey(), queryStr);
 		List<MovieDto> result = Arrays.asList(wrMovie.getResults());
@@ -136,8 +136,8 @@ public class MovieService {
 		return true;
 	}
 
-	public boolean importMovie(String title, int number) throws InterruptedException {
-		User user = this.auds.getCurrentUser();
+	public boolean importMovie(String title, int number, String bearerStr) throws InterruptedException {
+		User user = this.auds.getCurrentUser(bearerStr);
 		LOG.info("Start import");
 		LOG.info("Start import generes");
 		WrapperGenereDto result = this.movieDbRestClient.fetchAllGeneres(user.getMoviedbkey());
@@ -160,7 +160,7 @@ public class MovieService {
 		if (movieEntity == null) {
 			LOG.info("Movie not found by id");
 			List<Movie> movies = this.movieRep.findByTitleAndRelDate(wrMovie.getResults()[number].getTitle(),
-					wrMovie.getResults()[number].getReleaseDate(), this.auds.getCurrentUser().getId());
+					wrMovie.getResults()[number].getReleaseDate(), this.auds.getCurrentUser(bearerStr).getId());
 			if (!movies.isEmpty()) {
 				LOG.info("Movie found by Title and Reldate");
 				movieEntity = movies.get(0);

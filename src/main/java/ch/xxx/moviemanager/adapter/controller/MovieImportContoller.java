@@ -14,10 +14,12 @@ package ch.xxx.moviemanager.adapter.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,14 +37,14 @@ public class MovieImportContoller {
 	}
 	
 	@RequestMapping(value="/{searchStr}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MovieDto>> getMovieImportSearch(@PathVariable("searchStr") String searchStr) throws InterruptedException {
-		List<MovieDto> movies = this.service.findImportMovie(searchStr);		
+	public ResponseEntity<List<MovieDto>> getMovieImportSearch(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("searchStr") String searchStr) throws InterruptedException {
+		List<MovieDto> movies = this.service.findImportMovie(searchStr, bearerStr);		
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
 	}
 	
 	@RequestMapping(value="/{searchStr}/number/{number}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Boolean> getMovieImport(@PathVariable("searchStr") String searchStr,@PathVariable("number") int number) throws InterruptedException {
-		boolean success = this.service.importMovie(searchStr, number);
+	public ResponseEntity<Boolean> getMovieImport(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("searchStr") String searchStr,@PathVariable("number") int number) throws InterruptedException {
+		boolean success = this.service.importMovie(searchStr, number, bearerStr);
 		if(success) {
 			return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
 		} else {
