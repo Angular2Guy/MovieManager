@@ -14,83 +14,196 @@ package ch.xxx.moviemanager.usecase.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.transaction.Transactional;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import ch.xxx.moviemanager.domain.exceptions.AccessForbiddenException;
-import ch.xxx.moviemanager.domain.exceptions.AccessUnauthorizedException;
+import ch.xxx.moviemanager.domain.common.Role;
+import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
+import ch.xxx.moviemanager.domain.model.dto.RefreshTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.domain.model.entity.UserRepository;
+import ch.xxx.moviemanager.domain.utils.TokenSubjectRole;
+import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 
 @Service
 @Transactional
-public class UserDetailsMgmtService implements UserDetailsService {
-	private final List<GrantedAuthority> AUTHORITIES = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+public class UserDetailsMgmtService {
+	private final static Logger LOG = LoggerFactory.getLogger(UserDetailsMgmtService.class);
 	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final JavaMailSender javaMailSender;
+	private final JwtTokenService jwtTokenService;
+	private final UserMapper userMapper;
+	@Value("${mail.url.uuid.confirm}")
+	private String confirmUrl;
 
-	public UserDetailsMgmtService(UserRepository userRepository) {
+	public UserDetailsMgmtService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+			JavaMailSender javaMailSender, JwtTokenService jwtTokenService, UserMapper userMapper) {
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.javaMailSender = javaMailSender;
+		this.jwtTokenService = jwtTokenService;
+		this.userMapper = userMapper;
 	}
 
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = this.userRepository.findByUsername(username).orElseThrow(
-				() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", username)));
-		List<SimpleGrantedAuthority> authorities = Arrays.stream(user.getRoles().split(","))
-				.map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
-		UserDetails userDetails = new org.springframework.security.core.userdetails.User(user.getUsername(),
-				user.getPassword(), authorities);
-		return userDetails;
+	/*
+	 * @Override public UserDetails loadUserByUsername(String username) throws
+	 * UsernameNotFoundException { User user =
+	 * this.userRepository.findByUsername(username).orElseThrow( () -> new
+	 * UsernameNotFoundException(String.format("The username %s doesn't exist",
+	 * username))); List<SimpleGrantedAuthority> authorities =
+	 * Arrays.stream(user.getRoles().split(",")) .map(role -> new
+	 * SimpleGrantedAuthority(role)).collect(Collectors.toList()); UserDetails
+	 * userDetails = new
+	 * org.springframework.security.core.userdetails.User(user.getUsername(),
+	 * user.getPassword(), authorities); return userDetails; }
+	 * 
+	 * public boolean loginUser(UserDto userDto) { PasswordEncoder encoder = new
+	 * BCryptPasswordEncoder(); try { UserDetails userDetails =
+	 * this.loadUserByUsername(userDto.getUsername()); if
+	 * (userDto.getUsername().equals(userDetails.getUsername()) &&
+	 * encoder.matches(userDto.getPassword(), userDetails.getPassword())) {
+	 * Authentication result1 = new
+	 * UsernamePasswordAuthenticationToken(userDetails.getUsername(),
+	 * userDetails.getPassword(), AUTHORITIES);
+	 * SecurityContextHolder.getContext().setAuthentication(result1); return true; }
+	 * } catch (UsernameNotFoundException e) { throw new
+	 * AccessForbiddenException(userDto.toString()); } throw new
+	 * AccessUnauthorizedException(userDto.toString()); }
+	 * 
+	 * public User getCurrentUser() { final String userName =
+	 * SecurityContextHolder.getContext().getAuthentication().getPrincipal().
+	 * toString(); return this.userRepository.findByUsername(userName).orElseThrow(
+	 * () -> new
+	 * UsernameNotFoundException(String.format("The username %s doesn't exist",
+	 * userName))); }
+	 * 
+	 * public boolean saveUser(UserDto userDto) {
+	 * if(this.userRepository.findByUsername(userDto.getUsername()).isEmpty()) {
+	 * User user = new User(); user.setMoviedbkey(userDto.getMoviedbkey());
+	 * user.setPassword(this.passwordEncoder.encode(userDto.getPassword()));
+	 * user.setRoles("ROLE_USER"); user.setUsername(userDto.getUsername());
+	 * this.userRepository.save(user); return true; } return false; }
+	 */
+	public List<String> loggedOutUsers() {
+		return List.of();
 	}
 
-	public boolean loginUser(UserDto userDto) {
-		PasswordEncoder encoder = new BCryptPasswordEncoder();
-		try {
-			UserDetails userDetails = this.loadUserByUsername(userDto.getUsername());
-			if (userDto.getUsername().equals(userDetails.getUsername())
-					&& encoder.matches(userDto.getPassword(), userDetails.getPassword())) {
-				Authentication result1 = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
-						userDetails.getPassword(), AUTHORITIES);
-				SecurityContextHolder.getContext().setAuthentication(result1);
-				return true;
+	public RefreshTokenDto refreshToken(String bearerToken) {
+		Optional<String> tokenOpt = this.jwtTokenService.resolveToken(bearerToken);
+		if (tokenOpt.isEmpty()) {
+			throw new AuthorizationServiceException("Invalid token");
+		}
+		String newToken = this.jwtTokenService.refreshToken(tokenOpt.get());
+		LOG.info("Jwt Token refreshed.");
+		return new RefreshTokenDto(newToken);
+	}
+
+	public UserDto save(UserDto appUser) {
+		return this.userMapper.convert(Optional
+				.ofNullable(this.userRepository
+						.save(this.userMapper.convert(appUser, this.userRepository.findById(appUser.getId()))))
+				.orElseThrow(() -> new ResourceNotFoundException("User " + appUser.getId() + " not found")), "");
+	}
+
+	public Boolean signin(UserDto appUserDto) {
+		return Optional.ofNullable(appUserDto.getId()).stream().flatMap(id -> Stream.of(Boolean.FALSE)).findFirst()
+				.orElseGet(() -> this.checkSaveSignin(this.userMapper.convert(appUserDto,
+						this.userRepository.findByUsername(appUserDto.getUsername()))));
+	}
+
+	private Boolean checkSaveSignin(User entity) {
+		if (entity.getId() == null) {
+			String encryptedPassword = this.passwordEncoder.encode(entity.getPassword());
+			entity.setPassword(encryptedPassword);
+			UUID uuid = UUID.randomUUID();
+			entity.setUuid(uuid.toString());
+			entity.setLocked(false);
+			entity.setRoles(Role.USERS.name());
+			boolean emailConfirmEnabled = this.confirmUrl != null && !this.confirmUrl.isBlank();
+			entity.setEnabled(!emailConfirmEnabled);
+			if (emailConfirmEnabled) {
+				this.sendConfirmMail(entity);
 			}
-		} catch (UsernameNotFoundException e) {
-			throw new AccessForbiddenException(userDto.toString());
+			return this.userRepository.save(entity).getId() != null;
 		}
-		throw new AccessUnauthorizedException(userDto.toString());
+		LOG.warn("Username multiple signin: {}", entity.getUsername());
+		return Boolean.FALSE;
 	}
 
-	public User getCurrentUser() {
-		final String userName = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
-		return this.userRepository.findByUsername(userName).orElseThrow(
-				() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", userName)));
+	public Boolean confirmUuid(String uuid) {
+		return this.confirmUuid(this.userRepository.findByUuid(uuid), uuid);
 	}
 
-	public boolean saveUser(UserDto userDto) {
-		if(this.userRepository.findByUsername(userDto.getUsername()).isEmpty()) {
-			PasswordEncoder encoder = new BCryptPasswordEncoder();
-			User user = new User();
-			user.setMoviedbkey(userDto.getMoviedbkey());
-			user.setPassword(encoder.encode(userDto.getPassword()));
-			user.setRoles("ROLE_USER");
-			user.setUsername(userDto.getUsername());
-			this.userRepository.save(user);
-			return true;
-		}
-		return false;
+	private Boolean confirmUuid(Optional<User> entityOpt, final String uuid) {
+		return entityOpt.map(entity -> {
+			entity.setEnabled(true);
+			return this.userRepository.save(entity).isEnabled();
+		}).orElseGet(() -> {
+			LOG.warn("Uuid confirm failed: {}", uuid);
+			return Boolean.FALSE;
+		});
 	}
+
+	public UserDto login(UserDto appUserDto) {
+		return this.loginHelp(this.userRepository.findByUsername(appUserDto.getUsername()), appUserDto.getPassword());
+	}
+
+	private UserDto loginHelp(Optional<User> entityOpt, String passwd) {
+		UserDto user = new UserDto();
+		Optional<Role> myRole = entityOpt.stream().flatMap(myUser -> Arrays.stream(Role.values())
+				.filter(role1 -> Role.USERS.equals(role1)).filter(role1 -> role1.name().equals(myUser.getRoles())))
+				.findAny();
+		if (myRole.isPresent() && entityOpt.get().isEnabled()) {
+			if (this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
+				String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(), Arrays.asList(myRole.get()),
+						Optional.empty());
+				user = this.userMapper.convert(entityOpt.get(), jwtToken);
+				return user;
+			}
+		}
+		return user;
+	}
+
+	private void sendConfirmMail(User entity) {
+		SimpleMailMessage msg = new SimpleMailMessage();
+		msg.setTo(entity.getEmailAddress());
+		msg.setSubject("AngularPortfolioMgr Account Confirmation Mail");
+		String url = this.confirmUrl + "/" + entity.getUuid();
+		msg.setText(String
+				.format("Welcome to the AngularPwaMessenger please use this link(%s) to confirm your account.", url));
+		this.javaMailSender.send(msg);
+		LOG.info("Confirm Mail send to: " + entity.getEmailAddress());
+	}
+
+	public TokenSubjectRole getTokenRoles(Map<String, String> headers) {
+		return this.jwtTokenService.getTokenUserRoles(headers);
+	}
+
+	public UserDto load(Long id) {
+		return this.userMapper.convert(this.userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found")), "");
+	}
+
+	/*
+	public List<UserDto> loadAll() {
+		return this.userRepository.findAll().stream()
+				.flatMap(entity -> Stream.of(this.appUserMapper.convert(Optional.of(entity))))
+				.collect(Collectors.toList());
+	}
+	*/
 }

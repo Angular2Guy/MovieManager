@@ -12,10 +12,11 @@
  */
 package ch.xxx.moviemanager.domain.model.entity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
@@ -25,6 +26,12 @@ public class User extends EntityBase {
 	private String password;
 	private String moviedbkey;
 	private String roles;
+	private String emailAddress;
+	private boolean locked;
+	private boolean enabled;
+	private String uuid;
+	private LocalDateTime lastLogout;
+	private LocalDate birthDate;
 	
 	public String getUsername() {
 		return username;
@@ -50,27 +57,64 @@ public class User extends EntityBase {
 	public void setRoles(String roles) {
 		this.roles = roles;
 	}
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+	public boolean isLocked() {
+		return locked;
+	}
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+	public String getUuid() {
+		return uuid;
+	}
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+	public LocalDateTime getLastLogout() {
+		return lastLogout;
+	}
+	public void setLastLogout(LocalDateTime lastLogout) {
+		this.lastLogout = lastLogout;
+	}
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.getId() == null) ? 0 : this.getId().hashCode());
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(birthDate, emailAddress, enabled, lastLogout, locked, moviedbkey,
+				password, roles, username, uuid);
 		return result;
 	}
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (this.getId() == null) {
-			if (other.getId() != null)
-				return false;
-		} else if (!this.getId().equals(other.getId()))
-			return false;
-		return true;
+		return Objects.equals(birthDate, other.birthDate) && Objects.equals(emailAddress, other.emailAddress)
+				&& enabled == other.enabled && Objects.equals(lastLogout, other.lastLogout) && locked == other.locked
+				&& Objects.equals(moviedbkey, other.moviedbkey) && Objects.equals(password, other.password)
+				&& Objects.equals(roles, other.roles) && Objects.equals(username, other.username)
+				&& Objects.equals(uuid, other.uuid);
 	}
+	
 }

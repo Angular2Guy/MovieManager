@@ -20,4 +20,5 @@ import ch.xxx.moviemanager.domain.model.entity.User;
 
 public interface JpaUserRepository extends CrudRepository<User, Long> {
 	Optional<User> findByUsername(String username);
+	Optional<User> findByUuid(String uuid);
 }

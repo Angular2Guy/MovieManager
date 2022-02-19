@@ -12,6 +12,8 @@
  */
 package ch.xxx.moviemanager.domain.model.dto;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -21,17 +23,26 @@ public class UserDto {
 	private String password;
 	private String moviedbkey;
 	private String roles;
+	private String token;
+	private String emailAddress;
+	private String uuid;
+	private LocalDate birthDate;
 	
 	public UserDto() {		
 	}
 	
-	public UserDto(Long id, String username, String password, String moviedbkey, String roles) {
+	public UserDto(Long id, String username, String password, String moviedbkey, String roles, String token,
+			String emailAddress, String uuid, LocalDate birthDate) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.moviedbkey = moviedbkey;
 		this.roles = roles;
+		this.token = token;
+		this.emailAddress = emailAddress;
+		this.uuid = uuid;
+		this.birthDate = birthDate;
 	}
 
 	public Long getId() {
@@ -63,12 +74,39 @@ public class UserDto {
 	}
 	public void setRoles(String roles) {
 		this.roles = roles;
+	}	
+
+	public String getToken() {
+		return token;
 	}
 
-	@Override
-	public String toString() {
-		return "UserDto [id=" + id + ", username=" + username + ", password=" + password + ", moviedbkey=" + moviedbkey
-				+ ", roles=" + roles + "]";
+	public void setToken(String token) {
+		this.token = token;
 	}
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	public String getUuid() {
+		return uuid;
+	}
+
+	public void setUuid(String uuid) {
+		this.uuid = uuid;
+	}
+
+	public LocalDate getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(LocalDate birthDate) {
+		this.birthDate = birthDate;
+	}
+
 	
 }

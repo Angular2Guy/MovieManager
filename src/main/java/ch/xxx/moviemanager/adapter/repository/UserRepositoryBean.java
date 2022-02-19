@@ -26,12 +26,22 @@ public class UserRepositoryBean implements UserRepository {
 	public UserRepositoryBean(JpaUserRepository jpaUserRepository) {
 		this.jpaUserRepository = jpaUserRepository;
 	}
-	
+	@Override
 	public Optional<User> findByUsername(String username) {
 		return this.jpaUserRepository.findByUsername(username);
 	}
-	
+	@Override
 	public User save(User user) {
 		return this.jpaUserRepository.save(user);
+	}
+
+	@Override
+	public Optional<User> findById(Long id) {
+		return this.jpaUserRepository.findById(id);
+	}
+
+	@Override
+	public Optional<User> findByUuid(String uuid) {
+		return this.jpaUserRepository.findByUuid(uuid);
 	}
 }
