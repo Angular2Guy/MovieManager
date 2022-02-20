@@ -12,12 +12,14 @@
  */
 package ch.xxx.moviemanager.domain.model.entity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
 	Optional<User> findByUsername(String username);
 	Optional<User> findById(Long id);
 	Optional<User> findByUuid(String uuid);
+	List<User> findLoggedOut();
 
 	User save(User user);
 }

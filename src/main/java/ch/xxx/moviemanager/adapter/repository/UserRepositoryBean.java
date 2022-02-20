@@ -12,6 +12,7 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -43,5 +44,9 @@ public class UserRepositoryBean implements UserRepository {
 	@Override
 	public Optional<User> findByUuid(String uuid) {
 		return this.jpaUserRepository.findByUuid(uuid);
+	}
+	@Override
+	public List<User> findLoggedOut() {
+		return this.jpaUserRepository.findLoggedOut();
 	}
 }

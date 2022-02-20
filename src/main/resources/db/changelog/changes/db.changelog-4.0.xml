@@ -49,12 +49,10 @@
 					indexName="ix_user1_username_enabled_locked_last_logout" />
 			</not>
 		</preConditions>
-		<createIndex indexName="ix_user1_username_enabled_locked_last_logout"
-			tableName="user1">
-			<column name="username" />
+		<createIndex indexName="ix_user1_enabled_locked_last_logout"
+			tableName="user1">			
 			<column name="locked" />
 			<column name="enabled" />
-			<column name="uuid" />
 			<column name="last_logout" />
 		</createIndex>
 	</changeSet>
