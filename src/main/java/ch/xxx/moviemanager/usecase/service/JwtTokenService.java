@@ -86,7 +86,7 @@ public class JwtTokenService {
 	}
 
 	public String refreshToken(String token) {
-		validateToken(token);
+		this.validateToken(token);
 		Optional<Jws<Claims>> claimsOpt = JwtUtils.getClaims(Optional.of(token), this.jwtTokenKey);
 		if(claimsOpt.isEmpty()) {
 			throw new AuthorizationServiceException("Invalid token claims");
@@ -99,6 +99,7 @@ public class JwtTokenService {
 	}
 	
 	public Authentication getAuthentication(String token) {		
+		this.validateToken(token);
 		if(this.getAuthorities(token).stream().filter(role -> role.equals(Role.GUEST)).count() > 0) {
 			return new UsernamePasswordAuthenticationToken(this.getUsername(token), null);
 		}
@@ -106,11 +107,13 @@ public class JwtTokenService {
 	}
 
 	public String getUsername(String token) {
+		this.validateToken(token);
 		return Jwts.parserBuilder().setSigningKey(this.jwtTokenKey).build().parseClaimsJws(token).getBody().getSubject();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Collection<Role> getAuthorities(String token) {
+		this.validateToken(token);
 		Collection<Role> roles = new LinkedList<>();
 		for(Role role :Role.values()) {
 			roles.add(role);

@@ -69,6 +69,11 @@ public class AuthenticationController {
 		return this.auds.login(myUser);
 	}
 	
+	@PutMapping("/logout")
+	public Boolean putUserLogout(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr) {
+		return this.auds.logout(bearerStr);
+	}
+	
 	@GetMapping("/refreshToken")
 	public RefreshTokenDto getRefreshToken(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr) {
 		return this.auds.refreshToken(bearerStr);

@@ -12,8 +12,8 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -133,6 +133,14 @@ public class UserDetailsMgmtService {
 		return this.loginHelp(this.userRepository.findByUsername(appUserDto.getUsername()), appUserDto.getPassword());
 	}
 
+	public Boolean logout(String bearerStr) {
+		String username = this.jwtTokenService.getUsername(this.jwtTokenService.resolveToken(bearerStr).orElseThrow(() -> new AuthenticationException("Invalid bearer string.")));
+		User user1 = this.userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Username not found: "+username));
+		user1.setLastLogout(LocalDateTime.now());
+		this.userRepository.save(user1);
+		return Boolean.TRUE;
+	}
+	
 	private UserDto loginHelp(Optional<User> entityOpt, String passwd) {
 		UserDto user = new UserDto();
 		Optional<Role> myRole = entityOpt.stream().flatMap(myUser -> Arrays.stream(Role.values())
@@ -142,6 +150,7 @@ public class UserDetailsMgmtService {
 			if (this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
 				String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(),
 						Arrays.asList(myRole.get()), Optional.empty());
+				entityOpt.get().setLastLogout(null);
 				user = this.userMapper.convert(entityOpt.get(), jwtToken);
 				return user;
 			}
