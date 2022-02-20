@@ -62,47 +62,8 @@ public class UserDetailsMgmtService {
 		this.userMapper = userMapper;
 	}
 
-	/*
-	 * @Override public UserDetails loadUserByUsername(String username) throws
-	 * UsernameNotFoundException { User user =
-	 * this.userRepository.findByUsername(username).orElseThrow( () -> new
-	 * UsernameNotFoundException(String.format("The username %s doesn't exist",
-	 * username))); List<SimpleGrantedAuthority> authorities =
-	 * Arrays.stream(user.getRoles().split(",")) .map(role -> new
-	 * SimpleGrantedAuthority(role)).collect(Collectors.toList()); UserDetails
-	 * userDetails = new
-	 * org.springframework.security.core.userdetails.User(user.getUsername(),
-	 * user.getPassword(), authorities); return userDetails; }
-	 * 
-	 * public boolean loginUser(UserDto userDto) { PasswordEncoder encoder = new
-	 * BCryptPasswordEncoder(); try { UserDetails userDetails =
-	 * this.loadUserByUsername(userDto.getUsername()); if
-	 * (userDto.getUsername().equals(userDetails.getUsername()) &&
-	 * encoder.matches(userDto.getPassword(), userDetails.getPassword())) {
-	 * Authentication result1 = new
-	 * UsernamePasswordAuthenticationToken(userDetails.getUsername(),
-	 * userDetails.getPassword(), AUTHORITIES);
-	 * SecurityContextHolder.getContext().setAuthentication(result1); return true; }
-	 * } catch (UsernameNotFoundException e) { throw new
-	 * AccessForbiddenException(userDto.toString()); } throw new
-	 * AccessUnauthorizedException(userDto.toString()); }
-	 * 
-	 * public User getCurrentUser() { final String userName =
-	 * SecurityContextHolder.getContext().getAuthentication().getPrincipal().
-	 * toString(); return this.userRepository.findByUsername(userName).orElseThrow(
-	 * () -> new
-	 * UsernameNotFoundException(String.format("The username %s doesn't exist",
-	 * userName))); }
-	 * 
-	 * public boolean saveUser(UserDto userDto) {
-	 * if(this.userRepository.findByUsername(userDto.getUsername()).isEmpty()) {
-	 * User user = new User(); user.setMoviedbkey(userDto.getMoviedbkey());
-	 * user.setPassword(this.passwordEncoder.encode(userDto.getPassword()));
-	 * user.setRoles("ROLE_USER"); user.setUsername(userDto.getUsername());
-	 * this.userRepository.save(user); return true; } return false; }
-	 */
-	public List<String> loggedOutUsers() {
-		return List.of();
+	public void updateLoggedOutUsers() {
+		this.jwtTokenService.updateLoggedOutUsers(this.userRepository.findLoggedOut());
 	}
 
 	public User getCurrentUser(String bearerStr) {

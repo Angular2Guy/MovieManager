@@ -19,17 +19,20 @@ import org.springframework.stereotype.Component;
 
 import ch.xxx.moviemanager.usecase.service.ActorService;
 import ch.xxx.moviemanager.usecase.service.MovieService;
+import ch.xxx.moviemanager.usecase.service.UserDetailsMgmtService;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 
 @Component
-public class DatabaseCleanupJob {
-	private static final Logger LOG = LoggerFactory.getLogger(DatabaseCleanupJob.class);
+public class CronJobs {
+	private static final Logger LOG = LoggerFactory.getLogger(CronJobs.class);
 	private final ActorService actorService;
 	private final MovieService movieService;
+	private final UserDetailsMgmtService userService;
 	
-	public DatabaseCleanupJob(ActorService actorService, MovieService movieService) {
+	public CronJobs(ActorService actorService, MovieService movieService,UserDetailsMgmtService userService) {
 		this.actorService = actorService;
 		this.movieService = movieService;
+		this.userService = userService;
 	}
 
 	@Scheduled(cron = "5 0 1 * * ?")
@@ -40,5 +43,12 @@ public class DatabaseCleanupJob {
 		this.movieService.cleanup();
 		this.actorService.cleanup();
 		LOG.info("End cleanup Job");
+	}
+	
+	@Scheduled(fixedRate = 300000)
+	@SchedulerLock(name = "LoggedOutUsers_scheduledTask", lockAtLeastFor = "PT1M", lockAtMostFor = "PT4M")
+	public void updateLoggedOutUsers() {
+		LOG.info("Update logged out users.");
+		this.userService.updateLoggedOutUsers();
 	}
 }

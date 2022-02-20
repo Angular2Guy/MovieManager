@@ -13,6 +13,7 @@ package ch.xxx.moviemanager.usecase.service;
 
 import java.security.Key;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -34,6 +35,7 @@ import org.springframework.stereotype.Service;
 
 import ch.xxx.moviemanager.domain.common.Role;
 import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
+import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.domain.utils.JwtUtils;
 import ch.xxx.moviemanager.domain.utils.TokenSubjectRole;
 import io.jsonwebtoken.Claims;
@@ -45,6 +47,7 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtTokenService {
+	private List<String> loggedOutUsernames = new ArrayList<>();
 
 	@Value("${security.jwt.token.secret-key}")
 	private String secretKey;
@@ -59,6 +62,10 @@ public class JwtTokenService {
 		this.jwtTokenKey = Keys.hmacShaKeyFor(secretKey.getBytes());
 	}
 
+	public void updateLoggedOutUsers(List<User> users) {
+		this.loggedOutUsernames = users.stream().map(myUser -> myUser.getUsername()).collect(Collectors.toUnmodifiableList());
+	}
+	
 	public TokenSubjectRole getTokenUserRoles(Map<String,String> headers) {
 		return JwtUtils.getTokenUserRoles(headers, this.jwtTokenKey);
 	}
@@ -131,8 +138,9 @@ public class JwtTokenService {
 	
 	public boolean validateToken(String token) {
 		try {
-			Jwts.parserBuilder().setSigningKey(this.jwtTokenKey).build().parseClaimsJws(token);
-			return true;
+			Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(this.jwtTokenKey).build().parseClaimsJws(token);
+			String subject = Optional.ofNullable(claimsJws.getBody().getSubject()).orElseThrow(() -> new AuthenticationException("Invalid JWT token"));
+			return this.loggedOutUsernames.stream().noneMatch(myUserName -> subject.equalsIgnoreCase(myUserName));
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new AuthenticationException("Expired or invalid JWT token",e);
 		}
