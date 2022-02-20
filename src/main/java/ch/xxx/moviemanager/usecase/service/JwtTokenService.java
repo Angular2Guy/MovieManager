@@ -15,6 +15,7 @@ import java.security.Key;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,7 +48,7 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtTokenService {
-	private List<String> loggedOutUsernames = new ArrayList<>();
+	private static volatile List<String> loggedOutUsernames = Collections.unmodifiableList(new ArrayList<>());
 
 	@Value("${security.jwt.token.secret-key}")
 	private String secretKey;
@@ -63,7 +64,7 @@ public class JwtTokenService {
 	}
 
 	public void updateLoggedOutUsers(List<User> users) {
-		this.loggedOutUsernames = users.stream().map(myUser -> myUser.getUsername()).collect(Collectors.toUnmodifiableList());
+		JwtTokenService.loggedOutUsernames = users.stream().map(myUser -> myUser.getUsername()).collect(Collectors.toUnmodifiableList());
 	}
 	
 	public TokenSubjectRole getTokenUserRoles(Map<String,String> headers) {
@@ -143,7 +144,7 @@ public class JwtTokenService {
 		try {
 			Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(this.jwtTokenKey).build().parseClaimsJws(token);
 			String subject = Optional.ofNullable(claimsJws.getBody().getSubject()).orElseThrow(() -> new AuthenticationException("Invalid JWT token"));
-			return this.loggedOutUsernames.stream().noneMatch(myUserName -> subject.equalsIgnoreCase(myUserName));
+			return JwtTokenService.loggedOutUsernames.stream().noneMatch(myUserName -> subject.equalsIgnoreCase(myUserName));
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new AuthenticationException("Expired or invalid JWT token",e);
 		}
