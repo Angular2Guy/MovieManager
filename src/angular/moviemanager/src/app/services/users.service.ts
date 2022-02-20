@@ -21,7 +21,6 @@ import { User } from '../common/user';
 })
 export class UsersService {
   public loggedIn = false;
-  private reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
 
   constructor(private http: HttpClient) { }
 
@@ -32,7 +31,7 @@ export class UsersService {
       const u = new User();
       u.username = login;
       u.password = password;
-      return this.http.post<boolean>('/rest/user/login', u, this.reqOptionsArgs).pipe(catchError(error => {
+      return this.http.post<boolean>('/rest/auth/login', u).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return of(false);
           }));
@@ -46,9 +45,13 @@ export class UsersService {
       u.username = login;
       u.password = password;
       u.moviedbkey = movieDbKey;
-      return this.http.post<boolean>('/rest/user/signin', u, this.reqOptionsArgs).pipe(catchError(error => {
-          console.error( JSON.stringify( error ) );
-          return of(false);
-          }));
+      return this.http.post<boolean>('/rest/auth/signin', u).pipe(catchError(error => {
+        console.error( JSON.stringify( error ) );
+        return of(false);
+      }));
+  }
+  
+  public logout(): Observable<boolean> {
+	return this.http.put<boolean>('/rest/auth/logout',{});
   }
 }
