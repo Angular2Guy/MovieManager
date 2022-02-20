@@ -20,7 +20,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -31,10 +30,8 @@ import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 @Order(SecurityProperties.DEFAULT_FILTER_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final JwtTokenService jwtTokenService;
-	private final UserDetailsService userDetailsService;
 	
-	public SecurityConfig(UserDetailsService userDetailsService, JwtTokenService jwtTokenService) {
-		this.userDetailsService = userDetailsService; 
+	public SecurityConfig(JwtTokenService jwtTokenService) {
 		this.jwtTokenService = jwtTokenService;
 	}
 
