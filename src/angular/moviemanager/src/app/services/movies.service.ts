@@ -12,13 +12,14 @@
  */
 import { Injectable } from '@angular/core';
 import { Observable,of, throwError } from 'rxjs';
-import { Actor } from '../common/actor';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Movie } from '../common/movie';
 import { Genere } from '../common/genere';
 
-@Injectable()
+@Injectable({
+ providedIn: 'root',
+})
 export class MoviesService {
     private reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
 

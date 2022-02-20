@@ -16,7 +16,9 @@ import { Actor } from '../common/actor';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({
+ providedIn: 'root',
+})
 export class ActorsService {
   private reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
 

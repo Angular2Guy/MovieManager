@@ -16,7 +16,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { User } from '../common/user';
 
-@Injectable()
+@Injectable({
+ providedIn: 'root',
+})
 export class UsersService {
   public loggedIn = false;
   private reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
