@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2019 Sven Loesekann Licensed under the Apache License, Version 
+	2.0 (the "License"); you may not use this file except in compliance with 
+	the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<changeSet id="17" author="angular2guy">
+		<addUniqueConstraint tableName="user1" columnNames="username" constraintName="user1_username_unique" />
+		<addNotNullConstraint tableName="user1" columnName="username" constraintName="user1_username_not_null" />
+	</changeSet>
+	<changeSet id="18" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="user1"
+					indexName="ix_user1_username" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ix_user1_username"
+			tableName="user1">
+			<column name="username" />
+		</createIndex>
+	</changeSet>
+	<changeSet id="19" author="angular2guy">		
+		<addColumn tableName="user1">
+			<column name="email_address" type="varchar(255)" />
+			<column name="locked" type="boolean" />
+			<column name="enabled" type="boolean" />
+			<column name="uuid" type="varchar(64)" />
+			<column name="last_logout" type="datetime" />
+			<column name="birth_date" type="date" />			
+		</addColumn>
+		<update tableName="user1">
+			<column name="enabled" valueBoolean="true"/>
+			<column name="locked" valueBoolean="false"/>
+			<where>enabled is null</where>
+		</update>
+	</changeSet>
+		<changeSet id="20" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="user1"
+					indexName="ix_user1_username_enabled_locked_last_logout" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ix_user1_username_enabled_locked_last_logout"
+			tableName="user1">
+			<column name="username" />
+			<column name="locked" />
+			<column name="enabled" />
+			<column name="uuid" />
+			<column name="last_logout" />
+		</createIndex>
+	</changeSet>
+</databaseChangeLog>

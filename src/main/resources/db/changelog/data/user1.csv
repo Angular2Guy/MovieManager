@@ -1,2 +1,2 @@
-id,username,password,moviedbkey,roles
-1,John,$2a$10$TQa2veikvN75exjW8R1VfuPRgc6kUxvS1WhZWDcjz38m69kNBrXz6,dummyKey,ROLE_USER
+id,username,password,moviedbkey,roles,email_address,locked,enabled,uuid,last_logout,birth_date
+1,John,$2a$10$TQa2veikvN75exjW8R1VfuPRgc6kUxvS1WhZWDcjz38m69kNBrXz6,dummyKey,ROLE_USER,xxx@gmail.com,false,true,uuid,null,1970-01-01
