@@ -12,7 +12,14 @@
  */
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../services/users.service';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+
+enum ControlName {
+	loginName = 'loginName',
+	password = 'password',
+	movieDbKey = 'movieDbKey',	
+	emailAddress = 'emailAddress'
+}
 
 @Component({
   selector: 'app-login',
@@ -22,20 +29,27 @@ import { FormControl } from '@angular/forms';
 export class LoginComponent implements OnInit {
 
     @Output() loginClosed = new EventEmitter<boolean>();
+    ControlName = ControlName;
     showModal = true;
-    loginName = new FormControl();
-    password = new FormControl();
-    movieDbKey = new FormControl();
+    loginFormGroup: FormGroup;
     modalMsg = '';
 
-  constructor(private userService: UsersService) { }
+  constructor(private userService: UsersService, private formBuilder: FormBuilder) { 
+	this.loginFormGroup = formBuilder.group({
+		[ControlName.loginName]: '',
+		[ControlName.password]: '',
+		[ControlName.movieDbKey]: '',
+		[ControlName.emailAddress]: ''
+	});
+  }
 
   ngOnInit() {
       this.showModal = !this.userService.loggedIn;
   }
 
   loginUser() {
-      this.userService.login(this.loginName.value, this.password.value).subscribe((res: boolean) => {
+      this.userService.login(this.loginFormGroup.controls[ControlName.loginName].value, 
+      	this.loginFormGroup.controls[ControlName.password].value).subscribe((res: boolean) => {
           this.showModal = !res;
           this.userService.loggedIn = res;
           this.modalMsg = res ? '' : 'Login Failed';
@@ -44,14 +58,17 @@ export class LoginComponent implements OnInit {
   }
 
   cancelUser() {
-      this.loginName.setValue('');
-      this.password.setValue('');
-      this.movieDbKey.setValue('');
+      this.loginFormGroup.controls[ControlName.loginName].setValue('');
+      this.loginFormGroup.controls[ControlName.password].setValue('');
+      this.loginFormGroup.controls[ControlName.movieDbKey].setValue('');
+      this.loginFormGroup.controls[ControlName.emailAddress].setValue('');
       this.modalMsg = '';
   }
 
   signinUser() {
-      this.userService.signin(this.loginName.value, this.password.value, this.movieDbKey.value).subscribe((res: boolean) =>{
+      this.userService.signin(this.loginFormGroup.controls[ControlName.loginName].value, 
+        this.loginFormGroup.controls[ControlName.password].value, 
+        this.loginFormGroup.controls[ControlName.movieDbKey].value).subscribe((res: boolean) =>{
           this.showModal = !res;
           this.modalMsg = res ? '' : 'Signin Failed';
           this.loginClosed.emit(res);

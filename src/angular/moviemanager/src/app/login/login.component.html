@@ -4,12 +4,12 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel" i18n>Login / Signin</h5>
       </div>
-      <div class="modal-body">        
-        <input type="text" class="form-control" i18n-placeholder placeholder="login" [formControl]="loginName" >
+      <div class="modal-body" [formGroup]="loginFormGroup">        
+        <input type="text" class="form-control" i18n-placeholder placeholder="login" [formControlName]="ControlName.loginName" >
         <br/>
-        <input type="password" class="form-control" i18n-placeholder placeholder="password" [formControl]="password" >
+        <input type="password" class="form-control" i18n-placeholder placeholder="password" [formControlName]="ControlName.password" >
         <br/>
-        <input type="text" class="form-control" i18n-placeholder placeholder="movieDbKey" [formControl]="movieDbKey">
+        <input type="text" class="form-control" i18n-placeholder placeholder="movieDbKey" [formControlName]="ControlName.movieDbKey">
         <br/>
         <div *ngIf="modalMsg.length > 0" class="alert alert-danger">{{modalMsg}}</div>
       </div>

@@ -11,9 +11,11 @@
    limitations under the License.
  */
 export class User {
-    id: number;
+    id?: number;
     username: string;
     password: string;
-    moviedbkey: string;
-    roles: string;
+    moviedbkey?: string;
+    roles?: string;
+    emailAddress?: string;
+	token?: string;
 }
