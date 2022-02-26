@@ -42,7 +42,7 @@
 			<where>enabled is null</where>
 		</update>
 	</changeSet>
-		<changeSet id="20" author="angular2guy">
+	<changeSet id="20" author="angular2guy">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<indexExists tableName="user1"
@@ -55,5 +55,10 @@
 			<column name="enabled" />
 			<column name="last_logout" />
 		</createIndex>
+	</changeSet>
+	<changeSet id="21" author="angular2guy">
+		<update tableName="user1">
+			<column name="roles" value="USERS"></column>
+		</update>
 	</changeSet>
 </databaseChangeLog>
