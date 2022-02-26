@@ -11,10 +11,11 @@
    limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { User } from '../common/user';
+import { TokenService } from './token.service';
 
 @Injectable({
  providedIn: 'root',
@@ -22,19 +23,29 @@ import { User } from '../common/user';
 export class UsersService {
   public loggedIn = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   public login(login: string, password: string): Observable<boolean> {
       if(!login || !password) {
-          return of(false);
+          return throwError(() => 'login and password needed.');
       }
       const u = new User();
       u.username = login;
       u.password = password;
-      return this.http.post<boolean>('/rest/auth/login', u).pipe(catchError(error => {
+      return this.http.post<User>('/rest/auth/login', u).pipe(map(myUser => {
+			if(!!myUser?.id && !!myUser?.token) {
+				this.tokenService.token = myUser.token;
+				this.tokenService.userId = myUser.id;
+				return true;
+			}
+			return false;
+		}));
+      /*
+       .pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return of(false);
           }));
+          */
   }
 
   public signin(login: string, password: string, movieDbKey: string): Observable<boolean> {
@@ -52,6 +63,6 @@ export class UsersService {
   }
   
   public logout(): Observable<boolean> {
-	return this.http.put<boolean>('/rest/auth/logout',{});
+	return this.http.put<boolean>('/rest/auth/logout',{}).pipe(tap(() => this.tokenService.clear()));
   }
 }
