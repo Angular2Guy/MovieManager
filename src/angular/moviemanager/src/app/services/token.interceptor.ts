@@ -22,10 +22,10 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(private tokenService: TokenService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-	req = req.clone({
+	const myReq = req.clone({
 		headers: this.tokenService.createTokenHeader()
 	});
-  	return next.handle(req).pipe(tap(event => event, event => this.handleError(event)));
+  	return next.handle(myReq).pipe(tap(event => event, event => this.handleError(event)));
   }
 
   private handleError(event: HttpEvent<any>): HttpEvent<any> {

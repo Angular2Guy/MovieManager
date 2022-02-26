@@ -67,8 +67,9 @@ public class UserDetailsMgmtService {
 	}
 
 	public User getCurrentUser(String bearerStr) {
-		final String userName = this.jwtTokenService.resolveToken(bearerStr)
+		final String token = this.jwtTokenService.resolveToken(bearerStr)
 				.orElseThrow(() -> new AuthenticationException("Invalid bearer string."));
+		final String userName = this.jwtTokenService.getUsername(token);
 		return this.userRepository.findByUsername(userName).orElseThrow(
 				() -> new UsernameNotFoundException(String.format("The username %s doesn't exist", userName)));
 	}
