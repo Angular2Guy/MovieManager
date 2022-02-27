@@ -16,6 +16,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { User } from '../common/user';
 import { TokenService } from './token.service';
+import { Router } from '@angular/router';
 
 @Injectable({
  providedIn: 'root',
@@ -23,7 +24,7 @@ import { TokenService } from './token.service';
 export class UsersService {
   public loggedIn = false;
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) { }
 
   public login(login: string, password: string): Observable<boolean> {
       if(!login || !password) {
@@ -32,24 +33,20 @@ export class UsersService {
       const u = new User();
       u.username = login;
       u.password = password;
-      return this.http.post<User>('/rest/auth/login', u).pipe(map(myUser => {
-		console.log(myUser);
+      return this.http.post<User>('/rest/auth/login', u).pipe(map(myUser => {		
 			if(!!myUser?.id && !!myUser?.token) {
 				this.tokenService.token = myUser.token;
 				this.tokenService.userId = myUser.id;
-				return true;
+				this.loggedIn = true;
+				return this.loggedIn;
 			}
-			return false;
+			this.loggedIn = false;
+			return this.loggedIn;
 		}));
-      /*
-       .pipe(catchError(error => {
-          console.error( JSON.stringify( error ) );
-          return of(false);
-          }));
-          */
   }
 
   public signin(login: string, password: string, movieDbKey: string): Observable<boolean> {
+	this.loggedIn = false
       if(!login || !password || !movieDbKey) {
           return of(false);
       }
@@ -64,6 +61,8 @@ export class UsersService {
   }
   
   public logout(): Observable<boolean> {
-	return this.http.put<boolean>('/rest/auth/logout',{}).pipe(tap(() => this.tokenService.clear()));
+	this.loggedIn = false;
+	return this.http.put<boolean>('/rest/auth/logout',{}).pipe(tap(() => this.tokenService.clear()), 
+	  tap(() => this.router.navigate(['/actor/-1',{skipLocationChange: true}]).then(() => this.router.navigate(['/']))));
   }
 }

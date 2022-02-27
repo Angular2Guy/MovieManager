@@ -1,7 +1,10 @@
-<div style="text-align:center">
-  <h1 i18n>
+<div class="header-line">
+  <h1 i18n=@app.heading>
     Welcome to the movie database
   </h1>  
+  <div class="logout-button">
+  	<button type="button" [disabled]="!loggedIn()" (click)="logout()" class="btn btn-primary" i18n="@app.logout">Logout</button>
+  </div>
 </div>
 
 <router-outlet></router-outlet>

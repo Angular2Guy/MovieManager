@@ -20,7 +20,7 @@ const routes: Routes = [
     {path: 'search', component: SearchComponent},
     {path: 'movie/:id', component: MoviesComponent},
     {path: 'actor/:id', component: ActorsComponent},
-    {path: '**', component: SearchComponent}
+    {path: '**', redirectTo: '/search', pathMatch: 'full' }
 ];
 
 @NgModule({

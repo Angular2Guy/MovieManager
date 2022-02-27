@@ -111,6 +111,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
+	console.log('hallo');
         this.actors = this.movieActor.valueChanges.pipe(
             debounceTime( 400 ),
             distinctUntilChanged(),

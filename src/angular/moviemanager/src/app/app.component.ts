@@ -11,6 +11,7 @@
    limitations under the License.
  */
 import { Component } from '@angular/core';
+import { UsersService } from './services/users.service';
 
 @Component({
   selector: 'app-root',
@@ -19,4 +20,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  
+  constructor(private userService: UsersService) {}
+  
+  public loggedIn(): boolean {
+	return this.userService.loggedIn;
+  }
+  
+  public logout(): void {
+	this.userService.logout().subscribe(result => console.log('Logout: '+result));
+  }
 }
