@@ -1,39 +1,39 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col">
-			<a [routerLink]="['/search']" i18n>Back</a> 
+			<a [routerLink]="['/search']" i18n="@@back">Back</a> 
 		</div>
 	</div>
 	<div class="row">
-		<div class="col" i18n>
+		<div class="col" i18n="@@actorName">
 			Name: {{actor?.name}}
 		</div>
 	</div>
 	<div class="row">
-		<div class="col" i18n>
+		<div class="col" i18n="@@actorBirthday">
 			Birthday: {{actor?.birthday | date:'dd.MM.yyyy'}}
 		</div>
 	</div>
 	<div class="row">
-		<div class="col" i18n>
+		<div class="col" i18n="@@actorBiography">
 			Biography: {{actor?.biography}}
 		</div>
 	</div>
 	<div class="row">
 		<div class="col" [ngSwitch]="actor?.gender">
-			<span *ngSwitchCase="1" i18n>Gender: Female</span>
-			<span *ngSwitchCase="2" i18n>Gender: Male</span>
-			<span *ngSwitchDefault i18n>Gender: Unknown</span>
+			<span *ngSwitchCase="1" i18n="@@actorGenderFemale">Gender: Female</span>
+			<span *ngSwitchCase="2" i18n="@@actorGenderMale">Gender: Male</span>
+			<span *ngSwitchDefault i18n="@@actorGenderUnknown">Gender: Unknown</span>
 		</div>
 	</div>	
 	<div class="row">
-		<div class="col" i18n>
+		<div class="col" i18n="@@actorPlaceOfBirth">
 			Place of birth: {{actor?.placeOfBirth}}
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
-			<span  i18n>Cast:</span> 
+			<span  i18n="@@actorCast">Cast:</span> 
 			<ul *ngFor="let cast of actor?.myCasts">
 				<li>{{cast.character}} - <a [routerLink]="['/movie',cast.myMovie.id]">{{cast.myMovie.title}}</a></li>
 			</ul>

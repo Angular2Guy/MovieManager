@@ -2,21 +2,21 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel" i18n>Login / Signin</h5>
+        <h5 class="modal-title" id="exampleModalLabel" i18n="@@loginLoginSignin">Login / Signin</h5>
       </div>
       <div class="modal-body" [formGroup]="loginFormGroup">        
-        <input type="text" class="form-control" i18n-placeholder placeholder="login" [formControlName]="ControlName.loginName" >
+        <input type="text" class="form-control" i18n-placeholder="@@loginLogin" placeholder="login" [formControlName]="ControlName.loginName" >
         <br/>
-        <input type="password" class="form-control" i18n-placeholder placeholder="password" [formControlName]="ControlName.password" >
+        <input type="password" class="form-control" i18n-placeholder="@@loginPassword" placeholder="password" [formControlName]="ControlName.password" >
         <br/>
-        <input type="text" class="form-control" i18n-placeholder placeholder="movieDbKey" [formControlName]="ControlName.movieDbKey">
+        <input type="text" class="form-control" i18n-placeholder="@@loginMovieDbKey" placeholder="movieDbKey" [formControlName]="ControlName.movieDbKey">
         <br/>
         <div *ngIf="modalMsg.length > 0" class="alert alert-danger">{{modalMsg}}</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="loginUser()" i18n>Login</button>
-        <button type="button" class="btn btn-secondary" (click)="cancelUser()" i18n>Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="signinUser()" i18n>Signin</button>
+        <button type="button" class="btn btn-primary" (click)="loginUser()" i18n="@@loginLogin">Login</button>
+        <button type="button" class="btn btn-secondary" (click)="cancelUser()" i18n="@@cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" (click)="signinUser()" i18n="@@loginSignin">Signin</button>
       </div>
     </div>
   </div>

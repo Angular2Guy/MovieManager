@@ -4,19 +4,19 @@
 		<div class="col-4 add-button">
 			<div class="form-floating mb-3 searchImportMovie">
 				<input type="text" id="importMovieByTitle" class="form-control" placeholder="xxx" aria-describedby="importMovieByTitle" [formControl]="importMovieTitle">
-				<label class="my-floating-labels" for="importMovieByTitle" i18n>Import Movie Title</label>
+				<label class="my-floating-labels" for="importMovieByTitle" i18n="@@searchImportMovieTitle">Import Movie Title</label>
 			</div>
 			<div>
-				<button class="btn btn-secondary mb-3" type="button" [disabled]="importMoviesLoading" (click)="importMovie()" i18n>Search for Movie</button>
+				<button class="btn btn-secondary mb-3" type="button" [disabled]="importMoviesLoading" (click)="importMovie()" i18n="@@searchSearchForMovie">Search for Movie</button>
 			</div>
 		</div>
 		<div class="col-3">
 			<div class="form-floating">
 				<input type="text" id="MovieByTitle" class="form-control" placeholder="xxx" aria-describedby="searchMovieTitle" [formControl]="movieTitle">				
-				<label class="my-floating-labels" for="MovieByTitle" i18n>Search for Movie by Title</label> 				
+				<label class="my-floating-labels" for="MovieByTitle" i18n="@@searchSearchMovieByTitle">Search for Movie by Title</label> 				
 			</div>
 			<div *ngIf="movieTitle.value" class="searchList my-dropdown-menu">
-				<span *ngIf="moviesLoading" i18n>Loading</span>
+				<span *ngIf="moviesLoading" i18n="@@loading">Loading</span>
 				<ng-container  *ngFor="let movie of movies | async">
 					<a class="dropdown-item" *ngIf="!moviesLoading" [routerLink]="['/movie',movie.id]">{{movie.title}}</a>
 				</ng-container>
@@ -25,10 +25,10 @@
 		<div class="col-3">
 			<div class="form-floating">
 				<input type="text" id="MovieByActor" class="form-control" placeholder="name" aria-describedby="searchMovieActor" [formControl]="movieActor">
-				<label class="my-floating-labels" for="MovieByActor" i18n>Search for Actor by Name</label>
+				<label class="my-floating-labels" for="MovieByActor" i18n="@@searchSearchActorByName">Search for Actor by Name</label>
 			</div>
 			<div *ngIf="movieActor.value" class="searchList my-dropdown-menu">
-				<span *ngIf="actorsLoading" 1i8n>Loading</span>
+				<span *ngIf="actorsLoading" 1i8n="@@loading">Loading</span>
 				<ng-container *ngFor="let actor of actors | async">
 					<a class="dropdown-item" *ngIf="!actorsLoading" [routerLink]="['/actor',actor.id]">{{actor.name}}</a>
 				</ng-container>
@@ -36,13 +36,13 @@
 		</div>
 		<div class="col-2 my-dropdown">
 			<div class="dropdown mb-3">
-				<button class="btn btn-secondary ngbDropdownToggle" type="button" (click)="dropDown()" i18n>Generes</button>
+				<button class="btn btn-secondary ngbDropdownToggle" type="button" (click)="dropDown()" i18n="@@generes">Generes</button>
 				<div class="dropdown-menu my-dropdown-menu" [class.show]="showMenu">
 					<a class="dropdown-item my-dropdown-item" *ngFor="let gen of generes" (click)="showGenere(gen.id)">{{gen.name}}</a>
 				</div>
 			</div>
 			<div [style.display]="moviesByGenLoading ? 'block' : 'none'" class="searchList my-dropdown-menu my-genere-menu-margin">
-				<span i18n>Loading</span>
+				<span i18n="@@loading">Loading</span>
 			</div>
 			<div *ngIf="moviesByGenere.length > 0" class="searchList my-dropdown-menu my-genere-menu-margin">
 				<a class="dropdown-item my-dropdown-item" [routerLink]="['/movie',movie.id]" *ngFor="let movie of moviesByGenere">{{movie.title}}</a>
@@ -51,12 +51,12 @@
 	</div>
 	<div class="row">
 		<div class="col">
-			<div *ngIf="importMoviesLoading">Importing...</div>
+			<div *ngIf="importMoviesLoading" i18n="@@searchImporting">Importing...</div>
 			<table class="table" *ngIf="importMovies.length > 0">
 				<tr>
-					<th i18n>Title</th>
-					<th i18n>Release</th>
-					<th i18n>Overview</th>
+					<th i18n="@@title">Title</th>
+					<th i18n="@@release">Release</th>
+					<th i18n="@@overview">Overview</th>
 				</tr>
 				<tr *ngFor="let movie of importMovies" (click)="importSelMovie(movie)" class="import-movie">
 					<td class="my-text-center">{{movie.title}}</td>
@@ -71,10 +71,10 @@
 			<table class="table">
 				<thead #header>
 					<tr>
-						<th i18n>Title</th>
-						<th i18n>Release</th>
-						<th i18n>Generes</th>
-						<th i18n>Overview</th>
+						<th i18n="@@title">Title</th>
+						<th i18n="@@release">Release</th>
+						<th i18n="@@generes">Generes</th>
+						<th i18n="@@overview">Overview</th>
 					</tr>
 				<tbody #container>
 					<tr *ngFor="let movie of scrollMovies" (dblclick)="movieDetails(movie)" class="import-movie">

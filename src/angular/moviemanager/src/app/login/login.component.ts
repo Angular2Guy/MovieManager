@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
 	      this.tillNextLogin = myTillNextLogin;
           this.showModal = !res;
           this.userService.loggedIn = res;
-          this.modalMsg = res ? '' : 'Login Failed. Try again in: '+myTillNextLogin+' seconds.';
+          this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed. Try again in: ${myTillNextLogin} seconds.`;
           this.loginClosed.emit(res);
       });
   }

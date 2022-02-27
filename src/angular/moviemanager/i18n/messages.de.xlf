@@ -2,119 +2,43 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="3e8e30607eafb769e681c95bd490a909d7a92e92" datatype="html">
-        <source>Welcome to the movie database</source>
-        <target>Welcome to the movie database</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/app.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c" datatype="html">
+      <trans-unit id="back" datatype="html">
         <source>Back</source>
         <target>Back</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">src/app/actors/actors.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="c6dcc6766b98d922dd32129d2719ed19bec46222" datatype="html">
-        <source>
-			Title: <x id="INTERPOLATION" equiv-text="{{movie?.title}}"/>
-		</source>
-		<target>
-			Title: <x id="INTERPOLATION" equiv-text="{{movie?.title}}"/>
-		</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/movies/movies.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="401e5cc4596ae3162dc1f8e06bc7538e1c7a3428" datatype="html">
-        <source>
-			Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.release_date | date:&apos;dd.MM.yyyy&apos;}}"/>
-		</source>
-		<target>
-			Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.release_date | date:&apos;dd.MM.yyyy&apos;}}"/>
-		</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="8af0a929d99ff939ef31679b83e535deb3a15fe0" datatype="html">
-        <source>
-			Overview: <x id="INTERPOLATION" equiv-text="{{movie?.overview}}"/>
-		</source>
-		<target>
-			Overview: <x id="INTERPOLATION" equiv-text="{{movie?.overview}}"/>
-		</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="e0f5fe5e9f11963547efa337782413d8df7ce538" datatype="html">
-        <source>Generes:</source>
-        <target>Generes:</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="f60dff27acfc94332f150363d235e97a3fb80b4c" datatype="html">
-        <source>Cast:</source>
-        <target>Cast:</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
+      <trans-unit id="actorName" datatype="html">
+        <source> Name: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/> </source>
+        <target> Name: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/actors/actors.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">8,10</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="e544b38c1e4d537438f1a2deaaebe2d050fcaae1" datatype="html">
-        <source>
-			Title: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/>
-		</source>
-		<target>
-			Title: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/>
-		</target>
+      <trans-unit id="actorBirthday" datatype="html">
+        <source> Birthday: <x id="INTERPOLATION" equiv-text="{{actor?.birthday | date:&apos;dd.MM.yyyy&apos;}}"/> </source>
+        <target> Birthday: <x id="INTERPOLATION" equiv-text="{{actor?.birthday | date:&apos;dd.MM.yyyy&apos;}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/actors/actors.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">13,15</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="74098385783c70675d90b28175e67ed84bec9f3e" datatype="html">
-        <source>
-			Birthday: <x id="INTERPOLATION" equiv-text="{{actor?.birthday | date:&apos;dd.MM.yyyy&apos;}}"/>
-		</source>
-		<target>
-			Birthday: <x id="INTERPOLATION" equiv-text="{{actor?.birthday | date:&apos;dd.MM.yyyy&apos;}}"/>
-		</target>
+      <trans-unit id="actorBiography" datatype="html">
+        <source> Biography: <x id="INTERPOLATION" equiv-text="{{actor?.biography}}"/> </source>
+        <target> Biography: <x id="INTERPOLATION" equiv-text="{{actor?.biography}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/actors/actors.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">18,20</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="cab3b9b0d82bc481017f9f0f07fe20f4267feb8b" datatype="html">
-        <source>
-			Biography: <x id="INTERPOLATION" equiv-text="{{actor?.biography}}"/>
-		</source>
-		<target>
-			Biography: <x id="INTERPOLATION" equiv-text="{{actor?.biography}}"/>
-		</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5344679c91b0f4ce6a713ec1dad83c714d7fd690" datatype="html">
+      <trans-unit id="actorGenderFemale" datatype="html">
         <source>Gender: Female</source>
         <target>Gender: Female</target>
         <context-group purpose="location">
@@ -122,7 +46,7 @@
           <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="e18c88087e1cd6c2aeb6a686ec7681f7931d8d1b" datatype="html">
+      <trans-unit id="actorGenderMale" datatype="html">
         <source>Gender: Male</source>
         <target>Gender: Male</target>
         <context-group purpose="location">
@@ -130,7 +54,7 @@
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="85a39ff263ed6fad57b77f4660ea4f3c0d910862" datatype="html">
+      <trans-unit id="actorGenderUnknown" datatype="html">
         <source>Gender: Unknown</source>
         <target>Gender: Unknown</target>
         <context-group purpose="location">
@@ -138,219 +62,7 @@
           <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ad3450267b936fec41400c48a4866509577ff01e" datatype="html">
-        <source>
-			Place of birth: <x id="INTERPOLATION" equiv-text="{{actor?.place_of_birth}}"/>
-		</source>
-		<target>
-			Place of birth: <x id="INTERPOLATION" equiv-text="{{actor?.place_of_birth}}"/>
-		</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="51dd9f3095c9aa0c734391b637f975d8371893f2" datatype="html">
-        <source>Import Movie by Title</source>
-        <target>Import Movie by Title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="a817ef2e565053d06453d5b831a730da41223092" datatype="html">
-        <source>title</source>
-        <target>title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="7e892ba15f2c6c17e83510e273b3e10fc32ea016" datatype="html">
-        <source>Search</source>
-        <target>Search</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="7b5c74dfee10ec53ae975f164b279c4b5101e61a" datatype="html">
-        <source>Search for Movie Title</source>
-        <target>Search for Movie Title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="def755457793d5ad40597886d2d317bc5f415a2f" datatype="html">
-        <source>Loading</source>
-        <target>Loading</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">39</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="f584a8b8113d60588752a09b8f2382af0ad359c9" datatype="html">
-        <source>Search for Movie Actor</source>
-        <target>Search for Movie Actor</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="d5d5363b5ebb6e56c798b438e5a2d219c11332a9" datatype="html">
-        <source>Generes</source>
-        <target>Generes</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="fdf7cbdc140d0aab0f0b6c06065a0fd448ed6a2e" datatype="html">
-        <source>Title</source>
-        <target>Title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="87026d98a68f73af07214f606a9cc9a27458d50d" datatype="html">
-        <source>Release</source>
-        <target>Release</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="e95ae009d0bdb45fcc656e8b65248cf7396080d5" datatype="html">
-        <source>Overview</source>
-        <target>Overview</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">71</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="3bb83c5e1d1de861152506f69516691d6fc5c810" datatype="html">
-        <source>Login / Signin</source>
-        <target>Login / Signin</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="801c464dfaabb8eb2c16f2cc0bf81435030174dd" datatype="html">
-        <source>login</source>
-        <target>login</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="d8b81951d25439864e92f750f7c99d7426d6517c" datatype="html">
-        <source>password</source>
-        <target>password</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="9c87bac7f07f439681cfd4f8d3c43232e7fdb29b" datatype="html">
-        <source>movieDbKey</source>
-        <target>movieDbKey</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6765b4c916060f6bc42d9bb69e80377dbcb5e4e9" datatype="html">
-        <source>Login</source>
-        <target>Login</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
-        <source>Cancel</source>
-        <target>Cancel</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">18</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="5a49f221378f8688a0cf91b1a3207407623f1918" datatype="html">
-        <source>Signin</source>
-        <target>Signin</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/login/login.component.html</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="4176feecc0a1a0f8b292601792b24cdc42b3cae5" datatype="html">
-        <source> Name: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/> </source>
-        <target> Name: <x id="INTERPOLATION" equiv-text="{{actor?.name}}"/> </target>>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
-          <context context-type="linenumber">8,10</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="cfa3c646944d920b388981fbc26d16aa6ef10563" datatype="html">
-        <source>Import Movie Title</source>
-        <target>Import Movie Title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="ad82543ba81450a51ffd7d91f6ab2980fd19b415" datatype="html">
-        <source>Search for Movie by Title</source>
-        <target>Search for Movie by Title</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="62982a9137e84a04eb1e9b44ef1e180e62d573ba" datatype="html">
-        <source>Search for Actor by Name</source>
-        <target>Search for Actor by Name</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/search/search.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="06057777856d25f0aa59f910bb3af88c71417b15" datatype="html">
-        <source> Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.releaseDate | date:&apos;dd.MM.yyyy&apos;}}"/> </source>
-        <target> Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.releaseDate | date:&apos;dd.MM.yyyy&apos;}}"/> </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
-          <context context-type="linenumber">14,16</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2602830bf21dfceef37f349d44cbb9411be765e5" datatype="html">
+      <trans-unit id="actorPlaceOfBirth" datatype="html">
         <source> Place of birth: <x id="INTERPOLATION" equiv-text="{{actor?.placeOfBirth}}"/> </source>
         <target> Place of birth: <x id="INTERPOLATION" equiv-text="{{actor?.placeOfBirth}}"/> </target>
         <context-group purpose="location">
@@ -358,12 +70,236 @@
           <context context-type="linenumber">30,32</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="b31649274e1b4a9000a373ec3ab67a6e815c0c90" datatype="html">
+      <trans-unit id="actorCast" datatype="html">
+        <source>Cast:</source>
+        <target>Cast:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/actors/actors.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="appHeading" datatype="html">
+        <source> Welcome to the movie database </source>
+        <target> Welcome to the movie database </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">2,4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="appLogout" datatype="html">
+        <source>Logout</source>
+        <target>Logout</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/app.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginLoginSignin" datatype="html">
+        <source>Login / Signin</source>
+        <target>Login / Signin</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginLogin" datatype="html">
+        <source>login</source>
+        <target>login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginPassword" datatype="html">
+        <source>password</source>
+        <target>password</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginMovieDbKey" datatype="html">
+        <source>movieDbKey</source>
+        <target>movieDbKey</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginLogin" datatype="html">
+        <source>Login</source>
+        <target>Login</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="cancel" datatype="html">
+        <source>Cancel</source>
+        <target>Cancel</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginSignin" datatype="html">
+        <source>Signin</source>
+        <target>Signin</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loginErrorMsg" datatype="html">
+        <source>Login Failed. Try again in: <x id="PH" equiv-text="myTillNextLogin"/> seconds.</source>
+        <target>Login Failed. Try again in: <x id="PH" equiv-text="myTillNextLogin"/> seconds.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/login/login.component.ts</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="delete" datatype="html">
+        <source>Delete</source>
+        <target>Delete</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="movieTitle" datatype="html">
+        <source> Title: <x id="INTERPOLATION" equiv-text="{{movie?.title}}"/> </source>
+        <target> Title: <x id="INTERPOLATION" equiv-text="{{movie?.title}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="movieReleaseDate" datatype="html">
+        <source> Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.releaseDate | date:&apos;dd.MM.yyyy&apos;}}"/> </source>
+        <target> Release Date: <x id="INTERPOLATION" equiv-text="{{movie?.releaseDate | date:&apos;dd.MM.yyyy&apos;}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">14,16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="movieOverview" datatype="html">
+        <source> Overview: <x id="INTERPOLATION" equiv-text="{{movie?.overview}}"/> </source>
+        <target> Overview: <x id="INTERPOLATION" equiv-text="{{movie?.overview}}"/> </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">19,21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="movieGeneres" datatype="html">
+        <source>Generes:</source>
+        <target>Generes:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/movies/movies.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="searchImportMovieTitle" datatype="html">
+        <source>Import Movie Title</source>
+        <target>Import Movie Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="searchSearchForMovie" datatype="html">
         <source>Search for Movie</source>
         <target>Search for Movie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/search/search.component.html</context>
           <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="searchSearchMovieByTitle" datatype="html">
+        <source>Search for Movie by Title</source>
+        <target>Search for Movie by Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="loading" datatype="html">
+        <source>Loading</source>
+        <target>Loading</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="searchSearchActorByName" datatype="html">
+        <source>Search for Actor by Name</source>
+        <target>Search for Actor by Name</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="generes" datatype="html">
+        <source>Generes</source>
+        <target>Generes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="searchImporting" datatype="html">
+        <source>Importing...</source>
+        <target>Importing...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="title" datatype="html">
+        <source>Title</source>
+        <target>Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="release" datatype="html">
+        <source>Release</source>
+        <target>Release</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="overview" datatype="html">
+        <source>Overview</source>
+        <target>Overview</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/search/search.component.html</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
     </body>

@@ -1,28 +1,28 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col">
-			<a [routerLink]="['/search']" i18n>Back</a> 
-			<button class="btn btn-primary delete-btn" (click)="deleteMovie()" type="button">Delete</button>
+			<a [routerLink]="['/search']" i18n="@@back">Back</a> 
+			<button class="btn btn-primary delete-btn" (click)="deleteMovie()" type="button" i18n="@@delete">Delete</button>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col" i18n>
+		<div class="col" i18n="@@movieTitle">
 			Title: {{movie?.title}}
 		</div>
 	</div>
 	<div class="row">
-		<div class="col" i18n>
+		<div class="col" i18n="@@movieReleaseDate">
 			Release Date: {{movie?.releaseDate | date:'dd.MM.yyyy'}}
 		</div>
 	</div>
 	<div class="row">
-		<div class="col" i18n>
+		<div class="col" i18n="@@movieOverview">
 			Overview: {{movie?.overview}}
 		</div>
 	</div>
 	<div class="row">
 		<div class="col">
-			<span i18n>Generes:</span> 
+			<span i18n="@@movieGeneres">Generes:</span> 
 			<ul *ngFor="let genere of movie?.myGenere">
 				<li>{{genere.name}}</li>
 			</ul>
@@ -30,7 +30,7 @@
 	</div>	
 	<div class="row">
 		<div class="col">
-			<span i18n>Cast:</span> 
+			<span i18n="@@actorCast">Cast:</span> 
 			<ul *ngFor="let cast of movie?.myCast">
 				<li>{{cast.character}} - <a [routerLink]="['/actor',cast.myActor.id]">{{cast.name}}</a></li>
 			</ul>
