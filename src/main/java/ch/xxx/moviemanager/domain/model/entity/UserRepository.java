@@ -20,6 +20,6 @@ public interface UserRepository {
 	Optional<User> findById(Long id);
 	Optional<User> findByUuid(String uuid);
 	List<User> findLoggedOut();
-
+	Iterable<User> saveAll(Iterable<User> users);
 	User save(User user);
 }

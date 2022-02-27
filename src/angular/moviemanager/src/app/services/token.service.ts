@@ -59,7 +59,7 @@ export class TokenService {
 	this.myTokenCache = null;
 	this.myToken = null;
 	this.myUserId = null;
-	this.router.navigate(['/login']);
+	// this.router.navigate(['/login']);
   }
 
   get tokenStream(): Observable<string> {

@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,7 +49,7 @@ import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 @Transactional
 public class UserDetailsMgmtService {
 	private final static Logger LOG = LoggerFactory.getLogger(UserDetailsMgmtService.class);
-	private final static long LOGIN_TIMEOUT = 240L;
+	private final static long LOGIN_TIMEOUT = 245L;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender javaMailSender;
@@ -67,6 +68,12 @@ public class UserDetailsMgmtService {
 	}
 
 	public void updateLoggedOutUsers() {
+		final List<User> users = this.userRepository.findLoggedOut();
+		this.userRepository.saveAll(users.stream().filter(myUser -> myUser.getLastLogout() != null
+				&& myUser.getLastLogout().isBefore(LocalDateTime.now().minusMinutes(2L))).map(myUser -> {
+					myUser.setLastLogout(null);
+					return myUser;
+				}).toList());
 		this.jwtTokenService.updateLoggedOutUsers(this.userRepository.findLoggedOut());
 	}
 
@@ -153,16 +160,18 @@ public class UserDetailsMgmtService {
 		Optional<Role> myRole = entityOpt.stream().flatMap(myUser -> Arrays.stream(Role.values())
 				.filter(role1 -> Role.USERS.equals(role1)).filter(role1 -> role1.name().equals(myUser.getRoles())))
 				.findAny();
-		if (myRole.isPresent() && entityOpt.get().isEnabled()) {
-			Instant now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
-			Instant lastLogout = entityOpt.get().getLastLogout() == null ? now.minusSeconds(120L) :  entityOpt.get().getLastLogout().atZone(ZoneId.systemDefault()).toInstant();
-			Duration sinceLastLogout = Duration.between(lastLogout, now);
-			if (sinceLastLogout.getSeconds() >= 120 && this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
+		if (myRole.isPresent() && entityOpt.get().isEnabled()) {			
+			if (entityOpt.get().getLastLogout() == null 
+					&& this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
 				String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(),
 						Arrays.asList(myRole.get()), Optional.empty());
 				entityOpt.get().setLastLogout(null);
-				user = this.userMapper.convert(entityOpt.get(), jwtToken, LOGIN_TIMEOUT - sinceLastLogout.getSeconds());
-			} else if(this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
+				user = this.userMapper.convert(entityOpt.get(), jwtToken, 0L);
+			} else if (this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
+				Instant now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
+				Instant lastLogout = entityOpt.get().getLastLogout() == null ? now.minusSeconds(LOGIN_TIMEOUT)
+						: entityOpt.get().getLastLogout().atZone(ZoneId.systemDefault()).toInstant();
+				Duration sinceLastLogout = Duration.between(lastLogout, now);
 				user.setSecUntilNexLogin(LOGIN_TIMEOUT - sinceLastLogout.getSeconds());
 			}
 		}

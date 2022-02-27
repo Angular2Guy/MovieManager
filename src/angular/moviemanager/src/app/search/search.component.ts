@@ -110,8 +110,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
         this.router.navigateByUrl('movie/'+movie.id);
     }
 
-    ngOnInit() {
-	console.log('hallo');
+    ngOnInit() {	
         this.actors = this.movieActor.valueChanges.pipe(
             debounceTime( 400 ),
             distinctUntilChanged(),

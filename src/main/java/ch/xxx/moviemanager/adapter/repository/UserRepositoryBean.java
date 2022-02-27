@@ -49,4 +49,8 @@ public class UserRepositoryBean implements UserRepository {
 	public List<User> findLoggedOut() {
 		return this.jpaUserRepository.findLoggedOut();
 	}
+	@Override
+	public Iterable<User> saveAll(Iterable<User> users) {
+		return this.jpaUserRepository.saveAll(users);
+	}
 }
