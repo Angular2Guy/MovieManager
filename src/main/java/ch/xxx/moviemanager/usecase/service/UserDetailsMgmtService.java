@@ -48,6 +48,7 @@ import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 @Transactional
 public class UserDetailsMgmtService {
 	private final static Logger LOG = LoggerFactory.getLogger(UserDetailsMgmtService.class);
+	private final static long LOGIN_TIMEOUT = 240L;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender javaMailSender;
@@ -160,9 +161,9 @@ public class UserDetailsMgmtService {
 				String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(),
 						Arrays.asList(myRole.get()), Optional.empty());
 				entityOpt.get().setLastLogout(null);
-				user = this.userMapper.convert(entityOpt.get(), jwtToken, 120L - sinceLastLogout.getSeconds());
+				user = this.userMapper.convert(entityOpt.get(), jwtToken, LOGIN_TIMEOUT - sinceLastLogout.getSeconds());
 			} else if(this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
-				user.setSecUntilNexLogin(120L - sinceLastLogout.getSeconds());
+				user.setSecUntilNexLogin(LOGIN_TIMEOUT - sinceLastLogout.getSeconds());
 			}
 		}
 		return user;
