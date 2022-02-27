@@ -22,9 +22,9 @@ import ch.xxx.moviemanager.domain.model.entity.User;
 
 @Component
 public class UserMapper {
-	public UserDto convert(User user, String token) {
+	public UserDto convert(User user, String token, long untilNextLogin) {
 		UserDto dto = new UserDto(user.getId(), user.getUsername(), "XXX",
-				"YYY", user.getRoles(), token, "ZZZ", "AAA", LocalDate.EPOCH);
+				"YYY", user.getRoles(), token, "ZZZ", "AAA", LocalDate.EPOCH, untilNextLogin);
 		return dto;
 	}
 	

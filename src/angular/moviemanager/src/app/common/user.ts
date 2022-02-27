@@ -18,4 +18,5 @@ export class User {
     roles?: string;
     emailAddress?: string;
 	token?: string;
+	secUntilNexLogin?: number;
 }

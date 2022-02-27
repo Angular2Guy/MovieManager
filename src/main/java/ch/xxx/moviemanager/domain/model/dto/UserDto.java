@@ -27,12 +27,13 @@ public class UserDto {
 	private String emailAddress;
 	private String uuid;
 	private LocalDate birthDate;
+	private Long secUntilNexLogin;
 	
 	public UserDto() {		
 	}
-	
+
 	public UserDto(Long id, String username, String password, String moviedbkey, String roles, String token,
-			String emailAddress, String uuid, LocalDate birthDate) {
+			String emailAddress, String uuid, LocalDate birthDate, Long secUntilNexLogin) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -43,6 +44,7 @@ public class UserDto {
 		this.emailAddress = emailAddress;
 		this.uuid = uuid;
 		this.birthDate = birthDate;
+		this.secUntilNexLogin = secUntilNexLogin;
 	}
 
 	public Long getId() {
@@ -108,5 +110,12 @@ public class UserDto {
 		this.birthDate = birthDate;
 	}
 
-	
+	public Long getSecUntilNexLogin() {
+		return secUntilNexLogin;
+	}
+
+	public void setSecUntilNexLogin(Long secUntilNexLogin) {
+		this.secUntilNexLogin = secUntilNexLogin;
+	}
+
 }

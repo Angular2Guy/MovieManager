@@ -26,22 +26,24 @@ export class UsersService {
 
   constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) { }
 
-  public login(login: string, password: string): Observable<boolean> {
+  public login(login: string, password: string): Observable<number> {
       if(!login || !password) {
           return throwError(() => 'login and password needed.');
       }
       const u = new User();
       u.username = login;
       u.password = password;
-      return this.http.post<User>('/rest/auth/login', u).pipe(map(myUser => {		
-			if(!!myUser?.id && !!myUser?.token) {
+      return this.http.post<User>('/rest/auth/login', u).pipe(map(myUser => {
+		console.log(!!myUser?.id && !!myUser?.token && myUser?.secUntilNexLogin <= 0);					
+			if(!!myUser?.id && !!myUser?.token && myUser?.secUntilNexLogin <= 0) {
 				this.tokenService.token = myUser.token;
 				this.tokenService.userId = myUser.id;
-				this.loggedIn = true;
-				return this.loggedIn;
+				this.loggedIn = true;				
+				return myUser.secUntilNexLogin;
 			}
 			this.loggedIn = false;
-			return this.loggedIn;
+			return !!myUser?.secUntilNexLogin ? myUser?.secUntilNexLogin : 24 * 60 * 60;
+			;
 		}));
   }
 

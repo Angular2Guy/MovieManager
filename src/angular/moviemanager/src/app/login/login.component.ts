@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
     showModal = true;
     loginFormGroup: FormGroup;
     modalMsg = '';
+    tillNextLogin = 0;
 
   constructor(private userService: UsersService, private formBuilder: FormBuilder) { 
 	this.loginFormGroup = formBuilder.group({
@@ -49,10 +50,12 @@ export class LoginComponent implements OnInit {
 
   loginUser() {
       this.userService.login(this.loginFormGroup.controls[ControlName.loginName].value, 
-      	this.loginFormGroup.controls[ControlName.password].value).subscribe((res: boolean) => {
+      	this.loginFormGroup.controls[ControlName.password].value).subscribe((myTillNextLogin: number) => {
+	      const res = myTillNextLogin <= 0;
+	      this.tillNextLogin = myTillNextLogin;
           this.showModal = !res;
           this.userService.loggedIn = res;
-          this.modalMsg = res ? '' : 'Login Failed';
+          this.modalMsg = res ? '' : 'Login Failed. Try again in: '+myTillNextLogin+' seconds.';
           this.loginClosed.emit(res);
       });
   }

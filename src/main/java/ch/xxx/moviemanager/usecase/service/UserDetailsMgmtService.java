@@ -12,7 +12,10 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
@@ -88,7 +91,7 @@ public class UserDetailsMgmtService {
 		return this.userMapper.convert(Optional
 				.ofNullable(this.userRepository
 						.save(this.userMapper.convert(appUser, this.userRepository.findById(appUser.getId()))))
-				.orElseThrow(() -> new ResourceNotFoundException("User " + appUser.getId() + " not found")), "");
+				.orElseThrow(() -> new ResourceNotFoundException("User " + appUser.getId() + " not found")), "", 10L);
 	}
 
 	public Boolean signin(UserDto appUserDto) {
@@ -135,25 +138,31 @@ public class UserDetailsMgmtService {
 	}
 
 	public Boolean logout(String bearerStr) {
-		String username = this.jwtTokenService.getUsername(this.jwtTokenService.resolveToken(bearerStr).orElseThrow(() -> new AuthenticationException("Invalid bearer string.")));
-		User user1 = this.userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Username not found: "+username));
+		String username = this.jwtTokenService.getUsername(this.jwtTokenService.resolveToken(bearerStr)
+				.orElseThrow(() -> new AuthenticationException("Invalid bearer string.")));
+		User user1 = this.userRepository.findByUsername(username)
+				.orElseThrow(() -> new ResourceNotFoundException("Username not found: " + username));
 		user1.setLastLogout(LocalDateTime.now());
 		this.userRepository.save(user1);
 		return Boolean.TRUE;
 	}
-	
+
 	private UserDto loginHelp(Optional<User> entityOpt, String passwd) {
 		UserDto user = new UserDto();
 		Optional<Role> myRole = entityOpt.stream().flatMap(myUser -> Arrays.stream(Role.values())
 				.filter(role1 -> Role.USERS.equals(role1)).filter(role1 -> role1.name().equals(myUser.getRoles())))
 				.findAny();
 		if (myRole.isPresent() && entityOpt.get().isEnabled()) {
-			if (this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
+			Instant now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
+			Instant lastLogout = entityOpt.get().getLastLogout() == null ? now.minusSeconds(120L) :  entityOpt.get().getLastLogout().atZone(ZoneId.systemDefault()).toInstant();
+			Duration sinceLastLogout = Duration.between(lastLogout, now);
+			if (sinceLastLogout.getSeconds() >= 120 && this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
 				String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(),
 						Arrays.asList(myRole.get()), Optional.empty());
 				entityOpt.get().setLastLogout(null);
-				user = this.userMapper.convert(entityOpt.get(), jwtToken);
-				return user;
+				user = this.userMapper.convert(entityOpt.get(), jwtToken, 120L - sinceLastLogout.getSeconds());
+			} else if(this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
+				user.setSecUntilNexLogin(120L - sinceLastLogout.getSeconds());
 			}
 		}
 		return user;
@@ -176,7 +185,7 @@ public class UserDetailsMgmtService {
 
 	public UserDto load(Long id) {
 		return this.userMapper.convert(this.userRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found")), "");
+				.orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found")), "", 10);
 	}
 
 	/*
