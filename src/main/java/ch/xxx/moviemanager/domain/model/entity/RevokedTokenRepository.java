@@ -12,11 +12,11 @@
  */
 package ch.xxx.moviemanager.domain.model.entity;
 
-import java.util.Optional;
+import java.util.Collection;
 
-public interface UserRepository {
-	Optional<User> findByUsername(String username);
-	Optional<User> findById(Long id);
-	Optional<User> findByUuid(String uuid);	
-	User save(User user);
+public interface RevokedTokenRepository {
+	Collection<RevokedToken> findAll();
+	Collection<RevokedToken> saveAll(Iterable<RevokedToken> revokedTokens);
+	void deleteAll(Iterable<RevokedToken> revokedTokens);
+	RevokedToken save(RevokedToken revokedToker);
 }

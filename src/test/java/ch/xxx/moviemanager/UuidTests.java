@@ -10,13 +10,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.domain.model.entity;
+package ch.xxx.moviemanager;
 
-import java.util.Optional;
+import java.util.UUID;
 
-public interface UserRepository {
-	Optional<User> findByUsername(String username);
-	Optional<User> findById(Long id);
-	Optional<User> findByUuid(String uuid);	
-	User save(User user);
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+public class UuidTests {
+
+	@Test
+	public void uuidCompare() {
+		// System.out.println(UUID.randomUUID().toString());
+		String uuidStr = UUID.randomUUID().toString();
+		Assertions.assertNotEquals(UUID.randomUUID().toString(), UUID.randomUUID().toString());
+		Assertions.assertEquals(uuidStr, uuidStr);
+	}
 }

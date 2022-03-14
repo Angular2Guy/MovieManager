@@ -12,10 +12,8 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
-import java.util.List;
 import java.util.Optional;
 
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import ch.xxx.moviemanager.domain.model.entity.User;
@@ -23,6 +21,4 @@ import ch.xxx.moviemanager.domain.model.entity.User;
 public interface JpaUserRepository extends CrudRepository<User, Long> {
 	Optional<User> findByUsername(String username);
 	Optional<User> findByUuid(String uuid);
-	@Query("select u from User u where u.locked=false and u.enabled=true and u.lastLogout is not null")
-	List<User> findLoggedOut();
 }

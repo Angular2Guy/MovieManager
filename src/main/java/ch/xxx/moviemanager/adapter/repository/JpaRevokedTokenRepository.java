@@ -10,13 +10,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.domain.model.entity;
+package ch.xxx.moviemanager.adapter.repository;
 
-import java.util.Optional;
+import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository {
-	Optional<User> findByUsername(String username);
-	Optional<User> findById(Long id);
-	Optional<User> findByUuid(String uuid);	
-	User save(User user);
+import ch.xxx.moviemanager.domain.model.entity.RevokedToken;
+
+public interface JpaRevokedTokenRepository extends CrudRepository<RevokedToken, Long> {
 }

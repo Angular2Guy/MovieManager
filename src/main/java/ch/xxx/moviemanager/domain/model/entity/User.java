@@ -30,7 +30,6 @@ public class User extends EntityBase {
 	private boolean locked;
 	private boolean enabled;
 	private String uuid;
-	private LocalDateTime lastLogout;
 	private LocalDate birthDate;
 	
 	public String getUsername() {
@@ -81,12 +80,6 @@ public class User extends EntityBase {
 	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
-	public LocalDateTime getLastLogout() {
-		return lastLogout;
-	}
-	public void setLastLogout(LocalDateTime lastLogout) {
-		this.lastLogout = lastLogout;
-	}
 	public LocalDate getBirthDate() {
 		return birthDate;
 	}
@@ -97,8 +90,8 @@ public class User extends EntityBase {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(birthDate, emailAddress, enabled, lastLogout, locked, moviedbkey,
-				password, roles, username, uuid);
+		result = prime * result
+				+ Objects.hash(birthDate, emailAddress, enabled, locked, moviedbkey, password, roles, username, uuid);
 		return result;
 	}
 	@Override
@@ -111,10 +104,8 @@ public class User extends EntityBase {
 			return false;
 		User other = (User) obj;
 		return Objects.equals(birthDate, other.birthDate) && Objects.equals(emailAddress, other.emailAddress)
-				&& enabled == other.enabled && Objects.equals(lastLogout, other.lastLogout) && locked == other.locked
-				&& Objects.equals(moviedbkey, other.moviedbkey) && Objects.equals(password, other.password)
-				&& Objects.equals(roles, other.roles) && Objects.equals(username, other.username)
-				&& Objects.equals(uuid, other.uuid);
-	}
-	
+				&& enabled == other.enabled && locked == other.locked && Objects.equals(moviedbkey, other.moviedbkey)
+				&& Objects.equals(password, other.password) && Objects.equals(roles, other.roles)
+				&& Objects.equals(username, other.username) && Objects.equals(uuid, other.uuid);
+	}	
 }

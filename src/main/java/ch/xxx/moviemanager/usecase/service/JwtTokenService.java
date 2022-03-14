@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -76,7 +77,8 @@ public class JwtTokenService {
 		claims.setSubject(username);
 		claims.put(JwtUtils.TOKENAUTHKEY, roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority()))
 				.filter(Objects::nonNull).collect(Collectors.toList()));
-		claims.put(JwtUtils.TOKENLASTMSGKEY, new Date().getTime());
+		claims.put(JwtUtils.TOKENLASTMSGKEY, new Date().getTime());		
+		claims.put(JwtUtils.UUID, UUID.randomUUID().toString());
 		Date issuedAt = issuedAtOpt.orElse(new Date());
 		claims.setIssuedAt(issuedAt);
 		Date validity = new Date(issuedAt.getTime() + validityInMilliseconds);
@@ -110,6 +112,11 @@ public class JwtTokenService {
 	public String getUsername(String token) {
 		this.validateToken(token);
 		return Jwts.parserBuilder().setSigningKey(this.jwtTokenKey).build().parseClaimsJws(token).getBody().getSubject();
+	}
+	
+	public String getUuid(String token) {
+		this.validateToken(token);
+		return Jwts.parserBuilder().setSigningKey(this.jwtTokenKey).build().parseClaimsJws(token).getBody().get(JwtUtils.UUID, String.class);
 	}
 	
 	@SuppressWarnings("unchecked")

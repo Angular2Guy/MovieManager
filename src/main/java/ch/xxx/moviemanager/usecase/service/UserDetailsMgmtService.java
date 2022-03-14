@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,8 @@ import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
 import ch.xxx.moviemanager.domain.model.dto.RefreshTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
+import ch.xxx.moviemanager.domain.model.entity.RevokedToken;
+import ch.xxx.moviemanager.domain.model.entity.RevokedTokenRepository;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.domain.model.entity.UserRepository;
 import ch.xxx.moviemanager.domain.utils.TokenSubjectRole;
@@ -51,6 +54,7 @@ public class UserDetailsMgmtService {
 	private final static Logger LOG = LoggerFactory.getLogger(UserDetailsMgmtService.class);
 	private final static long LOGIN_TIMEOUT = 245L;
 	private final UserRepository userRepository;
+	private final RevokedTokenRepository revokedTokenRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final JavaMailSender javaMailSender;
 	private final JwtTokenService jwtTokenService;
@@ -59,22 +63,22 @@ public class UserDetailsMgmtService {
 	private String confirmUrl;
 
 	public UserDetailsMgmtService(UserRepository userRepository, PasswordEncoder passwordEncoder,
-			JavaMailSender javaMailSender, JwtTokenService jwtTokenService, UserMapper userMapper) {
+			RevokedTokenRepository revokedTokenRepository, JavaMailSender javaMailSender,
+			JwtTokenService jwtTokenService, UserMapper userMapper) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.javaMailSender = javaMailSender;
 		this.jwtTokenService = jwtTokenService;
 		this.userMapper = userMapper;
+		this.revokedTokenRepository = revokedTokenRepository;
 	}
 
 	public void updateLoggedOutUsers() {
-		final List<User> users = this.userRepository.findLoggedOut();
-		this.userRepository.saveAll(users.stream().filter(myUser -> myUser.getLastLogout() != null
-				&& myUser.getLastLogout().isBefore(LocalDateTime.now().minusMinutes(2L))).map(myUser -> {
-					myUser.setLastLogout(null);
-					return myUser;
-				}).toList());
-		this.jwtTokenService.updateLoggedOutUsers(this.userRepository.findLoggedOut());
+		final List<RevokedToken> revokedTokens = new ArrayList<RevokedToken>(this.revokedTokenRepository.findAll());
+		this.revokedTokenRepository.deleteAll(revokedTokens.stream()
+				.filter(myRevokedToken -> myRevokedToken.getLastLogout() != null
+						&& myRevokedToken.getLastLogout().isBefore(LocalDateTime.now().minusSeconds(LOGIN_TIMEOUT)))
+				.toList());
 	}
 
 	public User getCurrentUser(String bearerStr) {
@@ -148,10 +152,12 @@ public class UserDetailsMgmtService {
 	public Boolean logout(String bearerStr) {
 		String username = this.jwtTokenService.getUsername(this.jwtTokenService.resolveToken(bearerStr)
 				.orElseThrow(() -> new AuthenticationException("Invalid bearer string.")));
-		User user1 = this.userRepository.findByUsername(username)
+		String uuid = this.jwtTokenService.getUuid(this.jwtTokenService.resolveToken(bearerStr)
+				.orElseThrow(() -> new AuthenticationException("Invalid bearer string.")));
+		this.userRepository.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("Username not found: " + username));
-		user1.setLastLogout(LocalDateTime.now());
-		this.userRepository.save(user1);
+		RevokedToken revokedToken = new RevokedToken(username, uuid, LocalDateTime.now());
+		this.revokedTokenRepository.save(revokedToken);
 		return Boolean.TRUE;
 	}
 
@@ -160,20 +166,11 @@ public class UserDetailsMgmtService {
 		Optional<Role> myRole = entityOpt.stream().flatMap(myUser -> Arrays.stream(Role.values())
 				.filter(role1 -> Role.USERS.equals(role1)).filter(role1 -> role1.name().equals(myUser.getRoles())))
 				.findAny();
-		if (myRole.isPresent() && entityOpt.get().isEnabled()) {			
-			if (entityOpt.get().getLastLogout() == null 
-					&& this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
-				String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(),
-						Arrays.asList(myRole.get()), Optional.empty());
-				entityOpt.get().setLastLogout(null);
-				user = this.userMapper.convert(entityOpt.get(), jwtToken, 0L);
-			} else if (this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
-				Instant now = LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant();
-				Instant lastLogout = entityOpt.get().getLastLogout() == null ? now.minusSeconds(LOGIN_TIMEOUT)
-						: entityOpt.get().getLastLogout().atZone(ZoneId.systemDefault()).toInstant();
-				Duration sinceLastLogout = Duration.between(lastLogout, now);
-				user.setSecUntilNexLogin(LOGIN_TIMEOUT - sinceLastLogout.getSeconds());
-			}
+		if (myRole.isPresent() && entityOpt.get().isEnabled()
+				&& this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
+			String jwtToken = this.jwtTokenService.createToken(entityOpt.get().getUsername(),
+					Arrays.asList(myRole.get()), Optional.empty());
+			user = this.userMapper.convert(entityOpt.get(), jwtToken, 0L);
 		}
 		return user;
 	}
