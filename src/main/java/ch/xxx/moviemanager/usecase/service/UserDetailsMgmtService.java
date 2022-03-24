@@ -12,10 +12,7 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +49,7 @@ import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 @Transactional
 public class UserDetailsMgmtService {
 	private final static Logger LOG = LoggerFactory.getLogger(UserDetailsMgmtService.class);
-	private final static long LOGIN_TIMEOUT = 245L;
+	private final static long LOGOUT_TIMEOUT = 185L;
 	private final UserRepository userRepository;
 	private final RevokedTokenRepository revokedTokenRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -77,7 +74,11 @@ public class UserDetailsMgmtService {
 		final List<RevokedToken> revokedTokens = new ArrayList<RevokedToken>(this.revokedTokenRepository.findAll());
 		this.revokedTokenRepository.deleteAll(revokedTokens.stream()
 				.filter(myRevokedToken -> myRevokedToken.getLastLogout() != null
-						&& myRevokedToken.getLastLogout().isBefore(LocalDateTime.now().minusSeconds(LOGIN_TIMEOUT)))
+						&& myRevokedToken.getLastLogout().isBefore(LocalDateTime.now().minusSeconds(LOGOUT_TIMEOUT)))
+				.toList());
+		this.jwtTokenService.updateLoggedOutUsers(revokedTokens.stream()
+				.filter(myRevokedToken -> myRevokedToken.getLastLogout() == null
+						|| !myRevokedToken.getLastLogout().isBefore(LocalDateTime.now().minusSeconds(LOGOUT_TIMEOUT)))
 				.toList());
 	}
 

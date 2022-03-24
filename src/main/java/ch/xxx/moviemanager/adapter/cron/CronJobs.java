@@ -45,7 +45,7 @@ public class CronJobs {
 		LOG.info("End cleanup Job");
 	}
 	
-	@Scheduled(fixedRate = 120000)
+	@Scheduled(fixedRate = 90000)
 	@SchedulerLock(name = "LoggedOutUsers_scheduledTask", lockAtLeastFor = "PT1M", lockAtMostFor = "PT100s")
 	public void updateLoggedOutUsers() {
 		LOG.info("Update logged out users.");
