@@ -46,7 +46,7 @@ public class CronJobs {
 	}
 	
 	@Scheduled(fixedRate = 90000)
-	@SchedulerLock(name = "LoggedOutUsers_scheduledTask", lockAtLeastFor = "PT1M", lockAtMostFor = "PT100s")
+	@SchedulerLock(name = "LoggedOutUsers_scheduledTask", lockAtLeastFor = "PT1M", lockAtMostFor = "PT80s")
 	public void updateLoggedOutUsers() {
 		LOG.info("Update logged out users.");
 		this.userService.updateLoggedOutUsers();
