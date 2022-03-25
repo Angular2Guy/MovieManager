@@ -61,7 +61,7 @@ public class UserDetailsMgmtService {
 	private final JavaMailSender javaMailSender;
 	private final JwtTokenService jwtTokenService;
 	private final UserMapper userMapper;
-	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(20);
+	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
 	@Value("${mail.url.uuid.confirm}")
 	private String confirmUrl;
 
@@ -174,14 +174,11 @@ public class UserDetailsMgmtService {
 				.filter(role1 -> Role.USERS.equals(role1)).filter(role1 -> role1.name().equals(myUser.getRoles())))
 				.findAny();
 		if (myRole.isPresent() && entityOpt.get().isEnabled()
-				&& this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {			
-			Callable<String> callableTask = () -> {
-				TimeUnit.MILLISECONDS.sleep(3000);
-				return this.jwtTokenService.createToken(entityOpt.get().getUsername(), Arrays.asList(myRole.get()),
-						Optional.empty());
-			};
+				&& this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {
+			Callable<String> callableTask = () -> this.jwtTokenService.createToken(entityOpt.get().getUsername(),
+					Arrays.asList(myRole.get()), Optional.empty());
 			try {
-				String jwtToken = executorService.submit(callableTask).get();
+				String jwtToken = executorService.schedule(callableTask, 3, TimeUnit.SECONDS).get();
 				user = this.jwtTokenService.userNameLogouts(entityOpt.get().getUsername()) > 2 ? user
 						: this.userMapper.convert(entityOpt.get(), jwtToken, 0L);
 			} catch (InterruptedException | ExecutionException e) {
