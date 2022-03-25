@@ -52,7 +52,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtTokenService {
 	private static final Logger LOG = LoggerFactory.getLogger(JwtTokenService.class);
 	public record UserNameUuid(String userName, String uuid) {}
-	private static final List<UserNameUuid> loggedOutUsers = new CopyOnWriteArrayList<>();
+	private final List<UserNameUuid> loggedOutUsers = new CopyOnWriteArrayList<>();
 
 	@Value("${security.jwt.token.secret-key}")
 	private String secretKey;
@@ -68,8 +68,8 @@ public class JwtTokenService {
 	}
 
 	public void updateLoggedOutUsers(List<RevokedToken> revokedTokens) {
-		JwtTokenService.loggedOutUsers.clear();
-		JwtTokenService.loggedOutUsers.addAll(revokedTokens.stream()
+		this.loggedOutUsers.clear();
+		this.loggedOutUsers.addAll(revokedTokens.stream()
 			.map(myRevokedToken -> new UserNameUuid(myRevokedToken.getName(), 
 					myRevokedToken.getUuid())).toList());
 	}
@@ -153,13 +153,17 @@ public class JwtTokenService {
 		return Optional.empty();
 	}
 	
+	public int userNameLogouts(String userName) {
+		return this.loggedOutUsers.stream().filter(myUserName -> myUserName.userName.equalsIgnoreCase(userName)).toList().size();
+	}
+	
 	public boolean validateToken(String token) {
 		try {
 			Jws<Claims> claimsJws = Jwts.parserBuilder().setSigningKey(this.jwtTokenKey).build().parseClaimsJws(token);
 			String subject = Optional.ofNullable(claimsJws.getBody().getSubject()).orElseThrow(() -> new AuthenticationException("Invalid JWT token"));
 			String uuid = Optional.ofNullable(claimsJws.getBody().get(JwtUtils.UUID, String.class)).orElseThrow(() -> new AuthenticationException("Invalid JWT token"));
 			// LOG.info("Subject: {}, Uuid: {}, LoggedOutUsers: {}", subject, uuid, JwtTokenService.loggedOutUsers.size());
-			return JwtTokenService.loggedOutUsers.stream().noneMatch(myUserName -> subject.equalsIgnoreCase(myUserName.userName) && uuid.equals(myUserName.uuid));
+			return this.loggedOutUsers.stream().noneMatch(myUserName -> subject.equalsIgnoreCase(myUserName.userName) && uuid.equals(myUserName.uuid));
 		} catch (JwtException | IllegalArgumentException e) {
 			throw new AuthenticationException("Expired or invalid JWT token",e);
 		}
