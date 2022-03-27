@@ -78,13 +78,13 @@ public class UserDetailsMgmtService {
 
 	public void updateLoggedOutUsers() {
 		final List<RevokedToken> revokedTokens = new ArrayList<RevokedToken>(this.revokedTokenRepository.findAll());
+		this.jwtTokenService.updateLoggedOutUsers(revokedTokens.stream()
+				.filter(myRevokedToken -> myRevokedToken.getLastLogout() == null
+				|| !myRevokedToken.getLastLogout().isBefore(LocalDateTime.now().minusSeconds(LOGOUT_TIMEOUT)))
+				.toList());
 		this.revokedTokenRepository.deleteAll(revokedTokens.stream()
 				.filter(myRevokedToken -> myRevokedToken.getLastLogout() != null
 						&& myRevokedToken.getLastLogout().isBefore(LocalDateTime.now().minusSeconds(LOGOUT_TIMEOUT)))
-				.toList());
-		this.jwtTokenService.updateLoggedOutUsers(revokedTokens.stream()
-				.filter(myRevokedToken -> myRevokedToken.getLastLogout() == null
-						|| !myRevokedToken.getLastLogout().isBefore(LocalDateTime.now().minusSeconds(LOGOUT_TIMEOUT)))
 				.toList());
 	}
 
