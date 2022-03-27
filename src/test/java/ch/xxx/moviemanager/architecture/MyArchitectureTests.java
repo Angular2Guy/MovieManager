@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.springframework.boot.web.reactive.error.DefaultErrorAttributes;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -84,8 +85,9 @@ public class MyArchitectureTests {
 	@Test
 	public void ruleCronJobMethodsAnnotations() {
 		ArchRule exceptionType = ArchRuleDefinition.methods().that().arePublic().and().areDeclaredInClassesThat()
-				.resideInAPackage("..adapter.cron.ScheduledTask").should().beAnnotatedWith(PostConstruct.class)
-				.orShould().beAnnotatedWith(Scheduled.class).andShould().beAnnotatedWith(SchedulerLock.class);
+				.resideInAPackage("..adapter.cron..").should().beAnnotatedWith(PostConstruct.class).orShould()
+				.beAnnotatedWith(Scheduled.class).andShould().beAnnotatedWith(SchedulerLock.class).orShould()
+				.beAnnotatedWith(Order.class);
 		exceptionType.check(this.importedClasses);
 	}
 

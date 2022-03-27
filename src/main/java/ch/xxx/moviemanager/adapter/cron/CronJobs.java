@@ -14,6 +14,7 @@ package ch.xxx.moviemanager.adapter.cron;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,7 @@ public class CronJobs {
 	}
 	
 	@Scheduled(fixedRate = 90000)
+	@Order(1)
 	// @SchedulerLock(name = "LoggedOutUsers_scheduledTask", lockAtLeastFor = "PT1M", lockAtMostFor = "PT80s")
 	public void updateLoggedOutUsers() {
 		LOG.info("Update logged out users.");
