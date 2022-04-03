@@ -157,14 +157,24 @@ public class UserDetailsMgmtService {
 	}
 
 	public Boolean logout(String bearerStr) {
+		if (!this.jwtTokenService.validateToken(this.jwtTokenService.resolveToken(bearerStr).orElse(""))) {
+			throw new AuthenticationException("Invalid token.");
+		}
 		String username = this.jwtTokenService.getUsername(this.jwtTokenService.resolveToken(bearerStr)
 				.orElseThrow(() -> new AuthenticationException("Invalid bearer string.")));
 		String uuid = this.jwtTokenService.getUuid(this.jwtTokenService.resolveToken(bearerStr)
 				.orElseThrow(() -> new AuthenticationException("Invalid bearer string.")));
 		this.userRepository.findByUsername(username)
 				.orElseThrow(() -> new ResourceNotFoundException("Username not found: " + username));
-		RevokedToken revokedToken = new RevokedToken(username, uuid, LocalDateTime.now());
-		this.revokedTokenRepository.save(revokedToken);
+		long revokedTokensForUuid = this.revokedTokenRepository.findAll().stream()
+				.filter(myRevokedToken -> myRevokedToken.getUuid().equals(uuid)
+						&& myRevokedToken.getName().equalsIgnoreCase(username))
+				.count();
+		if (revokedTokensForUuid == 0) {
+			this.revokedTokenRepository.save(new RevokedToken(username, uuid, LocalDateTime.now()));
+		} else {
+			LOG.warn("Duplicate logout for user {}", username);
+		}
 		return Boolean.TRUE;
 	}
 
