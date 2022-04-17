@@ -15,12 +15,12 @@
 
 	<name>moviemanager</name>
 	<description>Demo project for Spring Boot</description>
+	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>ch.xxx</groupId>
 		<artifactId>moviemanager</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
