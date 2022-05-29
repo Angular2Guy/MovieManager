@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
@@ -34,7 +34,7 @@ public class Actor extends EntityBase {
 	private Integer gender;
 	private Date birthday;
 	private Date deathday;
-	@Column(columnDefinition = "clob")
+	@Lob()
 	private String biography;
 	private String placeOfBirth;
 	@OneToMany(mappedBy="actor", cascade = CascadeType.ALL, orphanRemoval=true)	

@@ -19,16 +19,16 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
 public class Movie extends EntityBase {
-	@Column(columnDefinition = "clob")
+	@Lob
 	private String overview;
 	private Date releaseDate;
 	private String title;
