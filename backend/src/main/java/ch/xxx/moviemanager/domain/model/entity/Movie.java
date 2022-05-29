@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -29,60 +30,70 @@ import javax.persistence.OneToMany;
 @Entity
 public class Movie extends EntityBase {
 	@Lob
+	@Column(columnDefinition = "text")
 	private String overview;
 	private Date releaseDate;
 	private String title;
 	private Long movieId;
-	@OneToMany(mappedBy="movie", cascade = CascadeType.ALL, orphanRemoval=true)	
+	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Cast> cast = new ArrayList<>();
 	@ManyToMany
-	@JoinTable(name = "movie_genere", 
-		joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "genere_id"))
+	@JoinTable(name = "movie_genere", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "genere_id"))
 	private Set<Genere> generes = new HashSet<>();
 	@ManyToMany
-	@JoinTable(name = "movie_user", 
-		joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@JoinTable(name = "movie_user", joinColumns = @JoinColumn(name = "movie_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<User> users = new HashSet<>();
-	
-	
+
 	public Set<User> getUsers() {
 		return users;
 	}
+
 	public Long getMovieId() {
 		return movieId;
 	}
+
 	public void setMovieId(Long movieid) {
 		this.movieId = movieid;
 	}
+
 	public String getOverview() {
 		return overview;
 	}
+
 	public void setOverview(String overview) {
 		this.overview = overview;
 	}
+
 	public Date getReleaseDate() {
 		return releaseDate;
 	}
+
 	public void setReleaseDate(Date releaseDate) {
 		this.releaseDate = releaseDate;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public List<Cast> getCast() {
 		return cast;
 	}
+
 	public void setCast(List<Cast> cast) {
 		this.cast = cast;
 	}
+
 	public Set<Genere> getGeneres() {
 		return generes;
 	}
+
 	public void setGeneres(Set<Genere> generes) {
 		this.generes = generes;
 	}
-	
+
 }

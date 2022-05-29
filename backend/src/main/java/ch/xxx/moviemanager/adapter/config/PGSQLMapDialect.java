@@ -14,15 +14,15 @@ package ch.xxx.moviemanager.adapter.config;
 
 import java.sql.Types;
 
-import org.hibernate.dialect.PostgreSQL9Dialect;
+import org.hibernate.dialect.PostgreSQL10Dialect;
 import org.hibernate.type.descriptor.sql.LongVarcharTypeDescriptor;
 import org.hibernate.type.descriptor.sql.SqlTypeDescriptor;
 
-public class PGSQLMapDialect extends PostgreSQL9Dialect {
+public class PGSQLMapDialect extends PostgreSQL10Dialect {
 
 	@Override
 	public SqlTypeDescriptor remapSqlTypeDescriptor(SqlTypeDescriptor sqlTypeDescriptor) {
-		if (Types.CLOB == sqlTypeDescriptor.getSqlType()) {
+		if (Types.CLOB == sqlTypeDescriptor.getSqlType() || Types.LONGVARCHAR == sqlTypeDescriptor.getSqlType()) {
 			return LongVarcharTypeDescriptor.INSTANCE;
 		}
 		return super.remapSqlTypeDescriptor(sqlTypeDescriptor);

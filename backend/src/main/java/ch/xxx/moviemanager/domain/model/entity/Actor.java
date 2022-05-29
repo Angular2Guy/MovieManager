@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -34,66 +35,82 @@ public class Actor extends EntityBase {
 	private Integer gender;
 	private Date birthday;
 	private Date deathday;
-	@Lob()
+	@Lob
+	@Column(columnDefinition = "text")
 	private String biography;
 	private String placeOfBirth;
-	@OneToMany(mappedBy="actor", cascade = CascadeType.ALL, orphanRemoval=true)	
+	@OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Cast> casts = new ArrayList<>();
 	@ManyToMany
-	@JoinTable(name = "actor_user", 
-		joinColumns = @JoinColumn(name = "actor_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
+	@JoinTable(name = "actor_user", joinColumns = @JoinColumn(name = "actor_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
 	private Set<User> users = new HashSet<>();
-	
+
 	public Set<User> getUsers() {
 		return users;
 	}
+
 	public Long getActorId() {
 		return actorId;
 	}
+
 	public void setActorId(Long actorId) {
 		this.actorId = actorId;
 	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public Integer getGender() {
 		return gender;
 	}
+
 	public void setGender(Integer gender) {
 		this.gender = gender;
 	}
+
 	public Date getBirthday() {
 		return birthday;
 	}
+
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
+
 	public Date getDeathday() {
 		return deathday;
 	}
+
 	public void setDeathday(Date deathday) {
 		this.deathday = deathday;
 	}
+
 	public String getBiography() {
 		return biography;
 	}
+
 	public void setBiography(String biography) {
 		this.biography = biography;
 	}
+
 	public String getPlaceOfBirth() {
 		return placeOfBirth;
 	}
+
 	public void setPlaceOfBirth(String placeOfBirth) {
 		this.placeOfBirth = placeOfBirth;
 	}
+
 	public List<Cast> getCasts() {
 		return casts;
 	}
+
 	public void setCasts(List<Cast> casts) {
 		this.casts = casts;
 	}
-	
+
 }
