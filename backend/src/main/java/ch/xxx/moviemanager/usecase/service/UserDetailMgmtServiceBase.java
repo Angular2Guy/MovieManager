@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,16 +120,25 @@ public class UserDetailMgmtServiceBase {
 		return this.signin(appUserDto, true, true).isPresent();
 	}
 
-	public Optional<User> signin(UserDto appUserDto, boolean persist, boolean check) {	
-		if(appUserDto.getId() != null) {
+	public Optional<User> signin(UserDto appUserDto, boolean persist, boolean check) {
+		if (appUserDto.getId() != null) {
 			return Optional.empty();
 		}
-		Optional<User> result = check ? this.checkSaveSignin(this.userMapper.convert(appUserDto,
-				this.userRepository.findByUsername(appUserDto.getUsername()))) : Optional.of(this.userMapper.convert(appUserDto, Optional.empty()));
+		Optional<User> result = check
+				? this.checkSaveSignin(this.userMapper.convert(appUserDto,
+						this.userRepository.findByUsername(appUserDto.getUsername())))
+				: Optional.of(this.userMapper.convert(appUserDto, Optional.empty()));
+		result = result.stream().flatMap(myUser -> {
+			boolean emailConfirmEnabled = this.confirmUrl != null && !this.confirmUrl.isBlank();
+			if (myUser.getId() == null) {
+				myUser.setEnabled(!emailConfirmEnabled);
+			}
+			return Stream.of(myUser);
+		}).findAny();
 		result = result.stream().map(myAppUser -> persist ? this.userRepository.save(myAppUser) : myAppUser).findAny();
 		return result;
 	}
-	
+
 	private Optional<User> checkSaveSignin(User entity) {
 		Optional<User> result = Optional.empty();
 		if (entity.getId() == null) {
@@ -172,15 +182,16 @@ public class UserDetailMgmtServiceBase {
 				.peek(revokedToken -> this.revokedTokenRepository.save(revokedToken)).findAny();
 		return revokedTokenOpt.isPresent();
 	}
-	
+
 	public Boolean logout(RevokedTokenDto revokedTokenDto) {
 		this.revokedTokenRepository.findAll().stream()
 				.filter(myRevokedToken -> myRevokedToken.getUuid().equals(revokedTokenDto.getUuid())
 						&& myRevokedToken.getName().equalsIgnoreCase(revokedTokenDto.getName()))
-				.findAny().or(() -> Optional.of(this.revokedTokenRepository.save(this.revokedTokenMapper.convert(revokedTokenDto))));
+				.findAny().or(() -> Optional
+						.of(this.revokedTokenRepository.save(this.revokedTokenMapper.convert(revokedTokenDto))));
 		return Boolean.TRUE;
 	}
-	
+
 	public Optional<RevokedToken> logoutToken(String bearerStr) {
 		if (!this.jwtTokenService.validateToken(this.jwtTokenService.resolveToken(bearerStr).orElse(""))) {
 			throw new AuthenticationException("Invalid token.");
@@ -197,7 +208,8 @@ public class UserDetailMgmtServiceBase {
 				.count();
 		Optional<RevokedToken> result = Optional.empty();
 		if (revokedTokensForUuid == 0) {
-			result = Optional.of(this.revokedTokenRepository.save(new RevokedToken(username, uuid, LocalDateTime.now())));
+			result = Optional
+					.of(this.revokedTokenRepository.save(new RevokedToken(username, uuid, LocalDateTime.now())));
 		} else {
 			LOG.warn("Duplicate logout for user {}", username);
 		}
