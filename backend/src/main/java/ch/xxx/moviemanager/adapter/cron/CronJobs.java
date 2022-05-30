@@ -12,9 +12,12 @@
  */
 package ch.xxx.moviemanager.adapter.cron;
 
+import java.util.stream.Stream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +32,13 @@ public class CronJobs {
 	private final ActorService actorService;
 	private final MovieService movieService;
 	private final UserDetailMgmtService userService;
+	private Environment environment;
 	
-	public CronJobs(ActorService actorService, MovieService movieService,UserDetailMgmtService userService) {
+	public CronJobs(ActorService actorService, MovieService movieService,UserDetailMgmtService userService, Environment environment) {
 		this.actorService = actorService;
 		this.movieService = movieService;
 		this.userService = userService;
+		this.environment = environment;
 	}
 
 	@Scheduled(cron = "5 0 1 * * ?")
@@ -50,7 +55,9 @@ public class CronJobs {
 	@Order(1)
 	// @SchedulerLock(name = "LoggedOutUsers_scheduledTask", lockAtLeastFor = "PT1M", lockAtMostFor = "PT80s")
 	public void updateLoggedOutUsers() {
-		LOG.info("Update logged out users.");
-		this.userService.updateLoggedOutUsers();
+		if(Stream.of(this.environment.getActiveProfiles()).noneMatch(myProfile -> myProfile.contains("kafka"))) {
+			LOG.info("Update logged out users.");
+			this.userService.updateLoggedOutUsers();
+		}
 	}
 }
