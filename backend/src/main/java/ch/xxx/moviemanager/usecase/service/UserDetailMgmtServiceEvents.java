@@ -31,7 +31,7 @@ import ch.xxx.moviemanager.domain.producer.EventProducer;
 import ch.xxx.moviemanager.usecase.mapper.RevokedTokenMapper;
 import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 
-@Profile("kafka & prod-kafka")
+@Profile("kafka | prod-kafka")
 @Transactional
 @Service
 public class UserDetailMgmtServiceEvents extends UserDetailMgmtServiceBase implements UserDetailMgmtService {
