@@ -23,11 +23,11 @@ import ch.xxx.moviemanager.domain.model.entity.User;
 @Component
 public class UserMapper {
 	public UserDto convert(User user, String token, long untilNextLogin) {
-		UserDto dto = new UserDto(user.getId(), user.getUsername(), "XXX",
-				"YYY", user.getRoles(), token, "ZZZ", "AAA", LocalDate.EPOCH, untilNextLogin);
+		UserDto dto = new UserDto(user.getId(), user.getUsername(), "XXX", "YYY", user.getRoles(), token, "ZZZ", "AAA",
+				LocalDate.EPOCH, untilNextLogin);
 		return dto;
 	}
-	
+
 	public User convert(UserDto dto, Optional<User> entityOpt) {
 		final User myEntity = entityOpt.orElse(new User());
 		myEntity.setBirthDate(dto.getBirthDate());
@@ -35,7 +35,12 @@ public class UserMapper {
 		myEntity.setPassword(dto.getPassword());
 		myEntity.setUsername(dto.getUsername());
 		myEntity.setRoles(dto.getRoles());
-		myEntity.setUuid(dto.getUuid());		
+		myEntity.setUuid(dto.getUuid());
 		return myEntity;
+	}
+
+	public UserDto convert(User entity) {
+		return new UserDto(entity.getId(), entity.getUsername(), entity.getPassword(), entity.getMoviedbkey(), entity.getRoles(),
+				null, entity.getEmailAddress(), entity.getUuid(), entity.getBirthDate(), 1000L);
 	}
 }
