@@ -29,18 +29,18 @@ import ch.xxx.moviemanager.domain.common.Role;
 import ch.xxx.moviemanager.domain.model.dto.AuthCheckDto;
 import ch.xxx.moviemanager.domain.model.dto.RefreshTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
-import ch.xxx.moviemanager.usecase.service.UserDetailsMgmtService;
+import ch.xxx.moviemanager.usecase.service.UserDetailMgmtService;
 
 @RestController
 @RequestMapping("rest/auth")
 public class AuthenticationController {
-	private final UserDetailsMgmtService auds;	
+	private final UserDetailMgmtService auds;	
 	@Value("${spring.mail.username}")
 	private String mailuser;
 	@Value("${spring.mail.password}")
 	private String mailpwd;
 
-	public AuthenticationController(UserDetailsMgmtService auds) {
+	public AuthenticationController(UserDetailMgmtService auds) {
 		this.auds = auds;
 	}
 
@@ -83,12 +83,6 @@ public class AuthenticationController {
 	public UserDto getUser(@PathVariable Long id) {
 		return this.auds.load(id);
 	}
-	/*
-	@GetMapping("/all")
-	public List<AppUserDto> getUsers() {
-		return this.appUserService.loadAll();
-	}
-	*/
 	
 	@PutMapping()
 	public UserDto putUser(@RequestBody UserDto appUserDto) {

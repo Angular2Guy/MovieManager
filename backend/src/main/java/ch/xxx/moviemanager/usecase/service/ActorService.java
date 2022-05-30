@@ -31,9 +31,9 @@ import ch.xxx.moviemanager.domain.model.entity.User;
 public class ActorService {
 	private static final Logger LOG = LoggerFactory.getLogger(ActorService.class);
 	private final ActorRepository actorRep;
-	private final UserDetailsMgmtService auds;
+	private final UserDetailMgmtService auds;
 
-	public ActorService(ActorRepository actorRep, UserDetailsMgmtService auds) {
+	public ActorService(ActorRepository actorRep, UserDetailMgmtService auds) {
 		this.actorRep = actorRep;
 		this.auds = auds;
 	}

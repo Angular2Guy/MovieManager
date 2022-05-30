@@ -25,8 +25,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,7 +33,6 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import ch.xxx.moviemanager.domain.common.Role;
 import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
@@ -51,10 +48,8 @@ import ch.xxx.moviemanager.domain.utils.TokenSubjectRole;
 import ch.xxx.moviemanager.usecase.mapper.RevokedTokenMapper;
 import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 
-@Service
-@Transactional
-public class UserDetailsMgmtService {
-	private final static Logger LOG = LoggerFactory.getLogger(UserDetailsMgmtService.class);
+public class UserDetailMgmtServiceBase {
+	private final static Logger LOG = LoggerFactory.getLogger(UserDetailMgmtServiceBase.class);
 	private final static long LOGOUT_TIMEOUT = 185L;
 	private final UserRepository userRepository;
 	private final RevokedTokenRepository revokedTokenRepository;
@@ -67,7 +62,7 @@ public class UserDetailsMgmtService {
 	@Value("${mail.url.uuid.confirm}")
 	private String confirmUrl;
 
-	public UserDetailsMgmtService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+	public UserDetailMgmtServiceBase(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			RevokedTokenRepository revokedTokenRepository, JavaMailSender javaMailSender,
 			JwtTokenService jwtTokenService, UserMapper userMapper, RevokedTokenMapper revokedTokenMapper) {
 		this.userRepository = userRepository;

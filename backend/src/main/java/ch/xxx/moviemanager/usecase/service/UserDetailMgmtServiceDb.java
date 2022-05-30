@@ -24,10 +24,10 @@ import ch.xxx.moviemanager.domain.model.entity.UserRepository;
 import ch.xxx.moviemanager.usecase.mapper.RevokedTokenMapper;
 import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 
-@Profile("kafka & prod-kafka")
+@Profile("!kafka & !prod-kafka")
 @Transactional
 @Service
-public class UserDetailMgmtServiceDb extends UserDetailsMgmtService {
+public class UserDetailMgmtServiceDb extends UserDetailMgmtServiceBase implements UserDetailMgmtService {
 
 	public UserDetailMgmtServiceDb(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			RevokedTokenRepository revokedTokenRepository, JavaMailSender javaMailSender,

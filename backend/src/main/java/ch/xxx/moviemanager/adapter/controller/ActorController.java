@@ -31,16 +31,16 @@ import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.ActorService;
-import ch.xxx.moviemanager.usecase.service.UserDetailsMgmtService;
+import ch.xxx.moviemanager.usecase.service.UserDetailMgmtService;
 
 @RestController
 @RequestMapping("rest/actor")
 public class ActorController {
 	private final ActorService service;
 	private final DefaultMapper mapper;
-	private final UserDetailsMgmtService auds;
+	private final UserDetailMgmtService auds;
 
-	public ActorController(ActorService service, DefaultMapper mapper, UserDetailsMgmtService auds) {
+	public ActorController(ActorService service, DefaultMapper mapper, UserDetailMgmtService auds) {
 		this.service = service;
 		this.mapper = mapper;
 		this.auds = auds;
