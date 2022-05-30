@@ -174,7 +174,10 @@ public class UserDetailMgmtServiceBase {
 	}
 	
 	public Boolean logout(RevokedTokenDto revokedTokenDto) {
-		this.revokedTokenRepository.save(this.revokedTokenMapper.convert(revokedTokenDto));
+		this.revokedTokenRepository.findAll().stream()
+				.filter(myRevokedToken -> myRevokedToken.getUuid().equals(revokedTokenDto.getUuid())
+						&& myRevokedToken.getName().equalsIgnoreCase(revokedTokenDto.getName()))
+				.findAny().or(() -> Optional.of(this.revokedTokenRepository.save(this.revokedTokenMapper.convert(revokedTokenDto))));
 		return Boolean.TRUE;
 	}
 	

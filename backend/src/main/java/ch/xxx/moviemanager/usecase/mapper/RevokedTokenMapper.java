@@ -25,6 +25,12 @@ public class RevokedTokenMapper {
 		return new RevokedToken(dto.getName(), dto.getUuid(), dto.getLastLogout());
 	}
 	
+	public RevokedToken convert(RevokedTokenDto dto, Long id) {		
+		RevokedToken entity = new RevokedToken(dto.getName(), dto.getUuid(), dto.getLastLogout());
+		entity.setId(id != null ? id : null);
+		return entity;
+	}
+	
 	public RevokedTokenDto convert(RevokedToken entity) {
 		return new RevokedTokenDto(entity.getName(), entity.getUuid(), entity.getLastLogout());
 	}

@@ -39,7 +39,7 @@ public class KafkaConsumer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 	private final ObjectMapper objectMapper;
 	private final UserDetailMgmtServiceEvents appUserService;
-	
+
 	public KafkaConsumer(ObjectMapper objectMapper, UserDetailMgmtServiceEvents appUserService) {
 		this.objectMapper = objectMapper;
 		this.appUserService = appUserService;
