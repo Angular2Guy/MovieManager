@@ -1,0 +1,273 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.secret.nameApp }}
+type: Opaque
+data:
+  {{- range $key, $val := .Values.envApp.secret }}
+  {{ $key }}: {{ $val | b64enc }}
+  {{- end}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.secret.nameDb }}
+type: Opaque
+data:
+  {{- range $key, $val := .Values.envDb.secret }}
+  {{ $key }}: {{ $val | b64enc }}
+  {{- end}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.secret.nameKafka }}
+type: Opaque
+data:
+  {{- range $key, $val := .Values.envKafka.secret }}
+  {{ $key }}: {{ $val | b64enc }}
+  {{- end}}
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ .Values.secret.nameZookeeper }}
+type: Opaque
+data:
+  {{- range $key, $val := .Values.envZookeeper.secret }}
+  {{ $key }}: {{ $val | b64enc }}
+  {{- end}}
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Values.persistentVolumeName }}
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: /data/postgres1
+    type: DirectoryOrCreate
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.volumeClaimName }}
+  labels:
+    app: postgrespv
+spec:  
+  accessModes:
+    - ReadWriteOnce
+  # storageClassName: local-storage
+  storageClassName: manual
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.dbName }}
+  labels:
+    app: {{ .Values.dbName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.dbName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.dbName }}
+    spec:
+      containers:
+      - name: {{ .Values.dbName }}
+        image: "{{ .Values.dbImageName }}:{{ .Values.dbImageVersion }}"
+        resources:
+          limits:
+            memory: "2G"
+            cpu: "1.5"
+          requests:
+            memory: "1G"
+            cpu: "0.5"
+        env:
+          {{- include "helpers.list-envDb-variables" . | indent 10 }}
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: hostvol
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: hostvol
+        persistentVolumeClaim:
+          claimName: {{ .Values.volumeClaimName }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.dbServiceName }}
+  labels:
+    app: {{ .Values.dbServiceName }}
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+  selector:
+    app: {{ .Values.dbName }}
+---
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.zookeeperName }}
+  labels:
+    app: {{ .Values.zookeeperName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.zookeeperName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.zookeeperName }}
+    spec:
+      containers:
+      - name: {{ .Values.zookeeperName }}
+        image: "{{ .Values.zookeeperImageName }}:{{ .Values.zookeeperImageVersion }}"
+        resources:
+          limits:
+            memory: "768M"
+            cpu: "0.5"
+          requests:
+            memory: "512M"
+            cpu: "0.1"
+        env:
+          {{- include "helpers.list-envZookeeper-variables" . | indent 10 }}
+        ports:
+        - containerPort: 2181
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.zookeeperServiceName }}
+  labels:
+    app: {{ .Values.zookeeperServiceName }}
+spec:
+  ports:
+  - port: 2181
+    protocol: TCP
+  selector:
+    app: {{ .Values.zookeeperName }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.kafkaName }}
+  labels:
+    app: {{ .Values.kafkaName }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.kafkaName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.kafkaName }}    
+    spec:
+      securityContext:
+        runAsUser: 0
+        runAsGroup: 0
+        fsGroup: 0
+      containers:
+      - name: {{ .Values.kafkaName }}
+        image: "{{ .Values.kafkaImageName }}:{{ .Values.kafkaImageVersion }}"
+        resources:
+          limits:
+            memory: "1G"
+            cpu: "0.7"
+          requests:
+            memory: "768M"
+            cpu: "0.1"
+        env:
+          {{- include "helpers.list-envKafka-variables" . | indent 10 }}
+        ports:
+        - containerPort: 9092
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.kafkaServiceName }}
+  labels:
+    app: {{ .Values.kafkaServiceName }}
+spec:
+  ports:
+  - port: 9092
+    protocol: TCP
+  selector:
+    app: {{ .Values.kafkaName }}    
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.webAppName }}
+  labels:
+    app: {{ .Values.webAppName }}    
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.webAppName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.webAppName }}
+    spec:
+      containers:
+      - name: {{ .Values.webAppName }}
+        image: "{{ .Values.webImageName }}:{{ .Values.webImageVersion }}" 
+        imagePullPolicy: Always
+        resources:
+          limits:
+            memory: "1G"
+            cpu: "0.5"
+          requests:
+            memory: "768M"
+            cpu: "0.5"
+        env:
+          {{- include "helpers.list-envApp-variables" . | indent 10 }}
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: "/actuator/health/livenessState"
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        startupProbe:
+          httpGet:
+            path: "/actuator/health/readinessState"
+            port: 8080
+          failureThreshold: 60
+          periodSeconds: 5
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.webServiceName }} 
+  labels:
+    run: {{ .Values.webServiceName }} 
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    protocol: TCP
+  selector:
+    app: {{ .Values.webAppName }}
