@@ -44,8 +44,8 @@ export class LoginComponent implements OnInit {
 
   constructor(private userService: UsersService, private formBuilder: FormBuilder) { 
 	this.loginFormGroup = formBuilder.group({
-		[ControlName.loginName]: ['',[Validators.required, Validators.minLength(2)]],
-		[ControlName.password]: ['', [Validators.required, Validators.minLength(2)]],
+		[ControlName.loginName]: ['', {validators: [Validators.required, Validators.minLength(2)], updateOn: 'change'}],
+		[ControlName.password]: ['', {validators: [Validators.required, Validators.minLength(2)], updateOn: 'change'}],
 		[ControlName.movieDbKey]: '',
 		[ControlName.emailAddress]: ''
 	});
