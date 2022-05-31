@@ -12,7 +12,7 @@
  */
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../services/users.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 enum ControlName {
 	loginName = 'loginName',
@@ -44,15 +44,29 @@ export class LoginComponent implements OnInit {
 
   constructor(private userService: UsersService, private formBuilder: FormBuilder) { 
 	this.loginFormGroup = formBuilder.group({
-		[ControlName.loginName]: '',
-		[ControlName.password]: '',
+		[ControlName.loginName]: ['',[Validators.required, Validators.minLength(2)]],
+		[ControlName.password]: ['', [Validators.required, Validators.minLength(2)]],
 		[ControlName.movieDbKey]: '',
 		[ControlName.emailAddress]: ''
 	});
   }
 
   ngOnInit() {
-      this.showModal = !this.userService.loggedIn;
+      this.showModal = !this.userService.loggedIn;   
+    //  console.log(this.loginFormGroup.invalid || this.loginFormGroup.controls[ControlName.loginName].untouched || this.loginFormGroup.controls[ControlName.password].untouched);   
+  }
+
+  loginInvalid(): boolean {
+	const result = this.loginFormGroup.invalid || this.loginFormGroup.controls[ControlName.loginName].untouched || this.loginFormGroup.controls[ControlName.password].untouched;	
+	//console.log(result);
+	return result;
+  }
+
+  signinInvalid(): boolean {
+	const loginResult = this.loginInvalid();
+	const signinResult = !this.loginFormGroup.controls[ControlName.movieDbKey].value || (this.loginFormGroup.controls[ControlName.movieDbKey].value as string).length < 2;	
+	//console.log(loginResult+' '+signinResult);
+	return loginResult || signinResult;
   }
 
   loginUser() {

@@ -14,9 +14,9 @@
         <div *ngIf="modalMsg.length > 0" [ngClass]="modalMsgType === MessageType.error ? 'alert alert-danger' : 'alert alert-info'">{{modalMsg}}</div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" (click)="loginUser()" i18n="@@loginLogin">Login</button>
+        <button type="button" class="btn btn-primary" (click)="loginUser()" [disabled]="loginInvalid()" i18n="@@loginLogin">Login</button>
         <button type="button" class="btn btn-secondary" (click)="cancelUser()" i18n="@@cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" (click)="signinUser()" i18n="@@loginSignin">Signin</button>
+        <button type="button" class="btn btn-primary" (click)="signinUser()" [disabled]="signinInvalid()" i18n="@@loginSignin">Signin</button>
       </div>
     </div>
   </div>
