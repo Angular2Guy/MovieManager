@@ -21,6 +21,11 @@ enum ControlName {
 	emailAddress = 'emailAddress'
 }
 
+enum MessageType {
+	info = 'info',
+	error = 'error'
+}
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -30,9 +35,11 @@ export class LoginComponent implements OnInit {
 
     @Output() loginClosed = new EventEmitter<boolean>();
     ControlName = ControlName;
+    MessageType = MessageType;
     showModal = true;
     loginFormGroup: FormGroup;
     modalMsg = '';
+    modalMsgType = MessageType.error; 
     tillNextLogin = 0;
 
   constructor(private userService: UsersService, private formBuilder: FormBuilder) { 
@@ -55,6 +62,7 @@ export class LoginComponent implements OnInit {
 	      this.tillNextLogin = myTillNextLogin;
           this.showModal = !res;
           this.userService.loggedIn = res;
+          this.modalMsgType = MessageType.error;
           this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed. Try again in: ${myTillNextLogin} seconds.`;
           this.loginClosed.emit(res);
       });
@@ -72,9 +80,9 @@ export class LoginComponent implements OnInit {
       this.userService.signin(this.loginFormGroup.controls[ControlName.loginName].value, 
         this.loginFormGroup.controls[ControlName.password].value, 
         this.loginFormGroup.controls[ControlName.movieDbKey].value).subscribe((res: boolean) =>{
-          this.showModal = !res;
-          this.modalMsg = res ? '' : 'Signin Failed';
-          this.loginClosed.emit(res);
+          this.cancelUser();
+          this.modalMsgType = MessageType.info;
+          this.modalMsg = res ? $localize `:@@SigninSuccessMsg:Signin successful. Please Login.` : $localize `:@@SigninFailedMsg:Signin failed.`;
       });
   }
 
