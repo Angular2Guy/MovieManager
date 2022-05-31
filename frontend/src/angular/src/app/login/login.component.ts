@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef, Inject } from '@angular/core';
 import { UsersService } from '../services/users.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -42,23 +42,24 @@ export class LoginComponent implements OnInit {
     modalMsgType = MessageType.error; 
     tillNextLogin = 0;
 
-  constructor(private userService: UsersService, private formBuilder: FormBuilder) { 
+  constructor(private userService: UsersService, private formBuilder: FormBuilder, @Inject(ChangeDetectorRef) private cdr: ChangeDetectorRef) { 
 	this.loginFormGroup = formBuilder.group({
-		[ControlName.loginName]: ['', {validators: [Validators.required, Validators.minLength(2)], updateOn: 'change'}],
-		[ControlName.password]: ['', {validators: [Validators.required, Validators.minLength(2)], updateOn: 'change'}],
+		[ControlName.loginName]: ['', [Validators.required, Validators.minLength(2)]],
+		[ControlName.password]: ['', [Validators.required, Validators.minLength(2)]],
 		[ControlName.movieDbKey]: '',
 		[ControlName.emailAddress]: ''
-	});
+	});	
   }
 
   ngOnInit() {
       this.showModal = !this.userService.loggedIn;   
+      this.loginFormGroup.markAllAsTouched();
     //  console.log(this.loginFormGroup.invalid || this.loginFormGroup.controls[ControlName.loginName].untouched || this.loginFormGroup.controls[ControlName.password].untouched);   
   }
 
   loginInvalid(): boolean {
-	const result = this.loginFormGroup.invalid || this.loginFormGroup.controls[ControlName.loginName].untouched || this.loginFormGroup.controls[ControlName.password].untouched;	
-	//console.log(result);
+	const result = this.loginFormGroup.invalid;	
+	//console.log(result);	
 	return result;
   }
 
