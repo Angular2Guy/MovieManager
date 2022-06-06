@@ -12,7 +12,7 @@
  */
 import { Component, OnInit, EventEmitter, Output, ChangeDetectorRef, Inject } from '@angular/core';
 import { UsersService } from '../services/users.service';
-import { UntypedFormBuilder, FormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 enum ControlName {
 	loginName = 'loginName',
@@ -37,12 +37,12 @@ export class LoginComponent implements OnInit {
     ControlName = ControlName;
     MessageType = MessageType;
     showModal = true;
-    loginFormGroup: UntypedFormGroup;
+    loginFormGroup: FormGroup;
     modalMsg = '';
     modalMsgType = MessageType.error; 
     tillNextLogin = 0;
 
-  constructor(private userService: UsersService, private formBuilder: UntypedFormBuilder) { 
+  constructor(private userService: UsersService, private formBuilder: FormBuilder) { 
 	this.loginFormGroup = formBuilder.group({
 		[ControlName.loginName]: ['', [Validators.required, Validators.minLength(2)]],
 		[ControlName.password]: ['', [Validators.required, Validators.minLength(2)]],
