@@ -1,5 +1,5 @@
 {
-  "locale": "en",
+  "locale": "de",
   "translations": {
     "back": "Back",
     "actorName": " Name: {$INTERPOLATION} ",
