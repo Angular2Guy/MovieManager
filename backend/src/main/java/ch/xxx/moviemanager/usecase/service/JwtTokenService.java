@@ -13,6 +13,7 @@ package ch.xxx.moviemanager.usecase.service;
 
 import java.security.Key;
 import java.time.Instant;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -64,7 +65,7 @@ public class JwtTokenService {
 
 	@PostConstruct
 	public void init() {
-		this.jwtTokenKey = Keys.hmacShaKeyFor(secretKey.getBytes());
+		this.jwtTokenKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
 	}
 
 	public void updateLoggedOutUsers(List<RevokedToken> revokedTokens) {
