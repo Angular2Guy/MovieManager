@@ -60,7 +60,7 @@
 				</tr>
 				<tr *ngFor="let movie of importMovies" (click)="importSelMovie(movie)" class="import-movie">
 					<td class="my-text-center">{{movie.title}}</td>
-					<td class="my-text-center">{{movie.releaseDate | date:'dd.MM.yyyy'}}</td>
+					<td class="my-text-center">{{movie.release_date | date:'dd.MM.yyyy'}}</td>
 					<td class="my-text-center">{{movie.overview}}</td>
 				</tr>
 			</table>
@@ -79,7 +79,7 @@
 				<tbody #container>
 					<tr *ngFor="let movie of scrollMovies" (dblclick)="movieDetails(movie)" class="import-movie">
 						<td class="my-text-center">{{movie.title}}</td>
-						<td class="my-text-center">{{movie.releaseDate | date:'dd.MM.yyyy'}}</td>
+						<td class="my-text-center">{{movie.release_date | date:'dd.MM.yyyy'}}</td>
 						<td class="my-list-center">
 							<ul *ngFor="let genere of movie?.myGenere">
 								<li>{{genere.name}}</li>
