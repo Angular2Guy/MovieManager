@@ -12,8 +12,12 @@
  */
 package ch.xxx.moviemanager.adapter.client;
 
+import java.net.URI;
+import java.time.Duration;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
@@ -23,47 +27,41 @@ import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
 
 @Service
 public class MovieDbRestClientBean implements MovieDbRestClient {
-	
+
 	public WrapperGenereDto fetchAllGeneres(String moviedbkey) {
-		RestTemplate restTemplate = new RestTemplate();
-		WrapperGenereDto result = restTemplate.getForObject(
-				"https://api.themoviedb.org/3/genre/movie/list?api_key=" + moviedbkey + "&language=en-US",
-				WrapperGenereDto.class);
+		WrapperGenereDto result = WebClient.create().get()
+			.uri(URI.create("https://api.themoviedb.org/3/genre/movie/list?api_key=" + moviedbkey + "&language=en-US"))
+			.retrieve().bodyToMono(WrapperGenereDto.class).block(Duration.ofSeconds(10L));
 		return result;
 	}
-	
+
 	public WrapperMovieDto fetchMovie(String moviedbkey, String queryStr) {
-		RestTemplate restTemplate = new RestTemplate();
-		WrapperMovieDto wrMovie = restTemplate
-				.getForObject(
-						"https://api.themoviedb.org/3/search/movie?api_key=" + moviedbkey
-								+ "&language=en-US&query=" + queryStr + "&page=1&include_adult=false",
-						WrapperMovieDto.class);
+		WrapperMovieDto wrMovie = WebClient.create().get()
+		.uri(URI.create("https://api.themoviedb.org/3/search/movie?api_key="
+				+ moviedbkey + "&language=en-US&query=" + queryStr + "&page=1&include_adult=false"))
+		.retrieve().bodyToMono(WrapperMovieDto.class).block(Duration.ofSeconds(10L));
 		return wrMovie;
 	}
-	
+
 	public WrapperCastDto fetchCast(String moviedbkey, Long movieId) {
-		RestTemplate restTemplate = new RestTemplate();
-		WrapperCastDto wrCast = restTemplate.getForObject("https://api.themoviedb.org/3/movie/"
-				+ movieId + "/credits?api_key=" + moviedbkey,
-				WrapperCastDto.class);
+		WrapperCastDto wrCast = WebClient.create().get()
+		.uri(URI.create("https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key="))
+		.retrieve().bodyToMono(WrapperCastDto.class).block(Duration.ofSeconds(10L));
 		return wrCast;
 	}
-	
+
 	public ActorDto fetchActor(String moviedbkey, Integer castId) {
-		RestTemplate restTemplate = new RestTemplate();
-		ActorDto actor = restTemplate.getForObject("https://api.themoviedb.org/3/person/" + castId
-		+ "?api_key=" + moviedbkey + "&language=en-US", ActorDto.class);
+		ActorDto actor = WebClient.create().get()
+		.uri(URI.create("https://api.themoviedb.org/3/person/" + castId + "?api_key=" + moviedbkey + "&language=en-US"))
+		.retrieve().bodyToMono(ActorDto.class).block(Duration.ofSeconds(10L));
 		return actor;
 	}
-	
+
 	public WrapperMovieDto fetchImportMovie(String moviedbkey, String queryStr) {
-		RestTemplate restTemplate = new RestTemplate();
-		WrapperMovieDto wrMovie = restTemplate
-				.getForObject(
-						"https://api.themoviedb.org/3/search/movie?api_key=" + moviedbkey
-								+ "&language=en-US&query=" + queryStr + "&page=1&include_adult=false",
-						WrapperMovieDto.class);
+		WrapperMovieDto wrMovie = WebClient.create().get()
+		.uri(URI.create("https://api.themoviedb.org/3/search/movie?api_key="
+				+ moviedbkey + "&language=en-US&query=" + queryStr + "&page=1&include_adult=false"))
+		.retrieve().bodyToMono(WrapperMovieDto.class).block(Duration.ofSeconds(10L));
 		return wrMovie;
 	}
 }
