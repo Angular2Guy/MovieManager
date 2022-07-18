@@ -192,7 +192,7 @@ public class MovieService {
 				Cast castEntity = this.mapper.convert(c);
 				movieEntity.getCast().add(castEntity);
 				castEntity.setMovie(movieEntity);
-				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId());
+				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId(), 300L);
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : this.mapper.convert(actor);
 				castEntity = this.castRep.save(castEntity);
@@ -202,18 +202,18 @@ public class MovieService {
 				}
 				actorEntity.getCasts().add(castEntity);
 				castEntity.setActor(actorEntity);
-				Thread.sleep(300);
+//				Thread.sleep(300);
 			}
 		} else {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("update cast for movie");
-				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId());
+				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId(), 300L);
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.get();
 				if (!actorEntity.getUsers().contains(user)) {
 					actorEntity.getUsers().add(user);
 				}
-				Thread.sleep(300);
+//				Thread.sleep(300);
 			}
 		}
 		return true;

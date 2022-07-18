@@ -45,15 +45,19 @@ public class MovieDbRestClientBean implements MovieDbRestClient {
 	public WrapperCastDto fetchCast(String moviedbkey, Long movieId) {
 		WrapperCastDto wrCast = WebClient.create().get()
 		.uri(URI.create("https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=" + moviedbkey))
-		.retrieve().bodyToMono(WrapperCastDto.class).block(Duration.ofSeconds(10L));
+		.retrieve().bodyToMono(WrapperCastDto.class).delayElement(Duration.ofMillis(300L)).block(Duration.ofSeconds(10L));
 		return wrCast;
 	}
 
-	public ActorDto fetchActor(String moviedbkey, Integer castId) {
+	public ActorDto fetchActor(String moviedbkey, Integer castId, Long delay) {
 		ActorDto actor = WebClient.create().get()
-		.uri(URI.create("https://api.themoviedb.org/3/person/" + castId + "?api_key=" + moviedbkey + "&language=en-US"))
-		.retrieve().bodyToMono(ActorDto.class).block(Duration.ofSeconds(10L));
-		return actor;
+				.uri(URI.create("https://api.themoviedb.org/3/person/" + castId + "?api_key=" + moviedbkey + "&language=en-US"))
+				.retrieve().bodyToMono(ActorDto.class).delayElement(Duration.ofMillis(delay)).block(Duration.ofSeconds(10L));
+				return actor;
+	}
+	
+	public ActorDto fetchActor(String moviedbkey, Integer castId) {
+		return this.fetchActor(moviedbkey, castId, 0L);
 	}
 
 	public WrapperMovieDto fetchImportMovie(String moviedbkey, String queryStr) {

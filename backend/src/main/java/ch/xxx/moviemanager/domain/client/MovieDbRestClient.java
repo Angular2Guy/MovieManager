@@ -24,6 +24,8 @@ public interface MovieDbRestClient {
 	
 	ActorDto fetchActor(String moviedbkey, Integer castId);
 	
+	ActorDto fetchActor(String moviedbkey, Integer castId, Long delay);
+	
 	WrapperGenereDto fetchAllGeneres(String moviedbkey);
 	
 	WrapperMovieDto fetchImportMovie(String moviedbkey, String queryStr);
