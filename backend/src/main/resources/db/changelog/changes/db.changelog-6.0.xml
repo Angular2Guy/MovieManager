@@ -15,7 +15,7 @@
 		<addColumn tableName="actor">
 			<column name="popularity" type="double" />
 		</addColumn>
-		<update tableName="user1">
+		<update tableName="actor">
 			<column name="popularity" value="0.0"/>
 			<where>popularity is null</where>
 		</update>

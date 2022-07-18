@@ -1,2 +1,2 @@
-id,actor_id,name,gender,birthday,deathday,biography,place_of_birth
-1,1,John Actor,2,1950-01-01 12:00:00,2010-01-01 12:00:00,Johns bio,Singapore
+id,actor_id,name,gender,birthday,deathday,biography,place_of_birth,popularity
+1,1,John Actor,2,1950-01-01 12:00:00,2010-01-01 12:00:00,Johns bio,Singapore,5.5
