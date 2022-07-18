@@ -44,7 +44,7 @@ public class MovieDbRestClientBean implements MovieDbRestClient {
 
 	public WrapperCastDto fetchCast(String moviedbkey, Long movieId) {
 		WrapperCastDto wrCast = WebClient.create().get()
-		.uri(URI.create("https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key="))
+		.uri(URI.create("https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=" + moviedbkey))
 		.retrieve().bodyToMono(WrapperCastDto.class).block(Duration.ofSeconds(10L));
 		return wrCast;
 	}
