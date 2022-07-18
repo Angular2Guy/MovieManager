@@ -27,11 +27,11 @@ public class MovieDto {
 	private Date releaseDate;
 	private String title;	
 	private Long movieId;
-	private Long runtime = 0L;
-	private Long revenue = 0L;
-	private Double voteAverage = 0.0;
-	private Integer voteCount = 0;
-	private Long budget = 0L;
+	private Long runtime;
+	private Long revenue;
+	private Double voteAverage;
+	private Integer voteCount;
+	private Long budget;
 	@JsonProperty("genre_ids")
 	private int[] generes;
 	private List<CastDto> myCast = new ArrayList<>();

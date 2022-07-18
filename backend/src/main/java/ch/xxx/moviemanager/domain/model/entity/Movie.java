@@ -34,6 +34,11 @@ public class Movie extends EntityBase {
 	private String overview;
 	private Date releaseDate;
 	private String title;
+	private Integer runtime = 0;
+	private Long revenue = 0L;
+	private Double voteAverage = 0.0;
+	private Integer voteCount = 0;
+	private Long budget = 0L;
 	private Long movieId;
 	@OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Cast> cast = new ArrayList<>();
@@ -94,6 +99,46 @@ public class Movie extends EntityBase {
 
 	public void setGeneres(Set<Genere> generes) {
 		this.generes = generes;
+	}
+
+	public Integer getRuntime() {
+		return runtime;
+	}
+
+	public void setRuntime(Integer runtime) {
+		this.runtime = runtime;
+	}
+
+	public Long getRevenue() {
+		return revenue;
+	}
+
+	public void setRevenue(Long revenue) {
+		this.revenue = revenue;
+	}
+
+	public Double getVoteAverage() {
+		return voteAverage;
+	}
+
+	public void setVoteAverage(Double voteAverage) {
+		this.voteAverage = voteAverage;
+	}
+
+	public Integer getVoteCount() {
+		return voteCount;
+	}
+
+	public void setVoteCount(Integer voteCount) {
+		this.voteCount = voteCount;
+	}
+
+	public Long getBudget() {
+		return budget;
+	}
+
+	public void setBudget(Long budget) {
+		this.budget = budget;
 	}
 
 }

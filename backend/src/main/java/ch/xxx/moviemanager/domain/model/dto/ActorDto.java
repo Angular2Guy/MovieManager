@@ -30,7 +30,7 @@ public class ActorDto {
 	private String biography;
 	@JsonProperty("place_of_birth")
 	private String placeOfBirth;
-	private BigDecimal popularity = BigDecimal.ZERO;	
+	private Double popularity;	
 	@JsonProperty("actor_id")
 	private Long actorId;
 	private List<CastDto> myCasts = new ArrayList<>();
@@ -90,10 +90,10 @@ public class ActorDto {
 	public void setMyCasts(List<CastDto> myCasts) {
 		this.myCasts = myCasts;
 	}
-	public BigDecimal getPopularity() {
+	public Double getPopularity() {
 		return popularity;
 	}
-	public void setPopularity(BigDecimal popularity) {
+	public void setPopularity(Double popularity) {
 		this.popularity = popularity;
 	}
 }

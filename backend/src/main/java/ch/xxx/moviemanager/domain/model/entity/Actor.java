@@ -38,6 +38,7 @@ public class Actor extends EntityBase {
 	@Lob
 	@Column(columnDefinition = "text")
 	private String biography;
+	private Double popularity = 0.0;
 	private String placeOfBirth;
 	@OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Cast> casts = new ArrayList<>();
@@ -111,6 +112,14 @@ public class Actor extends EntityBase {
 
 	public void setCasts(List<Cast> casts) {
 		this.casts = casts;
+	}
+
+	public Double getPopularity() {
+		return popularity;
+	}
+
+	public void setPopularity(Double popularity) {
+		this.popularity = popularity;
 	}
 
 }
