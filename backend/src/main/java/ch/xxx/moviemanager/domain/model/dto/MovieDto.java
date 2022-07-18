@@ -27,6 +27,11 @@ public class MovieDto {
 	private Date releaseDate;
 	private String title;	
 	private Long movieId;
+	private Long runtime = 0L;
+	private Long revenue = 0L;
+	private Double voteAverage = 0.0;
+	private Integer voteCount = 0;
+	private Long budget = 0L;
 	@JsonProperty("genre_ids")
 	private int[] generes;
 	private List<CastDto> myCast = new ArrayList<>();
@@ -79,5 +84,35 @@ public class MovieDto {
 	}
 	public void setMyGenere(List<GenereDto> myGenere) {
 		this.myGenere = myGenere;
+	}
+	public Long getRuntime() {
+		return runtime;
+	}
+	public void setRuntime(Long runtime) {
+		this.runtime = runtime;
+	}
+	public Long getRevenue() {
+		return revenue;
+	}
+	public void setRevenue(Long revenue) {
+		this.revenue = revenue;
+	}
+	public Double getVoteAverage() {
+		return voteAverage;
+	}
+	public void setVoteAverage(Double voteAverage) {
+		this.voteAverage = voteAverage;
+	}
+	public Integer getVoteCount() {
+		return voteCount;
+	}
+	public void setVoteCount(Integer voteCount) {
+		this.voteCount = voteCount;
+	}
+	public Long getBudget() {
+		return budget;
+	}
+	public void setBudget(Long budget) {
+		this.budget = budget;
 	}	
 }

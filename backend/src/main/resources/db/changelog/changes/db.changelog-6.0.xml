@@ -11,30 +11,30 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
-	<changeSet id="22" author="angular2guy">
-		<preConditions onFail="MARK_RAN">
-			<indexExists tableName="user1"
-					indexName="ix_user1_enabled_locked_last_logout" />
-		</preConditions>		
-		<dropIndex tableName="user1" indexName="ix_user1_enabled_locked_last_logout"/>
+	<changeSet id="25" author="angular2guy">		
+		<addColumn tableName="actor">
+			<column name="popularity" type="double" />
+		</addColumn>
+		<update tableName="user1">
+			<column name="popularity" value="0.0"/>
+			<where>popularity is null</where>
+		</update>
 	</changeSet>
-	<changeSet id="23" author="angular2guy">
-		<dropColumn tableName="user1" columnName="last_logout"/>
-	</changeSet>
-	<changeSet id="24" author="angular2guy">
-		<createTable tableName="revoked_token">
-			<column name="id" type="bigint">
-				<constraints primaryKey="true" />
-			</column>
-			<column name="name" type="varchar(255)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="uuid" type="varchar(255)" >
-				<constraints nullable="false" unique="true"/>
-			</column>
-			<column name="last_logout" type="datetime">
-				<constraints nullable="false"/>
-			</column>
-		</createTable>
+	<changeSet id="26" author="angular2guy">		
+		<addColumn tableName="movie">
+			<column name="runtime" type="int" />
+			<column name="revenue" type="bigint"/>
+			<column name="vote_average" type="double"/>
+			<column name="vote_count" type="int"/>
+			<column name="budget" type="bigint"/>
+		</addColumn>
+		<update tableName="movie">
+			<column name="runtime" value="0"/>
+			<column name="revenue" value="0"/>
+			<column name="vote_average" value="0.0"/>
+			<column name="vote_count" value="0"/>
+			<column name="budget" value="0"/>
+			<where>runtime is null</where>
+		</update>
 	</changeSet>
 </databaseChangeLog>

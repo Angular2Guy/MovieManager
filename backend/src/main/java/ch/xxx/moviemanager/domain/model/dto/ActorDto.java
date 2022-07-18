@@ -12,6 +12,7 @@
  */
 package ch.xxx.moviemanager.domain.model.dto;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,7 @@ public class ActorDto {
 	private String biography;
 	@JsonProperty("place_of_birth")
 	private String placeOfBirth;
+	private BigDecimal popularity = BigDecimal.ZERO;	
 	@JsonProperty("actor_id")
 	private Long actorId;
 	private List<CastDto> myCasts = new ArrayList<>();
@@ -87,5 +89,11 @@ public class ActorDto {
 	}
 	public void setMyCasts(List<CastDto> myCasts) {
 		this.myCasts = myCasts;
+	}
+	public BigDecimal getPopularity() {
+		return popularity;
+	}
+	public void setPopularity(BigDecimal popularity) {
+		this.popularity = popularity;
 	}
 }

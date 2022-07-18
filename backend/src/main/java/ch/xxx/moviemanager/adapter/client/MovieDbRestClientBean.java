@@ -16,7 +16,6 @@ import java.net.URI;
 import java.time.Duration;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
