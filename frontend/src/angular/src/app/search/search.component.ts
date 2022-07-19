@@ -124,7 +124,9 @@ export class SearchComponent implements OnInit, AfterViewInit {
 			switchMap((title: string) => iif(() => title.length > 2,
 				this.movieService.findMovieByTitle( title ).pipe(catchError(() => of([]))), of([]))),
             tap(() => this.moviesLoading = false ) );
-        this.movieService.allGeneres().subscribe( res => this.generes = res );
+        if(this.userService.loggedIn) {
+            this.movieService.allGeneres().subscribe( res => this.generes = res );
+        }
         this.route.url.subscribe(() => {
             if(this.userService.loggedIn) {
                 this.initScrollMovies();
@@ -151,7 +153,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
 
     loginClosed( closed: boolean ) {
-        if ( closed ) {
+        if ( this.userService.loggedIn && closed ) {
 			this.movieService.allGeneres().subscribe( res => this.generes = res );
             this.initScrollMovies();
         }
