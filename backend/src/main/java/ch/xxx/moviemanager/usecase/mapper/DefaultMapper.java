@@ -83,6 +83,11 @@ public class DefaultMapper {
 		dto.setOverview(entity.getOverview());
 		dto.setReleaseDate(entity.getReleaseDate());
 		dto.setTitle(entity.getTitle());
+		dto.setRuntime(entity.getRuntime());
+		dto.setRevenue(entity.getRevenue());
+		dto.setVoteAverage(entity.getVoteAverage());
+		dto.setVoteCount(entity.getVoteCount());
+		dto.setBudget(entity.getBudget());
 		dto.setMovieId(entity.getMovieId());
 		if (!noGeneres) {
 			entity.getGeneres().forEach(g -> {
@@ -101,6 +106,7 @@ public class DefaultMapper {
 		dto.setGender(entity.getGender());
 		dto.setName(entity.getName());
 		dto.setPlaceOfBirth(entity.getPlaceOfBirth());
+		dto.setPopularity(entity.getPopularity());
 		dto.setId(entity.getId());
 		dto.setActorId(entity.getActorId());
 		return dto;
@@ -118,6 +124,11 @@ public class DefaultMapper {
 		entity.setOverview(dto.getOverview());
 		entity.setReleaseDate(dto.getReleaseDate());
 		entity.setTitle(dto.getTitle());
+		entity.setRuntime(dto.getRuntime());
+		entity.setRevenue(dto.getRevenue());
+		entity.setVoteAverage(dto.getVoteAverage());
+		entity.setVoteCount(dto.getVoteCount());
+		entity.setBudget(dto.getBudget());
 		entity.setMovieId(dto.getId());
 		return entity;
 	}
@@ -139,6 +150,7 @@ public class DefaultMapper {
 		entity.setGender(dto.getGender());
 		entity.setName(dto.getName());
 		entity.setPlaceOfBirth(dto.getPlaceOfBirth());
+		entity.setPopularity(dto.getPopularity());
 		return entity;
 	}
 }

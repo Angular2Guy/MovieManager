@@ -15,56 +15,84 @@ package ch.xxx.moviemanager.adapter.client;
 import java.net.URI;
 import java.time.Duration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperCastDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperGenereDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
 
 @Service
 public class MovieDbRestClientBean implements MovieDbRestClient {
+	private final static Logger LOG = LoggerFactory.getLogger(MovieDbRestClientBean.class);
+	private final ObjectMapper objectMapper;
+
+	public MovieDbRestClientBean(ObjectMapper objectMapper) {
+		this.objectMapper = objectMapper;
+	}
 
 	public WrapperGenereDto fetchAllGeneres(String moviedbkey) {
-		WrapperGenereDto result = WebClient.create().get()
-			.uri(URI.create("https://api.themoviedb.org/3/genre/movie/list?api_key=" + moviedbkey + "&language=en-US"))
-			.retrieve().bodyToMono(WrapperGenereDto.class).block(Duration.ofSeconds(10L));
+		WrapperGenereDto result = WebClient
+				.create().get().uri(URI.create(String
+						.format("https://api.themoviedb.org/3/genre/movie/list?api_key=%s&language=en-US", moviedbkey)))
+				.retrieve().bodyToMono(WrapperGenereDto.class).block(Duration.ofSeconds(10L));
 		return result;
 	}
 
-	public WrapperMovieDto fetchMovie(String moviedbkey, String queryStr) {
-		WrapperMovieDto wrMovie = WebClient.create().get()
-		.uri(URI.create("https://api.themoviedb.org/3/search/movie?api_key="
-				+ moviedbkey + "&language=en-US&query=" + queryStr + "&page=1&include_adult=false"))
-		.retrieve().bodyToMono(WrapperMovieDto.class).block(Duration.ofSeconds(10L));
+	public MovieDto fetchMovie(String moviedbkey, int movieDbId) {
+		MovieDto wrMovie = WebClient.create().get()
+				.uri(URI.create(String.format("https://api.themoviedb.org/3/movie/%d?api_key=%s&language=en-US",
+						movieDbId, moviedbkey)))
+				.retrieve().bodyToMono(MovieDto.class).block(Duration.ofSeconds(10L));
 		return wrMovie;
+	}
+
+	private <T> T parseJsonToDto(String bodyStr, Class<T> result) {
+		LOG.info(bodyStr);
+		try {
+			return this.objectMapper.readValue(bodyStr, result);
+		} catch (JacksonException e) {
+			throw new RuntimeException("Failed to parse movie json.", e);
+		}
 	}
 
 	public WrapperCastDto fetchCast(String moviedbkey, Long movieId) {
 		WrapperCastDto wrCast = WebClient.create().get()
-		.uri(URI.create("https://api.themoviedb.org/3/movie/" + movieId + "/credits?api_key=" + moviedbkey))
-		.retrieve().bodyToMono(WrapperCastDto.class).delayElement(Duration.ofMillis(300L)).block(Duration.ofSeconds(10L));
+				.uri(URI.create(
+						String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s", movieId, moviedbkey)))
+				.retrieve().bodyToMono(WrapperCastDto.class).delayElement(Duration.ofMillis(300L))
+				.block(Duration.ofSeconds(10L));
 		return wrCast;
 	}
 
 	public ActorDto fetchActor(String moviedbkey, Integer castId, Long delay) {
-		ActorDto actor = WebClient.create().get()
-				.uri(URI.create("https://api.themoviedb.org/3/person/" + castId + "?api_key=" + moviedbkey + "&language=en-US"))
-				.retrieve().bodyToMono(ActorDto.class).delayElement(Duration.ofMillis(delay)).block(Duration.ofSeconds(10L));
-				return actor;
+		ActorDto actor = WebClient.create().get().uri(URI.create(
+				String.format("https://api.themoviedb.org/3/person/%d?api_key=%s&language=en-US", castId, moviedbkey)))
+				.retrieve().bodyToMono(ActorDto.class)
+//				.bodyToMono(String.class)
+//				.map(bodyStr -> {
+//					return parseJsonToDto(bodyStr, ActorDto.class);
+//				})
+				.delayElement(Duration.ofMillis(delay)).block(Duration.ofSeconds(10L));
+		return actor;
 	}
-	
+
 	public ActorDto fetchActor(String moviedbkey, Integer castId) {
 		return this.fetchActor(moviedbkey, castId, 0L);
 	}
 
 	public WrapperMovieDto fetchImportMovie(String moviedbkey, String queryStr) {
-		WrapperMovieDto wrMovie = WebClient.create().get()
-		.uri(URI.create("https://api.themoviedb.org/3/search/movie?api_key="
-				+ moviedbkey + "&language=en-US&query=" + queryStr + "&page=1&include_adult=false"))
-		.retrieve().bodyToMono(WrapperMovieDto.class).block(Duration.ofSeconds(10L));
+		WrapperMovieDto wrMovie = WebClient.create().get().uri(URI.create(String.format(
+				"https://api.themoviedb.org/3/search/movie?api_key=%s&language=en-US&query=%s&page=1&include_adult=false",
+				moviedbkey, queryStr))).retrieve().bodyToMono(WrapperMovieDto.class).block(Duration.ofSeconds(10L));
 		return wrMovie;
 	}
 }

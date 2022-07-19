@@ -13,12 +13,13 @@
 package ch.xxx.moviemanager.domain.client;
 
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperCastDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperGenereDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
 
 public interface MovieDbRestClient {
-	WrapperMovieDto fetchMovie(String moviedbkey, String queryStr);
+	MovieDto fetchMovie(String moviedbkey, int movieDbId);
 	
 	WrapperCastDto fetchCast(String moviedbkey, Long movieId);
 	

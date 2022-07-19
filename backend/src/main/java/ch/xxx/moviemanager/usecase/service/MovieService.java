@@ -136,7 +136,7 @@ public class MovieService {
 		return true;
 	}
 
-	public boolean importMovie(String title, int number, String bearerStr) throws InterruptedException {
+	public boolean importMovie(int movieDbId, String bearerStr) throws InterruptedException {
 		User user = this.auds.getCurrentUser(bearerStr);
 		LOG.info("Start import");
 		LOG.info("Start import generes");
@@ -152,23 +152,22 @@ public class MovieService {
 
 			}
 		}
-		LOG.info("Start import Movie");
-		String queryStr = this.createQueryStr(title);
-		WrapperMovieDto wrMovie = this.movieDbRestClient.fetchMovie(user.getMoviedbkey(), queryStr);
-		Movie movieEntity = this.movieRep.findByMovieId(wrMovie.getResults()[number].getMovieId(), user.getId())
+		LOG.info("Start import Movie with Id: {movieDbId}", movieDbId);
+		MovieDto movieDto = this.movieDbRestClient.fetchMovie(user.getMoviedbkey(), movieDbId);
+		Movie movieEntity = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId())
 				.orElse(null);
 		if (movieEntity == null) {
 			LOG.info("Movie not found by id");
-			List<Movie> movies = this.movieRep.findByTitleAndRelDate(wrMovie.getResults()[number].getTitle(),
-					wrMovie.getResults()[number].getReleaseDate(), this.auds.getCurrentUser(bearerStr).getId());
+			List<Movie> movies = this.movieRep.findByTitleAndRelDate(movieDto.getTitle(),
+					movieDto.getReleaseDate(), this.auds.getCurrentUser(bearerStr).getId());
 			if (!movies.isEmpty()) {
 				LOG.info("Movie found by Title and Reldate");
 				movieEntity = movies.get(0);
-				movieEntity.setMovieId(wrMovie.getResults()[number].getId());
+				movieEntity.setMovieId(movieDto.getId());
 			} else {
 				LOG.info("creating new Movie");
-				movieEntity = this.mapper.convert(wrMovie.getResults()[number]);
-				for (int genId : wrMovie.getResults()[number].getGeneres()) {
+				movieEntity = this.mapper.convert(movieDto);
+				for (int genId : movieDto.getGeneres()) {
 					Optional<Genere> myResult = generes.stream().filter(
 							myGenere -> Long.valueOf(Integer.valueOf(genId).longValue()).equals(myGenere.getGenereId()))
 							.findFirst();
@@ -185,7 +184,7 @@ public class MovieService {
 			movieEntity.getUsers().add(user);
 		}
 		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(user.getMoviedbkey(),
-				wrMovie.getResults()[number].getId());
+				movieDto.getId());
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
@@ -202,7 +201,6 @@ public class MovieService {
 				}
 				actorEntity.getCasts().add(castEntity);
 				castEntity.setActor(actorEntity);
-//				Thread.sleep(300);
 			}
 		} else {
 			for (CastDto c : wrCast.getCast()) {
@@ -213,7 +211,6 @@ public class MovieService {
 				if (!actorEntity.getUsers().contains(user)) {
 					actorEntity.getUsers().add(user);
 				}
-//				Thread.sleep(300);
 			}
 		}
 		return true;

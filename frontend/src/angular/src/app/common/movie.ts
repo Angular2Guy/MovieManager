@@ -18,7 +18,13 @@ export interface Movie {
     overview: string;
     release_date: Date;
     title: string;
-    num: number;
+    num?: number;
+    movie_id: number;
+    runtime: number;
+    revenue: number;
+    vote_average: number;
+    vote_count: number;
+    budget: number;
 	genreIds: number[];
     myCast: Cast[];
     myGenere: Genere[];

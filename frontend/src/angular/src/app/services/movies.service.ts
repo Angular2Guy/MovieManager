@@ -79,12 +79,12 @@ export class MoviesService {
             }));
     }
 
-    public importMovieByTitleAndId(title: string, id: number): Observable<boolean> {
-        if(!title) {
-            console.log('title: '+title+' id: '+id);
+    public importMovieByMovieDbId(movieDbId: number): Observable<boolean> {
+        if(!movieDbId) {
+            console.log('movieDbId: '+movieDbId);
             return of(false);
         }
-        return this.http.get<boolean>('/rest/movie/import/'+title+'/number/'+id, this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.get<boolean>('/rest/movie/import/movieid/'+movieDbId, this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
             }));

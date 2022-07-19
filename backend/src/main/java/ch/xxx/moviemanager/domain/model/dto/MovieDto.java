@@ -26,10 +26,13 @@ public class MovieDto {
 	@JsonProperty("release_date")
 	private Date releaseDate;
 	private String title;	
+	@JsonProperty("movie_id")
 	private Long movieId;
-	private Long runtime;
+	private Integer runtime;
 	private Long revenue;
+	@JsonProperty("vote_average")
 	private Double voteAverage;
+	@JsonProperty("vote_count")
 	private Integer voteCount;
 	private Long budget;
 	@JsonProperty("genre_ids")
@@ -85,10 +88,10 @@ public class MovieDto {
 	public void setMyGenere(List<GenereDto> myGenere) {
 		this.myGenere = myGenere;
 	}
-	public Long getRuntime() {
+	public Integer getRuntime() {
 		return runtime;
 	}
-	public void setRuntime(Long runtime) {
+	public void setRuntime(Integer runtime) {
 		this.runtime = runtime;
 	}
 	public Long getRevenue() {

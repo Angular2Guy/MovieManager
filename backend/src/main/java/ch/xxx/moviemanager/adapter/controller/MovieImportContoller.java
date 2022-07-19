@@ -42,9 +42,9 @@ public class MovieImportContoller {
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
 	}
 	
-	@RequestMapping(value="/{searchStr}/number/{number}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Boolean> getMovieImport(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("searchStr") String searchStr,@PathVariable("number") int number) throws InterruptedException {
-		boolean success = this.service.importMovie(searchStr, number, bearerStr);
+	@RequestMapping(value="/movieid/{movieId}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> getMovieImport(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("movieId") int movieId) throws InterruptedException {
+		boolean success = this.service.importMovie(movieId, bearerStr);
 		if(success) {
 			return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
 		} else {

@@ -20,5 +20,6 @@ export interface Actor {
     deathday: Date;
     biography: string;
     place_of_birth: string;
+    popularity: number;
     myCasts: Cast[];
 }
