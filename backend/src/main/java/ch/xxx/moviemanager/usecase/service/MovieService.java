@@ -167,9 +167,10 @@ public class MovieService {
 			} else {
 				LOG.info("creating new Movie");
 				movieEntity = this.mapper.convert(movieDto);
-				for (int genId : movieDto.getGeneres()) {
+				movieEntity.setMovieId(movieDto.getId());
+				for (Long genId : movieDto.getGenres().stream().map(myGenere -> myGenere.getId()).toList()) {
 					Optional<Genere> myResult = generes.stream().filter(
-							myGenere -> Long.valueOf(Integer.valueOf(genId).longValue()).equals(myGenere.getGenereId()))
+							myGenere -> genId.equals(myGenere.getGenereId()))
 							.findFirst();
 					if (myResult.isPresent()) {
 						movieEntity.getGeneres().add(myResult.get());

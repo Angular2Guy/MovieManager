@@ -35,8 +35,7 @@ public class MovieDto {
 	@JsonProperty("vote_count")
 	private Integer voteCount;
 	private Long budget;
-	@JsonProperty("genre_ids")
-	private int[] generes;
+	private List<GenereDto> genres = new ArrayList<>();
 	private List<CastDto> myCast = new ArrayList<>();
 	private List<GenereDto> myGenere = new ArrayList<>();
 	
@@ -76,12 +75,6 @@ public class MovieDto {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	public int[] getGeneres() {
-		return generes;
-	}
-	public void setGeneres(int[] generes) {
-		this.generes = generes;
-	}
 	public void setMyCast(List<CastDto> myCast) {
 		this.myCast = myCast;
 	}
@@ -117,5 +110,11 @@ public class MovieDto {
 	}
 	public void setBudget(Long budget) {
 		this.budget = budget;
-	}	
+	}
+	public List<GenereDto> getGenres() {
+		return genres;
+	}
+	public void setGenres(List<GenereDto> genres) {
+		this.genres = genres;
+	}
 }

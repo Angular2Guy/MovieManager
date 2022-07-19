@@ -25,7 +25,7 @@ export interface Movie {
     vote_average: number;
     vote_count: number;
     budget: number;
-	genreIds: number[];
+	genres: Genere[];
     myCast: Cast[];
     myGenere: Genere[];
 }
