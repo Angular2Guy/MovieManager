@@ -129,7 +129,7 @@ public class DefaultMapper {
 		entity.setVoteAverage(dto.getVoteAverage());
 		entity.setVoteCount(dto.getVoteCount());
 		entity.setBudget(dto.getBudget());
-		entity.setMovieId(dto.getId());
+		entity.setMovieId(dto.getMovieId());
 		return entity;
 	}
 

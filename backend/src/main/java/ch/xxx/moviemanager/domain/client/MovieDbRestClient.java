@@ -19,7 +19,7 @@ import ch.xxx.moviemanager.domain.model.dto.WrapperGenereDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
 
 public interface MovieDbRestClient {
-	MovieDto fetchMovie(String moviedbkey, int movieDbId);
+	MovieDto fetchMovie(String moviedbkey, long movieDbId);
 	
 	WrapperCastDto fetchCast(String moviedbkey, Long movieId);
 	
