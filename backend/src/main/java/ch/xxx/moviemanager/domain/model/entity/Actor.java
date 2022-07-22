@@ -27,6 +27,11 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.TermVector;
+
+@Indexed
 @Entity
 public class Actor extends EntityBase {
 
@@ -35,6 +40,7 @@ public class Actor extends EntityBase {
 	private Integer gender;
 	private Date birthday;
 	private Date deathday;
+	@Field(termVector = TermVector.YES)
 	@Lob
 	@Column(columnDefinition = "text")
 	private String biography;
