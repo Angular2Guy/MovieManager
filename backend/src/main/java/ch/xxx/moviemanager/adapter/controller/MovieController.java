@@ -27,8 +27,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
+import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
+import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.MovieService;
 
@@ -88,4 +90,10 @@ public class MovieController {
 		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<MovieDto>> postSearchTerm(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, SearchTermDto searchTermDto) {
+		List<MovieDto> results = this.service.findMoviesBySearchTerm(bearerStr, searchTermDto).stream().map(myMovie -> this.mapper.convert(myMovie)).toList();
+		return new ResponseEntity<List<MovieDto>>(results, HttpStatus.OK);
+	}
 }

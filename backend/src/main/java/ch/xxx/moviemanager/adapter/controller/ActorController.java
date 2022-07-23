@@ -82,6 +82,7 @@ public class ActorController {
 	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ActorDto>> postSearchTerm(
 			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, SearchTermDto searchTermDto) {
-		return null;
+		List<ActorDto> results = this.service.findActorsBySearchTerm(bearerStr, searchTermDto).stream().map(myActor -> this.mapper.convert(myActor)).toList();
+		return new ResponseEntity<List<ActorDto>>(results, HttpStatus.OK);
 	}
 }

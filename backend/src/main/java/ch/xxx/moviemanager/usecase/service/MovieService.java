@@ -222,7 +222,7 @@ public class MovieService {
 		return str.replace(" ", "%20");
 	}
 	
-	public List<Movie> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
+	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
 		List<Movie> movies = searchTermDto.getSearchPhraseDto() != null
 				? this.movieRep.findMoviesByPhrase(searchTermDto.getSearchPhraseDto())
 				: this.movieRep.findMoviesBySearchStrings(searchTermDto.getSearchStringDtos());
