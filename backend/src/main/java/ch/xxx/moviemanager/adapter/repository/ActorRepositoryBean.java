@@ -18,6 +18,8 @@ import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
+import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 
@@ -56,5 +58,13 @@ public class ActorRepositoryBean implements ActorRepository {
 	@Override
 	public List<Actor> findUnusedActors() {		
 		return this.jpaActorRepository.findUnusedActors();
+	}
+	
+	public List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto) {
+		return List.of();
+	}
+	
+	public List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings) {
+		return List.of();
 	}
 }

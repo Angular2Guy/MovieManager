@@ -17,6 +17,9 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 
+import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
+import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
+
 public interface ActorRepository {
 	List<Actor> findActorsByPage(Long userId, Pageable pageble);
 	List<Actor> findByActorName(String name, Long userId, Pageable pageable);
@@ -25,4 +28,6 @@ public interface ActorRepository {
 	Optional<Actor> findById(Long id);
 	Actor save(Actor actorEntity);
 	List<Actor> findUnusedActors();
+	List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto);
+	List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings);
 }

@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 import ch.xxx.moviemanager.domain.model.entity.User;
@@ -46,7 +47,8 @@ public class ActorService {
 
 	public List<Actor> findActor(String name, String bearerStr) {
 		PageRequest pageRequest = PageRequest.of(0, 15, Sort.by("name").ascending());
-		List<Actor> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser(bearerStr).getId(), pageRequest);
+		List<Actor> result = this.actorRep.findByActorName(name, this.auds.getCurrentUser(bearerStr).getId(),
+				pageRequest);
 		return result;
 	}
 
@@ -61,8 +63,17 @@ public class ActorService {
 		if (result.isPresent()) {
 			User user = this.auds.getCurrentUser(bearerStr);
 			result = result.get().getUsers().stream().filter(myUser -> user.getId().equals(myUser.getId())).findFirst()
-					.isEmpty() ? Optional.empty() : result;			
+					.isEmpty() ? Optional.empty() : result;
 		}
 		return result;
+	}
+
+	public List<Actor> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
+		List<Actor> actors = searchTermDto.getSearchPhraseDto() != null
+				? this.actorRep.findActorsByPhrase(searchTermDto.getSearchPhraseDto())
+				: this.actorRep.findActorsBySearchStrings(searchTermDto.getSearchStringDtos());
+		List<Actor> filteredActors = actors.stream().filter(myActor -> myActor.getUsers().stream()
+				.anyMatch(myUser -> myUser.getId().equals(this.auds.getCurrentUser(bearerStr).getId()))).toList();
+		return filteredActors;
 	}
 }
