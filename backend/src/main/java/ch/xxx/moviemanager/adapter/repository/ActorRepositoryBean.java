@@ -15,6 +15,13 @@ package ch.xxx.moviemanager.adapter.repository;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
+import org.apache.lucene.search.Query;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.jpa.Search;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -26,9 +33,11 @@ import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 @Repository
 public class ActorRepositoryBean implements ActorRepository {
 	private final JpaActorRepository jpaActorRepository;
+	private final EntityManager entityManager;
 	
-	public ActorRepositoryBean(JpaActorRepository jpaActorRepository) {
+	public ActorRepositoryBean(JpaActorRepository jpaActorRepository, EntityManagerFactory entityManagerFactory) {
 		this.jpaActorRepository = jpaActorRepository;
+		this.entityManager = entityManagerFactory.createEntityManager();
 	}
 
 	public Optional<Actor> findById(Long id) {
@@ -61,10 +70,33 @@ public class ActorRepositoryBean implements ActorRepository {
 	}
 	
 	public List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto) {
-		return List.of();
+		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+		QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+				.forEntity(Actor.class).get();
+		Query phraseQuery = actorQueryBuilder
+				  .phrase()
+				  .withSlop(searchPhraseDto.getOtherWordsInPhrase())
+				  .onField("biography")
+				  .sentence(searchPhraseDto.getPhrase())
+				  .createQuery();
+		@SuppressWarnings("unchecked")
+		List<Actor> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(50).getResultList();
+		return resultList;
 	}
 	
 	public List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings) {
-		return List.of();
+		StringBuilder stringBuilder = new StringBuilder();
+		searchStrings.forEach(myDto -> stringBuilder.append(" ").append(myDto.getOperator().value).append(" ").append(myDto.getSearchString()));
+		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+		QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+				.forEntity(Actor.class).get();
+		Query phraseQuery = actorQueryBuilder
+				  .simpleQueryString()
+				  .onField("biography")
+				  .matching(stringBuilder.substring(2))
+				  .createQuery();
+		@SuppressWarnings("unchecked")
+		List<Actor> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(50).getResultList();
+		return resultList;
 	}
 }

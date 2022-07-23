@@ -13,19 +13,31 @@
 package ch.xxx.moviemanager.domain.model.dto;
 
 public class SearchStringDto {
-	public static enum Operator {AND, OR, NOT}
+	public static enum Operator {
+		AND("+"), OR("|"), NOT("-");
+
+		public final String value;
+
+		private Operator(String value) {
+			this.value = value;
+		}
+	}
+
 	private String searchString;
 	private Operator operator;
-	
+
 	public String getSearchString() {
 		return searchString;
 	}
+
 	public void setSearchString(String searchString) {
 		this.searchString = searchString;
 	}
+
 	public Operator getOperator() {
 		return operator;
 	}
+
 	public void setOperator(Operator operator) {
 		this.operator = operator;
 	}
