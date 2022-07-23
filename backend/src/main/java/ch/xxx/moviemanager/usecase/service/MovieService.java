@@ -31,6 +31,7 @@ import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.CastDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
+import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperCastDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperGenereDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
@@ -219,5 +220,14 @@ public class MovieService {
 
 	private String createQueryStr(String str) {
 		return str.replace(" ", "%20");
+	}
+	
+	public List<Movie> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
+		List<Movie> movies = searchTermDto.getSearchPhraseDto() != null
+				? this.movieRep.findMoviesByPhrase(searchTermDto.getSearchPhraseDto())
+				: this.movieRep.findMoviesBySearchStrings(searchTermDto.getSearchStringDtos());
+		List<Movie> filteredMovies = movies.stream().filter(myMovie -> myMovie.getUsers().stream()
+				.anyMatch(myUser -> myUser.getId().equals(this.auds.getCurrentUser(bearerStr).getId()))).toList();
+		return filteredMovies;
 	}
 }
