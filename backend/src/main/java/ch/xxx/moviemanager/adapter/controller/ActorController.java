@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
+import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.ActorService;
@@ -47,15 +48,18 @@ public class ActorController {
 	}
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ActorDto>> getActorSearch(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("name") String name)
+	public ResponseEntity<List<ActorDto>> getActorSearch(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("name") String name)
 			throws InterruptedException {
-		List<ActorDto> actors = this.service.findActor(name, bearerStr).stream().map(a -> this.mapper.convertOnlyActor(a))
-				.collect(Collectors.toList());
+		List<ActorDto> actors = this.service.findActor(name, bearerStr).stream()
+				.map(a -> this.mapper.convertOnlyActor(a)).collect(Collectors.toList());
 		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ActorDto> getActorSearchById(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("id") Long id) throws InterruptedException {
+	public ResponseEntity<ActorDto> getActorSearchById(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("id") Long id)
+			throws InterruptedException {
 		final User currentUser = this.auds.getCurrentUser(bearerStr);
 		ActorDto actor = this.service.findActorById(id, bearerStr).stream()
 				.filter(myActor -> myActor.getCasts().stream()
@@ -67,10 +71,17 @@ public class ActorController {
 
 	@RequestMapping(value = "/pages", params = {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ActorDto>> getPagesByNumber(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @RequestParam("page") Integer page)
+	public ResponseEntity<List<ActorDto>> getPagesByNumber(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, @RequestParam("page") Integer page)
 			throws InterruptedException {
 		List<ActorDto> actors = this.service.findActorsByPage(page, bearerStr).stream().map(a -> this.mapper.convert(a))
 				.collect(Collectors.toList());
 		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<ActorDto>> postSearchTerm(
+			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, SearchTermDto searchTermDto) {
+		return null;
 	}
 }
