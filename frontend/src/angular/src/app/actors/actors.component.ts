@@ -11,7 +11,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Actor } from '../common/actor';
+import { Actor } from '../model/actor';
 import { ActorsService } from '../services/actors.service';
 
 @Component({

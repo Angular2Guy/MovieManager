@@ -12,9 +12,9 @@
  */
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
-import { User } from '../common/user';
+import { User } from '../model/user';
 import { TokenService } from './token.service';
 import { Router } from '@angular/router';
 

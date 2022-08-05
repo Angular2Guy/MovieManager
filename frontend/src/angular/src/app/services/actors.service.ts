@@ -12,23 +12,21 @@
  */
 import { Injectable } from '@angular/core';
 import { Observable,of,throwError } from 'rxjs';
-import { Actor } from '../common/actor';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Actor } from '../model/actor';
+import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
  providedIn: 'root',
 })
 export class ActorsService {
-  private reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
-
   constructor(private http: HttpClient) { }
 
   public findActorById(id: number): Observable<Actor> {
       if(!id && id !== 0) {
           return of(null);
       }
-      return this.http.get<Actor>('/rest/actor/id/'+id, this.reqOptionsArgs).pipe(catchError(error => {
+      return this.http.get<Actor>('/rest/actor/id/'+id).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return throwError( error );
           }));
@@ -38,7 +36,7 @@ export class ActorsService {
       if(!name) {
           return of([]);
       }
-      return this.http.get<Actor[]>('/rest/actor/'+name, this.reqOptionsArgs).pipe(catchError(error => {
+      return this.http.get<Actor[]>('/rest/actor/'+name).pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return throwError( error );
           }));

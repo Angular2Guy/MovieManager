@@ -11,9 +11,9 @@
    limitations under the License.
  */
 import { Component, OnInit, HostListener, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { Movie } from '../common/movie';
-import { Actor } from '../common/actor';
-import { Genere } from '../common/genere';
+import { Movie } from '../model/movie';
+import { Actor } from '../model/actor';
+import { Genere } from '../model/genere';
 import { ActorsService } from '../services/actors.service';
 import { MoviesService } from '../services/movies.service';
 import { UsersService } from '../services/users.service';

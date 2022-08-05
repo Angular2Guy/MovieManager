@@ -12,9 +12,8 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
-import { Observable, of, timer, Subscription, Subject } from 'rxjs';
+import { Observable, timer, Subscription, Subject } from 'rxjs';
 import { shareReplay, switchMap, map, takeUntil } from 'rxjs/operators';
-import { Router } from '@angular/router';
 
 export interface RefreshTokenResponse {
 	refreshToken: string;
@@ -32,7 +31,7 @@ export class TokenService {
   private myTokenSubscription: Subscription;
   private stopTimer: Subject<boolean>;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient) { }
 
   private refreshToken(): Observable<RefreshTokenResponse> {	
 	return this.http.get<RefreshTokenResponse>('/rest/auth/refreshToken', {
@@ -80,7 +79,11 @@ export class TokenService {
 			takeUntil(myStopTimer),
 			switchMap(() => this.refreshToken()),
 			shareReplay(this.CACHE_SIZE));
-		this.myTokenSubscription = this.myTokenCache.subscribe(newToken => this.myToken = newToken.refreshToken, () => this.clear());
+		this.myTokenSubscription = this.myTokenCache
+		   .subscribe({
+              next: newToken => this.myToken = newToken.refreshToken, 
+              error: () => this.clear()
+           });
 	}
   }
 

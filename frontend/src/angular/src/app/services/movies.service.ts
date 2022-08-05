@@ -13,9 +13,9 @@
 import { Injectable } from '@angular/core';
 import { Observable,of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
-import { Movie } from '../common/movie';
-import { Genere } from '../common/genere';
+import { catchError } from 'rxjs/operators';
+import { Movie } from '../model/movie';
+import { Genere } from '../model/genere';
 
 @Injectable({
  providedIn: 'root',
