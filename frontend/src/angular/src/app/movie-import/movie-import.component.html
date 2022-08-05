@@ -1,0 +1,23 @@
+<div class="container-fluid">
+	<div>
+		<div class="row">
+			<div class="col">
+				<div *ngIf="importMoviesLoading" i18n="@@movieImportImporting">Importing...</div>
+				<table class="table" *ngIf="importMovies.length > 0">
+					<tr>
+						<th i18n="@@title">Title</th>
+						<th i18n="@@release">Release</th>
+						<th i18n="@@overview">Overview</th>
+					</tr>
+					<tr *ngFor="let movie of importMovies"
+						(click)="importSelMovie(movie)" class="import-movie">
+						<td class="my-text-center">{{movie.title}}</td>
+						<td class="my-text-center">{{movie.release_date |
+							date:'dd.MM.yyyy'}}</td>
+						<td class="my-text-center">{{movie.overview}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

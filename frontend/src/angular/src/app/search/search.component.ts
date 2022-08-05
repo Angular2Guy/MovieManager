@@ -19,7 +19,7 @@ import { MoviesService } from '../services/movies.service';
 import { UsersService } from '../services/users.service';
 import { iif, of, Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { tap, debounceTime, distinctUntilChanged, switchMap, filter, catchError } from 'rxjs/operators';
+import { tap, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 
 
