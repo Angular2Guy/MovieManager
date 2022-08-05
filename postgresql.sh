@@ -4,3 +4,4 @@ docker run --name local-postgres -e POSTGRES_PASSWORD=sven1 -e POSTGRES_USER=sve
 # deprecated psql -h localhost -U sven1 -f src/main/resources/db/initDB.sql movies
 # docker start local-postgres
 # docker stop local-postgres
+# docker exec -it local-postgres bash
