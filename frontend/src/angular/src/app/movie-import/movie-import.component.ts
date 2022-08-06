@@ -16,22 +16,25 @@ import { MovieImportKey } from '../model/common';
 import { Movie } from '../model/movie';
 import { MoviesService } from '../services/movies.service';
 
+enum ImportState {Idle='idle' ,MoviesLoading='moviesLoading', Importing='importing',
+   ImportSuccess='success', ImportFailed='failed'}
+
 @Component({
   selector: 'app-movie-import',
   templateUrl: './movie-import.component.html',
   styleUrls: ['./movie-import.component.scss']
 })
 export class MovieImportComponent implements OnInit {
-  importMoviesLoading = false;
-  importFailed = false;
-  importMovies: Movie[] = [];
+  public ImportState = ImportState;
+  public importState = ImportState.Idle;
+  public importMovies: Movie[] = [];
   
   constructor(private moviesService: MoviesService, private router: Router, private activeRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
 	this.activeRoute.queryParamMap.subscribe(queryParamMap => {
 		if(!!queryParamMap.get(MovieImportKey.MovieName)) {
-			this.importMoviesLoading = true;
+		   this.importState = ImportState.MoviesLoading;
 		   this.loadMatchingMovies(decodeURIComponent(queryParamMap.get(MovieImportKey.MovieName)));
 		} else {
 			this.router.navigate(['search']);
@@ -42,19 +45,17 @@ export class MovieImportComponent implements OnInit {
   private loadMatchingMovies(movieTitle: string) {
 	this.moviesService.importMovieByTitle( movieTitle ).subscribe( m => {
        this.importMovies = this.addNums( m );
-       this.importMoviesLoading = false;
+       this.importState = ImportState.Idle;
     } );
   }
 
    importSelMovie( movie: Movie ) {
-      this.importMoviesLoading = true;
+      this.importState = ImportState.Importing;
       this.importMovies = [];
       this.moviesService.importMovieByMovieDbId( movie.movie_id ).subscribe( imported => {            
-         this.importMoviesLoading = false;
- 	     this.importFailed = !imported;
-		 if(!!imported) {
-			this.router.navigate['search'];
-		 }
+         this.importState = imported ? ImportState.ImportSuccess : ImportState.ImportFailed;
+         const timeoutMs = imported ? 3000 : 6000;
+         setTimeout(this.router.navigate['search'], timeoutMs);
       } );
     }
 
