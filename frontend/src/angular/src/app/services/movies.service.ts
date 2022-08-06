@@ -73,7 +73,7 @@ export class MoviesService {
         if(!title) {
             return of([]);
         }
-        return this.http.get<Movie[]>('/rest/movie/import/'+title, this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.get<Movie[]>('/rest/movie/import/'+encodeURIComponent(title), this.reqOptionsArgs).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
             }));

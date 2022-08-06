@@ -69,10 +69,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
 	importMovie() {
         this.importMoviesLoading = true;
         const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
+        /*
+        const myTitle = encodeURIComponent(this.importMovieTitle.value);
+        this.router.navigate(['movie-import'],{ 'queryParams': { 'movie-title': myTitle }});
+        */
         this.movieService.importMovieByTitle( myTitle ).subscribe( m => {
             this.importMovies = this.addNums( m );
             this.importMoviesLoading = false;
-        } );
+        } );        
     }
 
 	importSelMovie( movie: Movie ) {

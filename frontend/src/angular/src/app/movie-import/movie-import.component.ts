@@ -12,6 +12,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MovieImportKey } from '../model/common';
 import { Movie } from '../model/movie';
 import { MoviesService } from '../services/movies.service';
 
@@ -21,15 +22,19 @@ import { MoviesService } from '../services/movies.service';
   styleUrls: ['./movie-import.component.scss']
 })
 export class MovieImportComponent implements OnInit {
-  importMoviesLoading = true;
+  importMoviesLoading = false;
+  importFailed = false;
   importMovies: Movie[] = [];
   
   constructor(private moviesService: MoviesService, private router: Router, private activeRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-	this.activeRoute.params.subscribe(params => {
-		if(!!params?.movieTitle) {
-		   this.loadMatchingMovies(params.movieTitle);
+	this.activeRoute.queryParamMap.subscribe(queryParamMap => {
+		if(!!queryParamMap.get(MovieImportKey.MovieName)) {
+			this.importMoviesLoading = true;
+		   this.loadMatchingMovies(decodeURIComponent(queryParamMap.get(MovieImportKey.MovieName)));
+		} else {
+			this.router.navigate(['search']);
 		}
 	});	
   }
@@ -44,10 +49,13 @@ export class MovieImportComponent implements OnInit {
    importSelMovie( movie: Movie ) {
       this.importMoviesLoading = true;
       this.importMovies = [];
-      this.moviesService.importMovieByMovieDbId( movie.movie_id ).subscribe( imported => {
-            
-		    this.importMoviesLoading = !imported;
-        } );
+      this.moviesService.importMovieByMovieDbId( movie.movie_id ).subscribe( imported => {            
+         this.importMoviesLoading = false;
+ 	     this.importFailed = !imported;
+		 if(!!imported) {
+			this.router.navigate['search'];
+		 }
+      } );
     }
 
     private addNums( movies: Movie[] ): Movie[] {

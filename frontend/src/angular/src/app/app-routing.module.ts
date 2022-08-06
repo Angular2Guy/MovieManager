@@ -15,11 +15,13 @@ import { Routes, RouterModule } from '@angular/router';
 import { SearchComponent } from './search/search.component';
 import { MoviesComponent } from './movies/movies.component';
 import { ActorsComponent } from './actors/actors.component';
+import { MovieImportComponent } from './movie-import/movie-import.component';
 
 const routes: Routes = [
     {path: 'search', component: SearchComponent},
     {path: 'movie/:id', component: MoviesComponent},
     {path: 'actor/:id', component: ActorsComponent},
+    {path: 'movie-import', component: MovieImportComponent},
     {path: '**', redirectTo: '/search', pathMatch: 'full' }
 ];
 
