@@ -8,3 +8,23 @@
 .my-text-center {
 	vertical-align: middle;
 }
+
+.info-text {
+	padding-top: 30px;
+	font-size: 30px;
+	color: #037bfc; 
+	text-align: center;
+	width: 100%;
+}
+
+.failure-text {
+	color: #fc0f03;
+}
+
+.success-text {
+	color: #27b500;
+}
+
+.my-spinner {
+	background-image: url("../../assets/svg/spinner.svg");
+}

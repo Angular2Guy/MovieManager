@@ -2,12 +2,15 @@
 	<div>
 		<div class="row">
 			<div class="col">
-				<div *ngIf="importState===ImportState.Importing" i18n="@@movieImportImporting">Importing...</div>
-				<div *ngIf="importState===ImportState.MoviesLoading" i18n="@@movieImportMoviesLoading">Movies loading...</div>				
-			    <div *ngIf="importState===ImportState.Idle && importMovies.length===0" i18n="@@movieImportNoMoviesFound">No Movies found</div>
-			    <div *ngIf="importState===ImportState.ImportSuccess" i18n="@@movieImportSuccess">Movie import successful. Redirecting back.</div>
-			    <div *ngIf="importState===ImportState.ImportFailed" i18n="@@movieImportFailed">
+				<div class="info-text" *ngIf="importState===ImportState.Importing" i18n="@@movieImportImporting">Importing...</div>
+				<div class="info-text" *ngIf="importState===ImportState.MoviesLoading" i18n="@@movieImportMoviesLoading">Movies loading...</div>				
+			    <div class="info-text" *ngIf="importState===ImportState.Idle && importMovies.length===0" i18n="@@movieImportNoMoviesFound">No Movies found</div>
+			    <div class="info-text success-text" *ngIf="importState===ImportState.ImportSuccess" i18n="@@movieImportSuccess">Movie import successful. Redirecting back.</div>
+			    <div class="info-text failure-text" *ngIf="importState===ImportState.ImportFailed" i18n="@@movieImportFailed">
 			       Movie import failed. Please try again later. Redirecting back.
+			    </div>
+			    <div class="info-text" *ngIf="!(importState===ImportState.Idle)">
+			       <img src="assets/svg/spinner.svg">
 			    </div>
 				<table class="table" *ngIf="importMovies.length > 0">
 					<tr>
