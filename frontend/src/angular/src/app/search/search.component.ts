@@ -37,7 +37,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     movieActor = new FormControl('');
     actors: Observable<Actor[]>;
     importMovies: Movie[] = [];
-    importMovieTitle = new FormControl();
+    importMovieTitle = new FormControl('');
     actorsLoading = false;
     moviesLoading = false;
     importMoviesLoading = false;
@@ -66,31 +66,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
 
 	importMovie() {
-        /*
-        this.importMoviesLoading = true;
-        const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
-        */
         const myTitle = encodeURIComponent(this.importMovieTitle.value);
         this.router.navigate(['movie-import'],{ 'queryParams': { [QueryParam.MovieName]: myTitle }});
-        /*
-        this.movieService.importMovieByTitle( myTitle ).subscribe( m => {
-            this.importMovies = this.addNums( m );
-            this.importMoviesLoading = false;
-        } );
-        */        
-    }
-
-	importSelMovie( movie: Movie ) {
-        this.importMoviesLoading = true;
-        this.importMovies = [];
-        this.movieService.importMovieByMovieDbId( movie.movie_id ).subscribe( imported => {
-            if ( imported ) {
-				this.importMoviesLoading = false;
-				this.scMoviesPageEnd = 1;
-				this.scrollMovies = [];
-				this.initScrollMovies();
-			}
-        } );
     }
 
     dropDown() {
@@ -171,12 +148,5 @@ export class SearchComponent implements OnInit, AfterViewInit {
             this.scrollMovies = this.scrollMovies.concat( res );
             this.scMoviesPageEnd += 1;
         } );
-    }
-
-    private addNums( movies: Movie[] ): Movie[] {
-        for ( let i = 0; i < movies.length; i++ ) {
-            movies[i].num = i;
-        }
-        return movies;
     }
 }

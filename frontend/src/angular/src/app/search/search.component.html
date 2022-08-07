@@ -8,7 +8,7 @@
 				<label class="my-floating-labels" for="importMovieByTitle" i18n="@@searchImportMovieTitle">Import Movie Title</label>
 			</div>
 			<div>
-				<button class="btn btn-secondary mb-3" type="button" [disabled]="importMoviesLoading" (click)="importMovie()" i18n="@@searchSearchForMovie">Search for Movie</button>
+				<button class="btn btn-secondary mb-3" type="button" [disabled]="this.importMovieTitle.value.length < 3" (click)="importMovie()" i18n="@@searchSearchForMovie">Search for Movie</button>
 			</div>
 		</div>
 		<div class="col-3">
@@ -51,24 +51,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col">
-			<div *ngIf="importMoviesLoading" i18n="@@searchImporting">Importing...</div>
-			<table class="table" *ngIf="importMovies.length > 0">
-				<tr>
-					<th i18n="@@title">Title</th>
-					<th i18n="@@release">Release</th>
-					<th i18n="@@overview">Overview</th>
-				</tr>
-				<tr *ngFor="let movie of importMovies" (click)="importSelMovie(movie)" class="import-movie">
-					<td class="my-text-center">{{movie.title}}</td>
-					<td class="my-text-center">{{movie.release_date | date:'dd.MM.yyyy'}}</td>
-					<td class="my-text-center">{{movie.overview}}</td>
-				</tr>
-			</table>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col" #movies *ngIf="!importMoviesLoading && importMovies.length === 0">
+		<div class="col" #movies *ngIf="true">
 			<table class="table">
 				<thead #header>
 					<tr>
