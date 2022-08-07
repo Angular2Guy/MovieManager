@@ -22,6 +22,14 @@
     "loginErrorMsg": "Login Failed. Try again in: {$PH} seconds.",
     "SigninSuccessMsg": "Signin successful. Please Login.",
     "SigninFailedMsg": "Signin failed.",
+    "movieImportImporting": "Importing...",
+    "movieImportMoviesLoading": "Movies loading...",
+    "movieImportNoMoviesFound": "No Movies found",
+    "movieImportSuccess": "Movie import successful. Redirecting back.",
+    "movieImportFailed": " Movie import failed. Please try again later. Redirecting back. ",
+    "title": "Title",
+    "release": "Release",
+    "overview": "Overview",
     "delete": "Delete",
     "movieTitle": " Title: {$INTERPOLATION} ",
     "movieReleaseDate": " Release Date: {$INTERPOLATION} ",
@@ -32,10 +40,6 @@
     "searchSearchMovieByTitle": "Search for Movie by Title",
     "loading": "Loading",
     "searchSearchActorByName": "Search for Actor by Name",
-    "generes": "Generes",
-    "searchImporting": "Importing...",
-    "title": "Title",
-    "release": "Release",
-    "overview": "Overview"
+    "generes": "Generes"
   }
 }
