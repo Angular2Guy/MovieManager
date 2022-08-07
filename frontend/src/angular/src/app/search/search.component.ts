@@ -21,6 +21,7 @@ import { iif, of, Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { tap, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import { QueryParam } from '../model/common';
 
 
 @Component( {
@@ -29,7 +30,6 @@ import { ActivatedRoute, Router } from '@angular/router';
     styleUrls: ['./search.component.scss']
 } )
 export class SearchComponent implements OnInit, AfterViewInit {
-
     @ViewChild('movies') moviesRef: ElementRef;
     generes: Genere[];
     movieTitle = new FormControl('');
@@ -50,7 +50,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     allMoviesLoaded = false;
     private actorListOffset = 0;
 
-
     constructor( private actorService: ActorsService,
             private movieService: MoviesService,
             private userService: UsersService,
@@ -67,16 +66,18 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
 
 	importMovie() {
+        /*
         this.importMoviesLoading = true;
         const myTitle = this.importMovieTitle.value.replace( / /g, '+' );
-        /*
-        const myTitle = encodeURIComponent(this.importMovieTitle.value);
-        this.router.navigate(['movie-import'],{ 'queryParams': { 'movie-title': myTitle }});
         */
+        const myTitle = encodeURIComponent(this.importMovieTitle.value);
+        this.router.navigate(['movie-import'],{ 'queryParams': { [QueryParam.MovieName]: myTitle }});
+        /*
         this.movieService.importMovieByTitle( myTitle ).subscribe( m => {
             this.importMovies = this.addNums( m );
             this.importMoviesLoading = false;
-        } );        
+        } );
+        */        
     }
 
 	importSelMovie( movie: Movie ) {

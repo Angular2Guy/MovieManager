@@ -12,7 +12,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MovieImportKey } from '../model/common';
+import { QueryParam } from '../model/common';
 import { Movie } from '../model/movie';
 import { MoviesService } from '../services/movies.service';
 
@@ -33,9 +33,9 @@ export class MovieImportComponent implements OnInit {
 
   ngOnInit(): void {
 	this.activeRoute.queryParamMap.subscribe(queryParamMap => {
-		if(!!queryParamMap.get(MovieImportKey.MovieName)) {
+		if(!!queryParamMap.get(QueryParam.MovieName)) {
 		   this.importState = ImportState.MoviesLoading;
-		   this.loadMatchingMovies(decodeURIComponent(queryParamMap.get(MovieImportKey.MovieName)));
+		   this.loadMatchingMovies(decodeURIComponent(queryParamMap.get(QueryParam.MovieName)));
 		} else {
 			this.router.navigate(['search']);
 		}
@@ -55,7 +55,7 @@ export class MovieImportComponent implements OnInit {
       this.moviesService.importMovieByMovieDbId( movie.movie_id ).subscribe( imported => {            
          this.importState = imported ? ImportState.ImportSuccess : ImportState.ImportFailed;
          const timeoutMs = imported ? 3000 : 6000;
-         setTimeout(this.router.navigate['search'], timeoutMs);
+         setTimeout(() => this.router.navigate(['search']), timeoutMs);
       } );
     }
 
