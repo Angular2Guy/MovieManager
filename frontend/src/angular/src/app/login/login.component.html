@@ -5,13 +5,13 @@
         <h5 class="modal-title" id="exampleModalLabel" i18n="@@loginLoginSignin">Login / Signin</h5>
       </div>
       <div class="modal-body" [formGroup]="loginFormGroup">        
-        <input type="text" class="form-control" i18n-placeholder="@@loginLoginPh" placeholder="login" [formControlName]="ControlName.loginName" >
+        <input type="text" class="form-control" i18n-placeholder="@@loginLoginPh" placeholder="login" [formControlName]="ControlName.LoginName" >
         <br/>
-        <input type="password" class="form-control" i18n-placeholder="@@loginPassword" placeholder="password" [formControlName]="ControlName.password" >
+        <input type="password" class="form-control" i18n-placeholder="@@loginPassword" placeholder="password" [formControlName]="ControlName.Password" >
         <br/>
-        <input type="text" class="form-control" i18n-placeholder="@@loginMovieDbKey" placeholder="movieDbKey" [formControlName]="ControlName.movieDbKey">
+        <input type="text" class="form-control" i18n-placeholder="@@loginMovieDbKey" placeholder="movieDbKey" [formControlName]="ControlName.MovieDbKey">
         <br/>
-        <div *ngIf="modalMsg.trim().length > 0" [ngClass]="modalMsgType === MessageType.error ? 'alert alert-danger' : 'alert alert-info'">{{modalMsg}}</div>
+        <div *ngIf="modalMsg.trim().length > 0" [ngClass]="modalMsgType === MessageType.Error ? 'alert alert-danger' : 'alert alert-info'">{{modalMsg}}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="loginUser()" [disabled]="loginInvalid()" i18n="@@loginLogin">Login</button>
