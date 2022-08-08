@@ -71,16 +71,17 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser() {
-      this.userService.login(this.loginFormGroup.controls[ControlName.loginName].value, 
-      	this.loginFormGroup.controls[ControlName.password].value).subscribe((myTillNextLogin: number) => {
-	      const res = myTillNextLogin <= 0;
-	      this.tillNextLogin = myTillNextLogin;
-          this.showModal = !res;
-          this.userService.loggedIn = res;
-          this.modalMsgType = MessageType.error;
-          this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed.`;
-          this.loginClosed.emit(res);
-      });
+	 this.modalMsg = '';
+     this.userService.login(this.loginFormGroup.controls[ControlName.loginName].value, 
+     this.loginFormGroup.controls[ControlName.password].value).subscribe((myTillNextLogin: number) => {
+	    const res = myTillNextLogin <= 0;
+	    this.tillNextLogin = myTillNextLogin;
+        this.showModal = !res;
+        this.userService.loggedIn = res;
+        this.modalMsgType = MessageType.error;
+        this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed.`;
+        this.loginClosed.emit(res);
+     });
   }
 
   cancelUser() {
@@ -92,7 +93,8 @@ export class LoginComponent implements OnInit {
   }
 
   signinUser() {
-      this.userService.signin(this.loginFormGroup.controls[ControlName.loginName].value, 
+	 this.modalMsg = '';
+     this.userService.signin(this.loginFormGroup.controls[ControlName.loginName].value, 
         this.loginFormGroup.controls[ControlName.password].value, 
         this.loginFormGroup.controls[ControlName.movieDbKey].value).subscribe((res: boolean) =>{
           this.cancelUser();
@@ -100,5 +102,4 @@ export class LoginComponent implements OnInit {
           this.modalMsg = res ? $localize `:@@SigninSuccessMsg:Signin successful. Please Login.` : $localize `:@@SigninFailedMsg:Signin failed.`;
       });
   }
-
 }

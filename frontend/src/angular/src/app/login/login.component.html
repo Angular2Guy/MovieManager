@@ -11,7 +11,7 @@
         <br/>
         <input type="text" class="form-control" i18n-placeholder="@@loginMovieDbKey" placeholder="movieDbKey" [formControlName]="ControlName.movieDbKey">
         <br/>
-        <div *ngIf="modalMsg.length > 0" [ngClass]="modalMsgType === MessageType.error ? 'alert alert-danger' : 'alert alert-info'">{{modalMsg}}</div>
+        <div *ngIf="modalMsg.trim().length > 0" [ngClass]="modalMsgType === MessageType.error ? 'alert alert-danger' : 'alert alert-info'">{{modalMsg}}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="loginUser()" [disabled]="loginInvalid()" i18n="@@loginLogin">Login</button>
