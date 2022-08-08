@@ -78,7 +78,7 @@ export class LoginComponent implements OnInit {
           this.showModal = !res;
           this.userService.loggedIn = res;
           this.modalMsgType = MessageType.error;
-          this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed. Try again in: ${myTillNextLogin} seconds.`;
+          this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed.`;
           this.loginClosed.emit(res);
       });
   }
@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
         this.loginFormGroup.controls[ControlName.password].value, 
         this.loginFormGroup.controls[ControlName.movieDbKey].value).subscribe((res: boolean) =>{
           this.cancelUser();
-          this.modalMsgType = MessageType.info;
+          this.modalMsgType = res ? MessageType.info : MessageType.error;
           this.modalMsg = res ? $localize `:@@SigninSuccessMsg:Signin successful. Please Login.` : $localize `:@@SigninFailedMsg:Signin failed.`;
       });
   }
