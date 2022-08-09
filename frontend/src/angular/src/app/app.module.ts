@@ -24,6 +24,7 @@ import { SearchComponent } from './search/search.component';
 import { LoginComponent } from './login/login.component';
 import { TokenInterceptor } from './services/token.interceptor';
 import { MovieImportComponent } from './movie-import/movie-import.component';
+import { FilterMoviesComponent } from './filter-movies/filter-movies.component';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { MovieImportComponent } from './movie-import/movie-import.component';
     ActorsComponent,
     SearchComponent,
     LoginComponent,
-    MovieImportComponent
+    MovieImportComponent,
+    FilterMoviesComponent
   ],
   imports: [
     BrowserModule,
