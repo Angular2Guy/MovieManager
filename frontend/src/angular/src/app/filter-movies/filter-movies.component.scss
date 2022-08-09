@@ -1,0 +1,14 @@
+.info-text {
+	padding-top: 30px;
+	font-size: 30px;
+	color: #037bfc; 
+	text-align: center;
+	width: 100%;
+}
+
+.import-movie {
+	cursor: pointer;
+	&:hover {
+		background: #BBBBBB;
+	}
+}

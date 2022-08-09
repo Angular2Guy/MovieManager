@@ -10,18 +10,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Movie } from '../model/movie';
 
 @Component({
   selector: 'app-filter-movies',
   templateUrl: './filter-movies.component.html',
   styleUrls: ['./filter-movies.component.scss']
 })
-export class FilterMoviesComponent implements OnInit {
+export class FilterMoviesComponent {
+  public filteredMovies: Movie[] = [];
+  
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit(): void {
+  public selectMovie(movie: Movie): void {
+	
   }
-
 }
