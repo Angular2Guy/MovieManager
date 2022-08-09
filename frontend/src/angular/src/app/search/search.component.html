@@ -48,6 +48,9 @@
 			<div *ngIf="moviesByGenere.length > 0" class="searchList my-dropdown-menu my-genere-menu-margin">
 				<a class="dropdown-item my-dropdown-item" [routerLink]="['/movie',movie.id]" *ngFor="let movie of moviesByGenere">{{movie.title}}</a>
 			</div>
+			<div class="mb-3 filter-movies">
+			   <button class="btn btn-secondary" i18n="@@searchFilterMovies" (click)="showFilterMovies()">Filter Movies</button>
+			</div>
 		</div>
 	</div>
 	<div class="row">

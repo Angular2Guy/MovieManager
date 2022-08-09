@@ -87,6 +87,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
         } );
     }
 
+    showFilterMovies(): void {
+	   this.router.navigate(['filter-movies']);
+    }
+
     movieDetails(movie: Movie) {
         this.router.navigateByUrl('movie/'+movie.id);
     }
