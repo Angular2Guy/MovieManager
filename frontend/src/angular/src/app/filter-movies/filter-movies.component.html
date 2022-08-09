@@ -2,11 +2,13 @@
 	<div>
 		<div class="row">
 			<div class="col">
-			   <div class="info-text" i18n="@@filterMoviesFilteringMovies">Filtering Movies</div>
-			   <div class="info-text">
+			   <div class="info-text filter-text" *ngIf="filtering" i18n="@@filterMoviesFilteringMovies">Filtering Movies</div>
+			   <div class="info-text filter-text" *ngIf="filtering">
 			       <img src="assets/svg/spinner.svg">
 			    </div>
-				<table class="table" *ngIf="filteredMovies.length > 0">
+			    <div class="info-text" *ngIf="!filtering && filteredMovies.length === 0" 
+			       i18n="@@filterMoviesNoMoviesFound">No Movies found</div>
+				<table class="table" *ngIf="!filtering && filteredMovies.length > 0">
 					<tr>
 						<th i18n="@@title">Title</th>
 						<th i18n="@@release">Release</th>

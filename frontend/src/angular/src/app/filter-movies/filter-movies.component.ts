@@ -20,6 +20,7 @@ import { Movie } from '../model/movie';
 })
 export class FilterMoviesComponent {
   public filteredMovies: Movie[] = [];
+  public filtering = false;
   
   constructor() {}
 
