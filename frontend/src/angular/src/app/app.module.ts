@@ -24,6 +24,7 @@ import { SearchComponent } from './search/search.component';
 import { LoginComponent } from './login/login.component';
 import { TokenInterceptor } from './services/token.interceptor';
 import { MovieImportComponent } from './movie-import/movie-import.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -41,6 +42,7 @@ import { MovieImportComponent } from './movie-import/movie-import.component';
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
+    NgbModule,
   ],
   providers: [
 	{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
