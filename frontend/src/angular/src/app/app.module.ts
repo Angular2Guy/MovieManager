@@ -41,8 +41,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule,
-    NgbModule,
+    AppRoutingModule
   ],
   providers: [
 	{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

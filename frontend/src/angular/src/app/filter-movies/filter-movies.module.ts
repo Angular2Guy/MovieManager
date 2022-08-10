@@ -13,9 +13,11 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-//import { NgbDatepickerModule, NgbOffcanvasModule } from "@ng-bootstrap/ng-bootstrap";
+//import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbDatepickerModule, NgbOffcanvasModule } from "@ng-bootstrap/ng-bootstrap";
 import { FilterMoviesRoutingModule } from "./filter-movies-routing.module";
 import { FilterMoviesComponent } from "./filter-movies.component";
+
 
 @NgModule({
   declarations: [
@@ -25,9 +27,10 @@ import { FilterMoviesComponent } from "./filter-movies.component";
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    //NgbOffcanvasModule, 
-    //NgbDatepickerModule,
-    FilterMoviesRoutingModule
+    NgbOffcanvasModule, 
+    NgbDatepickerModule,
+    FilterMoviesRoutingModule,
+    //NgbModule,
   ]
 })
 export class FilterMoviesModule { }
