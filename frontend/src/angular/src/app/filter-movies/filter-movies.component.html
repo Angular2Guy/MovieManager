@@ -1,21 +1,45 @@
 <ng-template #content let-offcanvas>
   <div class="offcanvas-header">
-    <h4 class="offcanvas-title" id="offcanvas-basic-title">Profile update</h4>
+    <h4 class="offcanvas-title" id="offcanvas-basic-title">Filters availiable</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
   </div>
   <div class="offcanvas-body">
     <form>
       <div class="mb-3">
-        <label for="dateOfBirth">Date of birth</label>
+        <label for="releasedBefore">Released before</label>
         <div class="input-group">
-          <input id="dateOfBirth" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
+          <input id="releasedBefore" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
         </div>
       </div>
+      <div class="mb-3">
+        <label for="releasedAfter">Released after</label>
+        <div class="input-group">
+          <input id="releasedAfter" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
+          <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" placeholder="title">
+      </div>
+      <div class="mb-3">
+        <div class="col">
+           <div ngbDropdown class="d-inline-block">
+              <label for="dropdownGeneres" class="form-label">Selected Generes</label>
+              <div>
+                 <button type="button" class="form-control btn btn-outline-primary" id="dropdownGeneres" ngbDropdownToggle>Generes</button>
+                 <span>{{selectedGeneres}}</span>
+                 <div ngbDropdownMenu aria-labelledby="dropdownGeneres">
+                    <button ngbDropdownItem>Action - 1</button>
+                    <button ngbDropdownItem>Another Action</button>
+                    <button ngbDropdownItem>Something else is here</button>
+                 </div>
+              </div>
+           </div>
+        </div>
+      </div>
     </form>
-    <div class="text-end">
-      <button type="button" class="btn btn-outline-dark" (click)="offcanvas.close('Save click')">Save</button>
-    </div>
   </div>
 </ng-template>
 <div class="container-fluid">

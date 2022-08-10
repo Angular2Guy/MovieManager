@@ -22,7 +22,8 @@ import { Movie } from '../model/movie';
 export class FilterMoviesComponent {
   public filteredMovies: Movie[] = [];
   public filtering = false;
-  closeResult = '';
+  public selectedGeneres = '';
+  public closeResult = '';
   
   constructor(private offcanvasService: NgbOffcanvas) {}
 
