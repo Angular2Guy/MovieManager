@@ -5,19 +5,21 @@
   </div>
   <div class="offcanvas-body">
     <form>
-      <div class="mb-3">
+      <div class="select-range">
+      <div class="mb-3 me-1">
         <label for="releasedBefore">Released before</label>
         <div class="input-group">
-          <input id="releasedBefore" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
-          <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+          <input id="releasedBefore" class="form-control" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
+          <button class="btn btn-outline-secondary calendar" (click)="dpFrom.toggle()" type="button"></button>
         </div>
       </div>
-      <div class="mb-3">
+      <div class="mb-3 ms-1">
         <label for="releasedAfter">Released after</label>
         <div class="input-group">
-          <input id="releasedAfter" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
-          <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+          <input id="releasedAfter" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
+          <button class="btn btn-outline-secondary calendar" (click)="dpTo.toggle()" type="button"></button>
         </div>
+      </div>
       </div>
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
@@ -38,6 +40,20 @@
               </div>
            </div>
         </div>
+      </div>
+      <div class="select-range">
+	      <div class="mb-3 me-1">
+	        <label for="title" class="form-label">Min Length</label>
+	        <input type="number" class="form-control" id="min-length" placeholder="minutes">
+	      </div>
+	      <div class="mb-3 ms-1">
+	        <label for="title" class="form-label">Max Length</label>
+	        <input type="number" class="form-control" id="max-length" placeholder="minutes">
+	      </div>
+      </div>
+      <div class="mb-3">
+         <div class="mb-1">Min Rating</div>
+         <ngb-rating id="rating" [rate]="0"></ngb-rating>
       </div>
     </form>
   </div>

@@ -10,8 +10,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component } from '@angular/core';
-import { NgbOffcanvas, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit } from '@angular/core';
+import { NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Movie } from '../model/movie';
 
 @Component({
@@ -19,15 +19,19 @@ import { Movie } from '../model/movie';
   templateUrl: './filter-movies.component.html',
   styleUrls: ['./filter-movies.component.scss']
 })
-export class FilterMoviesComponent {
+export class FilterMoviesComponent implements OnInit {
   public filteredMovies: Movie[] = [];
   public filtering = false;
   public selectedGeneres = '';
   public closeResult = '';
   
-  constructor(private offcanvasService: NgbOffcanvas) {}
+  constructor(private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig) {}
+  
+  ngOnInit(): void {
+     this.ngbRatingConfig.max = 10;
+  }
 
-  public open(content) {
+  public open(content: any) {
     this.offcanvasService.open(content, {ariaLabelledBy: 'offcanvas-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
