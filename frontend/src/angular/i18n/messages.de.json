@@ -54,6 +54,7 @@
     "filterMoviesMaxLength": "Max Length",
     "filterMoviesMinRating": "Min Rating",
     "filterMoviesInOverview": "In Overview",
+    "filterMoviesResetFilters": "Reset Filters",
     "filterMoviesFilteringMovies": "Filtering Movies",
     "filterMoviesNoMoviesFound": "No Movies found",
     "release": "Release",

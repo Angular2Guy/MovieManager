@@ -12,6 +12,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { NgbDateStruct, NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { FilterCriteria } from '../model/filter-criteria';
 import { Genere } from '../model/genere';
 import { Movie } from '../model/movie';
 import { MoviesService } from '../services/movies.service';
@@ -24,18 +25,10 @@ import { MoviesService } from '../services/movies.service';
 export class FilterMoviesComponent implements OnInit {
   public filteredMovies: Movie[] = [];
   public filtering = false;
-  private selectedGeneres: Genere[] = [];
   public selectedGeneresStr = '';
-  public closeResult = '';
   public generes: Genere[] = [];
-  public releaseFrom: NgbDateStruct;
-  public releaseTo: NgbDateStruct;
-  public movieTitle = '';
-  public movieActor = '';
-  public minLength = 0;
-  public maxLength = 0;
-  public minRating = 0;
-  public overviewStr = '';
+  public closeResult = '';
+  public filterCriteria = new FilterCriteria();
   
   constructor(private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig, 
      private movieService: MoviesService) {}
@@ -53,27 +46,26 @@ export class FilterMoviesComponent implements OnInit {
     });
   }
 
-  private getDismissReason(reason: unknown): string {
+  private getDismissReason(reason: unknown): void {
+	console.log(this.filterCriteria);
     if (reason === OffcanvasDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === OffcanvasDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on the backdrop';
+      return this.resetFilters();
     } else {
-      return `with: ${reason}`;
+      this.movieService.findMoviesByCriteria(this.filterCriteria).subscribe(result => this.filteredMovies = result);
     }
   }
 
   public addToSelectedGenere(genere: Genere): void {
-	if(this.selectedGeneres.length < 2 
-	   && this.selectedGeneres.filter(myGen => genere.id === myGen.id).length === 0) {
+	if(this.filterCriteria.selectedGeneres.length < 2 
+	   && this.filterCriteria.selectedGeneres.filter(myGen => genere.id === myGen.id).length === 0) {
 	   this.selectedGeneresStr = `${this.selectedGeneresStr} ${genere.name}`;
 	   this.selectedGeneresStr = this.selectedGeneresStr.trim();
- 	   this.selectedGeneres.push(genere);
+ 	   this.filterCriteria.selectedGeneres.push(genere);
 	}
   }
 
   public resetSelectedGeneres(): void {
-	this.selectedGeneres = [];
+	this.filterCriteria.selectedGeneres = [];
 	this.selectedGeneresStr = '';
   }
 
@@ -82,6 +74,17 @@ export class FilterMoviesComponent implements OnInit {
   }
   
   public resetFilters(): void {
-	console.log('reset Filters');
+	this.filterCriteria.releaseFrom = null;
+	this.filterCriteria.releaseTo = null;
+	this.filterCriteria.selectedGeneres = [];
+    this.selectedGeneresStr = '';
+    this.closeResult = '';
+    this.generes = [];
+    this.filterCriteria.movieTitle = '';
+    this.filterCriteria.movieActor = '';
+    this.filterCriteria.minLength = 0;
+    this.filterCriteria.maxLength = 0;
+    this.filterCriteria.minRating = 0;
+    this.filterCriteria.overviewStr = '';
   }
 }

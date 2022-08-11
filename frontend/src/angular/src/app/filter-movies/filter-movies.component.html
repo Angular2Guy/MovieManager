@@ -9,25 +9,25 @@
       <div class="mb-3 me-1">
         <label for="releasedBefore" i18n="@@filterMoviesReleasedBefore">Released before</label>
         <div class="input-group">
-          <input id="releasedBefore"  class="form-control" [(ngModel)]="releaseFrom" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
+          <input id="releasedBefore"  class="form-control" [(ngModel)]="filterCriteria.releaseFrom" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dpFrom.toggle()" type="button"></button>
         </div>
       </div>
       <div class="mb-3 ms-1">
         <label for="releasedAfter" i18n="@@filterMoviesReleasedAfter">Released after</label>
         <div class="input-group">
-          <input id="releasedAfter" [(ngModel)]="releaseTo" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
+          <input id="releasedAfter" [(ngModel)]="filterCriteria.releaseTo" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dpTo.toggle()" type="button"></button>
         </div>
       </div>
       </div>
       <div class="mb-3">
         <label for="title" class="form-label" i18n="@@title">Title</label>
-        <input type="text" [(ngModel)]="movieTitle" name="title" class="form-control" id="title" placeholder="title">
+        <input type="text" [(ngModel)]="filterCriteria.movieTitle" name="title" class="form-control" id="title" placeholder="title">
       </div>
       <div class="mb-3">
         <label for="actor" class="form-label" i18n="@@actor">Actor</label>
-        <input type="text" [(ngModel)]="movieActor" name="actor" class="form-control" id="actor" placeholder="actor">
+        <input type="text" [(ngModel)]="filterCriteria.movieActor" name="actor" class="form-control" id="actor" placeholder="actor">
       </div>
       <div class="mb-3">
         <div class="col">
@@ -51,20 +51,20 @@
       <div class="select-range">
 	      <div class="mb-3 me-1">
 	        <label for="min-length" class="form-label" i18n="@@filterMoviesMinLength">Min Length</label>
-	        <input type="number" [(ngModel)]="minLength" name="minLength" class="form-control" id="min-length" placeholder="minutes">
+	        <input type="number" [(ngModel)]="filterCriteria.minLength" name="minLength" class="form-control" id="min-length" placeholder="minutes">
 	      </div>
 	      <div class="mb-3 ms-1">
 	        <label for="max-length" class="form-label" i18n="@@filterMoviesMaxLength">Max Length</label>
-	        <input type="number" [(ngModel)]="maxLength" name="maxLength" class="form-control" id="max-length" placeholder="minutes">
+	        <input type="number" [(ngModel)]="filterCriteria.maxLength" name="maxLength" class="form-control" id="max-length" placeholder="minutes">
 	      </div>
       </div>
       <div class="mb-3">
          <div for="rating" class="mb-1" i18n="@@filterMoviesMinRating">Min Rating</div>
-         <ngb-rating id="rating" [(ngModel)]="minRating" name="minRating" [rate]="0"></ngb-rating>
+         <ngb-rating id="rating" [(ngModel)]="filterCriteria.minRating" name="minRating" [rate]="0"></ngb-rating>
       </div>
       <div class="mb-3">
          <label for="overview" class="form-label" i18n="@@filterMoviesInOverview">In Overview</label>
-         <textarea rows="2" id="overview" [(ngModel)]="overviewStr" name="overviewStr" class="form-control"></textarea>
+         <textarea rows="2" id="overview" [(ngModel)]="filterCriteria.overviewStr" name="overviewStr" class="form-control"></textarea>
       </div>
       <div class="mb-3 float-end">
          <button class="btn btn-outline-primary" (click)="resetFilters()" type="button" i18n="@@filterMoviesResetFilters">Reset Filters</button>

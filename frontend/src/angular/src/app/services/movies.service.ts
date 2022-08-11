@@ -16,6 +16,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Movie } from '../model/movie';
 import { Genere } from '../model/genere';
+import { FilterCriteria } from '../model/filter-criteria';
 
 @Injectable({
  providedIn: 'root',
@@ -68,6 +69,13 @@ export class MoviesService {
             return throwError( error);
             }));
     }
+    
+   public findMoviesByCriteria(filterCriteria: FilterCriteria): Observable<Movie[]> {
+	   return this.http.post<Movie[]>('/rest/movie/filter-criteria', filterCriteria).pipe(catchError(error => {
+            console.error( JSON.stringify( error ) );
+            return throwError( error);
+            }));
+   }
 
     public importMovieByTitle(title: string): Observable<Movie[]> {
         if(!title) {
