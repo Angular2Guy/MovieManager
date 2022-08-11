@@ -9,25 +9,25 @@
       <div class="mb-3 me-1">
         <label for="releasedBefore">Released before</label>
         <div class="input-group">
-          <input id="releasedBefore" class="form-control" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
+          <input id="releasedBefore"  class="form-control" [(ngModel)]="releaseFrom" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dpFrom.toggle()" type="button"></button>
         </div>
       </div>
       <div class="mb-3 ms-1">
         <label for="releasedAfter">Released after</label>
         <div class="input-group">
-          <input id="releasedAfter" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
+          <input id="releasedAfter" [(ngModel)]="releaseTo" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dpTo.toggle()" type="button"></button>
         </div>
       </div>
       </div>
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
-        <input type="text" class="form-control" id="title" placeholder="title">
+        <input type="text" [(ngModel)]="movieTitle" class="form-control" id="title" placeholder="title">
       </div>
       <div class="mb-3">
         <label for="actor" class="form-label">Actor</label>
-        <input type="text" class="form-control" id="actor" placeholder="actor">
+        <input type="text" [(ngModel)]="movieActor" class="form-control" id="actor" placeholder="actor">
       </div>
       <div class="mb-3">
         <div class="col">
@@ -51,20 +51,20 @@
       <div class="select-range">
 	      <div class="mb-3 me-1">
 	        <label for="title" class="form-label">Min Length</label>
-	        <input type="number" class="form-control" id="min-length" placeholder="minutes">
+	        <input type="number" [(ngModel)]="minLength" class="form-control" id="min-length" placeholder="minutes">
 	      </div>
 	      <div class="mb-3 ms-1">
 	        <label for="title" class="form-label">Max Length</label>
-	        <input type="number" class="form-control" id="max-length" placeholder="minutes">
+	        <input type="number" [(ngModel)]="maxLength" class="form-control" id="max-length" placeholder="minutes">
 	      </div>
       </div>
       <div class="mb-3">
          <div class="mb-1">Min Rating</div>
-         <ngb-rating id="rating" [rate]="0"></ngb-rating>
+         <ngb-rating id="rating" [(ngModel)]="minRating" [rate]="0"></ngb-rating>
       </div>
       <div class="mb-3">
          <div for="overview" class="form-label">In Overview</div>
-         <textarea rows="2" class="form-control"></textarea>
+         <textarea rows="2" id="overview" [(ngModel)]="overviewStr" class="form-control"></textarea>
       </div>
     </form>
   </div>

@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Component, OnInit } from '@angular/core';
-import { NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Genere } from '../model/genere';
 import { Movie } from '../model/movie';
 import { MoviesService } from '../services/movies.service';
@@ -28,6 +28,14 @@ export class FilterMoviesComponent implements OnInit {
   public selectedGeneresStr = '';
   public closeResult = '';
   public generes: Genere[] = [];
+  public releaseFrom: NgbDateStruct;
+  public releaseTo: NgbDateStruct;
+  public movieTitle = '';
+  public movieActor = '';
+  public minLength = 0;
+  public maxLength = 0;
+  public minRating = 0;
+  public overviewStr = '';
   
   constructor(private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig, 
      private movieService: MoviesService) {}
