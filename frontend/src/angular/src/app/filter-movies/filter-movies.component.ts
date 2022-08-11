@@ -12,7 +12,9 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Genere } from '../model/genere';
 import { Movie } from '../model/movie';
+import { MoviesService } from '../services/movies.service';
 
 @Component({
   selector: 'app-filter-movies',
@@ -22,16 +24,20 @@ import { Movie } from '../model/movie';
 export class FilterMoviesComponent implements OnInit {
   public filteredMovies: Movie[] = [];
   public filtering = false;
-  public selectedGeneres = '';
+  private selectedGeneres: Genere[] = [];
+  public selectedGeneresStr = '';
   public closeResult = '';
+  public generes: Genere[] = [];
   
-  constructor(private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig) {}
+  constructor(private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig, 
+     private movieService: MoviesService) {}
   
   ngOnInit(): void {
      this.ngbRatingConfig.max = 10;
+     this.movieService.allGeneres().subscribe(myGeneres => this.generes = myGeneres);
   }
 
-  public open(content: any) {
+  public open(content: unknown) {
     this.offcanvasService.open(content, {ariaLabelledBy: 'offcanvas-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -39,7 +45,7 @@ export class FilterMoviesComponent implements OnInit {
     });
   }
 
-  private getDismissReason(reason: any): string {
+  private getDismissReason(reason: unknown): string {
     if (reason === OffcanvasDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === OffcanvasDismissReasons.BACKDROP_CLICK) {
@@ -47,6 +53,20 @@ export class FilterMoviesComponent implements OnInit {
     } else {
       return `with: ${reason}`;
     }
+  }
+
+  public addToSelectedGenere(genere: Genere): void {
+	if(this.selectedGeneres.length < 2 
+	   && this.selectedGeneres.filter(myGen => genere.id === myGen.id).length === 0) {
+	   this.selectedGeneresStr = `${this.selectedGeneresStr} ${genere.name}`;
+	   this.selectedGeneresStr = this.selectedGeneresStr.trim();
+ 	   this.selectedGeneres.push(genere);
+	}
+  }
+
+  public resetSelectedGeneres(): void {
+	this.selectedGeneres = [];
+	this.selectedGeneresStr = '';
   }
 
   public selectMovie(movie: Movie): void {

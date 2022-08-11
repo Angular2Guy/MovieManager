@@ -25,5 +25,10 @@
 }
 
 .select-range {
+	display: flex;	
+}
+
+.selected-generes {
 	display: flex;
+	align-items: center;	
 }

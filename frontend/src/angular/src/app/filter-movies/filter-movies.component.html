@@ -26,16 +26,23 @@
         <input type="text" class="form-control" id="title" placeholder="title">
       </div>
       <div class="mb-3">
+        <label for="actor" class="form-label">Actor</label>
+        <input type="text" class="form-control" id="actor" placeholder="actor">
+      </div>
+      <div class="mb-3">
         <div class="col">
            <div ngbDropdown class="d-inline-block">
               <label for="dropdownGeneres" class="form-label">Selected Generes</label>
-              <div>
-                 <button type="button" class="form-control btn btn-outline-primary" id="dropdownGeneres" ngbDropdownToggle>Generes</button>
-                 <span>{{selectedGeneres}}</span>
-                 <div ngbDropdownMenu aria-labelledby="dropdownGeneres">
-                    <button ngbDropdownItem>Action - 1</button>
-                    <button ngbDropdownItem>Another Action</button>
-                    <button ngbDropdownItem>Something else is here</button>
+              <div class="select-range">
+                 <div>
+                    <button type="button" class="form-control btn btn-outline-primary" id="dropdownGeneres" ngbDropdownToggle>Generes</button>                 
+                    <div ngbDropdownMenu aria-labelledby="dropdownGeneres">
+                       <button ngbDropdownItem (click)="addToSelectedGenere(myGenere)" *ngFor="let myGenere of generes">{{myGenere.name}}</button>
+                    </div>
+                 </div>
+                 <div class="selected-generes" *ngIf="selectedGeneresStr.length > 0">
+                    <div class="ms-1">{{selectedGeneresStr}}</div>
+                    <div class="ms-1 btn-close" (click)="resetSelectedGeneres()"></div>
                  </div>
               </div>
            </div>
