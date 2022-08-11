@@ -1,20 +1,20 @@
 <ng-template #content let-offcanvas>
   <div class="offcanvas-header">
-    <h4 class="offcanvas-title" id="offcanvas-basic-title">Filters availiable</h4>
+    <h4 class="offcanvas-title" id="offcanvas-basic-title" i18n="@@filterMoviesFiltersAvailiable">Filters availiable</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
   </div>
   <div class="offcanvas-body">
     <form>
       <div class="select-range">
       <div class="mb-3 me-1">
-        <label for="releasedBefore">Released before</label>
+        <label for="releasedBefore" i18n="@@filterMoviesReleasedBefore">Released before</label>
         <div class="input-group">
           <input id="releasedBefore"  class="form-control" [(ngModel)]="releaseFrom" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dpFrom.toggle()" type="button"></button>
         </div>
       </div>
       <div class="mb-3 ms-1">
-        <label for="releasedAfter">Released after</label>
+        <label for="releasedAfter" i18n="@@filterMoviesReleasedAfter">Released after</label>
         <div class="input-group">
           <input id="releasedAfter" [(ngModel)]="releaseTo" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dpTo.toggle()" type="button"></button>
@@ -22,17 +22,17 @@
       </div>
       </div>
       <div class="mb-3">
-        <label for="title" class="form-label">Title</label>
+        <label for="title" class="form-label" i18n="@@title">Title</label>
         <input type="text" [(ngModel)]="movieTitle" class="form-control" id="title" placeholder="title">
       </div>
       <div class="mb-3">
-        <label for="actor" class="form-label">Actor</label>
+        <label for="actor" class="form-label" i18n="@@actor">Actor</label>
         <input type="text" [(ngModel)]="movieActor" class="form-control" id="actor" placeholder="actor">
       </div>
       <div class="mb-3">
         <div class="col">
            <div ngbDropdown class="d-inline-block">
-              <label for="dropdownGeneres" class="form-label">Selected Generes</label>
+              <label for="dropdownGeneres" class="form-label" i18n="@@filterMoviesSelectedGeneres">Selected Generes</label>
               <div class="select-range">
                  <div>
                     <button type="button" class="form-control btn btn-outline-primary" id="dropdownGeneres" ngbDropdownToggle>Generes</button>                 
@@ -50,20 +50,20 @@
       </div>
       <div class="select-range">
 	      <div class="mb-3 me-1">
-	        <label for="title" class="form-label">Min Length</label>
+	        <label for="min-length" class="form-label" i18n="@@filterMoviesMinLength">Min Length</label>
 	        <input type="number" [(ngModel)]="minLength" class="form-control" id="min-length" placeholder="minutes">
 	      </div>
 	      <div class="mb-3 ms-1">
-	        <label for="title" class="form-label">Max Length</label>
+	        <label for="max-length" class="form-label" i18n="@@filterMoviesMaxLength">Max Length</label>
 	        <input type="number" [(ngModel)]="maxLength" class="form-control" id="max-length" placeholder="minutes">
 	      </div>
       </div>
       <div class="mb-3">
-         <div class="mb-1">Min Rating</div>
+         <label for="rating" class="mb-1" i18n="@@filterMoviesMinRating">Min Rating</label>
          <ngb-rating id="rating" [(ngModel)]="minRating" [rate]="0"></ngb-rating>
       </div>
       <div class="mb-3">
-         <div for="overview" class="form-label">In Overview</div>
+         <label for="overview" class="form-label" i18n="@@filterMoviesInOverview">In Overview</label>
          <textarea rows="2" id="overview" [(ngModel)]="overviewStr" class="form-control"></textarea>
       </div>
     </form>
