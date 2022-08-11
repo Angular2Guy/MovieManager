@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
+import ch.xxx.moviemanager.domain.model.dto.FilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
@@ -45,18 +46,18 @@ public class MovieController {
 	}
 
 	@RequestMapping(value = "/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MovieDto>> getMovieSearch(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("title") String titleStr)
+	public List<MovieDto> getMovieSearch(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("title") String titleStr)
 			throws InterruptedException {
 		List<MovieDto> movies = this.service.findMovie(titleStr, bearerStr).stream().map(m -> this.mapper.convertOnlyMovie(m))
 				.collect(Collectors.toList());
-		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
+		return movies;
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<MovieDto> getMovieSearchById(@PathVariable("id") Long id) throws InterruptedException {
+	public MovieDto getMovieSearchById(@PathVariable("id") Long id) throws InterruptedException {
 		MovieDto result = this.mapper.convert(this.service.findMovieById(id).orElseThrow(
 				() -> new ResourceNotFoundException(String.format("Failed to find movie with id: %d", id))));
-		return new ResponseEntity<MovieDto>(result, HttpStatus.OK);
+		return result;
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -67,32 +68,38 @@ public class MovieController {
 	}
 
 	@RequestMapping(value = "/genere/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MovieDto>> getGeneresById(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr,@PathVariable("id") Long id) throws InterruptedException {
+	public List<MovieDto> getGeneresById(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr,@PathVariable("id") Long id) throws InterruptedException {
 		List<MovieDto> movies = this.service.findMoviesByGenere(id,bearerStr).stream().map(m -> this.mapper.convertMovieWithGenere(m))
 				.collect(Collectors.toList());
-		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
+		return movies;
 	}
 
 	@RequestMapping(value = "/generes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<GenereDto>> getGeneres() throws InterruptedException {
+	public List<GenereDto> getGeneres() throws InterruptedException {
 		List<GenereDto> generes = this.service.findAllGeneres().stream().map(gen -> this.mapper.convert(gen))
 				.collect(Collectors.toList());
-		return new ResponseEntity<List<GenereDto>>(generes, HttpStatus.OK);
+		return generes;
 	}
 
 	@RequestMapping(value = "/pages", params = {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MovieDto>> getPagesByNumber(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @RequestParam("page") Integer page)
+	public List<MovieDto> getPagesByNumber(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @RequestParam("page") Integer page)
 			throws InterruptedException {
 		List<MovieDto> movies = this.service.findMoviesByPage(page, bearerStr).stream().map(m -> this.mapper.convert(m))
 				.collect(Collectors.toList());
-		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);
+		return movies;
 	}
 
+	@RequestMapping(value="/filter-criteria", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public List<MovieDto> getMoviesByCriteria(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, FilterCriteriaDto filterCriteria) {
+		List<MovieDto> movies = List.of();
+		return movies;
+	}
+	
 	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MovieDto>> postSearchTerm(
+	public List<MovieDto> postSearchTerm(
 			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, SearchTermDto searchTermDto) {
 		List<MovieDto> results = this.service.findMoviesBySearchTerm(bearerStr, searchTermDto).stream().map(myMovie -> this.mapper.convert(myMovie)).toList();
-		return new ResponseEntity<List<MovieDto>>(results, HttpStatus.OK);
+		return results;
 	}
 }
