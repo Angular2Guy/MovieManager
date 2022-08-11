@@ -80,4 +80,8 @@ export class FilterMoviesComponent implements OnInit {
   public selectMovie(movie: Movie): void {
 	
   }
+  
+  public resetFilters(): void {
+	console.log('reset Filters');
+  }
 }
