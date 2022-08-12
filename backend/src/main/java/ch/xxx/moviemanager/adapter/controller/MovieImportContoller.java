@@ -31,24 +31,23 @@ import ch.xxx.moviemanager.usecase.service.MovieService;
 @RequestMapping("rest/movie/import")
 public class MovieImportContoller {
 	private final MovieService service;
-	
+
 	public MovieImportContoller(MovieService service) {
 		this.service = service;
 	}
-	
-	@RequestMapping(value="/{searchStr}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<MovieDto>> getMovieImportSearch(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("searchStr") String searchStr) throws InterruptedException {
-		List<MovieDto> movies = this.service.findImportMovie(searchStr, bearerStr);		
-		return new ResponseEntity<List<MovieDto>>(movies, HttpStatus.OK);		
+
+	@RequestMapping(value = "/{searchStr}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public List<MovieDto> getMovieImportSearch(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			@PathVariable("searchStr") String searchStr) throws InterruptedException {
+		List<MovieDto> movies = this.service.findImportMovie(searchStr, bearerStr);
+		return movies;
 	}
-	
-	@RequestMapping(value="/movieid/{movieId}", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Boolean> getMovieImport(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("movieId") int movieId) throws InterruptedException {
+
+	@RequestMapping(value = "/movieid/{movieId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Boolean> getMovieImport(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			@PathVariable("movieId") int movieId) throws InterruptedException {
 		boolean success = this.service.importMovie(movieId, bearerStr);
-		if(success) {
-			return new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.NOT_ACCEPTABLE);			
-		}
+		return success ? new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK)
+				: new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.NOT_ACCEPTABLE);
 	}
 }

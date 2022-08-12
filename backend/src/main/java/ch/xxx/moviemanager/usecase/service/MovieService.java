@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.CastDto;
+import ch.xxx.moviemanager.domain.model.dto.FilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
@@ -220,6 +221,10 @@ public class MovieService {
 
 	private String createQueryStr(String str) {
 		return str.replace(" ", "%20");
+	}
+	
+	public List<Movie> findMoviesByFilterCriteria(String bearerStr, FilterCriteriaDto filterCriteria) {
+		return List.of();
 	}
 	
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {

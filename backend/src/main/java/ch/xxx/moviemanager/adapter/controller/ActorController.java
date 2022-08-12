@@ -13,6 +13,7 @@
 package ch.xxx.moviemanager.adapter.controller;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.http.HttpHeaders;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.User;
@@ -48,12 +48,11 @@ public class ActorController {
 	}
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ActorDto>> getActorSearch(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("name") String name)
-			throws InterruptedException {
+	public List<ActorDto> getActorSearch(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			@PathVariable("name") String name) throws InterruptedException {
 		List<ActorDto> actors = this.service.findActor(name, bearerStr).stream()
-				.map(a -> this.mapper.convertOnlyActor(a)).collect(Collectors.toList());
-		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
+				.map(a -> this.mapper.convertOnlyActor(a)).toList();
+		return actors;
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -61,28 +60,28 @@ public class ActorController {
 			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("id") Long id)
 			throws InterruptedException {
 		final User currentUser = this.auds.getCurrentUser(bearerStr);
-		ActorDto actor = this.service.findActorById(id, bearerStr).stream()
+		Optional<ActorDto> actorOpt = this.service.findActorById(id, bearerStr).stream()
 				.filter(myActor -> myActor.getCasts().stream()
 						.filter(c -> c.getMovie().getUsers().contains(currentUser)).findFirst().isPresent())
-				.map(a -> this.mapper.convert(a)).findFirst().orElseThrow(
-						() -> new ResourceNotFoundException(String.format("Failed to find actor with id: %d", id)));
-		return new ResponseEntity<ActorDto>(actor, HttpStatus.OK);
+				.map(a -> this.mapper.convert(a)).findFirst();
+		return actorOpt.stream().map(myActor -> new ResponseEntity<ActorDto>(myActor, HttpStatus.OK)).findFirst()
+				.orElse(new ResponseEntity<ActorDto>(new ActorDto(), HttpStatus.NOT_FOUND));
 	}
 
 	@RequestMapping(value = "/pages", params = {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ActorDto>> getPagesByNumber(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, @RequestParam("page") Integer page)
-			throws InterruptedException {
+	public List<ActorDto> getPagesByNumber(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			@RequestParam("page") Integer page) throws InterruptedException {
 		List<ActorDto> actors = this.service.findActorsByPage(page, bearerStr).stream().map(a -> this.mapper.convert(a))
 				.collect(Collectors.toList());
-		return new ResponseEntity<List<ActorDto>>(actors, HttpStatus.OK);
+		return actors;
 	}
 
 	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ActorDto>> postSearchTerm(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, SearchTermDto searchTermDto) {
-		List<ActorDto> results = this.service.findActorsBySearchTerm(bearerStr, searchTermDto).stream().map(myActor -> this.mapper.convert(myActor)).toList();
-		return new ResponseEntity<List<ActorDto>>(results, HttpStatus.OK);
+	public List<ActorDto> postSearchTerm(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			SearchTermDto searchTermDto) {
+		List<ActorDto> results = this.service.findActorsBySearchTerm(bearerStr, searchTermDto).stream()
+				.map(myActor -> this.mapper.convert(myActor)).toList();
+		return results;
 	}
 }

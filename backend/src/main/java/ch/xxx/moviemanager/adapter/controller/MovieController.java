@@ -13,7 +13,6 @@
 package ch.xxx.moviemanager.adapter.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -46,10 +45,10 @@ public class MovieController {
 	}
 
 	@RequestMapping(value = "/{title}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<MovieDto> getMovieSearch(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("title") String titleStr)
-			throws InterruptedException {
-		List<MovieDto> movies = this.service.findMovie(titleStr, bearerStr).stream().map(m -> this.mapper.convertOnlyMovie(m))
-				.collect(Collectors.toList());
+	public List<MovieDto> getMovieSearch(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			@PathVariable("title") String titleStr) throws InterruptedException {
+		List<MovieDto> movies = this.service.findMovie(titleStr, bearerStr).stream()
+				.map(m -> this.mapper.convertOnlyMovie(m)).toList();
 		return movies;
 	}
 
@@ -61,45 +60,48 @@ public class MovieController {
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Boolean> deleteMovieById(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("id") Long id) throws InterruptedException {
+	public ResponseEntity<Boolean> deleteMovieById(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			@PathVariable("id") Long id) throws InterruptedException {
 		boolean result = this.service.deleteMovieById(id, bearerStr);
 		return result ? new ResponseEntity<Boolean>(result, HttpStatus.OK)
 				: new ResponseEntity<Boolean>(result, HttpStatus.NOT_FOUND);
 	}
 
 	@RequestMapping(value = "/genere/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<MovieDto> getGeneresById(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr,@PathVariable("id") Long id) throws InterruptedException {
-		List<MovieDto> movies = this.service.findMoviesByGenere(id,bearerStr).stream().map(m -> this.mapper.convertMovieWithGenere(m))
-				.collect(Collectors.toList());
+	public List<MovieDto> getGeneresById(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			@PathVariable("id") Long id) throws InterruptedException {
+		List<MovieDto> movies = this.service.findMoviesByGenere(id, bearerStr).stream()
+				.map(m -> this.mapper.convertMovieWithGenere(m)).toList();
 		return movies;
 	}
 
 	@RequestMapping(value = "/generes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<GenereDto> getGeneres() throws InterruptedException {
-		List<GenereDto> generes = this.service.findAllGeneres().stream().map(gen -> this.mapper.convert(gen))
-				.collect(Collectors.toList());
+		List<GenereDto> generes = this.service.findAllGeneres().stream().map(gen -> this.mapper.convert(gen)).toList();
 		return generes;
 	}
 
 	@RequestMapping(value = "/pages", params = {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<MovieDto> getPagesByNumber(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, @RequestParam("page") Integer page)
-			throws InterruptedException {
+	public List<MovieDto> getPagesByNumber(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			@RequestParam("page") Integer page) throws InterruptedException {
 		List<MovieDto> movies = this.service.findMoviesByPage(page, bearerStr).stream().map(m -> this.mapper.convert(m))
-				.collect(Collectors.toList());
+				.toList();
 		return movies;
 	}
 
-	@RequestMapping(value="/filter-criteria", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public List<MovieDto> getMoviesByCriteria(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr, FilterCriteriaDto filterCriteria) {
-		List<MovieDto> movies = List.of();
-		return movies;
+	@RequestMapping(value = "/filter-criteria", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	public List<MovieDto> getMoviesByCriteria(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			FilterCriteriaDto filterCriteria) {
+		return this.service.findMoviesByFilterCriteria(bearerStr, filterCriteria).stream()
+				.map(m -> this.mapper.convert(m)).toList();
 	}
-	
+
 	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public List<MovieDto> postSearchTerm(
-			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, SearchTermDto searchTermDto) {
-		List<MovieDto> results = this.service.findMoviesBySearchTerm(bearerStr, searchTermDto).stream().map(myMovie -> this.mapper.convert(myMovie)).toList();
+	public List<MovieDto> postSearchTerm(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
+			SearchTermDto searchTermDto) {
+		List<MovieDto> results = this.service.findMoviesBySearchTerm(bearerStr, searchTermDto).stream()
+				.map(myMovie -> this.mapper.convert(myMovie)).toList();
 		return results;
 	}
 }
