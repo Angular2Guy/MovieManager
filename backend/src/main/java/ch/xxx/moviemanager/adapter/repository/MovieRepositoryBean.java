@@ -12,12 +12,20 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.Metamodel;
 
 import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -26,9 +34,10 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import ch.xxx.moviemanager.domain.model.dto.FilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
-import ch.xxx.moviemanager.domain.model.entity.Actor;
+import ch.xxx.moviemanager.domain.model.entity.Cast;
 import ch.xxx.moviemanager.domain.model.entity.Movie;
 import ch.xxx.moviemanager.domain.model.entity.MovieRepository;
 
@@ -91,6 +100,41 @@ public class MovieRepositoryBean implements MovieRepository {
 	@Override
 	public Optional<Movie> findByIdWithCollections(Long ids) {
 		return this.jpaMovieRepository.findByIdWithCollections(ids);
+	}
+
+	public List<Movie> findByFilterCriteria(FilterCriteriaDto filterCriteriaDto) {
+		CriteriaQuery<Movie> cq = this.entityManager.getCriteriaBuilder().createQuery(Movie.class);
+		Root<Movie> cMovie = cq.from(Movie.class);
+		List<Predicate> predicates = new ArrayList<>();
+		if (filterCriteriaDto.releaseFrom != null) {
+			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.<Date>get("releaseDate"),
+					this.convert(filterCriteriaDto.releaseFrom)));
+		}
+		if (filterCriteriaDto.releaseTo != null) {
+			predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(cMovie.<Date>get("releaseDate"),
+					this.convert(filterCriteriaDto.releaseTo)));
+		}
+		if (filterCriteriaDto.movieTitle != null && filterCriteriaDto.movieTitle.trim().length() > 2) {
+			predicates.add(this.entityManager.getCriteriaBuilder().like(
+					this.entityManager.getCriteriaBuilder().lower(cMovie.get("title")),
+					String.format("%%%s%%", filterCriteriaDto.movieTitle.toLowerCase())));
+		}
+		if (filterCriteriaDto.movieActor != null && filterCriteriaDto.movieActor.trim().length() > 2) {
+			Metamodel m = this.entityManager.getMetamodel();
+			EntityType<Movie> movie_ = m.entity(Movie.class);
+			predicates
+					.add(this.entityManager
+							.getCriteriaBuilder().like(
+									this.entityManager.getCriteriaBuilder()
+											.lower(cMovie.join(movie_.getDeclaredCollection("cast", Cast.class))
+													.get("movieChar")),
+									String.format("%%%s%%", filterCriteriaDto.movieActor.toLowerCase())));
+		}
+		return List.of();
+	}
+
+	private Date convert(LocalDate localDate) {
+		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
 	public List<Movie> findMoviesByPhrase(SearchPhraseDto searchPhraseDto) {
