@@ -130,7 +130,20 @@ public class MovieRepositoryBean implements MovieRepository {
 													.get("movieChar")),
 									String.format("%%%s%%", filterCriteriaDto.movieActor.toLowerCase())));
 		}
-		return List.of();
+		if (filterCriteriaDto.minLength > 0) {
+			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.get("runtime"),
+					filterCriteriaDto.minLength));
+		}
+		if (filterCriteriaDto.maxLength > 0) {
+			predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(cMovie.get("runtime"),
+					filterCriteriaDto.maxLength));
+		}
+		if (filterCriteriaDto.minRating > 0) {
+			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.get("voteAverage"),
+					filterCriteriaDto.minRating));
+		}
+		cq.where(predicates.toArray(new Predicate[0]));
+		return this.entityManager.createQuery(cq).getResultList();
 	}
 
 	private Date convert(LocalDate localDate) {
