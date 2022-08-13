@@ -24,7 +24,7 @@ public class FilterCriteriaDto {
 	public int minLength;
 	public int maxLength;
 	public int minRating;
-	public String overviewStr;
+	public SearchPhraseDto searchPraseDto = new SearchPhraseDto();
 	
 	public List<GenereDto> getSelectedGeneres() {
 		return selectedGeneres;
@@ -74,10 +74,10 @@ public class FilterCriteriaDto {
 	public void setMinRating(int minRating) {
 		this.minRating = minRating;
 	}
-	public String getOverviewStr() {
-		return overviewStr;
+	public SearchPhraseDto getSearchPraseDto() {
+		return searchPraseDto;
 	}
-	public void setOverviewStr(String overviewStr) {
-		this.overviewStr = overviewStr;
-	}	
+	public void setSearchPraseDto(SearchPhraseDto searchPraseDto) {
+		this.searchPraseDto = searchPraseDto == null ? searchPraseDto : this.searchPraseDto;
+	}
 }

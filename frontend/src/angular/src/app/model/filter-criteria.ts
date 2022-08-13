@@ -22,5 +22,10 @@ export class FilterCriteria {
   public minLength = 0;
   public maxLength = 0;
   public minRating = 0;
-  public overviewStr = '';   
+  public searchPhrase = new SearchPhrase();   
+}
+
+export class SearchPhrase {
+    public phrase = '';
+	public otherWordsInPhrase = 0;
 }

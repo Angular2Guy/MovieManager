@@ -64,7 +64,7 @@
       </div>
       <div class="mb-3">
          <label for="overview" class="form-label" i18n="@@filterMoviesInOverview">In Overview</label>
-         <textarea rows="2" id="overview" [(ngModel)]="filterCriteria.overviewStr" name="overviewStr" class="form-control"></textarea>
+         <textarea rows="2" id="overview" [(ngModel)]="filterCriteria.searchPhrase.phrase" name="phrase" class="form-control"></textarea>
       </div>
       <div class="mb-3 float-end">
          <button class="btn btn-outline-primary" (click)="resetFilters()" type="button" i18n="@@filterMoviesResetFilters">Reset Filters</button>

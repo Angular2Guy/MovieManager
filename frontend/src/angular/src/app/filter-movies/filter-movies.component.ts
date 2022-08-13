@@ -85,6 +85,7 @@ export class FilterMoviesComponent implements OnInit {
     this.filterCriteria.minLength = 0;
     this.filterCriteria.maxLength = 0;
     this.filterCriteria.minRating = 0;
-    this.filterCriteria.overviewStr = '';
+    this.filterCriteria.searchPhrase.phrase = '';
+    this.filterCriteria.searchPhrase.otherWordsInPhrase = 0;
   }
 }
