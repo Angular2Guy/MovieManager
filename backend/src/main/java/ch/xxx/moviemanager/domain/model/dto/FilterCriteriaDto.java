@@ -17,14 +17,14 @@ import java.util.List;
 
 public class FilterCriteriaDto {
 	private List<GenereDto> selectedGeneres;
-	public LocalDate releaseFrom;
-	public LocalDate releaseTo;
-	public String movieTitle;
-	public String movieActor;
-	public int minLength;
-	public int maxLength;
-	public int minRating;
-	public SearchPhraseDto searchPraseDto = new SearchPhraseDto();
+	private LocalDate releaseFrom;
+	private LocalDate releaseTo;
+	private String movieTitle;
+	private String movieActor;
+	private int minLength;
+	private int maxLength;
+	private int minRating;
+	private SearchPhraseDto searchPraseDto = new SearchPhraseDto();
 	
 	public List<GenereDto> getSelectedGeneres() {
 		return selectedGeneres;

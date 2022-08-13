@@ -14,6 +14,7 @@ package ch.xxx.moviemanager.usecase.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -223,8 +224,18 @@ public class MovieService {
 		return str.replace(" ", "%20");
 	}
 	
-	public List<Movie> findMoviesByFilterCriteria(String bearerStr, FilterCriteriaDto filterCriteria) {
-		return List.of();
+	public List<Movie> findMoviesByFilterCriteria(String bearerStr, FilterCriteriaDto filterCriteriaDto) {
+		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto);
+		SearchTermDto searchTermDto = new SearchTermDto();
+		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPraseDto());
+		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr,  searchTermDto);
+		Collection<Movie> results = Stream.of(jpaMovies, ftMovies)
+        .flatMap(List::stream)
+        .collect(Collectors.toMap(Movie::getId,
+                d -> d,
+                (Movie x, Movie y) -> x == null ? y : x)
+        ).values();
+		return List.copyOf(results);
 	}
 	
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {

@@ -106,20 +106,20 @@ public class MovieRepositoryBean implements MovieRepository {
 		CriteriaQuery<Movie> cq = this.entityManager.getCriteriaBuilder().createQuery(Movie.class);
 		Root<Movie> cMovie = cq.from(Movie.class);
 		List<Predicate> predicates = new ArrayList<>();
-		if (filterCriteriaDto.releaseFrom != null) {
+		if (filterCriteriaDto.getReleaseFrom() != null) {
 			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.<Date>get("releaseDate"),
-					this.convert(filterCriteriaDto.releaseFrom)));
+					this.convert(filterCriteriaDto.getReleaseFrom())));
 		}
-		if (filterCriteriaDto.releaseTo != null) {
+		if (filterCriteriaDto.getReleaseTo() != null) {
 			predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(cMovie.<Date>get("releaseDate"),
-					this.convert(filterCriteriaDto.releaseTo)));
+					this.convert(filterCriteriaDto.getReleaseTo())));
 		}
-		if (filterCriteriaDto.movieTitle != null && filterCriteriaDto.movieTitle.trim().length() > 2) {
+		if (filterCriteriaDto.getMovieTitle() != null && filterCriteriaDto.getMovieTitle().trim().length() > 2) {
 			predicates.add(this.entityManager.getCriteriaBuilder().like(
 					this.entityManager.getCriteriaBuilder().lower(cMovie.get("title")),
-					String.format("%%%s%%", filterCriteriaDto.movieTitle.toLowerCase())));
+					String.format("%%%s%%", filterCriteriaDto.getMovieTitle().toLowerCase())));
 		}
-		if (filterCriteriaDto.movieActor != null && filterCriteriaDto.movieActor.trim().length() > 2) {
+		if (filterCriteriaDto.getMovieActor() != null && filterCriteriaDto.getMovieActor().trim().length() > 2) {
 			Metamodel m = this.entityManager.getMetamodel();
 			EntityType<Movie> movie_ = m.entity(Movie.class);
 			predicates
@@ -128,19 +128,19 @@ public class MovieRepositoryBean implements MovieRepository {
 									this.entityManager.getCriteriaBuilder()
 											.lower(cMovie.join(movie_.getDeclaredCollection("cast", Cast.class))
 													.get("movieChar")),
-									String.format("%%%s%%", filterCriteriaDto.movieActor.toLowerCase())));
+									String.format("%%%s%%", filterCriteriaDto.getMovieActor().toLowerCase())));
 		}
-		if (filterCriteriaDto.minLength > 0) {
+		if (filterCriteriaDto.getMinLength() > 0) {
 			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.get("runtime"),
-					filterCriteriaDto.minLength));
+					filterCriteriaDto.getMinLength()));
 		}
-		if (filterCriteriaDto.maxLength > 0) {
+		if (filterCriteriaDto.getMaxLength() > 0) {
 			predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(cMovie.get("runtime"),
-					filterCriteriaDto.maxLength));
+					filterCriteriaDto.getMaxLength()));
 		}
-		if (filterCriteriaDto.minRating > 0) {
+		if (filterCriteriaDto.getMinRating() > 0) {
 			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.get("voteAverage"),
-					filterCriteriaDto.minRating));
+					filterCriteriaDto.getMinRating()));
 		}
 		cq.where(predicates.toArray(new Predicate[0]));
 		return this.entityManager.createQuery(cq).getResultList();

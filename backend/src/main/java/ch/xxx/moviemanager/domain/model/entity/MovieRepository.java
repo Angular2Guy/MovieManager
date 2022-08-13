@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 
+import ch.xxx.moviemanager.domain.model.dto.FilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
 
@@ -34,4 +35,5 @@ public interface MovieRepository {
 	Optional<Movie> findByIdWithCollections(Long id);
 	List<Movie> findMoviesByPhrase(SearchPhraseDto searchPhraseDto);
 	List<Movie> findMoviesBySearchStrings(List<SearchStringDto> searchStrings);
+	List<Movie> findByFilterCriteria(FilterCriteriaDto filterCriteriaDto);
 }
