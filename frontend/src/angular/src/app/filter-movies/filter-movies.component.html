@@ -7,16 +7,16 @@
     <form>
       <div class="select-range">
       <div class="mb-3 me-1">
-        <label for="releasedBefore" i18n="@@filterMoviesReleasedBefore">Released before</label>
+      <label for="releasedAfter" i18n="@@filterMoviesReleasedAfter">Released after</label>
         <div class="input-group">
-          <input id="releasedBefore"  class="form-control" [(ngModel)]="filterCriteria.releaseFrom" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
+          <input id="releasedBefore"  class="form-control" [(ngModel)]="ngbReleaseFrom" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dpFrom.toggle()" type="button"></button>
         </div>
       </div>
       <div class="mb-3 ms-1">
-        <label for="releasedAfter" i18n="@@filterMoviesReleasedAfter">Released after</label>
+        <label for="releasedBefore" i18n="@@filterMoviesReleasedBefore">Released before</label>        
         <div class="input-group">
-          <input id="releasedAfter" [(ngModel)]="filterCriteria.releaseTo" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
+          <input id="releasedAfter" [(ngModel)]="ngbReleaseTo" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
           <button class="btn btn-outline-secondary calendar" (click)="dpTo.toggle()" type="button"></button>
         </div>
       </div>

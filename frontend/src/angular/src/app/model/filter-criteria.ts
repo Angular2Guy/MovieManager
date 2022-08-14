@@ -10,13 +10,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
 import { Genere } from "./genere";
 
 export class FilterCriteria {
   public selectedGeneres: Genere[] = [];
-  public releaseFrom: NgbDateStruct = null;
-  public releaseTo: NgbDateStruct = null;
+  public releaseFrom: Date = null;
+  public releaseTo: Date = null;
   public movieTitle = '';
   public movieActor = '';
   public minLength = 0;

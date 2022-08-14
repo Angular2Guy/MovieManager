@@ -12,7 +12,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FilterCriteria } from '../model/filter-criteria';
 import { Genere } from '../model/genere';
 import { Movie } from '../model/movie';
@@ -30,6 +30,8 @@ export class FilterMoviesComponent implements OnInit {
   public generes: Genere[] = [];
   public closeResult = '';
   public filterCriteria = new FilterCriteria();
+  public ngbReleaseFrom: NgbDateStruct;
+  public ngbReleaseTo: NgbDateStruct;
   
   constructor(private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig, 
      private movieService: MoviesService, private router: Router) {}
@@ -56,6 +58,10 @@ export class FilterMoviesComponent implements OnInit {
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
     } else {
+	  this.filterCriteria.releaseFrom = !this.ngbReleaseFrom ? null : 
+	     new Date(this.ngbReleaseFrom.year, this.ngbReleaseFrom.month, this.ngbReleaseFrom.day);
+	  this.filterCriteria.releaseTo = !this.ngbReleaseTo ? null : 
+	     new Date(this.ngbReleaseTo.year, this.ngbReleaseTo.month, this.ngbReleaseTo.day);
       this.movieService.findMoviesByCriteria(this.filterCriteria).subscribe(result => this.filteredMovies = result);
     }
   }
