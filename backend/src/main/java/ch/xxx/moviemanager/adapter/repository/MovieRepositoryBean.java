@@ -35,9 +35,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import ch.xxx.moviemanager.domain.model.dto.FilterCriteriaDto;
+import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
+import ch.xxx.moviemanager.domain.model.entity.Genere;
 import ch.xxx.moviemanager.domain.model.entity.Movie;
 import ch.xxx.moviemanager.domain.model.entity.MovieRepository;
 
@@ -122,13 +124,16 @@ public class MovieRepositoryBean implements MovieRepository {
 		if (filterCriteriaDto.getMovieActor() != null && filterCriteriaDto.getMovieActor().trim().length() > 2) {
 			Metamodel m = this.entityManager.getMetamodel();
 			EntityType<Movie> movie_ = m.entity(Movie.class);
-			predicates
-					.add(this.entityManager
-							.getCriteriaBuilder().like(
-									this.entityManager.getCriteriaBuilder()
-											.lower(cMovie.join(movie_.getDeclaredCollection("cast", Cast.class))
-													.get("movieChar")),
-									String.format("%%%s%%", filterCriteriaDto.getMovieActor().toLowerCase())));
+			predicates.add(this.entityManager.getCriteriaBuilder()
+					.like(this.entityManager.getCriteriaBuilder()
+							.lower(cMovie.join(movie_.getDeclaredList("cast", Cast.class)).get("movieChar")),
+							String.format("%%%s%%", filterCriteriaDto.getMovieActor().toLowerCase())));
+		}
+		if (!filterCriteriaDto.getSelectedGeneres().isEmpty()) {
+			Metamodel m = this.entityManager.getMetamodel();
+			EntityType<Movie> movie_ = m.entity(Movie.class);
+			predicates.add(cMovie.join(movie_.getDeclaredSet("generes", Genere.class)).get("id")
+					.in(filterCriteriaDto.getSelectedGeneres().stream().map(GenereDto::getId).toList()));
 		}
 		if (filterCriteriaDto.getMinLength() > 0) {
 			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.get("runtime"),

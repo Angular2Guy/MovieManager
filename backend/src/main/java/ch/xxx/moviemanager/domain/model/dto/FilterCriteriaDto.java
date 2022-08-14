@@ -15,6 +15,9 @@ package ch.xxx.moviemanager.domain.model.dto;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FilterCriteriaDto {
 	private List<GenereDto> selectedGeneres;
 	private LocalDate releaseFrom;
