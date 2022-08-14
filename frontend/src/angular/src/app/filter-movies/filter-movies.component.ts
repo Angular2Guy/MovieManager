@@ -54,7 +54,7 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   private getDismissReason(reason: unknown): void {
-	console.log(this.filterCriteria);
+	//console.log(this.filterCriteria);
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
     } else {
@@ -62,7 +62,12 @@ export class FilterMoviesComponent implements OnInit {
 	     new Date(this.ngbReleaseFrom.year, this.ngbReleaseFrom.month, this.ngbReleaseFrom.day);
 	  this.filterCriteria.releaseTo = !this.ngbReleaseTo ? null : 
 	     new Date(this.ngbReleaseTo.year, this.ngbReleaseTo.month, this.ngbReleaseTo.day);
-      this.movieService.findMoviesByCriteria(this.filterCriteria).subscribe(result => this.filteredMovies = result);
+      this.movieService.findMoviesByCriteria(this.filterCriteria).subscribe({next: result => this.filteredMovies = result, 
+         error: failed => {
+	        console.log(failed);
+	        this.router.navigate(['/']);
+         }
+       });
     }
   }
 
