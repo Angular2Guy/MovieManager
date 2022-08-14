@@ -11,6 +11,7 @@
    limitations under the License.
  */
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { FilterCriteria } from '../model/filter-criteria';
 import { Genere } from '../model/genere';
@@ -31,7 +32,7 @@ export class FilterMoviesComponent implements OnInit {
   public filterCriteria = new FilterCriteria();
   
   constructor(private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig, 
-     private movieService: MoviesService) {}
+     private movieService: MoviesService, private router: Router) {}
   
   public ngOnInit(): void {
      this.ngbRatingConfig.max = 10;
@@ -44,6 +45,10 @@ export class FilterMoviesComponent implements OnInit {
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
     });
+  }
+
+  public back() {
+	this.router.navigate(['search']);
   }
 
   private getDismissReason(reason: unknown): void {

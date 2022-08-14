@@ -17,9 +17,16 @@
 	}
 }
 
-.open-filters{
+.open-filters {
 	position: absolute;
     bottom: 20px;
+    right: 20px;
+    border-radius: 50%;
+}
+
+.back-btn {
+	position: absolute;
+    bottom: 100px;
     right: 20px;
     border-radius: 50%;
 }
