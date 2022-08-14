@@ -224,7 +224,7 @@ public class MovieService {
 	}
 
 	public List<Movie> findMoviesByFilterCriteria(String bearerStr, FilterCriteriaDto filterCriteriaDto) {
-		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto);
+		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto, this.auds.getCurrentUser(bearerStr).getId());
 		SearchTermDto searchTermDto = new SearchTermDto();
 		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());
 		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr, searchTermDto);
