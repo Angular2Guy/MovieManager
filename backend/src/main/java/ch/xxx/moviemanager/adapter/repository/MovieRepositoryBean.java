@@ -150,22 +150,27 @@ public class MovieRepositoryBean implements MovieRepository {
 		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Movie> findMoviesByPhrase(SearchPhraseDto searchPhraseDto) {
-		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-		QueryBuilder movieQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-				.forEntity(Movie.class).get();
-		Query phraseQuery = movieQueryBuilder.phrase().withSlop(searchPhraseDto.getOtherWordsInPhrase())
-				.onField("overview").sentence(searchPhraseDto.getPhrase()).createQuery();
-		@SuppressWarnings("unchecked")
-		List<Movie> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Movie.class).setMaxResults(50)
-				.getResultList();
+		List<Movie> resultList = List.of();
+		if (searchPhraseDto.getPhrase() != null && searchPhraseDto.getPhrase().trim().length() > 2) {
+			FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+			QueryBuilder movieQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+					.forEntity(Movie.class).get();
+			Query phraseQuery = movieQueryBuilder.phrase().withSlop(searchPhraseDto.getOtherWordsInPhrase())
+					.onField("overview").sentence(searchPhraseDto.getPhrase()).createQuery();
+			resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Movie.class).setMaxResults(50)
+					.getResultList();
+		}
 		return resultList;
 	}
 
 	public List<Movie> findMoviesBySearchStrings(List<SearchStringDto> searchStrings) {
 		StringBuilder stringBuilder = new StringBuilder();
-		searchStrings.forEach(myDto -> stringBuilder.append(" ").append(myDto.getOperator().value).append(" ")
-				.append(myDto.getSearchString()));
+		searchStrings.stream().filter(
+				searchStringDto -> searchStringDto.getOperator() != null && searchStringDto.getSearchString() != null)
+				.toList().forEach(myDto -> stringBuilder.append(" ").append(myDto.getOperator().value).append(" ")
+						.append(myDto.getSearchString()));
 		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 		QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
 				.forEntity(Movie.class).get();
