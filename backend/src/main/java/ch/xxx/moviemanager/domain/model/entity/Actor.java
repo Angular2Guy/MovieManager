@@ -25,12 +25,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.TermVector;
 
+@NamedQuery(name = "Actor.count", query = "select count(a) from Actor a")
 @Indexed
 @Entity
 public class Actor extends EntityBase {

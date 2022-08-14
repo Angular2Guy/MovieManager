@@ -54,10 +54,13 @@ public class CronJobConfiguration {
 	@Async
 	@EventListener(ApplicationReadyEvent.class)
 	public void hibernateSearch() throws InterruptedException {
+		int movieCount = this.entityManager.createNamedQuery("Movie.count", Long.class).getSingleResult().intValue();
+		int actorCount = this.entityManager.createNamedQuery("Actor.count", Long.class).getSingleResult().intValue();
 		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
 		int actorResults = checkForActorIndex(fullTextEntityManager);
 		int movieResults = checkForMovieIndex(fullTextEntityManager);
-		if (actorResults == 0 || movieResults == 0) {
+		LOG.info(String.format("DbMovies: %d, DbActors: %d, FtMovies: %d, FtActors: %d", movieCount, actorCount, movieResults, actorResults));
+		if (actorResults == 0 || movieResults == 0 || actorResults != actorCount || movieResults != movieCount) {
 			fullTextEntityManager.createIndexer().startAndWait();
 			this.indexDone = true;
 			LOG.info("Hibernate Search Index ready.");
