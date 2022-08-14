@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -157,12 +159,11 @@ public class MovieService {
 		}
 		LOG.info("Start import Movie with Id: {movieDbId}", movieDbId);
 		MovieDto movieDto = this.movieDbRestClient.fetchMovie(user.getMoviedbkey(), movieDbId);
-		Movie movieEntity = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId())
-				.orElse(null);
+		Movie movieEntity = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId()).orElse(null);
 		if (movieEntity == null) {
 			LOG.info("Movie not found by id");
-			List<Movie> movies = this.movieRep.findByTitleAndRelDate(movieDto.getTitle(),
-					movieDto.getReleaseDate(), this.auds.getCurrentUser(bearerStr).getId());
+			List<Movie> movies = this.movieRep.findByTitleAndRelDate(movieDto.getTitle(), movieDto.getReleaseDate(),
+					this.auds.getCurrentUser(bearerStr).getId());
 			if (!movies.isEmpty()) {
 				LOG.info("Movie found by Title and Reldate");
 				movieEntity = movies.get(0);
@@ -172,9 +173,8 @@ public class MovieService {
 				movieEntity = this.mapper.convert(movieDto);
 				movieEntity.setMovieId(movieDto.getId());
 				for (Long genId : movieDto.getGenres().stream().map(myGenere -> myGenere.getId()).toList()) {
-					Optional<Genere> myResult = generes.stream().filter(
-							myGenere -> genId.equals(myGenere.getGenereId()))
-							.findFirst();
+					Optional<Genere> myResult = generes.stream()
+							.filter(myGenere -> genId.equals(myGenere.getGenereId())).findFirst();
 					if (myResult.isPresent()) {
 						movieEntity.getGeneres().add(myResult.get());
 						myResult.get().getMovies().add(movieEntity);
@@ -187,8 +187,7 @@ public class MovieService {
 			LOG.info("adding user to movie");
 			movieEntity.getUsers().add(user);
 		}
-		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(user.getMoviedbkey(),
-				movieDto.getId());
+		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(user.getMoviedbkey(), movieDto.getId());
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
@@ -223,27 +222,40 @@ public class MovieService {
 	private String createQueryStr(String str) {
 		return str.replace(" ", "%20");
 	}
-	
+
 	public List<Movie> findMoviesByFilterCriteria(String bearerStr, FilterCriteriaDto filterCriteriaDto) {
 		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto);
 		SearchTermDto searchTermDto = new SearchTermDto();
-		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPraseDto());
-		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr,  searchTermDto);
-		Collection<Movie> results = Stream.of(jpaMovies, ftMovies)
-        .flatMap(List::stream)
-        .collect(Collectors.toMap(Movie::getId,
-                d -> d,
-                (Movie x, Movie y) -> x == null ? y : x)
-        ).values();
+		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());
+		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr, searchTermDto);
+		List<Movie> results = jpaMovies;
+		if (filterCriteriaDto.getSearchPhraseDto() != null
+				&& !Objects.isNull(filterCriteriaDto.getSearchPhraseDto().getPhrase())
+				&& filterCriteriaDto.getSearchPhraseDto().getPhrase().length() > 2) {
+			Collection<Long> dublicates = Stream.of(jpaMovies, ftMovies).flatMap(List::stream)
+					.collect(Collectors.toMap(Movie::getId, u -> false, (x, y) -> true)).entrySet().stream()
+					.filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
+			results = Stream.of(jpaMovies, ftMovies).flatMap(List::stream)
+					.filter(myMovie -> this.filterDublicates(myMovie, dublicates)).toList();
+			// remove dublicates
+			results = List.copyOf(results.stream()
+					.collect(Collectors.toMap(Movie::getId, d -> d, (Movie x, Movie y) -> x == null ? y : x)).values());
+		}
 		return List.copyOf(results);
 	}
-	
+
+	private boolean filterDublicates(Movie myMovie, Collection<Long> dublicates) {
+		return dublicates.stream().filter(myId -> myId.equals(myMovie.getId())).findAny().isPresent();
+	}
+
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
 		List<Movie> movies = searchTermDto.getSearchPhraseDto() != null
 				? this.movieRep.findMoviesByPhrase(searchTermDto.getSearchPhraseDto())
 				: this.movieRep.findMoviesBySearchStrings(searchTermDto.getSearchStringDtos());
-		List<Movie> filteredMovies = movies.stream().filter(myMovie -> myMovie.getUsers().stream()
-				.anyMatch(myUser -> myUser.getId().equals(this.auds.getCurrentUser(bearerStr).getId()))).toList();
+		List<Movie> filteredMovies = movies.stream()
+				.filter(myMovie -> myMovie.getUsers().stream()
+						.anyMatch(myUser -> myUser.getId().equals(this.auds.getCurrentUser(bearerStr).getId())))
+				.toList();
 		return filteredMovies;
 	}
 }

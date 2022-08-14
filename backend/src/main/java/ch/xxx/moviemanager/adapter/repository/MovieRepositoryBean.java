@@ -148,7 +148,7 @@ public class MovieRepositoryBean implements MovieRepository {
 					filterCriteriaDto.getMinRating()));
 		}
 		cq.where(predicates.toArray(new Predicate[0]));
-		return this.entityManager.createQuery(cq).getResultList();
+		return this.entityManager.createQuery(cq).setMaxResults(50).getResultList();
 	}
 
 	private Date convert(LocalDate localDate) {

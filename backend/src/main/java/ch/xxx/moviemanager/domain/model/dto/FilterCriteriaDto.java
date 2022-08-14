@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class FilterCriteriaDto {
@@ -27,7 +28,8 @@ public class FilterCriteriaDto {
 	private int minLength;
 	private int maxLength;
 	private int minRating;
-	private SearchPhraseDto searchPraseDto = new SearchPhraseDto();
+	@JsonProperty("searchPhrase")
+	private SearchPhraseDto searchPhraseDto = new SearchPhraseDto();
 	
 	public List<GenereDto> getSelectedGeneres() {
 		return selectedGeneres;
@@ -77,10 +79,10 @@ public class FilterCriteriaDto {
 	public void setMinRating(int minRating) {
 		this.minRating = minRating;
 	}
-	public SearchPhraseDto getSearchPraseDto() {
-		return searchPraseDto;
+	public SearchPhraseDto getSearchPhraseDto() {
+		return searchPhraseDto;
 	}
-	public void setSearchPraseDto(SearchPhraseDto searchPraseDto) {
-		this.searchPraseDto = searchPraseDto == null ? searchPraseDto : this.searchPraseDto;
+	public void setSearchPhraseDto(SearchPhraseDto searchPhraseDto) {
+		this.searchPhraseDto = searchPhraseDto;
 	}
 }

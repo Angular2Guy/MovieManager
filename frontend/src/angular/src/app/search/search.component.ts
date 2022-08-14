@@ -101,14 +101,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
             distinctUntilChanged(),
             tap(() => this.actorsLoading = true ),
             switchMap((name: string) => iif(() => name.length > 2,
-				this.actorService.findActorByName( name).pipe(catchError(() => of([]))), of([]))),
+				this.actorService.findActorByName( name).pipe(catchError(error => this.handleRxJsProblem(error))), of([]))),
             tap(() => this.actorsLoading = false ) );
         this.movies = this.movieTitle.valueChanges.pipe(
             debounceTime( 400 ),
             distinctUntilChanged(),
             tap(() => this.moviesLoading = true ),
 			switchMap((title: string) => iif(() => title.length > 2,
-				this.movieService.findMovieByTitle( title ).pipe(catchError(() => of([]))), of([]))),
+				this.movieService.findMovieByTitle( title ).pipe(catchError(error => this.handleRxJsProblem(error))), of([]))),
             tap(() => this.moviesLoading = false ) );
         if(this.userService.loggedIn) {
             this.movieService.allGeneres().subscribe( res => this.generes = res );
@@ -120,6 +120,12 @@ export class SearchComponent implements OnInit, AfterViewInit {
         });
     }
 
+   private handleRxJsProblem(error: unknown): Observable<any[]> {
+	  console.log(error);
+	  this.router.navigate(['/']);
+	  return of([]);
+   }
+
     ngAfterViewInit(): void {
         this.actorListOffset = this.moviesRef.nativeElement.getBoundingClientRect().y;
     }
@@ -127,7 +133,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
     fetchMore() {
         if (this.allMoviesLoaded || this.loading) {return;}
         this.loading = true;
-        this.movieService.findMoviesByPage( this.scMoviesPageEnd ).subscribe( res => {
+        this.movieService.findMoviesByPage( this.scMoviesPageEnd )
+           .pipe(catchError(error => this.handleRxJsProblem(error))).subscribe( res => {
             if(res.length > 0) {
                 this.scrollMovies = this.scrollMovies.concat( res );
                 this.scMoviesPageEnd += 1;
