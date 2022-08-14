@@ -157,7 +157,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		predicates.add(this.entityManager.getCriteriaBuilder()
 				.equal(cMovie.join(movie_.getDeclaredSet("users", User.class)).get("id"), userId));
 		cq.where(predicates.toArray(new Predicate[0])).distinct(true);
-		return this.entityManager.createQuery(cq).setMaxResults(50).getResultList();
+		return this.entityManager.createQuery(cq).setMaxResults(30).getResultList();
 	}
 
 	private Date convert(LocalDate localDate) {
