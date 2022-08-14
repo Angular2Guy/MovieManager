@@ -86,7 +86,7 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public selectMovie(movie: Movie): void {
-	
+	this.router.navigate(['movie', movie.id]);
   }
   
   public resetFilters(): void {
