@@ -24,12 +24,14 @@ export class MoviesComponent implements OnInit {
 
   movie: Movie = null;
   delMovie = false;
+  backParam = '';
 
   constructor(private route: ActivatedRoute, private router: Router, private movieService: MoviesService) { }
 
   ngOnInit() {
       this.movieService.findMovieById(Number(this.route.snapshot.paramMap.get('id')))
           .subscribe(movie => this.movie = movie);
+      this.backParam = !this.route.snapshot.queryParams?.back? '' : this.route.snapshot.queryParams?.back; 
   }
 
   deleteMovie() {

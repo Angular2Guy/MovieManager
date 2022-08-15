@@ -86,7 +86,7 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public selectMovie(movie: Movie): void {
-	this.router.navigate(['movie', movie.id]);
+	this.router.navigate(['movie', movie.id], { queryParams: { back: 'filter-movies' } });
   }
   
   public resetFilters(): void {

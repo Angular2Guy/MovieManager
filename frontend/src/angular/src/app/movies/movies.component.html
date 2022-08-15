@@ -1,7 +1,8 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col">
-			<a [routerLink]="['/search']" i18n="@@back">Back</a> 
+			<a *ngIf="!backParam" [routerLink]="['/search']" i18n="@@back">Back</a>
+			<a *ngIf="backParam === 'filter-movies'" [routerLink]="['/filter-movies']" i18n="@@back">Back</a>			
 			<button class="btn btn-primary delete-btn" (click)="deleteMovie()" type="button" i18n="@@delete">Delete</button>
 		</div>
 	</div>
