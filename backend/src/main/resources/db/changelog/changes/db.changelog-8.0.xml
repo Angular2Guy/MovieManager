@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2019 Sven Loesekann Licensed under the Apache License, Version 
+	2.0 (the "License"); you may not use this file except in compliance with 
+	the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+	Unless required by applicable law or agreed to in writing, software distributed 
+	under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+	OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+	the specific language governing permissions and limitations under the License. -->
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+	<changeSet id="31" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="cast1"
+					indexName="ix_cast1_movie_char" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ix_cast1_movie_char"
+			tableName="cast1">
+			<column name="movie_char" />
+		</createIndex>
+	</changeSet>
+	<changeSet id="32" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="cast1"
+					indexName="ix_cast1_character_name" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ix_cast1_character_name"
+			tableName="cast1">
+			<column name="character_name" />
+		</createIndex>
+	</changeSet>	
+	<changeSet id="33" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="actor_user"
+					indexName="ix_actor_user_actor_id" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ix_actor_user_actor_id"
+			tableName="actor_user">
+			<column name="actor_id" />
+		</createIndex>
+	</changeSet>	
+	<changeSet id="34" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="actor_user"
+					indexName="ix_actor_user_user_id" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ix_actor_user_user_id"
+			tableName="actor_user">
+			<column name="user_id" />
+		</createIndex>
+	</changeSet>		
+	<changeSet id="35" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="movie_user"
+					indexName="ix_movie_user_movie_id" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ix_movie_user_movie_id"
+			tableName="movie_user">
+			<column name="movie_id" />
+		</createIndex>
+	</changeSet>
+		<changeSet id="36" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<indexExists tableName="movie_user"
+					indexName="ix_movie_user_user_id" />
+			</not>
+		</preConditions>
+		<createIndex indexName="ix_movie_user_user_id"
+			tableName="movie_user">
+			<column name="user_id" />
+		</createIndex>
+	</changeSet>	
+</databaseChangeLog>
