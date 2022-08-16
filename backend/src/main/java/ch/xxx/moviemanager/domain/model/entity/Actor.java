@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.Lob;
@@ -48,7 +49,7 @@ public class Actor extends EntityBase {
 	private String biography;
 	private Double popularity = 0.0;
 	private String placeOfBirth;
-	@OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "actor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
 	private List<Cast> casts = new ArrayList<>();
 	@ManyToMany
 	@JoinTable(name = "actor_user", joinColumns = @JoinColumn(name = "actor_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))

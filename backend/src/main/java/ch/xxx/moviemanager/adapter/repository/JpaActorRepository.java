@@ -26,7 +26,7 @@ public interface JpaActorRepository extends PagingAndSortingRepository<Actor,Lon
 	@Query("select a from Actor a join a.users u where lower(a.name) like lower(concat('%',:name,'%')) and u.id = :userid")
 	List<Actor> findByActorName(@Param("name") String name, @Param("userid") Long userId, Pageable pageable);
 	
-	@Query("select a from Actor a join a.users u where a.actorId = :actorId and u.id = :userId")
+	@Query("select a from Actor a join a.users u join a.casts where a.actorId = :actorId and u.id = :userId")
 	Optional<Actor> findByActorId(Long actorId, Long userId);
 	
 	@Query("select a from Actor a join a.users u where u.id = :userId order by a.name")
