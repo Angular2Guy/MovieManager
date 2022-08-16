@@ -17,6 +17,7 @@ import { MovieFilterCriteria } from '../model/movie-filter-criteria';
 import { Genere } from '../model/genere';
 import { Movie } from '../model/movie';
 import { MoviesService } from '../services/movies.service';
+import { QueryParam } from '../model/common';
 
 @Component({
   selector: 'app-filter-movies',
@@ -86,7 +87,7 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public selectMovie(movie: Movie): void {
-	this.router.navigate(['movie', movie.id], { queryParams: { back: 'filter-movies' } });
+	this.router.navigate(['movie', movie.id], { queryParams: { back: QueryParam.Back } });
   }
   
   public resetFilters(): void {

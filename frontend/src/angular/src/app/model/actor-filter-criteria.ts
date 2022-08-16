@@ -10,17 +10,4 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Genere } from "./genere";
-import { SearchPhrase } from "./search-phrase";
-
-export class MovieFilterCriteria {
-  public selectedGeneres: Genere[] = [];
-  public releaseFrom: Date = null;
-  public releaseTo: Date = null;
-  public movieTitle = '';
-  public movieActor = '';
-  public minLength = 0;
-  public maxLength = 0;
-  public minRating = 0;
-  public searchPhrase = new SearchPhrase();   
-}
+ 

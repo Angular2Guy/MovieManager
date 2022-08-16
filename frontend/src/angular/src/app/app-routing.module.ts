@@ -24,6 +24,8 @@ const routes: Routes = [
     {path: 'movie-import', component: MovieImportComponent},
     {path: 'filter-movies', loadChildren: () => import('./filter-movies/filter-movies.module')
        .then(m => m.FilterMoviesModule)},
+       {path: 'filter-actors', loadChildren: () => import('./filter-actors/filter-actors.module')
+       .then(m => m.FilterActorsModule)},
     {path: '**', redirectTo: '/search', pathMatch: 'full' }
 ];
 

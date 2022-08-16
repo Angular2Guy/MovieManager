@@ -10,17 +10,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Genere } from "./genere";
-import { SearchPhrase } from "./search-phrase";
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Actor } from '../model/actor';
+import { ActorsService } from '../services/actors.service';
 
-export class MovieFilterCriteria {
-  public selectedGeneres: Genere[] = [];
-  public releaseFrom: Date = null;
-  public releaseTo: Date = null;
-  public movieTitle = '';
-  public movieActor = '';
-  public minLength = 0;
-  public maxLength = 0;
-  public minRating = 0;
-  public searchPhrase = new SearchPhrase();   
+@Component({
+  selector: 'app-filter-actors',
+  templateUrl: './filter-actors.component.html',
+  styleUrls: ['./filter-actors.component.scss']
+})
+export class FilterActorsComponent implements OnInit {
+  public filteredActors: Actor[] = [];
+  
+  constructor(private actorsService: ActorsService, private router: Router) { }
+
+  ngOnInit(): void {
+	
+  }
+
 }
