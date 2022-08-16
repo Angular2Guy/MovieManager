@@ -12,10 +12,12 @@
  */
 import { Cast } from './cast';
 
+export enum Gender{Unkown=0, Female=1, Male=2}
+
 export interface Actor {
     id: number;
     name: string;
-    gender: number;
+    gender: Gender;
     birthday: Date;
     deathday: Date;
     biography: string;

@@ -11,7 +11,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Actor } from '../model/actor';
+import { Actor, Gender } from '../model/actor';
 import { ActorsService } from '../services/actors.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { ActorsService } from '../services/actors.service';
   styleUrls: ['./actors.component.scss']
 })
 export class ActorsComponent implements OnInit {
-
+  gender = Gender;
   actor: Actor = null;
 
   constructor(private route: ActivatedRoute, private actorService: ActorsService) { }

@@ -21,8 +21,8 @@
 	</div>
 	<div class="row">
 		<div class="col" [ngSwitch]="actor?.gender">
-			<span *ngSwitchCase="1" i18n="@@actorGenderFemale">Gender: Female</span>
-			<span *ngSwitchCase="2" i18n="@@actorGenderMale">Gender: Male</span>
+			<span *ngSwitchCase="gender.Female" i18n="@@actorGenderFemale">Gender: Female</span>
+			<span *ngSwitchCase="gender.Male" i18n="@@actorGenderMale">Gender: Male</span>
 			<span *ngSwitchDefault i18n="@@actorGenderUnknown">Gender: Unknown</span>
 		</div>
 	</div>	
