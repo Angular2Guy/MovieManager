@@ -16,7 +16,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Movie } from '../model/movie';
 import { Genere } from '../model/genere';
-import { FilterCriteria } from '../model/filter-criteria';
+import { MovieFilterCriteria } from '../model/movie-filter-criteria';
 
 @Injectable({
  providedIn: 'root',
@@ -70,7 +70,7 @@ export class MoviesService {
             }));
     }
     
-   public findMoviesByCriteria(filterCriteria: FilterCriteria): Observable<Movie[]> {
+   public findMoviesByCriteria(filterCriteria: MovieFilterCriteria): Observable<Movie[]> {
 	   return this.http.post<Movie[]>('/rest/movie/filter-criteria', filterCriteria).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);

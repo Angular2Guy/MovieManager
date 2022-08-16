@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FilterCriteriaDto {
+public class MovieFilterCriteriaDto {
 	private List<GenereDto> selectedGeneres;
 	private LocalDate releaseFrom;
 	private LocalDate releaseTo;

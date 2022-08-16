@@ -13,7 +13,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbDateStruct, NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { FilterCriteria } from '../model/filter-criteria';
+import { MovieFilterCriteria } from '../model/movie-filter-criteria';
 import { Genere } from '../model/genere';
 import { Movie } from '../model/movie';
 import { MoviesService } from '../services/movies.service';
@@ -29,7 +29,7 @@ export class FilterMoviesComponent implements OnInit {
   public selectedGeneresStr = '';
   public generes: Genere[] = [];
   public closeResult = '';
-  public filterCriteria = new FilterCriteria();
+  public filterCriteria = new MovieFilterCriteria();
   public ngbReleaseFrom: NgbDateStruct;
   public ngbReleaseTo: NgbDateStruct;
   

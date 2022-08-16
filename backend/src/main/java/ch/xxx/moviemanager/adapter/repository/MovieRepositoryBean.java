@@ -34,7 +34,7 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ch.xxx.moviemanager.domain.model.dto.FilterCriteriaDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
@@ -105,7 +105,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		return this.jpaMovieRepository.findByIdWithCollections(ids);
 	}
 
-	public List<Movie> findByFilterCriteria(FilterCriteriaDto filterCriteriaDto, Long userId) {
+	public List<Movie> findByFilterCriteria(MovieFilterCriteriaDto filterCriteriaDto, Long userId) {
 		CriteriaQuery<Movie> cq = this.entityManager.getCriteriaBuilder().createQuery(Movie.class);
 		Root<Movie> cMovie = cq.from(Movie.class);
 		List<Predicate> predicates = new ArrayList<>();

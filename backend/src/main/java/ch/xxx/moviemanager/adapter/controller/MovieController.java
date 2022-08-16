@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
-import ch.xxx.moviemanager.domain.model.dto.FilterCriteriaDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
@@ -93,7 +93,7 @@ public class MovieController {
 
 	@RequestMapping(value = "/filter-criteria", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public List<MovieDto> getMoviesByCriteria(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
-			@RequestBody FilterCriteriaDto filterCriteria) {
+			@RequestBody MovieFilterCriteriaDto filterCriteria) {
 		return this.service.findMoviesByFilterCriteria(bearerStr, filterCriteria).stream()
 				.map(m -> this.mapper.convert(m)).toList();
 	}

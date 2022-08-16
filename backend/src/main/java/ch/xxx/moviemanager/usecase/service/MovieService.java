@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.CastDto;
-import ch.xxx.moviemanager.domain.model.dto.FilterCriteriaDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
@@ -223,7 +223,7 @@ public class MovieService {
 		return str.replace(" ", "%20");
 	}
 
-	public List<Movie> findMoviesByFilterCriteria(String bearerStr, FilterCriteriaDto filterCriteriaDto) {
+	public List<Movie> findMoviesByFilterCriteria(String bearerStr, MovieFilterCriteriaDto filterCriteriaDto) {
 		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto, this.auds.getCurrentUser(bearerStr).getId());
 		SearchTermDto searchTermDto = new SearchTermDto();
 		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());

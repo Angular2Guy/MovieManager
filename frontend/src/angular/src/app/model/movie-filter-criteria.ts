@@ -12,7 +12,7 @@
  */
 import { Genere } from "./genere";
 
-export class FilterCriteria {
+export class MovieFilterCriteria {
   public selectedGeneres: Genere[] = [];
   public releaseFrom: Date = null;
   public releaseTo: Date = null;
