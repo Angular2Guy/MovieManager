@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
@@ -68,6 +69,10 @@ public class ActorService {
 		return result;
 	}
 
+	public List<Actor> findActorsByFilterCriteria(String bearerStr, ActorFilterCriteriaDto filterCriteriaDto) {
+		return List.of();
+	}
+	
 	public List<Actor> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
 		List<Actor> actors = searchTermDto.getSearchPhraseDto() != null
 				? this.actorRep.findActorsByPhrase(searchTermDto.getSearchPhraseDto())
