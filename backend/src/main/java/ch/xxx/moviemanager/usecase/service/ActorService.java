@@ -13,6 +13,7 @@
 package ch.xxx.moviemanager.usecase.service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -72,6 +73,14 @@ public class ActorService {
 	public List<Actor> findActorsByFilterCriteria(String bearerStr, ActorFilterCriteriaDto filterCriteriaDto) {
 		User currentUser = this.auds.getCurrentUser(bearerStr);
 		List<Actor> jpaActors = this.actorRep.findByFilterCriteria(filterCriteriaDto, currentUser.getId());
+		SearchTermDto searchTermDto = new SearchTermDto();
+		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());
+		List<Actor> ftActors = this.findActorsBySearchTerm(bearerStr, searchTermDto);
+		if (filterCriteriaDto.getSearchPhraseDto() != null
+				&& !Objects.isNull(filterCriteriaDto.getSearchPhraseDto().getPhrase())
+				&& filterCriteriaDto.getSearchPhraseDto().getPhrase().length() > 2) {
+			
+		}
 		return List.of();
 	}
 	

@@ -27,7 +27,7 @@ public class ActorFilterCriteriaDto {
     private Boolean dead;
     private int popularity;
     private String movieCharacter;
-    private SearchPhraseDto searchPhrase = new SearchPhraseDto();
+    private SearchPhraseDto searchPhraseDto = new SearchPhraseDto();
     
 	public String getName() {
 		return name;
@@ -65,16 +65,16 @@ public class ActorFilterCriteriaDto {
 	public void setPopularity(int popularity) {
 		this.popularity = popularity;
 	}
-	public SearchPhraseDto getSearchPhrase() {
-		return searchPhrase;
-	}
-	public void setSearchPhrase(SearchPhraseDto searchPhrase) {
-		this.searchPhrase = searchPhrase;
-	}
 	public String getMovieCharacter() {
 		return movieCharacter;
 	}
 	public void setMovieCharacter(String movieCharacter) {
 		this.movieCharacter = movieCharacter;
+	}
+	public SearchPhraseDto getSearchPhraseDto() {
+		return searchPhraseDto;
+	}
+	public void setSearchPhraseDto(SearchPhraseDto searchPhraseDto) {
+		this.searchPhraseDto = searchPhraseDto;
 	}
 }

@@ -238,10 +238,9 @@ public class MovieService {
 			Collection<Long> dublicates = CommonUtils
 					.findDublicates(Stream.of(jpaMovies, ftMovies).flatMap(List::stream).toList());
 			results = Stream.of(jpaMovies, ftMovies).flatMap(List::stream)
-					.filter(myMovie -> CommonUtils.filterDublicates(myMovie, dublicates)).toList();
+					.filter(myMovie -> CommonUtils.filterForDublicates(myMovie, dublicates)).toList();
 			// remove dublicates
-			results = List.copyOf(results.stream()
-					.collect(Collectors.toMap(Movie::getId, d -> d, (Movie x, Movie y) -> x == null ? y : x)).values());
+			results = List.copyOf(CommonUtils.filterDublicates(results));
 		}
 		return List.copyOf(results);
 	}
