@@ -12,8 +12,6 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,8 +32,9 @@ import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
+import ch.xxx.moviemanager.domain.common.CommonUtils;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
@@ -111,11 +110,11 @@ public class MovieRepositoryBean implements MovieRepository {
 		List<Predicate> predicates = new ArrayList<>();
 		if (filterCriteriaDto.getReleaseFrom() != null) {
 			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.<Date>get("releaseDate"),
-					this.convert(filterCriteriaDto.getReleaseFrom())));
+					CommonUtils.convert(filterCriteriaDto.getReleaseFrom())));
 		}
 		if (filterCriteriaDto.getReleaseTo() != null) {
 			predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(cMovie.<Date>get("releaseDate"),
-					this.convert(filterCriteriaDto.getReleaseTo())));
+					CommonUtils.convert(filterCriteriaDto.getReleaseTo())));
 		}
 		if (filterCriteriaDto.getMovieTitle() != null && filterCriteriaDto.getMovieTitle().trim().length() > 2) {
 			predicates.add(this.entityManager.getCriteriaBuilder().like(
@@ -160,9 +159,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		return this.entityManager.createQuery(cq).setMaxResults(30).getResultList();
 	}
 
-	private Date convert(LocalDate localDate) {
-		return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-	}
+	
 
 	@SuppressWarnings("unchecked")
 	public List<Movie> findMoviesByPhrase(SearchPhraseDto searchPhraseDto) {
