@@ -112,12 +112,12 @@ public class ActorRepositoryBean implements ActorRepository {
 		if (filterCriteriaDto.getMovieCharacter() != null
 				&& filterCriteriaDto.getMovieCharacter().trim().length() > 2) {
 			Metamodel m = this.entityManager.getMetamodel();
-			EntityType<Actor> movie_ = m.entity(Actor.class);
+			EntityType<Actor> actor_ = m.entity(Actor.class);
 			predicates
 					.add(this.entityManager
 							.getCriteriaBuilder().like(
 									this.entityManager.getCriteriaBuilder()
-											.lower(cActor.join(movie_.getDeclaredList("casts", Cast.class))
+											.lower(cActor.join(actor_.getDeclaredList("casts", Cast.class))
 													.get("characterName")),
 									String.format("%%%s%%", filterCriteriaDto.getMovieCharacter().toLowerCase())));
 		}
