@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
+import ch.xxx.moviemanager.domain.common.CommonUtils;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.CastDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
@@ -43,6 +44,7 @@ import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
 import ch.xxx.moviemanager.domain.model.entity.CastRepository;
+import ch.xxx.moviemanager.domain.model.entity.EntityBase;
 import ch.xxx.moviemanager.domain.model.entity.Genere;
 import ch.xxx.moviemanager.domain.model.entity.GenereRepository;
 import ch.xxx.moviemanager.domain.model.entity.Movie;
@@ -224,7 +226,8 @@ public class MovieService {
 	}
 
 	public List<Movie> findMoviesByFilterCriteria(String bearerStr, MovieFilterCriteriaDto filterCriteriaDto) {
-		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto, this.auds.getCurrentUser(bearerStr).getId());
+		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto,
+				this.auds.getCurrentUser(bearerStr).getId());
 		SearchTermDto searchTermDto = new SearchTermDto();
 		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());
 		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr, searchTermDto);
@@ -232,20 +235,15 @@ public class MovieService {
 		if (filterCriteriaDto.getSearchPhraseDto() != null
 				&& !Objects.isNull(filterCriteriaDto.getSearchPhraseDto().getPhrase())
 				&& filterCriteriaDto.getSearchPhraseDto().getPhrase().length() > 2) {
-			Collection<Long> dublicates = Stream.of(jpaMovies, ftMovies).flatMap(List::stream)
-					.collect(Collectors.toMap(Movie::getId, u -> false, (x, y) -> true)).entrySet().stream()
-					.filter(Map.Entry::getValue).map(Map.Entry::getKey).collect(Collectors.toSet());
+			Collection<Long> dublicates = CommonUtils
+					.findDublicates(Stream.of(jpaMovies, ftMovies).flatMap(List::stream).toList());
 			results = Stream.of(jpaMovies, ftMovies).flatMap(List::stream)
-					.filter(myMovie -> this.filterDublicates(myMovie, dublicates)).toList();
+					.filter(myMovie -> CommonUtils.filterDublicates(myMovie, dublicates)).toList();
 			// remove dublicates
 			results = List.copyOf(results.stream()
 					.collect(Collectors.toMap(Movie::getId, d -> d, (Movie x, Movie y) -> x == null ? y : x)).values());
 		}
 		return List.copyOf(results);
-	}
-
-	private boolean filterDublicates(Movie myMovie, Collection<Long> dublicates) {
-		return dublicates.stream().filter(myId -> myId.equals(myMovie.getId())).findAny().isPresent();
 	}
 
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
