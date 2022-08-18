@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 
+import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
 
@@ -30,4 +31,5 @@ public interface ActorRepository {
 	List<Actor> findUnusedActors();
 	List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto);
 	List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings);
+	List<Actor> findByFilterCriteria(ActorFilterCriteriaDto filterCriteriaDto, Long userId);
 }

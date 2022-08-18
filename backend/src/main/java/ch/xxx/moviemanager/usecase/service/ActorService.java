@@ -70,6 +70,8 @@ public class ActorService {
 	}
 
 	public List<Actor> findActorsByFilterCriteria(String bearerStr, ActorFilterCriteriaDto filterCriteriaDto) {
+		User currentUser = this.auds.getCurrentUser(bearerStr);
+		List<Actor> jpaActors = this.actorRep.findByFilterCriteria(filterCriteriaDto, currentUser.getId());
 		return List.of();
 	}
 	
