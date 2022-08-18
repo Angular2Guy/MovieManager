@@ -12,9 +12,11 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.xxx.moviemanager.domain.common.CommonUtils;
 import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
@@ -76,12 +79,18 @@ public class ActorService {
 		SearchTermDto searchTermDto = new SearchTermDto();
 		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());
 		List<Actor> ftActors = this.findActorsBySearchTerm(bearerStr, searchTermDto);
+		List<Actor> results = jpaActors;
 		if (filterCriteriaDto.getSearchPhraseDto() != null
 				&& !Objects.isNull(filterCriteriaDto.getSearchPhraseDto().getPhrase())
 				&& filterCriteriaDto.getSearchPhraseDto().getPhrase().length() > 2) {
-			
+			Collection<Long> dublicates = CommonUtils
+					.findDublicates(Stream.of(jpaActors, ftActors).flatMap(List::stream).toList());
+			results = Stream.of(jpaActors, ftActors).flatMap(List::stream)
+					.filter(myMovie -> CommonUtils.filterForDublicates(myMovie, dublicates)).toList();
+			// remove dublicates
+			results = List.copyOf(CommonUtils.filterDublicates(results));
 		}
-		return List.of();
+		return results;
 	}
 	
 	public List<Actor> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {

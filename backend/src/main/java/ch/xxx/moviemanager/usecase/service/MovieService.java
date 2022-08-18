@@ -242,7 +242,7 @@ public class MovieService {
 			// remove dublicates
 			results = List.copyOf(CommonUtils.filterDublicates(results));
 		}
-		return List.copyOf(results);
+		return results;
 	}
 
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
