@@ -19,7 +19,6 @@ export class ActorFilterCriteria {
     public birthdayFrom: Date =  null;
     public birthdayTo: Date = null;
     public dead: boolean = false;
-    public biography: string = '';
     public popularity: number = 0;
     public movieCharacter: string = '';
     public searchPhrase = new SearchPhrase();   
