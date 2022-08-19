@@ -14,6 +14,7 @@ import { Component, OnInit } from '@angular/core';
 import { MoviesService } from '../services/movies.service';
 import {ActivatedRoute, Router } from '@angular/router';
 import { Movie } from '../model/movie';
+import { QueryParam } from '../model/common';
 
 @Component({
   selector: 'app-movies',
@@ -24,14 +25,15 @@ export class MoviesComponent implements OnInit {
 
   movie: Movie = null;
   delMovie = false;
-  backParam = '';
+  backParam = QueryParam.Empty;
+  queryParam = QueryParam;
 
   constructor(private route: ActivatedRoute, private router: Router, private movieService: MoviesService) { }
 
   ngOnInit() {
       this.movieService.findMovieById(Number(this.route.snapshot.paramMap.get('id')))
           .subscribe(movie => this.movie = movie);
-      this.backParam = !this.route.snapshot.queryParams?.back? '' : this.route.snapshot.queryParams?.back; 
+      this.backParam = !this.route.snapshot.queryParams?.back? QueryParam.Empty : this.route.snapshot.queryParams?.back; 
   }
 
   deleteMovie() {

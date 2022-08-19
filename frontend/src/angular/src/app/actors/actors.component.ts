@@ -12,6 +12,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Actor, Gender } from '../model/actor';
+import { QueryParam } from '../model/common';
 import { ActorsService } from '../services/actors.service';
 
 @Component({
@@ -22,14 +23,15 @@ import { ActorsService } from '../services/actors.service';
 export class ActorsComponent implements OnInit {
   gender = Gender;
   actor: Actor = null;
-  backParam = '';
+  backParam = QueryParam.Empty;
+  queryParam = QueryParam;
 
   constructor(private route: ActivatedRoute, private actorService: ActorsService) { }
 
   public ngOnInit() {
       this.actorService.findActorById(Number(this.route.snapshot.paramMap.get('id')))
           .subscribe(actor => this.actor = actor);
-      this.backParam = !this.route.snapshot.queryParams?.back? '' : this.route.snapshot.queryParams?.back; 
+      this.backParam = !this.route.snapshot.queryParams?.back ? QueryParam.Empty : this.route.snapshot.queryParams?.back; 
   }
 
 }

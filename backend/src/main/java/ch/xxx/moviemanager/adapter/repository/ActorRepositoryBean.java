@@ -40,6 +40,7 @@ import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
+import ch.xxx.moviemanager.domain.model.entity.Movie;
 import ch.xxx.moviemanager.domain.model.entity.User;
 
 @Repository
@@ -130,15 +131,18 @@ public class ActorRepositoryBean implements ActorRepository {
 		return this.entityManager.createQuery(cq).setMaxResults(30).getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto) {
-		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-		QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-				.forEntity(Actor.class).get();
-		Query phraseQuery = actorQueryBuilder.phrase().withSlop(searchPhraseDto.getOtherWordsInPhrase())
-				.onField("biography").sentence(searchPhraseDto.getPhrase()).createQuery();
-		@SuppressWarnings("unchecked")
-		List<Actor> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(50)
-				.getResultList();
+		List<Actor> resultList = List.of();
+		if (searchPhraseDto.getPhrase() != null && searchPhraseDto.getPhrase().trim().length() > 2) {
+			FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
+			QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+					.forEntity(Actor.class).get();
+			Query phraseQuery = actorQueryBuilder.phrase().withSlop(searchPhraseDto.getOtherWordsInPhrase())
+					.onField("biography").sentence(searchPhraseDto.getPhrase()).createQuery();
+			resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(50)
+					.getResultList();
+		}
 		return resultList;
 	}
 
