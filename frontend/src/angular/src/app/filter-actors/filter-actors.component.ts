@@ -58,6 +58,10 @@ export class FilterActorsComponent implements OnInit {
 	
   }
   
+  public showFilterMovies(): void {
+	
+  }
+  
   private getDismissReason(reason: unknown): void {
 	  //console.log(this.filterCriteria);
   }

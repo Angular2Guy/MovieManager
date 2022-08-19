@@ -90,6 +90,10 @@ export class FilterMoviesComponent implements OnInit {
 	this.router.navigate(['movie', movie.id], { queryParams: { back: QueryParam.Back } });
   }
   
+  public showFilterActors(): void {
+	this.router.navigate(['/filter-actors']);
+  }
+  
   public resetFilters(): void {
 	this.filterCriteria.releaseFrom = null;
 	this.filterCriteria.releaseTo = null;

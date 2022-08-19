@@ -77,6 +77,7 @@
 		<div class="row">
 			<div class="col">
 			   <button class="btn btn-primary back-btn" (click)="back()" i18n="@@back">Back</button>
+			   <button class="btn btn-primary filter-change-btn" (click)="showFilterActors()" i18n="@@filterMoviesFilterActors">Filter<br/>Actors</button>
 			   <button class="btn btn-primary open-filters" (click)="open(content)" i18n="@@filterMoviesOpenFilters">Open<br/>Filters</button>
 			   <div class="info-text filter-text" *ngIf="filtering" i18n="@@filterMoviesFilteringMovies">Filtering Movies</div>
 			   <div class="info-text filter-text" *ngIf="filtering">
