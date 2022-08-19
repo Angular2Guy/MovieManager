@@ -15,6 +15,7 @@ import { Observable,of,throwError } from 'rxjs';
 import { Actor } from '../model/actor';
 import { HttpClient } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
+import { ActorFilterCriteria } from '../model/actor-filter-criteria';
 
 @Injectable({
  providedIn: 'root',
@@ -41,4 +42,11 @@ export class ActorsService {
           return throwError( error );
           }));
   }
+  
+     public findActorsByCriteria(filterCriteria: ActorFilterCriteria): Observable<Actor[]> {
+	   return this.http.post<Actor[]>('/rest/actor/filter-criteria', filterCriteria).pipe(catchError(error => {
+            console.error( JSON.stringify( error ) );
+            return throwError( error);
+            }));
+   }
 }

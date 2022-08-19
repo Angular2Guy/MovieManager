@@ -12,7 +12,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NgbDateStruct, NgbOffcanvas, NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct, NgbOffcanvas, NgbRatingConfig, OffcanvasDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Actor, Gender } from '../model/actor';
 import { ActorFilterCriteria } from '../model/actor-filter-criteria';
 import { QueryParam } from '../model/common';
@@ -27,8 +27,8 @@ export class FilterActorsComponent implements OnInit {
   public gender=Gender;
   public filtering = false;
   public filteredActors: Actor[] = [];
-  public ngbReleaseFrom: NgbDateStruct;
-  public ngbReleaseTo: NgbDateStruct;
+  public ngbBirthdayFrom: NgbDateStruct;
+  public ngbBirthdayTo: NgbDateStruct;
   public closeResult = '';
   public filterCriteria = new ActorFilterCriteria();
   
@@ -74,6 +74,19 @@ export class FilterActorsComponent implements OnInit {
   
   private getDismissReason(reason: unknown): void {
 	  //console.log(this.filterCriteria);
-	  
+	  if (reason === OffcanvasDismissReasons.ESC) {
+      return this.resetFilters();
+    } else {
+	  this.filterCriteria.birthdayFrom = !this.ngbBirthdayFrom ? null : 
+	     new Date(this.ngbBirthdayFrom.year, this.ngbBirthdayFrom.month, this.ngbBirthdayFrom.day);
+	  this.filterCriteria.birthdayTo = !this.ngbBirthdayTo ? null : 
+	     new Date(this.ngbBirthdayTo.year, this.ngbBirthdayTo.month, this.ngbBirthdayTo.day);
+      this.actorsService.findActorsByCriteria(this.filterCriteria)
+         .subscribe({next: result => this.filteredActors = result, error: failed => {
+	        console.log(failed);
+	        this.router.navigate(['/']);
+         }
+       });
+    }
   }
 }
