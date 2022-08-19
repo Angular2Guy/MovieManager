@@ -1,6 +1,6 @@
 <ng-template #content let-offcanvas>
   <div class="offcanvas-header">
-    <h4 class="offcanvas-title" id="offcanvas-basic-title" i18n="@@filterMoviesFiltersAvailiable">Filters availiable</h4>
+    <h4 class="offcanvas-title" id="offcanvas-basic-title" i18n="@@filtersAvailiable">Filters availiable</h4>
     <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
   </div>
   <div class="offcanvas-body">
@@ -67,7 +67,7 @@
          <textarea rows="2" id="overview" [(ngModel)]="filterCriteria.searchPhrase.phrase" name="phrase" class="form-control"></textarea>
       </div>
       <div class="mb-3 float-end">
-         <button class="btn btn-outline-primary" (click)="resetFilters()" type="button" i18n="@@filterMoviesResetFilters">Reset Filters</button>
+         <button class="btn btn-outline-primary" (click)="resetFilters()" type="button" i18n="@@resetFilters">Reset Filters</button>
       </div>
     </form>
   </div>
@@ -92,10 +92,9 @@
 						<th i18n="@@overview">Overview</th>
 					</tr>
 					<tr *ngFor="let movie of filteredMovies"
-						(click)="selectMovie(movie)" class="import-movie">
+						(click)="selectMovie(movie)" class="import-item">
 						<td class="my-text-center">{{movie.title}}</td>
-						<td class="my-text-center">{{movie.release_date |
-							date:'dd.MM.yyyy'}}</td>
+						<td class="my-text-center">{{movie.release_date | date:'dd.MM.yyyy'}}</td>
 						<td class="my-text-center">
 							<ul *ngFor="let genere of movie?.myGenere" class="my-ul">
 								<li>{{genere.name}}</li>

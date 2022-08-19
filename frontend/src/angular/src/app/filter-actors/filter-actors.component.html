@@ -1,1 +1,87 @@
-<p>filter-actors works!</p>
+<ng-template #content let-offcanvas>
+  <div class="offcanvas-header">
+    <h4 class="offcanvas-title" id="offcanvas-basic-title" i18n="@@filtersAvailiable">Filters availiable</h4>
+    <button type="button" class="btn-close" aria-label="Close" (click)="offcanvas.dismiss('Cross click')"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form>
+      <div class="select-range">
+      <div class="mb-3 me-1">
+      <label for="releasedAfter" i18n="@@filterActorsBornAfter">Born after</label>
+        <div class="input-group">
+          <input id="releasedBefore"  class="form-control" [(ngModel)]="filterCriteria.birthdayFrom" placeholder="yyyy-mm-dd" name="dpFrom" ngbDatepicker #dpFrom="ngbDatepicker">
+          <button class="btn btn-outline-secondary calendar" (click)="dpFrom.toggle()" type="button"></button>
+        </div>
+      </div>
+      <div class="mb-3 ms-1">
+        <label for="releasedBefore" i18n="@@filterActorsBornBefore">Born before</label>        
+        <div class="input-group">
+          <input id="releasedAfter" [(ngModel)]="filterCriteria.birthdayTo" class="form-control" placeholder="yyyy-mm-dd" name="dpTo" ngbDatepicker #dpTo="ngbDatepicker">
+          <button class="btn btn-outline-secondary calendar" (click)="dpTo.toggle()" type="button"></button>
+        </div>
+      </div>
+      </div>
+      <div class="mb-3 ms-1">
+        <input class="form-check-input" type="radio" name="genderMale" id="genderMale" [value]="gender.Male" [(ngModel)]="filterCriteria.gender">
+        <label class="form-check-label" for="genderMale" i18n="@@male">Male</label>
+        <input class="form-check-input" type="radio" name="genderFemale" id="genderFemale" [value]="gender.Female" [(ngModel)]="filterCriteria.gender">
+        <label class="form-check-label" for="genderFemale" i18n="@@female">Female</label>
+        <input class="form-check-input" type="radio" name="genderUnknown" id="genderUnknown" [value]="gender.Unknown" [(ngModel)]="filterCriteria.gender">
+        <label class="form-check-label" for="genderUnknown" i18n="@@unknown">Unknown</label>
+      </div>
+      <div class="mb-3">
+        <label for="actor" class="form-label" i18n="@@actor">Actor</label>
+        <input type="text" [(ngModel)]="filterCriteria.name" name="actor" class="form-control" id="actor" placeholder="actor">
+      </div>
+      <div class="mb-3">
+        <label for="movieCharacter" class="form-label" i18n="@@filterActorsMovieCharacter">Movie Character</label>
+        <input type="text" [(ngModel)]="filterCriteria.movieCharacter" name="movieCharacter" class="form-control" id="movie-character" placeholder="MovieCharacter">
+      </div>
+      <div class="mb-3">
+         <div for="popularity" class="mb-1" i18n="@@filterActorsMinRating">Min Popularity</div>
+         <ngb-rating id="popularity" [(ngModel)]="filterCriteria.popularity" name="popularity" [rate]="0"></ngb-rating>
+      </div>
+      <div class="mb-3">
+         <label for="bio" class="form-label" i18n="@@filterActorsInBio">In Biography</label>
+         <textarea rows="2" id="bio" [(ngModel)]="filterCriteria.searchPhrase.phrase" name="phrase" class="form-control"></textarea>
+      </div>
+      <div class="mb-3 float-end">
+         <button class="btn btn-outline-primary" (click)="resetFilters()" type="button" i18n="@@resetFilters">Reset Filters</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<div class="container-fluid">
+	<div>
+		<div class="row">
+			<div class="col">
+			   <button class="btn btn-primary back-btn" (click)="back()" i18n="@@back">Back</button>
+			   <button class="btn btn-primary open-filters" (click)="open(content)" i18n="@@filterActorsOpenFilters">Open<br/>Filters</button>
+			   <div class="info-text filter-text" *ngIf="filtering" i18n="@@filterActorsFilteringMovies">Filtering Actors</div>
+			   <div class="info-text filter-text" *ngIf="filtering">
+			       <img src="assets/svg/spinner.svg">
+			    </div>
+			    <div class="info-text" *ngIf="!filtering && filteredActors.length === 0" 
+			       i18n="@@filterActorsNoActorsFound">No Actors found. Try different filter settings.</div>
+				<table class="table" *ngIf="!filtering && filteredActors.length > 0">
+					<tr>
+						<th i18n="@@name">Name</th>
+						<th i18n="@@birthday">Birthday</th>
+						<th i18n="@@gender">Gender</th>
+						<th i18n="@@filterActorsBiography">Biography</th>
+					</tr>
+					<tr *ngFor="let actor of filteredActors" (click)="selectActor(actor)" class="import-item">
+						<td class="my-text-center">{{actor.name}}</td>
+						<td class="my-text-center">{{actor.birthday | date:'dd.MM.yyyy'}}</td>
+						<ng-container [ngSwitch]="actor.gender">
+						  <td class="my-text-center" *ngSwitchCase="gender.Male" i18n="@@male">Male</td>
+						  <td class="my-text-center" *ngSwitchCase="gender.Female" i18n="@@female">Female</td>
+						  <td class="my-text-center" *ngSwitchCase="gender.Unknown" i18n="@@unknown">Unknown</td>
+						</ng-container>
+						<td class="my-text-center">{{actor.biography}}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

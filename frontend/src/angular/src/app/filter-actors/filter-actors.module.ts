@@ -13,13 +13,22 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FilterActorsComponent } from './filter-actors.component';
+import { NgbDatepickerModule, NgbOffcanvasModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FilterActorsRoutingModule } from './filter-actors-routing.module';
 
 @NgModule({
   declarations: [
     FilterActorsComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    NgbOffcanvasModule, 
+    NgbDatepickerModule,
+    NgbRatingModule,    
+    FormsModule,
+    ReactiveFormsModule,
+    FilterActorsRoutingModule
   ]
 })
 export class FilterActorsModule { }

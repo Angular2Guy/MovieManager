@@ -12,7 +12,9 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actor } from '../model/actor';
+import { NgbDateStruct, NgbOffcanvas, NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
+import { Actor, Gender } from '../model/actor';
+import { ActorFilterCriteria } from '../model/actor-filter-criteria';
 import { ActorsService } from '../services/actors.service';
 
 @Component({
@@ -21,12 +23,42 @@ import { ActorsService } from '../services/actors.service';
   styleUrls: ['./filter-actors.component.scss']
 })
 export class FilterActorsComponent implements OnInit {
+  public gender=Gender;
+  public filtering = false;
   public filteredActors: Actor[] = [];
+  public ngbReleaseFrom: NgbDateStruct;
+  public ngbReleaseTo: NgbDateStruct;
+  public closeResult = '';
+  public filterCriteria = new ActorFilterCriteria();
   
-  constructor(private actorsService: ActorsService, private router: Router) { }
+  constructor(private actorsService: ActorsService, private router: Router,
+     private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig, ) { }
 
-  ngOnInit(): void {
-	
+  public ngOnInit(): void {
+     this.ngbRatingConfig.max = 10;
   }
 
+  public open(content: unknown) {
+    this.offcanvasService.open(content, {ariaLabelledBy: 'offcanvas-basic-title'}).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+
+  public back() {
+	this.router.navigate(['search']);
+  }
+
+  public selectActor(actor: Actor): void {
+  
+  }
+  
+  public resetFilters(): void {
+	
+  }
+  
+  private getDismissReason(reason: unknown): void {
+	  //console.log(this.filterCriteria);
+  }
 }
