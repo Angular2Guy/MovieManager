@@ -51,6 +51,7 @@
     "female": "Female",
     "unknown": "Unknown",
     "actor": "Actor",
+    "phActor": "actor",
     "filterActorsMovieCharacter": "Movie Character",
     "phFilterActorsMovieCharacter": "movie-character",
     "filterActorsMinRating": "Min Popularity",
@@ -67,8 +68,10 @@
     "filterMoviesReleasedAfter": "Released after",
     "filterMoviesReleasedBefore": "Released before",
     "title": "Title",
+    "phTitle": "title",
     "filterMoviesSelectedGeneres": "Selected Generes",
     "filterMoviesMinLength": "Min Length",
+    "phMinutes": "minutes",
     "filterMoviesMaxLength": "Max Length",
     "filterMoviesMinRating": "Min Rating",
     "filterMoviesInOverview": "In Overview",
@@ -99,12 +102,13 @@
     "movieReleaseDate": " Release Date: {$INTERPOLATION} ",
     "movieOverview": " Overview: {$INTERPOLATION} ",
     "movieGeneres": "Generes:",
+    "phMovieTitle": "movie-title",
     "searchImportMovieTitle": "Import Movie Title",
     "searchSearchForMovie": "Search for Movie",
     "searchSearchMovieByTitle": "Search for Movie by Title",
     "loading": "Loading",
+    "phActorName": "actor-name",
     "searchSearchActorByName": "Search for Actor by Name",
-    "generes": "Generes",
     "searchFilterMovies": "Filter Movies"
   }
 }
