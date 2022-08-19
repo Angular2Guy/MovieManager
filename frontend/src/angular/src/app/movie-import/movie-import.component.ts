@@ -42,6 +42,10 @@ export class MovieImportComponent implements OnInit {
 	});	
   }
 
+  public back(): void {
+	this.router.navigate(['/search']);
+  }
+
   private loadMatchingMovies(movieTitle: string) {
 	this.moviesService.importMovieByTitle( movieTitle ).subscribe( m => {
        this.importMovies = this.addNums( m );

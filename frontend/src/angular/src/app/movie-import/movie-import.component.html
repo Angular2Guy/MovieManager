@@ -2,6 +2,7 @@
 	<div>
 		<div class="row">
 			<div class="col">
+			    <button class="btn btn-primary back-btn" (click)="back()" i18n="@@back">Back</button>
 				<div class="info-text" *ngIf="importState===ImportState.Importing" i18n="@@movieImportImporting">Importing...</div>
 				<div class="info-text" *ngIf="importState===ImportState.MoviesLoading" i18n="@@movieImportMoviesLoading">Movies loading...</div>				
 			    <div class="info-text" *ngIf="importState===ImportState.Idle && importMovies.length===0" i18n="@@movieImportNoMoviesFound">No Movies found</div>

@@ -23,11 +23,11 @@
       </div>
       <div class="mb-3">
         <label for="title" class="form-label" i18n="@@title">Title</label>
-        <input type="text" [(ngModel)]="filterCriteria.movieTitle" name="title" class="form-control" id="title" placeholder="title">
+        <input type="text" [(ngModel)]="filterCriteria.movieTitle" name="title" class="form-control" id="title" i18n-placeholder="@@phTitle" placeholder="title">
       </div>
       <div class="mb-3">
         <label for="actor" class="form-label" i18n="@@actor">Actor</label>
-        <input type="text" [(ngModel)]="filterCriteria.movieActor" name="actor" class="form-control" id="actor" placeholder="actor">
+        <input type="text" [(ngModel)]="filterCriteria.movieActor" name="actor" class="form-control" id="actor" i18n-placeholder="@@phActor" placeholder="actor">
       </div>
       <div class="mb-3">
         <div class="col">
@@ -51,11 +51,11 @@
       <div class="select-range">
 	      <div class="mb-3 me-1">
 	        <label for="min-length" class="form-label" i18n="@@filterMoviesMinLength">Min Length</label>
-	        <input type="number" [(ngModel)]="filterCriteria.minLength" name="minLength" class="form-control" id="min-length" placeholder="minutes">
+	        <input type="number" [(ngModel)]="filterCriteria.minLength" name="minLength" class="form-control" id="min-length" i18n-placeholder="@@phMinutes" placeholder="minutes">
 	      </div>
 	      <div class="mb-3 ms-1">
 	        <label for="max-length" class="form-label" i18n="@@filterMoviesMaxLength">Max Length</label>
-	        <input type="number" [(ngModel)]="filterCriteria.maxLength" name="maxLength" class="form-control" id="max-length" placeholder="minutes">
+	        <input type="number" [(ngModel)]="filterCriteria.maxLength" name="maxLength" class="form-control" id="max-length" i18n-placeholder="@@phMinutes" placeholder="minutes">
 	      </div>
       </div>
       <div class="mb-3">

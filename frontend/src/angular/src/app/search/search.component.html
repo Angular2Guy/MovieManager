@@ -4,7 +4,7 @@
 	<div class="row">
 		<div class="col-4 add-button">
 			<div class="form-floating mb-3 searchImportMovie">
-				<input type="text" id="importMovieByTitle" class="form-control" placeholder="xxx" aria-describedby="importMovieByTitle" [formControl]="importMovieTitle">
+				<input type="text" id="importMovieByTitle" class="form-control" i18n-placeholder="@@phMovieTitle" placeholder="movie-title" aria-describedby="importMovieByTitle" [formControl]="importMovieTitle">
 				<label class="my-floating-labels" for="importMovieByTitle" i18n="@@searchImportMovieTitle">Import Movie Title</label>
 			</div>
 			<div>
@@ -13,7 +13,7 @@
 		</div>
 		<div class="col-3">
 			<div class="form-floating">
-				<input type="text" id="MovieByTitle" class="form-control" placeholder="xxx" aria-describedby="searchMovieTitle" [formControl]="movieTitle">				
+				<input type="text" id="MovieByTitle" class="form-control" i18n-placeholder="@@phMovieTitle" placeholder="movie-title" aria-describedby="searchMovieTitle" [formControl]="movieTitle">				
 				<label class="my-floating-labels" for="MovieByTitle" i18n="@@searchSearchMovieByTitle">Search for Movie by Title</label> 				
 			</div>
 			<div *ngIf="movieTitle.value" class="searchList my-dropdown-menu">
@@ -25,7 +25,7 @@
 		</div>
 		<div class="col-3">
 			<div class="form-floating">
-				<input type="text" id="MovieByActor" class="form-control" placeholder="name" aria-describedby="searchMovieActor" [formControl]="movieActor">
+				<input type="text" id="MovieByActor" class="form-control" i18n-placeholder="@@phActorName" placeholder="actor-name" aria-describedby="searchMovieActor" [formControl]="movieActor">
 				<label class="my-floating-labels" for="MovieByActor" i18n="@@searchSearchActorByName">Search for Actor by Name</label>
 			</div>
 			<div *ngIf="movieActor.value" class="searchList my-dropdown-menu">
