@@ -22,12 +22,14 @@ import { ActorsService } from '../services/actors.service';
 export class ActorsComponent implements OnInit {
   gender = Gender;
   actor: Actor = null;
+  backParam = '';
 
   constructor(private route: ActivatedRoute, private actorService: ActorsService) { }
 
-  ngOnInit() {
+  public ngOnInit() {
       this.actorService.findActorById(Number(this.route.snapshot.paramMap.get('id')))
           .subscribe(actor => this.actor = actor);
+      this.backParam = !this.route.snapshot.queryParams?.back? '' : this.route.snapshot.queryParams?.back; 
   }
 
 }

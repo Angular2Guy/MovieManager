@@ -1,7 +1,8 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col">
-			<a [routerLink]="['/search']" i18n="@@back">Back</a> 
+  		  <a *ngIf="!backParam" [routerLink]="['/search']" i18n="@@back">Back</a>
+		  <a *ngIf="backParam === 'filter-movies'" [routerLink]="['/filter-actors']" i18n="@@back">Back</a>
 		</div>
 	</div>
 	<div class="row">

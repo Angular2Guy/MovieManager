@@ -15,6 +15,7 @@ import { Router } from '@angular/router';
 import { NgbDateStruct, NgbOffcanvas, NgbRatingConfig } from '@ng-bootstrap/ng-bootstrap';
 import { Actor, Gender } from '../model/actor';
 import { ActorFilterCriteria } from '../model/actor-filter-criteria';
+import { QueryParam } from '../model/common';
 import { ActorsService } from '../services/actors.service';
 
 @Component({
@@ -51,18 +52,28 @@ export class FilterActorsComponent implements OnInit {
   }
 
   public selectActor(actor: Actor): void {
-  
+    this.router.navigate(['actor', actor.id], { queryParams: { back: QueryParam.ActorsBack } });
   }
   
   public resetFilters(): void {
-	
+	this.filterCriteria.birthdayFrom = null
+	this.filterCriteria.birthdayTo = null;
+	this.filterCriteria.dead = false;
+	this.filterCriteria.gender = Gender.Unknown;
+	this.filterCriteria.movieCharacter = '';
+	this.filterCriteria.name = '';
+	this.filterCriteria.popularity = 0;
+	this.filterCriteria.searchPhrase.otherWordsInPhrase = 0;
+	this.filterCriteria.searchPhrase.phrase = '';
+	this.closeResult = '';
   }
   
   public showFilterMovies(): void {
-	
+	this.router.navigate(['/filter-movies']);
   }
   
   private getDismissReason(reason: unknown): void {
 	  //console.log(this.filterCriteria);
+	  
   }
 }

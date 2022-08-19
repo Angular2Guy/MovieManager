@@ -23,11 +23,11 @@
       </div>
       <div class="mb-3 ms-1">
         <input class="form-check-input" type="radio" name="genderMale" id="genderMale" [value]="gender.Male" [(ngModel)]="filterCriteria.gender">
-        <label class="form-check-label" for="genderMale" i18n="@@male">Male</label>
-        <input class="form-check-input" type="radio" name="genderFemale" id="genderFemale" [value]="gender.Female" [(ngModel)]="filterCriteria.gender">
-        <label class="form-check-label" for="genderFemale" i18n="@@female">Female</label>
-        <input class="form-check-input" type="radio" name="genderUnknown" id="genderUnknown" [value]="gender.Unknown" [(ngModel)]="filterCriteria.gender">
-        <label class="form-check-label" for="genderUnknown" i18n="@@unknown">Unknown</label>
+        <label class="form-check-label ms-1" for="genderMale" i18n="@@male">Male</label>
+        <input class="form-check-input ms-3" type="radio" name="genderFemale" id="genderFemale" [value]="gender.Female" [(ngModel)]="filterCriteria.gender">
+        <label class="form-check-label ms-1" for="genderFemale" i18n="@@female">Female</label>
+        <input class="form-check-input ms-3" type="radio" name="genderUnknown" id="genderUnknown" [value]="gender.Unknown" [(ngModel)]="filterCriteria.gender">
+        <label class="form-check-label ms-1" for="genderUnknown" i18n="@@unknown">Unknown</label>
       </div>
       <div class="mb-3">
         <label for="actor" class="form-label" i18n="@@actor">Actor</label>
@@ -35,7 +35,7 @@
       </div>
       <div class="mb-3">
         <label for="movieCharacter" class="form-label" i18n="@@filterActorsMovieCharacter">Movie Character</label>
-        <input type="text" [(ngModel)]="filterCriteria.movieCharacter" name="movieCharacter" class="form-control" id="movie-character" placeholder="MovieCharacter">
+        <input type="text" [(ngModel)]="filterCriteria.movieCharacter" name="movieCharacter" class="form-control" id="movie-character" placeholder="movie-character">
       </div>
       <div class="mb-3">
          <div for="popularity" class="mb-1" i18n="@@filterActorsMinRating">Min Popularity</div>
