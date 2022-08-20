@@ -92,7 +92,7 @@ public class ActorRepositoryBean implements ActorRepository {
 		}
 		if (filterCriteriaDto.getBirthdayTo() != null) {
 			predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(cActor.<Date>get("birthday"),
-					CommonUtils.convert(filterCriteriaDto.getBirthdayFrom())));
+					CommonUtils.convert(filterCriteriaDto.getBirthdayTo())));
 		}
 		if (filterCriteriaDto.getDead()) {
 			predicates.add(this.entityManager.getCriteriaBuilder().isNotNull(cActor.<Date>get("deathday")));
@@ -119,7 +119,7 @@ public class ActorRepositoryBean implements ActorRepository {
 							.getCriteriaBuilder().like(
 									this.entityManager.getCriteriaBuilder()
 											.lower(cActor.join(actor_.getDeclaredList("casts", Cast.class))
-													.get("characterName")),
+													.get("movieChar")),
 									String.format("%%%s%%", filterCriteriaDto.getMovieCharacter().toLowerCase())));
 		}
 		// user check
