@@ -15,6 +15,7 @@ package ch.xxx.moviemanager.domain.model.dto;
 import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import ch.xxx.moviemanager.domain.model.dto.ActorDto.Gender;
 
@@ -27,6 +28,7 @@ public class ActorFilterCriteriaDto {
     private Boolean dead;
     private int popularity;
     private String movieCharacter;
+    @JsonProperty("searchPhrase")
     private SearchPhraseDto searchPhraseDto = new SearchPhraseDto();
     
 	public String getName() {
