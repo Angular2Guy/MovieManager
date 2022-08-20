@@ -30,7 +30,7 @@ In the helm directory is a kubernetes setup to run the moviemanager project with
 To import movies a key needs to be provided at signin. To get such a key according to this [Faq](https://www.themoviedb.org/faq/api)
 
 ## Fulltext Search
-Hibernate Search recreates the indexes for the movie overviews and actor bios if the amount of movies or actors has changed. The indexes are used for searchterms in the indexed texts.
+Hibernate Search recreates the indexes for the movie overviews and actor bios if the amount of movies or actors has changed. The indexes are used to support searchterms in the indexed texts.
 
 ## Testdata
 It is test data provided for the User 'John' and the Password 'Doe'. Then a movie with an actor is available for testing. The login data is also needed for the /h2-console. 
