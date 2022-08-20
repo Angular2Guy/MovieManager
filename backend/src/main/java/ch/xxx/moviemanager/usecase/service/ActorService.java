@@ -88,7 +88,7 @@ public class ActorService {
 			results = Stream.of(jpaActors, ftActors).flatMap(List::stream)
 					.filter(myMovie -> CommonUtils.filterForDublicates(myMovie, dublicates)).toList();
 			// remove dublicates
-			results = List.copyOf(CommonUtils.filterDublicates(results));
+			results = results.isEmpty() ? ftActors :  List.copyOf(CommonUtils.filterDublicates(results));
 		}
 		return results;
 	}

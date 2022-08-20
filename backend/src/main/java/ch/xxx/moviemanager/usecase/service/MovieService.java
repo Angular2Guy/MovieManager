@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,9 +32,9 @@ import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.common.CommonUtils;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.CastDto;
-import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperCastDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperGenereDto;
@@ -44,7 +43,6 @@ import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
 import ch.xxx.moviemanager.domain.model.entity.CastRepository;
-import ch.xxx.moviemanager.domain.model.entity.EntityBase;
 import ch.xxx.moviemanager.domain.model.entity.Genere;
 import ch.xxx.moviemanager.domain.model.entity.GenereRepository;
 import ch.xxx.moviemanager.domain.model.entity.Movie;
@@ -240,7 +238,7 @@ public class MovieService {
 			results = Stream.of(jpaMovies, ftMovies).flatMap(List::stream)
 					.filter(myMovie -> CommonUtils.filterForDublicates(myMovie, dublicates)).toList();
 			// remove dublicates
-			results = List.copyOf(CommonUtils.filterDublicates(results));
+			results = results.isEmpty() ? ftMovies : List.copyOf(CommonUtils.filterDublicates(results));
 		}
 		return results;
 	}
