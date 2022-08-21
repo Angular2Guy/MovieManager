@@ -90,7 +90,7 @@ public class ActorService {
 			// remove dublicates
 			results = results.isEmpty() ? ftActors :  List.copyOf(CommonUtils.filterDublicates(results));
 		}
-		return results;
+		return results.subList(0, results.size() > 50 ? 50 : results.size());
 	}
 	
 	public List<Actor> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {

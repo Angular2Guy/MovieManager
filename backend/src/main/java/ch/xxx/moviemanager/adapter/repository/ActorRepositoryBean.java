@@ -128,7 +128,7 @@ public class ActorRepositoryBean implements ActorRepository {
 		predicates.add(this.entityManager.getCriteriaBuilder()
 				.equal(cActor.join(actor_.getDeclaredSet("users", User.class)).get("id"), userId));
 		cq.where(predicates.toArray(new Predicate[0])).distinct(true);
-		return this.entityManager.createQuery(cq).setMaxResults(30).getResultList();
+		return this.entityManager.createQuery(cq).setMaxResults(1000).getResultList();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -140,7 +140,7 @@ public class ActorRepositoryBean implements ActorRepository {
 					.forEntity(Actor.class).get();
 			Query phraseQuery = actorQueryBuilder.phrase().withSlop(searchPhraseDto.getOtherWordsInPhrase())
 					.onField("biography").sentence(searchPhraseDto.getPhrase()).createQuery();
-			resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(50)
+			resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(1000)
 					.getResultList();
 		}
 		return resultList;
@@ -156,7 +156,7 @@ public class ActorRepositoryBean implements ActorRepository {
 		Query phraseQuery = actorQueryBuilder.simpleQueryString().onField("biography")
 				.matching(stringBuilder.substring(2)).createQuery();
 		@SuppressWarnings("unchecked")
-		List<Actor> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(50)
+		List<Actor> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(1000)
 				.getResultList();
 		return resultList;
 	}

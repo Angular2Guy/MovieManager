@@ -156,7 +156,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		predicates.add(this.entityManager.getCriteriaBuilder()
 				.equal(cMovie.join(movie_.getDeclaredSet("users", User.class)).get("id"), userId));
 		cq.where(predicates.toArray(new Predicate[0])).distinct(true);
-		return this.entityManager.createQuery(cq).setMaxResults(30).getResultList();
+		return this.entityManager.createQuery(cq).setMaxResults(1000).getResultList();
 	}
 
 	
@@ -170,7 +170,7 @@ public class MovieRepositoryBean implements MovieRepository {
 					.forEntity(Movie.class).get();
 			Query phraseQuery = movieQueryBuilder.phrase().withSlop(searchPhraseDto.getOtherWordsInPhrase())
 					.onField("overview").sentence(searchPhraseDto.getPhrase()).createQuery();
-			resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Movie.class).setMaxResults(50)
+			resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Movie.class).setMaxResults(1000)
 					.getResultList();
 		}
 		return resultList;
@@ -188,7 +188,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		Query phraseQuery = actorQueryBuilder.simpleQueryString().onField("biography")
 				.matching(stringBuilder.substring(2)).createQuery();
 		@SuppressWarnings("unchecked")
-		List<Movie> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Movie.class).setMaxResults(50)
+		List<Movie> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Movie.class).setMaxResults(1000)
 				.getResultList();
 		return resultList;
 	}

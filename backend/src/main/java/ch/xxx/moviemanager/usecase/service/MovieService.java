@@ -240,7 +240,7 @@ public class MovieService {
 			// remove dublicates
 			results = results.isEmpty() ? ftMovies : List.copyOf(CommonUtils.filterDublicates(results));
 		}
-		return results;
+		return results.subList(0, results.size() > 50 ? 50 : results.size());
 	}
 
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
