@@ -37,7 +37,8 @@ export class ActorsService {
       if(!name) {
           return of([]);
       }
-      return this.http.get<Actor[]>('/rest/actor/'+name).pipe(catchError(error => {
+      return this.http.get<Actor[]>('/rest/actor/'+encodeURIComponent(name))
+      .pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return throwError( error );
           }));

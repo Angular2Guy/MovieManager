@@ -22,19 +22,18 @@ import { MovieFilterCriteria } from '../model/movie-filter-criteria';
  providedIn: 'root',
 })
 export class MoviesService {
-    private reqOptionsArgs = { headers: new HttpHeaders().set( 'Content-Type', 'application/json' ) };
 
     constructor(private http: HttpClient) { }
 
     public findMoviesByPage(page: number): Observable<Movie[]> {
-        return this.http.get<Movie[]>('/rest/movie/pages?page='+page, this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.get<Movie[]>('/rest/movie/pages?page='+page).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
         }));
     }
 
     public findMoviesByGenereId(id: number): Observable<Movie[]> {
-        return this.http.get<Movie[]>('/rest/movie/genere/id/'+id, this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.get<Movie[]>('/rest/movie/genere/id/'+id).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
         }));
@@ -44,7 +43,7 @@ export class MoviesService {
         if(!id && id !== 0) {
             return of(null);
         }
-        return this.http.get<Movie>('/rest/movie/id/'+id, this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.get<Movie>('/rest/movie/id/'+id).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
             }));
@@ -54,7 +53,7 @@ export class MoviesService {
         if(!id && id !== 0) {
             return of(false);
         }
-        return this.http.delete<boolean>('/rest/movie/id/'+id, this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.delete<boolean>('/rest/movie/id/'+id).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
         }));
@@ -64,7 +63,7 @@ export class MoviesService {
         if(!title) {
             return of([]);
         }
-        return this.http.get<Movie[]>('/rest/movie/'+title, this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.get<Movie[]>('/rest/movie/'+encodeURIComponent(title)).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
             }));
@@ -81,7 +80,7 @@ export class MoviesService {
         if(!title) {
             return of([]);
         }
-        return this.http.get<Movie[]>('/rest/movie/import/'+encodeURIComponent(title), this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.get<Movie[]>('/rest/movie/import/'+encodeURIComponent(title)).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
             }));
@@ -92,14 +91,14 @@ export class MoviesService {
             console.log('movieDbId: '+movieDbId);
             return of(false);
         }
-        return this.http.get<boolean>('/rest/movie/import/movieid/'+movieDbId, this.reqOptionsArgs).pipe(catchError(error => {
+        return this.http.get<boolean>('/rest/movie/import/movieid/'+movieDbId).pipe(catchError(error => {
             console.error( JSON.stringify( error ) );
             return throwError( error);
             }));
     }
     
   	public allGeneres(): Observable<Genere[]> {
-      return this.http.get<Genere[]>('/rest/movie/generes', this.reqOptionsArgs).pipe(catchError(error => {
+      return this.http.get<Genere[]>('/rest/movie/generes').pipe(catchError(error => {
           console.error( JSON.stringify( error ) );
           return throwError( error );
       }));
