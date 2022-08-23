@@ -63,7 +63,10 @@
          <ngb-rating id="rating" [(ngModel)]="filterCriteria.minRating" name="minRating" [rate]="0"></ngb-rating>
       </div>
       <div class="mb-3">
-         <label for="overview" class="form-label" i18n="@@filterMoviesInOverview">In Overview</label>
+         <div class="overview-label-input">
+            <label for="overview" class="form-label overview-label" i18n="@@filterMoviesInOverview">In Overview</label>
+            <input type="number" [(ngModel)]="filterCriteria.searchPhrase.otherWordsInPhrase" name="otherWordsInPhrase" class="form-control" id="otherWordsInPhrase" i18n-placeholder="@@phOtherWords" placeholder="other words">
+         </div>
          <textarea rows="2" id="overview" [(ngModel)]="filterCriteria.searchPhrase.phrase" name="phrase" class="form-control"></textarea>
       </div>
       <div class="mb-3 float-end">

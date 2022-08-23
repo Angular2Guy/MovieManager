@@ -38,11 +38,12 @@ export class FilterMoviesComponent implements OnInit {
      private movieService: MoviesService, private router: Router) {}
   
   public ngOnInit(): void {
-     this.ngbRatingConfig.max = 10;
-     this.movieService.allGeneres().subscribe(myGeneres => this.generes = myGeneres);
+     this.ngbRatingConfig.max = 10;     
+     this.movieService.allGeneres().subscribe({next: myGeneres => this.generes = myGeneres, error:  failed => this.router.navigate(['/'])});
   }
 
   public open(content: unknown) {
+	this.filterCriteria.searchPhrase.otherWordsInPhrase = null;
     this.offcanvasService.open(content, {ariaLabelledBy: 'offcanvas-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -63,6 +64,8 @@ export class FilterMoviesComponent implements OnInit {
 	     new Date(this.ngbReleaseFrom.year, this.ngbReleaseFrom.month, this.ngbReleaseFrom.day);
 	  this.filterCriteria.releaseTo = !this.ngbReleaseTo ? null : 
 	     new Date(this.ngbReleaseTo.year, this.ngbReleaseTo.month, this.ngbReleaseTo.day);
+	  this.filterCriteria.searchPhrase.otherWordsInPhrase = !this.filterCriteria.searchPhrase.otherWordsInPhrase ? 
+	    0 : this.filterCriteria.searchPhrase.otherWordsInPhrase; 
       this.movieService.findMoviesByCriteria(this.filterCriteria).subscribe({next: result => this.filteredMovies = result, 
          error: failed => {
 	        console.log(failed);
