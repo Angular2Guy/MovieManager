@@ -9,7 +9,7 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 * [An Angular Autocomplete From UI to DB](https://angular2guy.wordpress.com/2021/07/31/an-angular-autocomplete-from-ui-to-db/)
 * [Advanced Kubernetes setup for Spring Boot App with Postgresql DB](https://angular2guy.wordpress.com/2021/07/30/advanced-kubernetes-setup-for-spring-boot-app-with-postgresql-db/)
 * [Scalable Jwt Token Revokation in Spring Boot](https://angular2guy.wordpress.com/2022/03/26/scalable-jwt-token-revokation-in-spring-boot/)
-* [Fulltextsearch in the Moviemanager with Hibernate Search](https://angular2guy.wordpress.com/2022/08/23/fulltextsearch-in-the-moviemanager-with-hibernate-search/)
+* [Advanced Filtering with Fulltextsearch using Hibernate Search](https://angular2guy.wordpress.com/2022/08/23/fulltextsearch-in-the-moviemanager-with-hibernate-search/)
 
 ## Features
 1. It imports movie data from the movie database. The imported movies can be searched by movie title and Genere. 
