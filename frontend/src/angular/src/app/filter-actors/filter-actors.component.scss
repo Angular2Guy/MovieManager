@@ -43,6 +43,16 @@
 	display: flex;	
 }
 
+.bio-label-input {
+	display: flex;
+	align-items: center;
+	margin-bottom: 0.25rem;
+}
+
+.bio-label {
+	width: 200px;
+}
+
 .selected-generes {
 	display: flex;
 	align-items: center;	

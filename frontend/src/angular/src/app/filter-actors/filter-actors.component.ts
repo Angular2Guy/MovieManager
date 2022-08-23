@@ -40,6 +40,7 @@ export class FilterActorsComponent implements OnInit {
   }
 
   public open(content: unknown) {
+	this.filterCriteria.searchPhrase.otherWordsInPhrase = null;
     this.offcanvasService.open(content, {ariaLabelledBy: 'offcanvas-basic-title'}).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -63,7 +64,7 @@ export class FilterActorsComponent implements OnInit {
 	this.filterCriteria.movieCharacter = '';
 	this.filterCriteria.name = '';
 	this.filterCriteria.popularity = 0;
-	this.filterCriteria.searchPhrase.otherWordsInPhrase = 0;
+	this.filterCriteria.searchPhrase.otherWordsInPhrase = null;
 	this.filterCriteria.searchPhrase.phrase = '';
 	this.closeResult = '';
   }
@@ -81,6 +82,8 @@ export class FilterActorsComponent implements OnInit {
 	     new Date(this.ngbBirthdayFrom.year, this.ngbBirthdayFrom.month, this.ngbBirthdayFrom.day);
 	  this.filterCriteria.birthdayTo = !this.ngbBirthdayTo ? null : 
 	     new Date(this.ngbBirthdayTo.year, this.ngbBirthdayTo.month, this.ngbBirthdayTo.day);
+	  	  this.filterCriteria.searchPhrase.otherWordsInPhrase = !this.filterCriteria.searchPhrase.otherWordsInPhrase ? 
+	    0 : this.filterCriteria.searchPhrase.otherWordsInPhrase; 
       this.actorsService.findActorsByCriteria(this.filterCriteria)
          .subscribe({next: result => this.filteredActors = result, error: failed => {
 	        console.log(failed);
