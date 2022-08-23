@@ -53,7 +53,7 @@ public class CronJobConfiguration {
 
 	@Async
 	@EventListener(ApplicationReadyEvent.class)
-	public void hibernateSearch() throws InterruptedException {
+	public void checkHibernateSearchIndexes() throws InterruptedException {
 		int movieCount = this.entityManager.createNamedQuery("Movie.count", Long.class).getSingleResult().intValue();
 		int actorCount = this.entityManager.createNamedQuery("Actor.count", Long.class).getSingleResult().intValue();
 		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
@@ -71,18 +71,15 @@ public class CronJobConfiguration {
 	}
 
 	private int checkForMovieIndex(FullTextEntityManager fullTextEntityManager) {
-		QueryBuilder movieQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-				.forEntity(Movie.class).get();
-		org.apache.lucene.search.Query movieQuery = movieQueryBuilder.all().createQuery();
-
+		org.apache.lucene.search.Query movieQuery = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+				.forEntity(Movie.class).get().all().createQuery();
 		int movieResults = fullTextEntityManager.createFullTextQuery(movieQuery, Movie.class).getResultSize();
 		return movieResults;
 	}
 
 	private int checkForActorIndex(FullTextEntityManager fullTextEntityManager) {
-		QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-				.forEntity(Actor.class).get();
-		org.apache.lucene.search.Query actorQuery = actorQueryBuilder.all().createQuery();
+		org.apache.lucene.search.Query actorQuery = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
+				.forEntity(Actor.class).get().all().createQuery();
 		int actorResults = fullTextEntityManager.createFullTextQuery(actorQuery, Actor.class).getResultSize();
 		return actorResults;
 	}
