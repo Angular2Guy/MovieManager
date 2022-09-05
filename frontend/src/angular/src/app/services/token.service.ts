@@ -13,7 +13,7 @@
 import { Injectable } from '@angular/core';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable, timer, Subscription, Subject } from 'rxjs';
-import { shareReplay, switchMap, map, takeUntil } from 'rxjs/operators';
+import { shareReplay, switchMap, map, takeUntil, retry } from 'rxjs/operators';
 
 export interface RefreshTokenResponse {
 	refreshToken: string;
@@ -78,6 +78,7 @@ export class TokenService {
 		this.myTokenCache = myTimer.pipe(
 			takeUntil(myStopTimer),
 			switchMap(() => this.refreshToken()),
+			retry({count: 3, delay: 2000, resetOnSuccess: true}),
 			shareReplay(this.CACHE_SIZE));
 		this.myTokenSubscription = this.myTokenCache
 		   .subscribe({
