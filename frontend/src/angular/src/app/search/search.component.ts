@@ -22,6 +22,7 @@ import { FormControl } from '@angular/forms';
 import { tap, debounceTime, distinctUntilChanged, switchMap, catchError } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryParam } from '../model/common';
+import { TokenService } from 'ngx-simple-charts/base-service';
 
 
 @Component( {
@@ -53,6 +54,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     constructor( private actorService: ActorsService,
             private movieService: MoviesService,
             private userService: UsersService,
+            private tokenService: TokenService,
             private route: ActivatedRoute,
             private router: Router) { }
 
@@ -110,11 +112,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
 			switchMap((title: string) => iif(() => title.length > 2,
 				this.movieService.findMovieByTitle( title ).pipe(catchError(error => this.handleRxJsProblem(error))), of([]))),
             tap(() => this.moviesLoading = false ) );
-        if(this.userService.loggedIn) {
+        if(!!this.tokenService.userId) {
             this.movieService.allGeneres().subscribe( res => this.generes = res );
         }
         this.route.url.subscribe(() => {
-            if(this.userService.loggedIn) {
+            if(!!this.tokenService.userId) {
                 this.initScrollMovies();
             }
         });
@@ -146,7 +148,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     }
 
     loginClosed( closed: boolean ) {
-        if ( this.userService.loggedIn && closed ) {
+        if ( !!this.tokenService.userId && closed ) {
 			this.movieService.allGeneres().subscribe( res => this.generes = res );
             this.initScrollMovies();
         }

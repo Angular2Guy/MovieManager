@@ -22,9 +22,8 @@ import { MoviesComponent } from './movies/movies.component';
 import { ActorsComponent } from './actors/actors.component';
 import { SearchComponent } from './search/search.component';
 import { LoginComponent } from './login/login.component';
-import { TokenInterceptor } from './services/token.interceptor';
 import { MovieImportComponent } from './movie-import/movie-import.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxServiceModule,SimpleChartsConfig } from 'ngx-simple-charts/base-service';
 
 
 @NgModule({
@@ -41,10 +40,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
-  ],
-  providers: [
-	{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    AppRoutingModule,
+    NgxServiceModule.forRoot({tokenRefreshPath: '/rest/auth/refreshToken', logoutPath: '/rest/auth/logout', loginRoute: '/'})
   ],
   bootstrap: [AppComponent]
 })

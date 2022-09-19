@@ -13,6 +13,7 @@
 import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { UsersService } from '../services/users.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { TokenService } from 'ngx-simple-charts/base-service';
 
 enum ControlName {
 	LoginName = 'loginName',
@@ -42,7 +43,7 @@ export class LoginComponent implements OnInit {
     modalMsgType = MessageType.Error; 
     tillNextLogin = 0;
 
-  constructor(private userService: UsersService, formBuilder: FormBuilder) { 
+  constructor(private userService: UsersService, formBuilder: FormBuilder, private tokenService: TokenService) { 
 	this.loginFormGroup = formBuilder.group({
 		[ControlName.LoginName]: ['', [Validators.required, Validators.minLength(2)]],
 		[ControlName.Password]: ['', [Validators.required, Validators.minLength(2)]],
@@ -52,7 +53,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.showModal = !this.userService.loggedIn;   
+      this.showModal = !this.tokenService.userId;   
       this.loginFormGroup.markAllAsTouched();
     //  console.log(this.loginFormGroup.invalid || this.loginFormGroup.controls[ControlName.loginName].untouched || this.loginFormGroup.controls[ControlName.password].untouched);   
   }
@@ -76,8 +77,7 @@ export class LoginComponent implements OnInit {
      this.loginFormGroup.controls[ControlName.Password].value).subscribe((myTillNextLogin: number) => {
 	    const res = myTillNextLogin <= 0;
 	    this.tillNextLogin = myTillNextLogin;
-        this.showModal = !res;
-        this.userService.loggedIn = res;
+        this.showModal = !res;        
         this.modalMsgType = MessageType.Error;
         this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed.`;
         this.loginClosed.emit(res);

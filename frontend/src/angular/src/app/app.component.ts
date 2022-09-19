@@ -11,7 +11,8 @@
    limitations under the License.
  */
 import { Component } from '@angular/core';
-import { UsersService } from './services/users.service';
+import { Router } from '@angular/router';
+import { TokenService } from 'ngx-simple-charts/base-service';
 
 @Component({
   selector: 'app-root',
@@ -21,13 +22,13 @@ import { UsersService } from './services/users.service';
 export class AppComponent {
   title = 'app';
   
-  constructor(private userService: UsersService) {}
+  constructor(private tokenService: TokenService, private router: Router) {}
   
   public loggedIn(): boolean {
-	return this.userService.loggedIn;
+	return !!this.tokenService.userId;
   }
   
   public logout(): void {
-	this.userService.logout().subscribe(result => console.log('Logout: '+result));
+	this.router.navigate(['/actor/-1',{skipLocationChange: true}]).then(() => this.tokenService.logout());
   }
 }

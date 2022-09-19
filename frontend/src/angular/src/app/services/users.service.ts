@@ -15,14 +15,13 @@ import { Observable, of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { catchError, map, tap } from 'rxjs/operators';
 import { User } from '../model/user';
-import { TokenService } from './token.service';
 import { Router } from '@angular/router';
+import { TokenService } from 'ngx-simple-charts/base-service';
 
 @Injectable({
  providedIn: 'root',
 })
 export class UsersService {
-  public loggedIn = false;
 
   constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) { }
 
@@ -37,17 +36,14 @@ export class UsersService {
 			if(!!myUser?.id && !!myUser?.token && myUser?.secUntilNexLogin <= 0) {
 				this.tokenService.token = myUser.token;
 				this.tokenService.userId = myUser.id;
-				this.loggedIn = true;				
 				return myUser.secUntilNexLogin;
 			}
-			this.loggedIn = false;
 			return !!myUser?.secUntilNexLogin ? myUser?.secUntilNexLogin : 24 * 60 * 60;
 			;
 		}));
   }
 
   public signin(login: string, password: string, movieDbKey: string): Observable<boolean> {
-	this.loggedIn = false
       if(!login || !password || !movieDbKey) {
           return of(false);
       }
@@ -59,11 +55,5 @@ export class UsersService {
         console.error( JSON.stringify( error ) );
         return of(false);
       }));
-  }
-  
-  public logout(): Observable<boolean> {
-	this.loggedIn = false;
-	return this.http.put<boolean>('/rest/auth/logout',{}).pipe(tap(() => this.tokenService.clear()), 
-	  tap(() => this.router.navigate(['/actor/-1',{skipLocationChange: true}]).then(() => this.router.navigate(['/']))));
   }
 }
