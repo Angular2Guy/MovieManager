@@ -17,7 +17,7 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 3. The project manages its users with a login/signin and can import different movies for different users. 
 4. The loggedout/revoked tokens are checked now.
 5. The movie overviews and actor bios are indexed for fulltext search with searchterms.
-6: The ngx-simple-charts library entry point 'base-services' is used for the Jwt token handling.
+6. The ngx-simple-charts library entry point 'base-services' is used for the Jwt token handling.
 
 ## Mission Statement
 The project serves as example for the integration of Angular, Spring Boot with Jpa and relational databases in clean architecture. The Angular frontend uses the Ng-Bootstrap components and the 'ngx-simple-charts' library with its entry point for Jwt token handling. The backend manages/initialzies the H2/Postgresql databases with Liquibase. The data access is done with Jpa and Spring Repositories. Actor bios and Movie overviews are indexed and searched with Hibernate Search. The movies are imported with Spring WebClient. The architecture is checked with ArchUnit in a test. The security setup is done with Spring Security and Jwt Tokens, that are locked after logout.
