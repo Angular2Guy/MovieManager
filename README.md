@@ -17,9 +17,10 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 3. The project manages its users with a login/signin and can import different movies for different users. 
 4. The loggedout/revoked tokens are checked now.
 5. The movie overviews and actor bios are indexed for fulltext search with searchterms.
+6: The ngx-simple-charts library entry point 'base-services' is used for the Jwt token handling.
 
 ## Mission Statement
-The project serves as example for the integration of Angular, Spring Boot with Jpa and relational databases in clean architecture. The Angular frontend uses the Ng-Bootstrap components. The backend manages/initialzies the H2/Postgresql databases with Liquibase. The data access is done with Jpa and Spring Repositories. Actor bios and Movie overviews are indexed and searched with Hibernate Search. The movies are imported with Spring WebClient. The architecture is checked with ArchUnit in a test. The security setup is done with Spring Security and Jwt Tokens, that are locked after logout.
+The project serves as example for the integration of Angular, Spring Boot with Jpa and relational databases in clean architecture. The Angular frontend uses the Ng-Bootstrap components and the 'ngx-simple-charts' library with its entry point for Jwt token handling. The backend manages/initialzies the H2/Postgresql databases with Liquibase. The data access is done with Jpa and Spring Repositories. Actor bios and Movie overviews are indexed and searched with Hibernate Search. The movies are imported with Spring WebClient. The architecture is checked with ArchUnit in a test. The security setup is done with Spring Security and Jwt Tokens, that are locked after logout.
 
 ## Postgresql setup
 In the postgresql.sh file are the commands to pull and run Postgresql in a Docker image locally. To build a Jar with Postgresql setup build it with 'mvnw clean install -Ddocker=true'. In Eclipse the maven profile 'standalone-postgresql' has to be activated and a run/debug configuration with the VM parameter '-Dspring.profiles.active=prod' has to started. The database will be initialized by Liquibase. The Liquibase scripts are setup with preconditions that the tables/sequences/indexes are only created if they do not exist. 
@@ -44,15 +45,15 @@ The Spring Actuator interface with Prometheus interface can be used as it is des
 To test the setup the application has to be started and the Docker Images for Prometheus and Grafana have to be started and configured. The scripts 'runGraphana.sh' and 'runPrometheus.sh' can be used as a starting point.
 
 ## Setup
-Postgresql 10.x or newer.
+Postgresql 13.x or newer.
 
 Eclipse IDE for Enterprise Java and Web Developers newest version.
 
 Java 17 or newer
 
-Maven 3.5.2 or newer.
+Maven 3.8.2 or newer.
 
-Nodejs 14.15.x or newer
+Nodejs 14.18.x or newer
 
 Npm 6.14.x or newer
 
