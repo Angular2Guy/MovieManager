@@ -28,6 +28,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
@@ -42,6 +44,8 @@ public class Movie extends EntityBase {
 	@Column(columnDefinition = "text")
 	private String overview;
 	private Date releaseDate;
+	@NotBlank
+	@Size(max=255)
 	private String title;
 	private Integer runtime = 0;
 	private Long revenue = 0L;

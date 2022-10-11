@@ -16,11 +16,19 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class RevokedToken extends EntityBase {
+	@NotBlank
+	@Size(max=255)
 	private String name;
+	@NotBlank
+	@Size(max=255)
 	private String uuid;
+	@NotNull	
 	private LocalDateTime lastLogout;
 	
 	public RevokedToken() {		

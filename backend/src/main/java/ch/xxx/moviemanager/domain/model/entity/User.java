@@ -13,18 +13,25 @@
 package ch.xxx.moviemanager.domain.model.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="user1")
 public class User extends EntityBase {
+	@NotBlank
+	@Size(max=255)
 	private String username;
+	@NotBlank
+	@Size(max=255)
 	private String password;
 	private String moviedbkey;
+	@NotBlank
+	@Size(max=255)
 	private String roles;
 	private String emailAddress;
 	private boolean locked;

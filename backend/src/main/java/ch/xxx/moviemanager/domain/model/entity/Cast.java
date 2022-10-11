@@ -17,11 +17,17 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name="cast1")
 public class Cast extends EntityBase {
+	@NotBlank
+	@Size(max=255)
 	private String movieChar;
+	@NotBlank
+	@Size(max=255)
 	private String characterName;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="movie_id")
