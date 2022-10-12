@@ -26,13 +26,13 @@ The project serves as example for the integration of Angular, Spring Boot with J
 In the postgresql.sh file are the commands to pull and run Postgresql in a Docker image locally. To build a Jar with Postgresql setup build it with 'mvnw clean install -Ddocker=true'. In Eclipse the maven profile 'standalone-postgresql' has to be activated and a run/debug configuration with the VM parameter '-Dspring.profiles.active=prod' has to started. The database will be initialized by Liquibase. The Liquibase scripts are setup with preconditions that the tables/sequences/indexes are only created if they do not exist. 
 
 ## Kubernetes setup
-In the helm directory is a kubernetes setup to run the moviemanager project with minikube. The Helm chart deployes the postgres database and the moviemanager with the needed parameters to run. It uses the resource limit support of Jdk 16 to limit memory. Kubernetes limits the cpu use and uses the startupprobes and livenessprobes that Spring Actuator provides.
+In the helm directory is a kubernetes setup to run the moviemanager project with minikube. The Helm chart deployes the postgres database and the moviemanager with the needed parameters(SpringProfile is in values.yaml) to run. It uses the resource limit support of Jdk 16 to limit memory. Kubernetes limits the cpu use and uses the startupprobes and livenessprobes that Spring Actuator provides.
 
 ## Movie import
 To import movies a key needs to be provided at signin. To get such a key according to this [Faq](https://www.themoviedb.org/faq/api)
 
 ## Fulltext Search
-Hibernate Search recreates the indexes for the movie overviews and actor bios if the amount of movies or actors has changed. The indexes are used to support searchterms in the indexed texts.
+Hibernate Search recreates the indexes for the movie overviews and actor bios at startup, if the amount of movies or actors has changed. The indexes are used to support search terms in the indexed texts.
 
 ## Testdata
 It is test data provided for the User 'John' and the Password 'Doe'. Then a movie with an actor is available for testing. The login data is also needed for the /h2-console. 
