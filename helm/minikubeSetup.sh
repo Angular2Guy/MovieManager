@@ -16,6 +16,7 @@ kubectl edit deployment -n kube-system metrics-server
 kubectl logs --previous <pod-name>
 kubectl exec --stdin --tty <mongodb-pod-name> -- /bin/bash
 kubectl expose pod <postgresql-pod-name> --port=5432 --type="NodePort"
+#psql -d movies -U dbuser -h minikubeip -p dbport < dump.sql
 
 
 minikube pause
