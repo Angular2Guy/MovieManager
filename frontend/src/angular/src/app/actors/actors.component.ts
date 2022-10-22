@@ -21,10 +21,10 @@ import { ActorsService } from '../services/actors.service';
   styleUrls: ['./actors.component.scss']
 })
 export class ActorsComponent implements OnInit {
-  gender = Gender;
-  actor: Actor = null;
-  backParam = QueryParam.Empty;
-  queryParam = QueryParam;
+  protected gender = Gender;
+  protected actor: Actor = null;
+  protected backParam = QueryParam.Empty;
+  protected queryParam = QueryParam;
 
   constructor(private route: ActivatedRoute, private actorService: ActorsService) { }
 

@@ -24,13 +24,13 @@ import { ActorsService } from '../services/actors.service';
   styleUrls: ['./filter-actors.component.scss']
 })
 export class FilterActorsComponent implements OnInit {
-  public gender=Gender;
-  public filtering = false;
-  public filteredActors: Actor[] = [];
-  public ngbBirthdayFrom: NgbDateStruct;
-  public ngbBirthdayTo: NgbDateStruct;
-  public closeResult = '';
-  public filterCriteria = new ActorFilterCriteria();
+  protected gender = Gender;
+  protected filtering = false;
+  protected filteredActors: Actor[] = [];
+  protected ngbBirthdayFrom: NgbDateStruct;
+  protected ngbBirthdayTo: NgbDateStruct;
+  protected closeResult = '';
+  protected filterCriteria = new ActorFilterCriteria();
   
   constructor(private actorsService: ActorsService, private router: Router,
      private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig, ) { }

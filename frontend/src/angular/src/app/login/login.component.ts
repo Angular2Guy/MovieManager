@@ -35,13 +35,13 @@ enum MessageType {
 export class LoginComponent implements OnInit {
 
     @Output() loginClosed = new EventEmitter<boolean>();
-    ControlName = ControlName;
-    MessageType = MessageType;
-    showModal = true;
-    loginFormGroup: FormGroup;
-    modalMsg = '';
-    modalMsgType = MessageType.Error; 
-    tillNextLogin = 0;
+    protected ControlName = ControlName;
+    protected MessageType = MessageType;
+    protected showModal = true;
+    protected loginFormGroup: FormGroup;
+    protected modalMsg = '';
+    protected modalMsgType = MessageType.Error; 
+    protected tillNextLogin = 0;
 
   constructor(private userService: UsersService, formBuilder: FormBuilder, private tokenService: TokenService) { 
 	this.loginFormGroup = formBuilder.group({

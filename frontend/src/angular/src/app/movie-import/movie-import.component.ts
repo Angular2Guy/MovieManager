@@ -25,9 +25,9 @@ enum ImportState {Idle='idle' ,MoviesLoading='moviesLoading', Importing='importi
   styleUrls: ['./movie-import.component.scss']
 })
 export class MovieImportComponent implements OnInit {
-  public ImportState = ImportState;
-  public importState = ImportState.Idle;
-  public importMovies: Movie[] = [];
+  protected ImportState = ImportState;
+  protected importState = ImportState.Idle;
+  protected importMovies: Movie[] = [];
   
   constructor(private moviesService: MoviesService, private router: Router, private activeRoute: ActivatedRoute) { }
 

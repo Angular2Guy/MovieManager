@@ -20,7 +20,7 @@ import { TokenService } from 'ngx-simple-charts/base-service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'app';
+  protected title = 'app';
   
   constructor(private tokenService: TokenService, private router: Router) {}
   

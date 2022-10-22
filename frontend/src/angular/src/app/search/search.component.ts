@@ -32,23 +32,23 @@ import { TokenService } from 'ngx-simple-charts/base-service';
 } )
 export class SearchComponent implements OnInit, AfterViewInit {
     @ViewChild('movies') moviesRef: ElementRef;
-    generes: Genere[];
-    movieTitle = new FormControl('');
-    movies: Observable<Movie[]>;
-    movieActor = new FormControl('');
-    actors: Observable<Actor[]>;
-    importMovies: Movie[] = [];
-    importMovieTitle = new FormControl('');
-    actorsLoading = false;
-    moviesLoading = false;
-    importMoviesLoading = false;
-    showMenu = false;
-    moviesByGenere: Movie[] = [];
-    moviesByGenLoading = false;
-    scrollMovies: Movie[] = [];
-    scMoviesPageEnd = 1;
-    loading = false;
-    allMoviesLoaded = false;
+    protected generes: Genere[];
+    protected movieTitle = new FormControl('');
+    protected movies: Observable<Movie[]>;
+    protected movieActor = new FormControl('');
+    protected actors: Observable<Actor[]>;
+    protected importMovies: Movie[] = [];
+    protected importMovieTitle = new FormControl('');
+    protected actorsLoading = false;
+    protected moviesLoading = false;
+    protected importMoviesLoading = false;
+    protected showMenu = false;
+    protected moviesByGenere: Movie[] = [];
+    protected moviesByGenLoading = false;
+    protected scrollMovies: Movie[] = [];
+    protected scMoviesPageEnd = 1;
+    protected loading = false;
+    protected allMoviesLoaded = false;
     private actorListOffset = 0;
 
     constructor( private actorService: ActorsService,

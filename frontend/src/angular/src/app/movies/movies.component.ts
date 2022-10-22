@@ -23,10 +23,10 @@ import { QueryParam } from '../model/common';
 })
 export class MoviesComponent implements OnInit {
 
-  movie: Movie = null;
-  delMovie = false;
-  backParam = QueryParam.Empty;
-  queryParam = QueryParam;
+  protected movie: Movie = null;
+  protected delMovie = false;
+  protected backParam = QueryParam.Empty;
+  protected queryParam = QueryParam;
 
   constructor(private route: ActivatedRoute, private router: Router, private movieService: MoviesService) { }
 

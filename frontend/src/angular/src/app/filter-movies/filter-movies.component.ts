@@ -25,14 +25,14 @@ import { QueryParam } from '../model/common';
   styleUrls: ['./filter-movies.component.scss']
 })
 export class FilterMoviesComponent implements OnInit {
-  public filteredMovies: Movie[] = [];
-  public filtering = false;
-  public selectedGeneresStr = '';
-  public generes: Genere[] = [];
-  public closeResult = '';
-  public filterCriteria = new MovieFilterCriteria();
-  public ngbReleaseFrom: NgbDateStruct;
-  public ngbReleaseTo: NgbDateStruct;
+  protected filteredMovies: Movie[] = [];
+  protected filtering = false;
+  protected selectedGeneresStr = '';
+  protected generes: Genere[] = [];
+  protected closeResult = '';
+  protected filterCriteria = new MovieFilterCriteria();
+  protected ngbReleaseFrom: NgbDateStruct;
+  protected ngbReleaseTo: NgbDateStruct;
   
   constructor(private offcanvasService: NgbOffcanvas, public ngbRatingConfig: NgbRatingConfig, 
      private movieService: MoviesService, private router: Router) {}
