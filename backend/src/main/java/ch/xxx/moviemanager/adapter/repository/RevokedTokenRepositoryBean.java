@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Repository;
 
 import ch.xxx.moviemanager.domain.model.entity.RevokedToken;
@@ -36,7 +38,7 @@ public class RevokedTokenRepositoryBean implements RevokedTokenRepository {
 	}
 
 	@Override
-	public List<RevokedToken> saveAll(Iterable<RevokedToken> revokedTokens) {
+	public List<RevokedToken> saveAll(@Valid Iterable<RevokedToken> revokedTokens) {
 		return StreamSupport.stream(this.jpaRevokedTokenRepository.saveAll(revokedTokens).spliterator(), false)
 				.collect(Collectors.toList());
 	}
@@ -47,7 +49,7 @@ public class RevokedTokenRepositoryBean implements RevokedTokenRepository {
 	}
 	
 	@Override
-	public RevokedToken save(RevokedToken revokedToker) {
+	public RevokedToken save(@Valid RevokedToken revokedToker) {
 		return this.jpaRevokedTokenRepository.save(revokedToker);
 	}
 }

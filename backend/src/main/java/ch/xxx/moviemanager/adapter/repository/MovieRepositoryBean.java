@@ -24,6 +24,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
+import javax.validation.Valid;
 
 import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -65,7 +66,7 @@ public class MovieRepositoryBean implements MovieRepository {
 	}
 
 	@Override
-	public Movie save(Movie movieEntity) {
+	public Movie save(@Valid Movie movieEntity) {
 		return this.jpaMovieRepository.save(movieEntity);
 	}
 

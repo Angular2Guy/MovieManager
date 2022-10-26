@@ -12,6 +12,8 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Repository;
 
 import ch.xxx.moviemanager.domain.model.entity.Cast;
@@ -25,7 +27,7 @@ public class CastRepositoryBean implements CastRepository {
 		this.jpaCastRepository = jpaCastRepository;
 	}
 
-	public Cast save(Cast cast) {
+	public Cast save(@Valid Cast cast) {
 		return this.jpaCastRepository.save(cast);
 	}
 }

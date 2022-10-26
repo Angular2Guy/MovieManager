@@ -14,6 +14,8 @@ package ch.xxx.moviemanager.adapter.repository;
 
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Repository;
 
 import ch.xxx.moviemanager.domain.model.entity.User;
@@ -31,7 +33,7 @@ public class UserRepositoryBean implements UserRepository {
 		return this.jpaUserRepository.findByUsername(username);
 	}
 	@Override
-	public User save(User user) {
+	public User save(@Valid User user) {
 		return this.jpaUserRepository.save(user);
 	}
 

@@ -14,6 +14,8 @@ package ch.xxx.moviemanager.adapter.repository;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.stereotype.Repository;
 
 import ch.xxx.moviemanager.domain.model.entity.Genere;
@@ -31,7 +33,7 @@ public class GenereRepositoryBean implements GenereRepository {
 		return this.jpaGenereRepository.findAll();
 	}
 	
-	public Genere save(Genere genere) {
+	public Genere save(@Valid Genere genere) {
 		return this.jpaGenereRepository.save(genere);
 	}
 }
