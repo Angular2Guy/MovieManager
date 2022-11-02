@@ -12,16 +12,19 @@
  */
 package ch.xxx.moviemanager.adapter.config;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 
-import org.apache.kafka.clients.DefaultHostResolver;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
@@ -31,8 +34,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.KafkaOperations;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 
@@ -44,7 +49,8 @@ public class KafkaConfig {
 	public static final String NEW_USER_TOPIC = "new-user-topic";
 	public static final String DEFAULT_DLT_TOPIC = "default-dlt-topic";
 	public static final String USER_LOGOUT_TOPIC = "user-logout-topic";
-	// private static final String USER_LOGOUT_DLT_TOPIC = "user-logout-topic-retry";
+	// private static final String USER_LOGOUT_DLT_TOPIC =
+	// "user-logout-topic-retry";
 	private static final String GZIP = "gzip";
 	private static final String ZSTD = "zstd";
 
@@ -65,13 +71,7 @@ public class KafkaConfig {
 	@PostConstruct
 	public void init() {
 		String bootstrap = this.bootstrapServers.split(":")[0].trim();
-		if (bootstrap.matches("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$")) {
-			DefaultHostResolver.IP_ADDRESS = bootstrap;
-		} else if(!bootstrap.isEmpty()) {
-			DefaultHostResolver.KAFKA_SERVICE_NAME = bootstrap;
-		}
-		LOGGER.info("Kafka Servername: {} Kafka Servicename: {} Ip Address: {}", DefaultHostResolver.KAFKA_SERVER_NAME,
-				DefaultHostResolver.KAFKA_SERVICE_NAME, DefaultHostResolver.IP_ADDRESS);
+		LOGGER.info("Kafka bootstrap {}", bootstrap);
 	}
 
 	@Bean
@@ -85,8 +85,18 @@ public class KafkaConfig {
 	public KafkaTemplate<String, String> kafkaRetryTemplate() {
 		KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(this.producerFactory);
 		kafkaTemplate.setTransactionIdPrefix(this.transactionIdPrefix);
-		kafkaTemplate.setAllowNonTransactional(true);		
+		kafkaTemplate.setAllowNonTransactional(true);
 		return kafkaTemplate;
+	}
+
+	@Bean
+	public DeadLetterPublishingRecoverer recoverer(
+			@Qualifier("kafkaRetryTemplate") KafkaTemplate<?, ?> bytesKafkaTemplate,
+			@Qualifier("kafkaRetryTemplate") KafkaTemplate<?, ?> kafkaTemplate) {
+		Map<Class<?>, KafkaOperations<? extends Object, ? extends Object>> templates = new LinkedHashMap<>();
+		templates.put(byte[].class, bytesKafkaTemplate);
+		templates.put(String.class, kafkaTemplate);
+		return new DeadLetterPublishingRecoverer(templates);
 	}
 
 	@Bean
@@ -99,7 +109,7 @@ public class KafkaConfig {
 	public AdminClient kafkaAdminClient() {
 		return KafkaAdminClient.create(this.producerFactory.getConfigurationProperties());
 	}
-	
+
 	@Bean
 	public NewTopic newUserTopic() {
 		return TopicBuilder.name(KafkaConfig.NEW_USER_TOPIC)
@@ -117,7 +127,7 @@ public class KafkaConfig {
 		return TopicBuilder.name(KafkaConfig.DEFAULT_DLT_TOPIC)
 				.config(TopicConfig.COMPRESSION_TYPE_CONFIG, this.compressionType).compact().build();
 	}
-	
+
 	@Bean
 	@Primary
 	public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
