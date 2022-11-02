@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 
+import org.apache.kafka.clients.DefaultHostResolver;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -71,7 +72,13 @@ public class KafkaConfig {
 	@PostConstruct
 	public void init() {
 		String bootstrap = this.bootstrapServers.split(":")[0].trim();
-		LOGGER.info("Kafka bootstrap {}", bootstrap);
+		if (bootstrap.matches("^\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}$")) {
+			DefaultHostResolver.IP_ADDRESS = bootstrap;
+		} else if(!bootstrap.isEmpty()) {
+			DefaultHostResolver.KAFKA_SERVICE_NAME = bootstrap;
+		}
+		LOGGER.info("Kafka Servername: {} Kafka Servicename: {} Ip Address: {}", DefaultHostResolver.KAFKA_SERVER_NAME,
+				DefaultHostResolver.KAFKA_SERVICE_NAME, DefaultHostResolver.IP_ADDRESS);
 	}
 
 	@Bean
