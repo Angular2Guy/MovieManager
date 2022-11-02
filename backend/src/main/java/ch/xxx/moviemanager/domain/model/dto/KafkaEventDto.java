@@ -10,14 +10,31 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-package ch.xxx.moviemanager.domain.producer;
+package ch.xxx.moviemanager.domain.model.dto;
 
-import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
-import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
-import ch.xxx.moviemanager.domain.model.dto.UserDto;
+public class KafkaEventDto {
+	private String topicName;
+	private String topicContent;
 
-public interface EventProducer {
-	void sendLogoutMsg(RevokedTokenDto revokedTokenDto);
-	void sendNewUserMsg(UserDto appUserDto);
-	void sendKafkaEvent(KafkaEventDto kafkaEventDto);
+	public KafkaEventDto() {		
+	}
+	
+	public KafkaEventDto(String topicName, String topicContent) {
+		super();
+		this.topicName = topicName;
+		this.topicContent = topicContent;
+	}
+
+	public String getTopicName() {
+		return topicName;
+	}
+	public void setTopicName(String topicName) {
+		this.topicName = topicName;
+	}
+	public String getTopicContent() {
+		return topicContent;
+	}
+	public void setTopicContent(String topicContent) {
+		this.topicContent = topicContent;
+	}
 }

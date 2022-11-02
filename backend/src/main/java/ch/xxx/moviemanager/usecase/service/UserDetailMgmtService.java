@@ -14,6 +14,7 @@ package ch.xxx.moviemanager.usecase.service;
 
 import java.util.Map;
 
+import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
 import ch.xxx.moviemanager.domain.model.dto.RefreshTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.domain.model.entity.User;
@@ -30,4 +31,5 @@ public interface UserDetailMgmtService {
 	UserDto load(Long id);
 	UserDto save(UserDto appUser);
 	void updateLoggedOutUsers();
+	void sendKafkaEvent(KafkaEventDto kafkaEventDto);
 }

@@ -15,7 +15,6 @@ package ch.xxx.moviemanager.adapter.client;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -21,6 +21,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
 import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.domain.model.entity.RevokedToken;
@@ -40,7 +41,7 @@ public class UserDetailMgmtServiceEvents extends UserDetailMgmtServiceBase imple
 	
 	public UserDetailMgmtServiceEvents(UserRepository userRepository, PasswordEncoder passwordEncoder, RevokedTokenMapper revokedTokenMapper,
 			RevokedTokenRepository revokedTokenRepository, JavaMailSender javaMailSender, EventProducer eventProducer,
-			JwtTokenService jwtTokenService, UserMapper userMapper, EventProducer messageProducer) {
+			JwtTokenService jwtTokenService, UserMapper userMapper) {
 		super(userRepository, passwordEncoder, revokedTokenRepository, javaMailSender, jwtTokenService, userMapper, revokedTokenMapper);
 		this.eventProducer = eventProducer;
 	}
@@ -73,5 +74,9 @@ public class UserDetailMgmtServiceEvents extends UserDetailMgmtServiceBase imple
 		Boolean result = super.logout(revokedTokenDto);
 		this.updateLoggedOutUsers();
 		return result;
+	}
+	
+	public void sendKafkaEvent(KafkaEventDto kafkaEventDto) {
+		this.eventProducer.sendKafkaEvent(kafkaEventDto);
 	}
 }

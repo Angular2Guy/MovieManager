@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.xxx.moviemanager.adapter.config.KafkaConfig;
 import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
+import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
 import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.domain.producer.EventProducer;
@@ -40,18 +41,19 @@ import ch.xxx.moviemanager.domain.producer.EventProducer;
 @Profile("kafka | prod-kafka")
 public class KafkaProducer implements EventProducer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducer.class);
-	private final KafkaTemplate<String,String> kafkaTemplate;
+	private final KafkaTemplate<String, String> kafkaTemplate;
 	private final ObjectMapper objectMapper;
-	
-	public KafkaProducer(KafkaTemplate<String,String> kafkaTemplate, ObjectMapper objectMapper) {
+
+	public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
 		this.kafkaTemplate = kafkaTemplate;
 		this.objectMapper = objectMapper;
 	}
-	
-	public void sendLogoutMsg(RevokedTokenDto revokedTokenDto) {		
+
+	public void sendLogoutMsg(RevokedTokenDto revokedTokenDto) {
 		try {
 			String msg = this.objectMapper.writeValueAsString(revokedTokenDto);
-			ListenableFuture<SendResult<String,String>> listenableFuture = this.kafkaTemplate.send(KafkaConfig.USER_LOGOUT_TOPIC, revokedTokenDto.getUuid(), msg);
+			ListenableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
+					.send(KafkaConfig.USER_LOGOUT_TOPIC, revokedTokenDto.getUuid(), msg);
 			listenableFuture.get(2, TimeUnit.SECONDS);
 		} catch (InterruptedException | ExecutionException | TimeoutException | JsonProcessingException e) {
 			LOGGER.error("sendLogoutMsg ", e);
@@ -59,16 +61,29 @@ public class KafkaProducer implements EventProducer {
 		}
 		LOGGER.info("send logout msg: {}", revokedTokenDto.toString());
 	}
-	
+
 	public void sendNewUserMsg(UserDto appUserDto) {
 		try {
 			String msg = this.objectMapper.writeValueAsString(appUserDto);
-			ListenableFuture<SendResult<String,String>> listenableFuture = this.kafkaTemplate.send(KafkaConfig.NEW_USER_TOPIC, appUserDto.getUsername(), msg);
+			ListenableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
+					.send(KafkaConfig.NEW_USER_TOPIC, appUserDto.getUsername(), msg);
 			listenableFuture.get(2, TimeUnit.SECONDS);
 		} catch (InterruptedException | ExecutionException | TimeoutException | JsonProcessingException e) {
 			LOGGER.error("SendNewUserMsg ", e);
 			throw new AuthenticationException("User creation failed.");
 		}
 		LOGGER.info("send new user msg: {}", appUserDto.toString());
+	}
+
+	public void sendKafkaEvent(KafkaEventDto kafkaEventDto) {
+		ListenableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
+				.send(kafkaEventDto.getTopicName(), kafkaEventDto.getTopicContent());
+		try {
+			listenableFuture.get(2,  TimeUnit.SECONDS);
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
+			LOGGER.error("SendKafkaEvent ", e);
+			throw new AuthenticationException("Kafka Event failed.");
+		}
+		LOGGER.info("send Kafka event to {}",kafkaEventDto.getTopicName());
 	}
 }

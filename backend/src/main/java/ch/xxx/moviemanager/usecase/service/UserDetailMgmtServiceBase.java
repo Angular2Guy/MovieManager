@@ -38,6 +38,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import ch.xxx.moviemanager.domain.common.Role;
 import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
+import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
 import ch.xxx.moviemanager.domain.model.dto.RefreshTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
@@ -256,6 +257,10 @@ public class UserDetailMgmtServiceBase {
 				.orElseThrow(() -> new ResourceNotFoundException("User " + id + " not found")), "", 10);
 	}
 
+	public void sendKafkaEvent(KafkaEventDto kafkaEventDto) {
+		
+	}
+	
 	/*
 	 * public List<UserDto> loadAll() { return
 	 * this.userRepository.findAll().stream() .flatMap(entity ->
