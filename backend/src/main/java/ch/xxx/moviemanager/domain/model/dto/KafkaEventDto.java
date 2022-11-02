@@ -37,4 +37,9 @@ public class KafkaEventDto {
 	public void setTopicContent(String topicContent) {
 		this.topicContent = topicContent;
 	}
+
+	@Override
+	public String toString() {
+		return "KafkaEventDto [topicName=" + topicName + ", topicContent=" + topicContent + "]";
+	}
 }

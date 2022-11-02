@@ -25,7 +25,6 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.xxx.moviemanager.adapter.config.KafkaConfig;
@@ -47,10 +46,15 @@ public class KafkaConsumer {
 
 	@RetryableTopic(kafkaTemplate = "kafkaRetryTemplate", attempts = "3", backoff = @Backoff(delay = 1000, multiplier = 2.0), autoCreateTopics = "true", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
 	@KafkaListener(topics = KafkaConfig.NEW_USER_TOPIC)
-	public void consumerForNewUserTopic(String message) throws JsonMappingException, JsonProcessingException {
+	public void consumerForNewUserTopic(String message) {
 		LOGGER.info("consumerForNewUserTopic [{}]", message);
-		UserDto dto = this.objectMapper.readValue(message, UserDto.class);
-		this.appUserService.signinMsg(dto);
+		UserDto dto;
+		try {
+			dto = this.objectMapper.readValue(message, UserDto.class);
+			this.appUserService.signinMsg(dto);
+		} catch (JsonProcessingException e) {
+			LOGGER.warn("failed consumerForNewUserTopic [{}]", message);
+		}
 	}
 
 	@DltHandler
@@ -60,9 +64,14 @@ public class KafkaConsumer {
 
 	@RetryableTopic(attempts = "3", backoff = @Backoff(delay = 1000, multiplier = 2.0), autoCreateTopics = "true", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
 	@KafkaListener(topics = KafkaConfig.USER_LOGOUT_TOPIC)
-	public void consumerForUserLogoutsTopic(String message) throws JsonMappingException, JsonProcessingException {
+	public void consumerForUserLogoutsTopic(String message)  {
 		LOGGER.info("consumerForUserLogoutsTopic [{}]", message);
-		RevokedTokenDto dto = this.objectMapper.readValue(message, RevokedTokenDto.class);
-		this.appUserService.logoutMsg(dto);
+		RevokedTokenDto dto;
+		try {
+			dto = this.objectMapper.readValue(message, RevokedTokenDto.class);
+			this.appUserService.logoutMsg(dto);
+		} catch (JsonProcessingException e) {
+			LOGGER.warn("failed consumerForUserLogoutsTopic [{}]", message);
+		}
 	}
 }
