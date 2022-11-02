@@ -96,10 +96,14 @@ public class AuthenticationController {
 
 	@PutMapping("/kafkaEvent")
 	public ResponseEntity<Boolean> putKafkaEvent(@RequestBody KafkaEventDto dto) {
-		ResponseEntity<Boolean> result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.FORBIDDEN);
+		ResponseEntity<Boolean> result = new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.FORBIDDEN);
 		if (!this.activeProfile.toLowerCase().contains("prod")) {
-			this.auds.sendKafkaEvent(dto);
 			result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
+			try {
+				this.auds.sendKafkaEvent(dto);
+			} catch (Exception e) {
+				result = new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.BAD_REQUEST);
+			}
 		}
 		return result;
 	}

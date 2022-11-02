@@ -16,6 +16,8 @@ import javax.annotation.PostConstruct;
 import javax.persistence.EntityManagerFactory;
 
 import org.apache.kafka.clients.DefaultHostResolver;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.config.TopicConfig;
 import org.slf4j.Logger;
@@ -83,7 +85,7 @@ public class KafkaConfig {
 	public KafkaTemplate<String, String> kafkaRetryTemplate() {
 		KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(this.producerFactory);
 		kafkaTemplate.setTransactionIdPrefix(this.transactionIdPrefix);
-		kafkaTemplate.setAllowNonTransactional(true);
+		kafkaTemplate.setAllowNonTransactional(true);		
 		return kafkaTemplate;
 	}
 
@@ -93,6 +95,11 @@ public class KafkaConfig {
 		return manager;
 	}
 
+	@Bean
+	public AdminClient kafkaAdminClient() {
+		return KafkaAdminClient.create(this.producerFactory.getConfigurationProperties());
+	}
+	
 	@Bean
 	public NewTopic newUserTopic() {
 		return TopicBuilder.name(KafkaConfig.NEW_USER_TOPIC)
