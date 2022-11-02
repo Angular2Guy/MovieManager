@@ -37,7 +37,7 @@ import ch.xxx.moviemanager.usecase.service.UserDetailMgmtService;
 @RestController
 @RequestMapping("rest/auth")
 public class AuthenticationController {
-	private final UserDetailMgmtService auds;	
+	private final UserDetailMgmtService auds;
 	@Value("${spring.mail.username}")
 	private String mailuser;
 	@Value("${spring.mail.password}")
@@ -58,12 +58,12 @@ public class AuthenticationController {
 			return new AuthCheckDto(authcheck.getPath(), false);
 		}
 	}
-	
+
 	@PostMapping("/signin")
 	public Boolean postUserSignin(@RequestBody UserDto myUser) {
 		return this.auds.signin(myUser);
 	}
-	
+
 	@GetMapping("/confirm/{uuid}")
 	public Boolean getConfirmUuid(@PathVariable String uuid) {
 		return this.auds.confirmUuid(uuid);
@@ -73,37 +73,37 @@ public class AuthenticationController {
 	public UserDto postUserLogin(@RequestBody UserDto myUser) {
 		return this.auds.login(myUser);
 	}
-	
+
 	@PutMapping("/logout")
-	public Boolean putUserLogout(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr) {
+	public Boolean putUserLogout(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr) {
 		return this.auds.logout(bearerStr);
 	}
-	
+
 	@GetMapping("/refreshToken")
-	public RefreshTokenDto getRefreshToken(@RequestHeader(value =  HttpHeaders.AUTHORIZATION) String bearerStr) {
+	public RefreshTokenDto getRefreshToken(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr) {
 		return this.auds.refreshToken(bearerStr);
 	}
-	
+
 	@GetMapping("/id/{id}")
 	public UserDto getUser(@PathVariable Long id) {
 		return this.auds.load(id);
 	}
-	
+
 	@PutMapping()
 	public UserDto putUser(@RequestBody UserDto appUserDto) {
 		return this.auds.save(appUserDto);
 	}
-	
+
 	@PutMapping("/kafkaEvent")
 	public ResponseEntity<Boolean> putKafkaEvent(@RequestBody KafkaEventDto dto) {
-		Boolean result = Boolean.TRUE;
-		if(!this.activeProfile.toLowerCase().contains("prod")) {
+		ResponseEntity<Boolean> result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.FORBIDDEN);
+		if (!this.activeProfile.toLowerCase().contains("prod")) {
 			this.auds.sendKafkaEvent(dto);
-			new ResponseEntity<Boolean>(result, HttpStatus.ACCEPTED);
+			result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
 		}
-		return new ResponseEntity<Boolean>(result, HttpStatus.FORBIDDEN);
+		return result;
 	}
-	
+
 //	@RequestMapping(value="/updateDB", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 //	public ResponseEntity<Boolean> getUpdateDB() throws InterruptedException {
 //		boolean result = this.service.updateDB();

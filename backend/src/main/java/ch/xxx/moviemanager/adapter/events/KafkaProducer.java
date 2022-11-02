@@ -16,8 +16,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import javax.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -37,7 +35,6 @@ import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.domain.producer.EventProducer;
 
 @Service
-@Transactional
 @Profile("kafka | prod-kafka")
 public class KafkaProducer implements EventProducer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducer.class);

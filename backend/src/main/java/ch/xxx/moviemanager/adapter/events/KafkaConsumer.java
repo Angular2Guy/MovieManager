@@ -24,10 +24,10 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.xxx.moviemanager.adapter.config.KafkaConfig;
+import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
 import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.usecase.service.UserDetailMgmtServiceEvents;
@@ -38,10 +38,12 @@ public class KafkaConsumer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 	private final ObjectMapper objectMapper;
 	private final UserDetailMgmtServiceEvents appUserService;
+	private final KafkaListenerDltHandler kafkaListenerDltHandler;
 
-	public KafkaConsumer(ObjectMapper objectMapper, UserDetailMgmtServiceEvents appUserService) {
+	public KafkaConsumer(ObjectMapper objectMapper, UserDetailMgmtServiceEvents appUserService, KafkaListenerDltHandler kafkaListenerDltHandler) {
 		this.objectMapper = objectMapper;
 		this.appUserService = appUserService;
+		this.kafkaListenerDltHandler = kafkaListenerDltHandler;
 	}
 
 	@RetryableTopic(kafkaTemplate = "kafkaRetryTemplate", attempts = "3", backoff = @Backoff(delay = 1000, multiplier = 2.0), autoCreateTopics = "true", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
@@ -52,8 +54,9 @@ public class KafkaConsumer {
 		try {
 			dto = this.objectMapper.readValue(message, UserDto.class);
 			this.appUserService.signinMsg(dto);
-		} catch (JsonProcessingException e) {
+		} catch (Exception e) {
 			LOGGER.warn("failed consumerForNewUserTopic [{}]", message);
+			this.kafkaListenerDltHandler.sendToDefaultDlt(new KafkaEventDto(KafkaConfig.DEFAULT_DLT_TOPIC, message));
 		}
 	}
 
@@ -70,8 +73,9 @@ public class KafkaConsumer {
 		try {
 			dto = this.objectMapper.readValue(message, RevokedTokenDto.class);
 			this.appUserService.logoutMsg(dto);
-		} catch (JsonProcessingException e) {
+		} catch (Exception e) {
 			LOGGER.warn("failed consumerForUserLogoutsTopic [{}]", message);
+			this.kafkaListenerDltHandler.sendToDefaultDlt(new KafkaEventDto(KafkaConfig.DEFAULT_DLT_TOPIC, message));
 		}
 	}
 }

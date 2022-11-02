@@ -40,7 +40,7 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 public class KafkaConfig {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConfig.class);
 	public static final String NEW_USER_TOPIC = "new-user-topic";
-	// private static final String NEW_USER_DLT_TOPIC = "new-user-topic-retry";
+	public static final String DEFAULT_DLT_TOPIC = "default-dlt-topic";
 	public static final String USER_LOGOUT_TOPIC = "user-logout-topic";
 	// private static final String USER_LOGOUT_DLT_TOPIC = "user-logout-topic-retry";
 	private static final String GZIP = "gzip";
@@ -105,6 +105,12 @@ public class KafkaConfig {
 				.config(TopicConfig.COMPRESSION_TYPE_CONFIG, this.compressionType).compact().build();
 	}
 
+	@Bean
+	public NewTopic defaultDltTopic() {
+		return TopicBuilder.name(KafkaConfig.DEFAULT_DLT_TOPIC)
+				.config(TopicConfig.COMPRESSION_TYPE_CONFIG, this.compressionType).compact().build();
+	}
+	
 	@Bean
 	@Primary
 	public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
