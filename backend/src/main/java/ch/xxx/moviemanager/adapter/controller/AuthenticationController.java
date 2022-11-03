@@ -37,7 +37,7 @@ import ch.xxx.moviemanager.usecase.service.UserDetailMgmtService;
 @RestController
 @RequestMapping("rest/auth")
 public class AuthenticationController {
-	private final UserDetailMgmtService auds;
+	private final UserDetailMgmtService userDetailService;
 	@Value("${spring.mail.username}")
 	private String mailuser;
 	@Value("${spring.mail.password}")
@@ -45,13 +45,13 @@ public class AuthenticationController {
 	@Value("${spring.profiles.active:}")
 	private String activeProfile;
 
-	public AuthenticationController(UserDetailMgmtService auds) {
-		this.auds = auds;
+	public AuthenticationController(UserDetailMgmtService userDetailService) {
+		this.userDetailService = userDetailService;
 	}
 
 	@PostMapping("/authorize")
 	public AuthCheckDto postAuthorize(@RequestBody AuthCheckDto authcheck, @RequestHeader Map<String, String> header) {
-		String tokenRoles = this.auds.getTokenRoles(header).role();
+		String tokenRoles = this.userDetailService.getTokenRoles(header).role();
 		if (tokenRoles != null && tokenRoles.contains(Role.USERS.name()) && !tokenRoles.contains(Role.GUEST.name())) {
 			return new AuthCheckDto(authcheck.getPath(), true);
 		} else {
@@ -61,37 +61,37 @@ public class AuthenticationController {
 
 	@PostMapping("/signin")
 	public Boolean postUserSignin(@RequestBody UserDto myUser) {
-		return this.auds.signin(myUser);
+		return this.userDetailService.signin(myUser);
 	}
 
 	@GetMapping("/confirm/{uuid}")
 	public Boolean getConfirmUuid(@PathVariable String uuid) {
-		return this.auds.confirmUuid(uuid);
+		return this.userDetailService.confirmUuid(uuid);
 	}
 
 	@PostMapping("/login")
 	public UserDto postUserLogin(@RequestBody UserDto myUser) {
-		return this.auds.login(myUser);
+		return this.userDetailService.login(myUser);
 	}
 
 	@PutMapping("/logout")
 	public Boolean putUserLogout(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr) {
-		return this.auds.logout(bearerStr);
+		return this.userDetailService.logout(bearerStr);
 	}
 
 	@GetMapping("/refreshToken")
 	public RefreshTokenDto getRefreshToken(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr) {
-		return this.auds.refreshToken(bearerStr);
+		return this.userDetailService.refreshToken(bearerStr);
 	}
 
 	@GetMapping("/id/{id}")
 	public UserDto getUser(@PathVariable Long id) {
-		return this.auds.load(id);
+		return this.userDetailService.load(id);
 	}
 
 	@PutMapping()
 	public UserDto putUser(@RequestBody UserDto appUserDto) {
-		return this.auds.save(appUserDto);
+		return this.userDetailService.save(appUserDto);
 	}
 
 	@PutMapping("/kafkaEvent")
@@ -100,7 +100,7 @@ public class AuthenticationController {
 		if (!this.activeProfile.toLowerCase().contains("prod")) {
 			result = new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.ACCEPTED);
 			try {
-				this.auds.sendKafkaEvent(dto);
+				this.userDetailService.sendKafkaEvent(dto);
 			} catch (Exception e) {
 				result = new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.BAD_REQUEST);
 			}

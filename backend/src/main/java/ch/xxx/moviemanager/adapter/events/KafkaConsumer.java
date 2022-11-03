@@ -50,12 +50,11 @@ public class KafkaConsumer {
 	@KafkaListener(topics = KafkaConfig.NEW_USER_TOPIC)
 	public void consumerForNewUserTopic(String message) {
 		LOGGER.info("consumerForNewUserTopic [{}]", message);
-		UserDto dto;
 		try {
-			dto = this.objectMapper.readValue(message, UserDto.class);
+			UserDto dto = this.objectMapper.readValue(message, UserDto.class);
 			this.appUserService.signinMsg(dto);
 		} catch (Exception e) {
-			LOGGER.warn("failed consumerForNewUserTopic [{}]", message);
+			LOGGER.warn("send failed consumerForNewUserTopic [{}]", message);
 			this.kafkaListenerDltHandler.sendToDefaultDlt(new KafkaEventDto(KafkaConfig.DEFAULT_DLT_TOPIC, message));
 		}
 	}
@@ -69,12 +68,11 @@ public class KafkaConsumer {
 	@KafkaListener(topics = KafkaConfig.USER_LOGOUT_TOPIC)
 	public void consumerForUserLogoutsTopic(String message)  {
 		LOGGER.info("consumerForUserLogoutsTopic [{}]", message);
-		RevokedTokenDto dto;
 		try {
-			dto = this.objectMapper.readValue(message, RevokedTokenDto.class);
+			RevokedTokenDto dto = this.objectMapper.readValue(message, RevokedTokenDto.class);
 			this.appUserService.logoutMsg(dto);
 		} catch (Exception e) {
-			LOGGER.warn("failed consumerForUserLogoutsTopic [{}]", message);
+			LOGGER.warn("send failed consumerForUserLogoutsTopic [{}]", message);
 			this.kafkaListenerDltHandler.sendToDefaultDlt(new KafkaEventDto(KafkaConfig.DEFAULT_DLT_TOPIC, message));
 		}
 	}

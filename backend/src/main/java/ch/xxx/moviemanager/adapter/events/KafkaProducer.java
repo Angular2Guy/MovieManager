@@ -50,6 +50,7 @@ public class KafkaProducer implements EventProducer {
 		this.adminClient = adminClient;
 	}
 
+	@Override
 	public void sendLogoutMsg(RevokedTokenDto revokedTokenDto) {
 		try {
 			String msg = this.objectMapper.writeValueAsString(revokedTokenDto);
@@ -63,12 +64,13 @@ public class KafkaProducer implements EventProducer {
 		LOGGER.info("send logout msg: {}", revokedTokenDto.toString());
 	}
 
+	@Override
 	public void sendNewUserMsg(UserDto appUserDto) {
 		try {
 			String msg = this.objectMapper.writeValueAsString(appUserDto);
 			ListenableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
 					.send(KafkaConfig.NEW_USER_TOPIC, appUserDto.getUsername(), msg);
-			listenableFuture.get(2, TimeUnit.SECONDS).getRecordMetadata().topic().length();
+			listenableFuture.get(2, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			LOGGER.error("SendNewUserMsg ", e);
 			throw new AuthenticationException("User creation failed.");
@@ -76,6 +78,7 @@ public class KafkaProducer implements EventProducer {
 		LOGGER.info("send new user msg: {}", appUserDto.toString());
 	}
 
+	@Override
 	public void sendKafkaEvent(KafkaEventDto kafkaEventDto) {
 		try {
 			Set<String> topicNames = this.adminClient.listTopics().names().get(2, TimeUnit.SECONDS);

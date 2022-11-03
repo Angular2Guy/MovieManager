@@ -258,7 +258,7 @@ public class UserDetailMgmtServiceBase {
 	}
 
 	public void sendKafkaEvent(KafkaEventDto kafkaEventDto) {
-		
+		LOG.info("KafkaEvent not send.");
 	}
 	
 	/*
