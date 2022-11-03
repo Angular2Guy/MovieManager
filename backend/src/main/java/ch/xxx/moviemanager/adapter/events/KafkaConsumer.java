@@ -30,17 +30,17 @@ import ch.xxx.moviemanager.adapter.config.KafkaConfig;
 import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
 import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
-import ch.xxx.moviemanager.usecase.service.UserDetailMgmtServiceEvents;
+import ch.xxx.moviemanager.usecase.service.UserDetailServiceEvents;
 
 @Service
 @Profile("kafka | prod-kafka")
 public class KafkaConsumer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 	private final ObjectMapper objectMapper;
-	private final UserDetailMgmtServiceEvents appUserService;
+	private final UserDetailServiceEvents appUserService;
 	private final KafkaListenerDltHandler kafkaListenerDltHandler;
 
-	public KafkaConsumer(ObjectMapper objectMapper, UserDetailMgmtServiceEvents appUserService, KafkaListenerDltHandler kafkaListenerDltHandler) {
+	public KafkaConsumer(ObjectMapper objectMapper, UserDetailServiceEvents appUserService, KafkaListenerDltHandler kafkaListenerDltHandler) {
 		this.objectMapper = objectMapper;
 		this.appUserService = appUserService;
 		this.kafkaListenerDltHandler = kafkaListenerDltHandler;

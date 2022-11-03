@@ -27,9 +27,9 @@ import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 @Profile("!kafka & !prod-kafka")
 @Transactional
 @Service
-public class UserDetailMgmtServiceDb extends UserDetailMgmtServiceBase implements UserDetailMgmtService {
+public class UserDetailServiceDb extends UserDetailServiceBase implements UserDetailService {
 
-	public UserDetailMgmtServiceDb(UserRepository userRepository, PasswordEncoder passwordEncoder,
+	public UserDetailServiceDb(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			RevokedTokenRepository revokedTokenRepository, JavaMailSender javaMailSender,
 			JwtTokenService jwtTokenService, UserMapper userMapper, RevokedTokenMapper revokedTokenMapper) {
 		super(userRepository, passwordEncoder, revokedTokenRepository, javaMailSender, jwtTokenService, userMapper, revokedTokenMapper);

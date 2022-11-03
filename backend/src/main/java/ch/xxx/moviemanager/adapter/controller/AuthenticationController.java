@@ -32,12 +32,12 @@ import ch.xxx.moviemanager.domain.model.dto.AuthCheckDto;
 import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
 import ch.xxx.moviemanager.domain.model.dto.RefreshTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
-import ch.xxx.moviemanager.usecase.service.UserDetailMgmtService;
+import ch.xxx.moviemanager.usecase.service.UserDetailService;
 
 @RestController
 @RequestMapping("rest/auth")
 public class AuthenticationController {
-	private final UserDetailMgmtService userDetailService;
+	private final UserDetailService userDetailService;
 	@Value("${spring.mail.username}")
 	private String mailuser;
 	@Value("${spring.mail.password}")
@@ -45,7 +45,7 @@ public class AuthenticationController {
 	@Value("${spring.profiles.active:}")
 	private String activeProfile;
 
-	public AuthenticationController(UserDetailMgmtService userDetailService) {
+	public AuthenticationController(UserDetailService userDetailService) {
 		this.userDetailService = userDetailService;
 	}
 

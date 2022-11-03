@@ -58,12 +58,12 @@ public class MovieService {
 	private final CastRepository castRep;
 	private final ActorRepository actorRep;
 	private final GenereRepository genereRep;
-	private final UserDetailMgmtService auds;
+	private final UserDetailService auds;
 	private final DefaultMapper mapper;
 	private final MovieDbRestClient movieDbRestClient;
 
 	public MovieService(MovieRepository movieRep, CastRepository castRep, ActorRepository actorRep,
-			GenereRepository genereRep, UserDetailMgmtService auds, DefaultMapper mapper,
+			GenereRepository genereRep, UserDetailService auds, DefaultMapper mapper,
 			MovieDbRestClient movieDbRestClient) {
 		this.auds = auds;
 		this.actorRep = actorRep;

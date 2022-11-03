@@ -35,11 +35,11 @@ import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 @Profile("kafka | prod-kafka")
 @Transactional
 @Service
-public class UserDetailMgmtServiceEvents extends UserDetailMgmtServiceBase implements UserDetailMgmtService {
+public class UserDetailServiceEvents extends UserDetailServiceBase implements UserDetailService {
 	private static final long LOGOUT_TIMEOUT = 95L;
 	private final EventProducer eventProducer;
 	
-	public UserDetailMgmtServiceEvents(UserRepository userRepository, PasswordEncoder passwordEncoder, RevokedTokenMapper revokedTokenMapper,
+	public UserDetailServiceEvents(UserRepository userRepository, PasswordEncoder passwordEncoder, RevokedTokenMapper revokedTokenMapper,
 			RevokedTokenRepository revokedTokenRepository, JavaMailSender javaMailSender, EventProducer eventProducer,
 			JwtTokenService jwtTokenService, UserMapper userMapper) {
 		super(userRepository, passwordEncoder, revokedTokenRepository, javaMailSender, jwtTokenService, userMapper, revokedTokenMapper);

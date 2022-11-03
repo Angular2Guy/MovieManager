@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 
 import ch.xxx.moviemanager.usecase.service.ActorService;
 import ch.xxx.moviemanager.usecase.service.MovieService;
-import ch.xxx.moviemanager.usecase.service.UserDetailMgmtService;
+import ch.xxx.moviemanager.usecase.service.UserDetailService;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 
 @Component
@@ -31,10 +31,10 @@ public class CronJobs {
 	private static final Logger LOG = LoggerFactory.getLogger(CronJobs.class);
 	private final ActorService actorService;
 	private final MovieService movieService;
-	private final UserDetailMgmtService userService;
+	private final UserDetailService userService;
 	private Environment environment;
 	
-	public CronJobs(ActorService actorService, MovieService movieService,UserDetailMgmtService userService, Environment environment) {
+	public CronJobs(ActorService actorService, MovieService movieService,UserDetailService userService, Environment environment) {
 		this.actorService = actorService;
 		this.movieService = movieService;
 		this.userService = userService;

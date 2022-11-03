@@ -50,8 +50,8 @@ import ch.xxx.moviemanager.domain.utils.TokenSubjectRole;
 import ch.xxx.moviemanager.usecase.mapper.RevokedTokenMapper;
 import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 
-public class UserDetailMgmtServiceBase {
-	private final static Logger LOG = LoggerFactory.getLogger(UserDetailMgmtServiceBase.class);
+public class UserDetailServiceBase {
+	private final static Logger LOG = LoggerFactory.getLogger(UserDetailServiceBase.class);
 	private final static long LOGOUT_TIMEOUT = 185L;
 	private final UserRepository userRepository;
 	private final RevokedTokenRepository revokedTokenRepository;
@@ -64,7 +64,7 @@ public class UserDetailMgmtServiceBase {
 	@Value("${mail.url.uuid.confirm}")
 	private String confirmUrl;
 
-	public UserDetailMgmtServiceBase(UserRepository userRepository, PasswordEncoder passwordEncoder,
+	public UserDetailServiceBase(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			RevokedTokenRepository revokedTokenRepository, JavaMailSender javaMailSender,
 			JwtTokenService jwtTokenService, UserMapper userMapper, RevokedTokenMapper revokedTokenMapper) {
 		this.userRepository = userRepository;

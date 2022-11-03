@@ -20,7 +20,7 @@ import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.domain.utils.TokenSubjectRole;
 
-public interface UserDetailMgmtService {
+public interface UserDetailService {
 	User getCurrentUser(String bearerStr);
 	TokenSubjectRole getTokenRoles(Map<String, String> headers);
 	Boolean signin(UserDto appUserDto);
