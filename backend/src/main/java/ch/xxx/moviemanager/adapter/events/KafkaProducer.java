@@ -13,6 +13,7 @@
 package ch.xxx.moviemanager.adapter.events;
 
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -54,7 +55,7 @@ public class KafkaProducer implements EventProducer {
 	public void sendLogoutMsg(RevokedTokenDto revokedTokenDto) {
 		try {
 			String msg = this.objectMapper.writeValueAsString(revokedTokenDto);
-			ListenableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
+			CompletableFuture<SendResult<String,String>>  listenableFuture = this.kafkaTemplate
 					.send(KafkaConfig.USER_LOGOUT_TOPIC, revokedTokenDto.getUuid(), msg);
 			listenableFuture.get(2, TimeUnit.SECONDS);
 		} catch (Exception e) {
@@ -68,7 +69,7 @@ public class KafkaProducer implements EventProducer {
 	public void sendNewUserMsg(UserDto appUserDto) {
 		try {
 			String msg = this.objectMapper.writeValueAsString(appUserDto);
-			ListenableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
+			CompletableFuture<SendResult<String,String>> listenableFuture = this.kafkaTemplate
 					.send(KafkaConfig.NEW_USER_TOPIC, appUserDto.getUsername(), msg);
 			listenableFuture.get(2, TimeUnit.SECONDS);
 		} catch (Exception e) {
@@ -84,7 +85,7 @@ public class KafkaProducer implements EventProducer {
 			Set<String> topicNames = this.adminClient.listTopics().names().get(2, TimeUnit.SECONDS);
 			if (topicNames.stream()
 					.anyMatch(topicName -> topicName.trim().equalsIgnoreCase(kafkaEventDto.getTopicName().trim()))) {
-				ListenableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
+				CompletableFuture<SendResult<String,String>> listenableFuture = this.kafkaTemplate
 						.send(kafkaEventDto.getTopicName(), kafkaEventDto.getTopicContent());
 				listenableFuture.get(2, TimeUnit.SECONDS);
 			} else {

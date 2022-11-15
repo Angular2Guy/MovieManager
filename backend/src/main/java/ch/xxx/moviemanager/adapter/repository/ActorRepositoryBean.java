@@ -24,7 +24,6 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
-import javax.validation.Valid;
 
 import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -42,6 +41,7 @@ import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
 import ch.xxx.moviemanager.domain.model.entity.User;
+import jakarta.validation.Valid;
 
 @Repository
 public class ActorRepositoryBean implements ActorRepository {

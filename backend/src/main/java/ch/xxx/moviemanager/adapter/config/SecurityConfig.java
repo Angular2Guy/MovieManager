@@ -19,10 +19,10 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import ch.xxx.moviemanager.usecase.service.JwtTokenService;
@@ -35,26 +35,27 @@ import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 	    prePostEnabled = true
 	)
 @Order(SecurityProperties.DEFAULT_FILTER_ORDER)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 	private final JwtTokenService jwtTokenService;
 	
 	public SecurityConfig(JwtTokenService jwtTokenService) {
 		this.jwtTokenService = jwtTokenService;
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	@Bean
+	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenService);
-		http.httpBasic()
+		HttpSecurity result = http.httpBasic()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 		.and().authorizeRequests()		
-		.antMatchers("/rest/auth/**").permitAll()
-		.antMatchers("/rest/**").authenticated()
-		.antMatchers("/**").permitAll()
+		.requestMatchers("/rest/auth/**").permitAll()
+		.requestMatchers("/rest/**").authenticated()
+		.requestMatchers("/**").permitAll()
 		.anyRequest().authenticated()
 		.and().csrf().disable()
 		.headers().frameOptions().sameOrigin()
 		.and().addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
+		return result.build();
 	}
 	
 	@Bean
