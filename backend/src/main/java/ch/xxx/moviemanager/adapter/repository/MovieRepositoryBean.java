@@ -24,7 +24,7 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.apache.lucene.search.Query;
 import org.hibernate.search.jpa.FullTextEntityManager;
@@ -57,7 +57,7 @@ public class MovieRepositoryBean implements MovieRepository {
 
 	@Override
 	public Optional<Movie> findById(Long id) {
-		return this.jpaMovieRepository.findById(id);
+		return this.jpaMovieRepository. findById(id);
 	}
 
 	@Override

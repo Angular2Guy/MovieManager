@@ -20,12 +20,12 @@ import org.hibernate.type.descriptor.sql.SqlTypeDescriptor;
 
 public class PGSQLMapDialect extends PostgreSQL10Dialect {
 
-	@Override
-	public SqlTypeDescriptor remapSqlTypeDescriptor(SqlTypeDescriptor sqlTypeDescriptor) {
-		if (Types.CLOB == sqlTypeDescriptor.getSqlType() || Types.LONGVARCHAR == sqlTypeDescriptor.getSqlType()) {
-			return LongVarcharTypeDescriptor.INSTANCE;
-		}
-		return super.remapSqlTypeDescriptor(sqlTypeDescriptor);
-	}
+//	@Override
+//	public SqlTypeDescriptor remapSqlTypeDescriptor(SqlTypeDescriptor sqlTypeDescriptor) {
+//		if (Types.CLOB == sqlTypeDescriptor.getSqlType() || Types.LONGVARCHAR == sqlTypeDescriptor.getSqlType()) {
+//			return LongVarcharTypeDescriptor.INSTANCE;
+//		}
+//		return super.remapSqlTypeDescriptor(sqlTypeDescriptor);
+//	}
 
 }

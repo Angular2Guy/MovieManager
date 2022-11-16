@@ -74,17 +74,17 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search-orm</artifactId>
-			<version>5.11.10.Final</version>
+			<version>5.11.11.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>net.javacrumbs.shedlock</groupId>
 			<artifactId>shedlock-spring</artifactId>
-			<version>4.34.0</version>
+			<version>4.42.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.javacrumbs.shedlock</groupId>
 			<artifactId>shedlock-provider-jdbc-template</artifactId>
-			<version>4.34.0</version>
+			<version>4.42.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.liquibase</groupId>
