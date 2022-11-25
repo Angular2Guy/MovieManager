@@ -12,10 +12,9 @@
  */
 package ch.xxx.moviemanager.adapter.config;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.hibernate.Session;
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
@@ -28,6 +27,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import ch.xxx.moviemanager.domain.model.entity.Actor;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
@@ -37,24 +38,27 @@ import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 @EnableSchedulerLock(defaultLockAtMostFor = "PT3H")
 public class CronJobConfiguration {
 	private static final Logger LOG = LoggerFactory.getLogger(CronJobConfiguration.class);
-	private final EntityManager entityManager;
+	
+	private final EntityManagerFactory entityManagerFactory;
 	public volatile boolean indexDone = false;
 
 	public CronJobConfiguration(final EntityManagerFactory entityManagerFactory) {
-		this.entityManager = entityManagerFactory.createEntityManager();
+		this.entityManagerFactory = entityManagerFactory;
 	}
-
+	
 	@Bean
 	public LockProvider lockProvider(DataSource dataSource) {
 		return new JdbcTemplateLockProvider(dataSource);
 	}
-
+	
 	@Async
 	@EventListener(ApplicationReadyEvent.class)
 	public void checkHibernateSearchIndexes() throws InterruptedException {
-		int movieCount = this.entityManager.createNamedQuery("Movie.count", Long.class).getSingleResult().intValue();
-		int actorCount = this.entityManager.createNamedQuery("Actor.count", Long.class).getSingleResult().intValue();
-		SearchSession searchSession = Search.session( entityManager );
+		EntityManager entityManager = this.entityManagerFactory.createEntityManager();
+		int movieCount = entityManager.createNamedQuery("Movie.count", Long.class).getSingleResult().intValue();
+		int actorCount = entityManager.createNamedQuery("Actor.count", Long.class).getSingleResult().intValue();
+		//SearchSession searchSession = Search.session( entityManager );
+		SearchSession searchSession = Search.session( entityManager.unwrap(Session.class) );
 		long actorResults = searchSession.search(Actor.class).where(f -> f.matchAll()).fetchTotalHitCount();
 		long movieResults = searchSession.search(Actor.class).where(f -> f.matchAll()).fetchTotalHitCount();
 		LOG.info(String.format("DbMovies: %d, DbActors: %d, FtMovies: %d, FtActors: %d", movieCount, actorCount, movieResults, actorResults));
