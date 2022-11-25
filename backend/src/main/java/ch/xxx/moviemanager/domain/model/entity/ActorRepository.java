@@ -30,6 +30,6 @@ public interface ActorRepository {
 	Actor save(Actor actorEntity);
 	List<Actor> findUnusedActors();
 	List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto);
-	List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings);
+	List<Actor> findActorsBySearchStrings(String searchString);
 	List<Actor> findByFilterCriteria(ActorFilterCriteriaDto filterCriteriaDto, Long userId);
 }

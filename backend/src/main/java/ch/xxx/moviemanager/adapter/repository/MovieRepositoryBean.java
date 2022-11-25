@@ -14,6 +14,7 @@ package ch.xxx.moviemanager.adapter.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,12 +25,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
-import jakarta.validation.Valid;
 
-import org.apache.lucene.search.Query;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -37,15 +35,16 @@ import ch.xxx.moviemanager.domain.common.CommonUtils;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
-import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
 import ch.xxx.moviemanager.domain.model.entity.Genere;
 import ch.xxx.moviemanager.domain.model.entity.Movie;
 import ch.xxx.moviemanager.domain.model.entity.MovieRepository;
 import ch.xxx.moviemanager.domain.model.entity.User;
+import jakarta.validation.Valid;
 
 @Repository
 public class MovieRepositoryBean implements MovieRepository {
+	private static final String OVERVIEW = "overview";
 	private final JpaMovieRepository jpaMovieRepository;
 	private final EntityManager entityManager;
 
@@ -162,35 +161,25 @@ public class MovieRepositoryBean implements MovieRepository {
 
 	
 
-	@SuppressWarnings("unchecked")
 	public List<Movie> findMoviesByPhrase(SearchPhraseDto searchPhraseDto) {
 		List<Movie> resultList = List.of();
 		if (searchPhraseDto.getPhrase() != null && searchPhraseDto.getPhrase().trim().length() > 2) {
-			FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-			QueryBuilder movieQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-					.forEntity(Movie.class).get();
-			Query phraseQuery = movieQueryBuilder.phrase().withSlop(searchPhraseDto.getOtherWordsInPhrase())
-					.onField("overview").sentence(searchPhraseDto.getPhrase()).createQuery();
-			resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Movie.class).setMaxResults(1000)
-					.getResultList();
+			SearchSession searchSession = Search.session(entityManager);
+			resultList = searchSession.search(Movie.class).where(f -> f.phrase().field(OVERVIEW)
+					.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase())).fetch(1000)
+					.hits();
 		}
 		return resultList;
 	}
 
-	public List<Movie> findMoviesBySearchStrings(List<SearchStringDto> searchStrings) {
-		StringBuilder stringBuilder = new StringBuilder();
-		searchStrings.stream().filter(
-				searchStringDto -> searchStringDto.getOperator() != null && searchStringDto.getSearchString() != null)
-				.toList().forEach(myDto -> stringBuilder.append(" ").append(myDto.getOperator().value).append(" ")
-						.append(myDto.getSearchString()));
-		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-		QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-				.forEntity(Movie.class).get();
-		Query phraseQuery = actorQueryBuilder.simpleQueryString().onField("biography")
-				.matching(stringBuilder.substring(2)).createQuery();
-		@SuppressWarnings("unchecked")
-		List<Movie> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Movie.class).setMaxResults(1000)
-				.getResultList();
+	//example string = "robots + -investigation + (crime | disappearance | robb* )"
+	public List<Movie> findMoviesBySearchStrings(String searchString) {
+		if(searchString == null || searchString.isBlank()) {
+			return new LinkedList<>();
+		}
+		SearchSession searchSession = Search.session(entityManager);
+		List<Movie> resultList = searchSession.search(Movie.class)
+				.where(f -> f.simpleQueryString().field(OVERVIEW).matching(searchString)).fetch(1000).hits();
 		return resultList;
 	}
 }

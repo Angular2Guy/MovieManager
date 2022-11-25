@@ -17,6 +17,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -27,7 +28,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import ch.xxx.moviemanager.domain.model.entity.Actor;
-import ch.xxx.moviemanager.domain.model.entity.Movie;
 import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.provider.jdbctemplate.JdbcTemplateLockProvider;
 import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
@@ -54,31 +54,18 @@ public class CronJobConfiguration {
 	public void checkHibernateSearchIndexes() throws InterruptedException {
 		int movieCount = this.entityManager.createNamedQuery("Movie.count", Long.class).getSingleResult().intValue();
 		int actorCount = this.entityManager.createNamedQuery("Actor.count", Long.class).getSingleResult().intValue();
-		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-		int actorResults = checkForActorIndex(fullTextEntityManager);
-		int movieResults = checkForMovieIndex(fullTextEntityManager);
+		SearchSession searchSession = Search.session( entityManager );
+		long actorResults = searchSession.search(Actor.class).where(f -> f.matchAll()).fetchTotalHitCount();
+		long movieResults = searchSession.search(Actor.class).where(f -> f.matchAll()).fetchTotalHitCount();
 		LOG.info(String.format("DbMovies: %d, DbActors: %d, FtMovies: %d, FtActors: %d", movieCount, actorCount, movieResults, actorResults));
 		if (actorResults == 0 || movieResults == 0 || actorResults != actorCount || movieResults != movieCount) {
-			fullTextEntityManager.createIndexer().startAndWait();
+			searchSession.schemaManager().dropAndCreate(); 
+			searchSession.massIndexer().batchSizeToLoadObjects(100).startAndWait();
 			this.indexDone = true;
 			LOG.info("Hibernate Search Index ready.");
 		} else {
 			this.indexDone = true;
 			LOG.info("Hibernate Search Index ready.");
 		}
-	}
-
-	private int checkForMovieIndex(FullTextEntityManager fullTextEntityManager) {
-		org.apache.lucene.search.Query movieQuery = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-				.forEntity(Movie.class).get().all().createQuery();
-		int movieResults = fullTextEntityManager.createFullTextQuery(movieQuery, Movie.class).getResultSize();
-		return movieResults;
-	}
-
-	private int checkForActorIndex(FullTextEntityManager fullTextEntityManager) {
-		org.apache.lucene.search.Query actorQuery = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-				.forEntity(Actor.class).get().all().createQuery();
-		int actorResults = fullTextEntityManager.createFullTextQuery(actorQuery, Actor.class).getResultSize();
-		return actorResults;
 	}
 }

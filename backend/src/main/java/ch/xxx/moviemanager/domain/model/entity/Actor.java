@@ -28,12 +28,13 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+
+import org.hibernate.search.engine.backend.types.TermVector;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.TermVector;
 
 @NamedQuery(name = "Actor.count", query = "select count(a) from Actor a")
 @Indexed
@@ -46,7 +47,7 @@ public class Actor extends EntityBase {
 	private Integer gender;
 	private Date birthday;
 	private Date deathday;
-	@Field(termVector = TermVector.YES)
+	@FullTextField(termVector = TermVector.YES)
 	@Lob
 	@Column(columnDefinition = "text")
 	private String biography;

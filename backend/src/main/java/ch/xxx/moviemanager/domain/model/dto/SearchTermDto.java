@@ -12,12 +12,9 @@
  */
 package ch.xxx.moviemanager.domain.model.dto;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class SearchTermDto {
 	private SearchPhraseDto searchPhraseDto;
-	private List<SearchStringDto> searchStringDtos = new LinkedList<>();
+	private String searchString;
 	
 	public SearchPhraseDto getSearchPhraseDto() {
 		return searchPhraseDto;
@@ -25,10 +22,10 @@ public class SearchTermDto {
 	public void setSearchPhraseDto(SearchPhraseDto searchPhraseDto) {
 		this.searchPhraseDto = searchPhraseDto;
 	}
-	public List<SearchStringDto> getSearchStringDtos() {
-		return searchStringDtos;
+	public String getSearchString() {
+		return searchString;
 	}
-	public void setSearchStringDtos(List<SearchStringDto> searchStringDtos) {
-		this.searchStringDtos = searchStringDtos;
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
 	}
 }

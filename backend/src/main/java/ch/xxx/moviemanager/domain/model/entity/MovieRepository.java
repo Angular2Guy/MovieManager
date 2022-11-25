@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
 
 import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
-import ch.xxx.moviemanager.domain.model.dto.SearchStringDto;
 
 public interface MovieRepository {
 	List<Movie> findByTitle(String title, Long userId, Pageable pageable);
@@ -34,6 +33,6 @@ public interface MovieRepository {
 	List<Movie> findUnusedMovies();
 	Optional<Movie> findByIdWithCollections(Long id);
 	List<Movie> findMoviesByPhrase(SearchPhraseDto searchPhraseDto);
-	List<Movie> findMoviesBySearchStrings(List<SearchStringDto> searchStrings);
+	List<Movie> findMoviesBySearchStrings(String searchString);
 	List<Movie> findByFilterCriteria(MovieFilterCriteriaDto filterCriteriaDto, Long userId);
 }

@@ -246,7 +246,7 @@ public class MovieService {
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
 		List<Movie> movies = searchTermDto.getSearchPhraseDto() != null
 				? this.movieRep.findMoviesByPhrase(searchTermDto.getSearchPhraseDto())
-				: this.movieRep.findMoviesBySearchStrings(searchTermDto.getSearchStringDtos());
+				: this.movieRep.findMoviesBySearchStrings(searchTermDto.getSearchString());
 		List<Movie> filteredMovies = movies.stream()
 				.filter(myMovie -> myMovie.getUsers().stream()
 						.anyMatch(myUser -> myUser.getId().equals(this.auds.getCurrentUser(bearerStr).getId())))
