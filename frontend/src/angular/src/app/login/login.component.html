@@ -5,11 +5,11 @@
         <h5 class="modal-title" id="exampleModalLabel" i18n="@@loginLoginSignin">Login / Signin</h5>
       </div>
       <div class="modal-body" [formGroup]="loginFormGroup">        
-        <input type="text" class="form-control" i18n-placeholder="@@loginLoginPh" placeholder="login" [formControlName]="ControlName.LoginName" (keyup.enter)="loginUser()">
+        <input type="text" class="form-control" i18n-placeholder="@@loginLoginPh" placeholder="login" [formControlName]="ControlName.LoginName" (keyup.enter)="loginUser()" (keyup.escape)="cancelUser()">
         <br/>
-        <input type="password" class="form-control" i18n-placeholder="@@loginPassword" placeholder="password" [formControlName]="ControlName.Password" (keyup.enter)="loginUser()">
+        <input type="password" class="form-control" i18n-placeholder="@@loginPassword" placeholder="password" [formControlName]="ControlName.Password" (keyup.enter)="loginUser()" (keyup.escape)="cancelUser()">
         <br/>
-        <input type="text" class="form-control" i18n-placeholder="@@loginMovieDbKey" placeholder="movieDbKey" [formControlName]="ControlName.MovieDbKey">
+        <input type="text" class="form-control" i18n-placeholder="@@loginMovieDbKey" placeholder="movieDbKey" [formControlName]="ControlName.MovieDbKey" (keyup.escape)="cancelUser()">
         <br/>
         <div *ngIf="modalMsg.trim().length > 0" [ngClass]="modalMsgType === MessageType.Error ? 'alert alert-danger' : 'alert alert-info'">{{modalMsg}}</div>
       </div>
