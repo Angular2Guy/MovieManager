@@ -72,6 +72,9 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser() {
+	  if(this.loginInvalid()) {
+		  return;
+	  } 
 	 this.modalMsg = '';
      this.userService.login(this.loginFormGroup.controls[ControlName.LoginName].value, 
      this.loginFormGroup.controls[ControlName.Password].value).subscribe((myTillNextLogin: number) => {
