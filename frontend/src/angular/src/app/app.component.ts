@@ -10,25 +10,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { TokenService } from 'ngx-simple-charts/base-service';
+import { Component } from "@angular/core";
+import { Router } from "@angular/router";
+import { TokenService } from "ngx-simple-charts/base-service";
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
-  protected title = 'app';
-  
+  protected title = "app";
+
   constructor(private tokenService: TokenService, private router: Router) {}
-  
+
   public loggedIn(): boolean {
-	return !!this.tokenService.userId;
+    return !!this.tokenService.userId;
   }
-  
+
   public logout(): void {
-	this.router.navigate(['/actor/-1',{skipLocationChange: true}]).then(() => this.tokenService.logout());
+    this.router
+      .navigate(["/actor/-1", { skipLocationChange: true }])
+      .then(() => this.tokenService.logout());
   }
 }

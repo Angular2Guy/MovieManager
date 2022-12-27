@@ -10,25 +10,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FilterActorsComponent } from './filter-actors.component';
-import { NgbDatepickerModule, NgbOffcanvasModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FilterActorsRoutingModule } from './filter-actors-routing.module';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { FilterActorsComponent } from "./filter-actors.component";
+import {
+  NgbDatepickerModule,
+  NgbOffcanvasModule,
+  NgbRatingModule,
+} from "@ng-bootstrap/ng-bootstrap";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { FilterActorsRoutingModule } from "./filter-actors-routing.module";
 
 @NgModule({
-  declarations: [
-    FilterActorsComponent
-  ],
+  declarations: [FilterActorsComponent],
   imports: [
     CommonModule,
-    NgbOffcanvasModule, 
+    NgbOffcanvasModule,
     NgbDatepickerModule,
-    NgbRatingModule,    
+    NgbRatingModule,
     FormsModule,
     ReactiveFormsModule,
-    FilterActorsRoutingModule
-  ]
+    FilterActorsRoutingModule,
+  ],
 })
-export class FilterActorsModule { }
+export class FilterActorsModule {}

@@ -10,26 +10,28 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { HttpClientModule } from '@angular/common/http';
-import { TestBed, waitForAsync } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { NgxServiceModule } from 'ngx-simple-charts/base-service';
-import { AppComponent } from './app.component';
+import { HttpClientModule } from "@angular/common/http";
+import { TestBed, waitForAsync } from "@angular/core/testing";
+import { RouterTestingModule } from "@angular/router/testing";
+import { NgxServiceModule } from "ngx-simple-charts/base-service";
+import { AppComponent } from "./app.component";
 
-describe('AppComponent', () => {
+describe("AppComponent", () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         RouterTestingModule,
         HttpClientModule,
-        NgxServiceModule.forRoot({tokenRefreshPath: '/rest/auth/refreshToken', logoutPath: '/rest/auth/logout', loginRoute: '/'})
+        NgxServiceModule.forRoot({
+          tokenRefreshPath: "/rest/auth/refreshToken",
+          logoutPath: "/rest/auth/logout",
+          loginRoute: "/",
+        }),
       ],
-      declarations: [
-        AppComponent
-      ],
+      declarations: [AppComponent],
     }).compileComponents();
   }));
-  it('should create the app', waitForAsync(() => {
+  it("should create the app", waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
@@ -37,12 +39,12 @@ describe('AppComponent', () => {
   it(`should have as title 'app'`, waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app');
+    expect(app.title).toEqual("app");
   }));
-//  it('should render title in a h1 tag', async(() => {
-//    const fixture = TestBed.createComponent(AppComponent);
-//    fixture.detectChanges();
-//    const compiled = fixture.debugElement.nativeElement;
-//    expect(compiled.querySelector('h1').textContent).toContain('Welcome to app!');
-//  }));
+  //  it('should render title in a h1 tag', async(() => {
+  //    const fixture = TestBed.createComponent(AppComponent);
+  //    fixture.detectChanges();
+  //    const compiled = fixture.debugElement.nativeElement;
+  //    expect(compiled.querySelector('h1').textContent).toContain('Welcome to app!');
+  //  }));
 });

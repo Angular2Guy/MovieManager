@@ -1,9 +1,15 @@
 <div class="header-line">
-  <h1 i18n=@@appHeading>
-    Welcome to the movie database
-  </h1>  
+  <h1 i18n="@@appHeading">Welcome to the movie database</h1>
   <div class="logout-button">
-  	<button type="button" [disabled]="!loggedIn()" (click)="logout()" class="btn btn-primary" i18n="@@appLogout">Logout</button>
+    <button
+      type="button"
+      [disabled]="!loggedIn()"
+      (click)="logout()"
+      class="btn btn-primary"
+      i18n="@@appLogout"
+    >
+      Logout
+    </button>
   </div>
 </div>
 

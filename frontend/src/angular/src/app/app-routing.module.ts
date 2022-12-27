@@ -10,27 +10,37 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { SearchComponent } from './search/search.component';
-import { MoviesComponent } from './movies/movies.component';
-import { ActorsComponent } from './actors/actors.component';
-import { MovieImportComponent } from './movie-import/movie-import.component';
+import { NgModule } from "@angular/core";
+import { Routes, RouterModule } from "@angular/router";
+import { SearchComponent } from "./search/search.component";
+import { MoviesComponent } from "./movies/movies.component";
+import { ActorsComponent } from "./actors/actors.component";
+import { MovieImportComponent } from "./movie-import/movie-import.component";
 
 const routes: Routes = [
-    {path: 'search', component: SearchComponent},
-    {path: 'movie/:id', component: MoviesComponent},
-    {path: 'actor/:id', component: ActorsComponent},
-    {path: 'movie-import', component: MovieImportComponent},
-    {path: 'filter-movies', loadChildren: () => import('./filter-movies/filter-movies.module')
-       .then(m => m.FilterMoviesModule)},
-       {path: 'filter-actors', loadChildren: () => import('./filter-actors/filter-actors.module')
-       .then(m => m.FilterActorsModule)},
-    {path: '**', redirectTo: '/search', pathMatch: 'full' }
+  { path: "search", component: SearchComponent },
+  { path: "movie/:id", component: MoviesComponent },
+  { path: "actor/:id", component: ActorsComponent },
+  { path: "movie-import", component: MovieImportComponent },
+  {
+    path: "filter-movies",
+    loadChildren: () =>
+      import("./filter-movies/filter-movies.module").then(
+        (m) => m.FilterMoviesModule
+      ),
+  },
+  {
+    path: "filter-actors",
+    loadChildren: () =>
+      import("./filter-actors/filter-actors.module").then(
+        (m) => m.FilterActorsModule
+      ),
+  },
+  { path: "**", redirectTo: "/search", pathMatch: "full" },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {})],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

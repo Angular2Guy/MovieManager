@@ -13,23 +13,26 @@
 import { CommonModule } from "@angular/common";
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { NgbDatepickerModule, NgbDropdownModule, NgbOffcanvasModule, NgbRatingModule } from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbDatepickerModule,
+  NgbDropdownModule,
+  NgbOffcanvasModule,
+  NgbRatingModule,
+} from "@ng-bootstrap/ng-bootstrap";
 import { FilterMoviesRoutingModule } from "./filter-movies-routing.module";
 import { FilterMoviesComponent } from "./filter-movies.component";
 
 @NgModule({
-  declarations: [
-    FilterMoviesComponent,
-  ],
+  declarations: [FilterMoviesComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgbOffcanvasModule, 
+    NgbOffcanvasModule,
     NgbDatepickerModule,
     NgbDropdownModule,
     NgbRatingModule,
     FilterMoviesRoutingModule,
-  ]
+  ],
 })
-export class FilterMoviesModule { }
+export class FilterMoviesModule {}

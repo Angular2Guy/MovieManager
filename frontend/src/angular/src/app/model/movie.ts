@@ -10,22 +10,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Genere } from './genere';
-import { Cast } from './cast';
+import { Genere } from "./genere";
+import { Cast } from "./cast";
 
 export interface Movie {
-    id: number;
-    overview: string;
-    release_date: Date;
-    title: string;
-    num?: number;
-    movie_id: number;
-    runtime: number;
-    revenue: number;
-    vote_average: number;
-    vote_count: number;
-    budget: number;
-	genres: Genere[];
-    myCast: Cast[];
-    myGenere: Genere[];
+  id: number;
+  overview: string;
+  release_date: Date;
+  title: string;
+  num?: number;
+  movie_id: number;
+  runtime: number;
+  revenue: number;
+  vote_average: number;
+  vote_count: number;
+  budget: number;
+  genres: Genere[];
+  myCast: Cast[];
+  myGenere: Genere[];
 }

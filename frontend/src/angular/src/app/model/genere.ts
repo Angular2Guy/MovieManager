@@ -11,6 +11,6 @@
    limitations under the License.
  */
 export interface Genere {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }

@@ -10,18 +10,22 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Cast } from './cast';
+import { Cast } from "./cast";
 
-export enum Gender{Unknown=0, Female=1, Male=2}
+export enum Gender {
+  Unknown = 0,
+  Female = 1,
+  Male = 2,
+}
 
 export interface Actor {
-    id: number;
-    name: string;
-    gender: Gender;
-    birthday: Date;
-    deathday: Date;
-    biography: string;
-    place_of_birth: string;
-    popularity: number;
-    myCasts: Cast[];
+  id: number;
+  name: string;
+  gender: Gender;
+  birthday: Date;
+  deathday: Date;
+  biography: string;
+  place_of_birth: string;
+  popularity: number;
+  myCasts: Cast[];
 }

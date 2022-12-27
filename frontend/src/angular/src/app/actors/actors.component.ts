@@ -9,16 +9,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Actor, Gender } from '../model/actor';
-import { QueryParam } from '../model/common';
-import { ActorsService } from '../services/actors.service';
+import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { Actor, Gender } from "../model/actor";
+import { QueryParam } from "../model/common";
+import { ActorsService } from "../services/actors.service";
 
 @Component({
-  selector: 'app-actors',
-  templateUrl: './actors.component.html',
-  styleUrls: ['./actors.component.scss']
+  selector: "app-actors",
+  templateUrl: "./actors.component.html",
+  styleUrls: ["./actors.component.scss"],
 })
 export class ActorsComponent implements OnInit {
   protected gender = Gender;
@@ -26,12 +26,17 @@ export class ActorsComponent implements OnInit {
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
 
-  constructor(private route: ActivatedRoute, private actorService: ActorsService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private actorService: ActorsService
+  ) {}
 
   public ngOnInit() {
-      this.actorService.findActorById(Number(this.route.snapshot.paramMap.get('id')))
-          .subscribe(actor => this.actor = actor);
-      this.backParam = !this.route.snapshot.queryParams?.back ? QueryParam.Empty : this.route.snapshot.queryParams?.back; 
+    this.actorService
+      .findActorById(Number(this.route.snapshot.paramMap.get("id")))
+      .subscribe((actor) => (this.actor = actor));
+    this.backParam = !this.route.snapshot.queryParams?.back
+      ? QueryParam.Empty
+      : this.route.snapshot.queryParams?.back;
   }
-
 }

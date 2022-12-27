@@ -10,104 +10,126 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
-import { UsersService } from '../services/users.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TokenService } from 'ngx-simple-charts/base-service';
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { UsersService } from "../services/users.service";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { TokenService } from "ngx-simple-charts/base-service";
 
 enum ControlName {
-	LoginName = 'loginName',
-	Password = 'password',
-	MovieDbKey = 'movieDbKey',	
-	EmailAddress = 'emailAddress'
+  LoginName = "loginName",
+  Password = "password",
+  MovieDbKey = "movieDbKey",
+  EmailAddress = "emailAddress",
 }
 
 enum MessageType {
-	Info = 'info',
-	Error = 'error'
+  Info = "info",
+  Error = "error",
 }
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
+  @Output() loginClosed = new EventEmitter<boolean>();
+  protected ControlName = ControlName;
+  protected MessageType = MessageType;
+  protected showModal = true;
+  protected loginFormGroup: FormGroup;
+  protected modalMsg = "";
+  protected modalMsgType = MessageType.Error;
+  protected tillNextLogin = 0;
+  protected waitingForResponse = false;
 
-    @Output() loginClosed = new EventEmitter<boolean>();
-    protected ControlName = ControlName;
-    protected MessageType = MessageType;
-    protected showModal = true;
-    protected loginFormGroup: FormGroup;
-    protected modalMsg = '';
-    protected modalMsgType = MessageType.Error; 
-    protected tillNextLogin = 0;
-    protected waitingForResponse = false;
-
-  constructor(private userService: UsersService, formBuilder: FormBuilder, private tokenService: TokenService) { 
-	this.loginFormGroup = formBuilder.group({
-		[ControlName.LoginName]: ['', [Validators.required, Validators.minLength(2)]],
-		[ControlName.Password]: ['', [Validators.required, Validators.minLength(2)]],
-		[ControlName.MovieDbKey]: '',
-		[ControlName.EmailAddress]: ''
-	});	
+  constructor(
+    private userService: UsersService,
+    formBuilder: FormBuilder,
+    private tokenService: TokenService
+  ) {
+    this.loginFormGroup = formBuilder.group({
+      [ControlName.LoginName]: [
+        "",
+        [Validators.required, Validators.minLength(2)],
+      ],
+      [ControlName.Password]: [
+        "",
+        [Validators.required, Validators.minLength(2)],
+      ],
+      [ControlName.MovieDbKey]: "",
+      [ControlName.EmailAddress]: "",
+    });
   }
 
   ngOnInit() {
-      this.showModal = !this.tokenService.userId;   
-      this.loginFormGroup.markAllAsTouched();
-    //  console.log(this.loginFormGroup.invalid || this.loginFormGroup.controls[ControlName.loginName].untouched || this.loginFormGroup.controls[ControlName.password].untouched);   
+    this.showModal = !this.tokenService.userId;
+    this.loginFormGroup.markAllAsTouched();
+    //  console.log(this.loginFormGroup.invalid || this.loginFormGroup.controls[ControlName.loginName].untouched || this.loginFormGroup.controls[ControlName.password].untouched);
   }
 
   loginInvalid(): boolean {
-	const result = this.loginFormGroup.invalid;	
-	//console.log(result);	
-	return result;
+    const result = this.loginFormGroup.invalid;
+    //console.log(result);
+    return result;
   }
 
   signinInvalid(): boolean {
-	const loginResult = this.loginInvalid();
-	const signinResult = !this.loginFormGroup.controls[ControlName.MovieDbKey].value || (this.loginFormGroup.controls[ControlName.MovieDbKey].value as string).length < 2;	
-	//console.log(loginResult+' '+signinResult);
-	return loginResult || signinResult;
+    const loginResult = this.loginInvalid();
+    const signinResult =
+      !this.loginFormGroup.controls[ControlName.MovieDbKey].value ||
+      (this.loginFormGroup.controls[ControlName.MovieDbKey].value as string)
+        .length < 2;
+    //console.log(loginResult+' '+signinResult);
+    return loginResult || signinResult;
   }
 
   loginUser() {
-	  if(this.loginInvalid()) {
-		  return;
-	  } 
-	  this.waitingForResponse = true;
-	 this.modalMsg = '';
-     this.userService.login(this.loginFormGroup.controls[ControlName.LoginName].value, 
-     this.loginFormGroup.controls[ControlName.Password].value).subscribe((myTillNextLogin: number) => {
-	    const res = myTillNextLogin <= 0;
-	    this.tillNextLogin = myTillNextLogin;
-        this.showModal = !res;        
+    if (this.loginInvalid()) {
+      return;
+    }
+    this.waitingForResponse = true;
+    this.modalMsg = "";
+    this.userService
+      .login(
+        this.loginFormGroup.controls[ControlName.LoginName].value,
+        this.loginFormGroup.controls[ControlName.Password].value
+      )
+      .subscribe((myTillNextLogin: number) => {
+        const res = myTillNextLogin <= 0;
+        this.tillNextLogin = myTillNextLogin;
+        this.showModal = !res;
         this.modalMsgType = MessageType.Error;
-        this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed.`;
+        this.modalMsg = res ? "" : $localize`:@@loginErrorMsg:Login Failed.`;
         this.loginClosed.emit(res);
         this.waitingForResponse = false;
-     });
+      });
   }
 
   cancelUser() {
-      this.loginFormGroup.controls[ControlName.LoginName].setValue('');
-      this.loginFormGroup.controls[ControlName.Password].setValue('');
-      this.loginFormGroup.controls[ControlName.MovieDbKey].setValue('');
-      this.loginFormGroup.controls[ControlName.EmailAddress].setValue('');
-      this.modalMsg = '';
+    this.loginFormGroup.controls[ControlName.LoginName].setValue("");
+    this.loginFormGroup.controls[ControlName.Password].setValue("");
+    this.loginFormGroup.controls[ControlName.MovieDbKey].setValue("");
+    this.loginFormGroup.controls[ControlName.EmailAddress].setValue("");
+    this.modalMsg = "";
   }
 
   signinUser() {
-	 this.modalMsg = '';
-	 this.waitingForResponse = true;
-     this.userService.signin(this.loginFormGroup.controls[ControlName.LoginName].value, 
-        this.loginFormGroup.controls[ControlName.Password].value, 
-        this.loginFormGroup.controls[ControlName.MovieDbKey].value).subscribe((res: boolean) =>{
-          this.cancelUser();
-          this.modalMsgType = res ? MessageType.Info : MessageType.Error;
-          this.modalMsg = res ? $localize `:@@SigninSuccessMsg:Signin successful. Please Login.` : $localize `:@@SigninFailedMsg:Signin failed.`;
-          this.waitingForResponse = false;
+    this.modalMsg = "";
+    this.waitingForResponse = true;
+    this.userService
+      .signin(
+        this.loginFormGroup.controls[ControlName.LoginName].value,
+        this.loginFormGroup.controls[ControlName.Password].value,
+        this.loginFormGroup.controls[ControlName.MovieDbKey].value
+      )
+      .subscribe((res: boolean) => {
+        this.cancelUser();
+        this.modalMsgType = res ? MessageType.Info : MessageType.Error;
+        this.modalMsg = res
+          ? $localize`:@@SigninSuccessMsg:Signin successful. Please Login.`
+          : $localize`:@@SigninFailedMsg:Signin failed.`;
+        this.waitingForResponse = false;
       });
   }
 }

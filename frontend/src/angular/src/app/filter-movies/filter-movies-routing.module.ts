@@ -13,16 +13,16 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { FilterMoviesComponent } from "./filter-movies.component";
- 
- const routes: Routes = [
+
+const routes: Routes = [
   {
-    path: '',
-    component: FilterMoviesComponent
-  }
+    path: "",
+    component: FilterMoviesComponent,
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class FilterMoviesRoutingModule { }
+export class FilterMoviesRoutingModule {}

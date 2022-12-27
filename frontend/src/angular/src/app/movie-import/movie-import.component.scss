@@ -1,37 +1,37 @@
 .import-movie {
-	cursor: pointer;
-	&:hover {
-		background: #BBBBBB;
-	}
+  cursor: pointer;
+  &:hover {
+    background: #bbbbbb;
+  }
 }
 
 .my-text-center {
-	vertical-align: middle;
+  vertical-align: middle;
 }
 
 .info-text {
-	padding-top: 30px;
-	font-size: 30px;
-	color: #037bfc; 
-	text-align: center;
-	width: 100%;
+  padding-top: 30px;
+  font-size: 30px;
+  color: #037bfc;
+  text-align: center;
+  width: 100%;
 }
 
 .failure-text {
-	color: #fc0f03;
+  color: #fc0f03;
 }
 
 .success-text {
-	color: #27b500;
+  color: #27b500;
 }
 
 .my-spinner {
-	background-image: url("../../assets/svg/spinner.svg");
+  background-image: url("../../assets/svg/spinner.svg");
 }
 
 .back-btn {
-	position: fixed;
-    bottom: 20px;
-    right: 20px;
-    border-radius: 50%;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
 }

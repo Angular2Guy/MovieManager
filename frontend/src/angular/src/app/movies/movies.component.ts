@@ -10,42 +10,50 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit } from '@angular/core';
-import { MoviesService } from '../services/movies.service';
-import {ActivatedRoute, Router } from '@angular/router';
-import { Movie } from '../model/movie';
-import { QueryParam } from '../model/common';
+import { Component, OnInit } from "@angular/core";
+import { MoviesService } from "../services/movies.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Movie } from "../model/movie";
+import { QueryParam } from "../model/common";
 
 @Component({
-  selector: 'app-movies',
-  templateUrl: './movies.component.html',
-  styleUrls: ['./movies.component.scss']
+  selector: "app-movies",
+  templateUrl: "./movies.component.html",
+  styleUrls: ["./movies.component.scss"],
 })
 export class MoviesComponent implements OnInit {
-
   protected movie: Movie = null;
   protected delMovie = false;
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
 
-  constructor(private route: ActivatedRoute, private router: Router, private movieService: MoviesService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private movieService: MoviesService
+  ) {}
 
   ngOnInit() {
-      this.movieService.findMovieById(Number(this.route.snapshot.paramMap.get('id')))
-          .subscribe(movie => this.movie = movie);
-      this.backParam = !this.route.snapshot.queryParams?.back? QueryParam.Empty : this.route.snapshot.queryParams?.back; 
+    this.movieService
+      .findMovieById(Number(this.route.snapshot.paramMap.get("id")))
+      .subscribe((movie) => (this.movie = movie));
+    this.backParam = !this.route.snapshot.queryParams?.back
+      ? QueryParam.Empty
+      : this.route.snapshot.queryParams?.back;
   }
 
   deleteMovie() {
-      console.log('delete movie id: '+this.movie.id+' title: '+this.movie.title);
-      this.delMovie = true;
-      this.movieService.deleteMovieById(this.movie.id).subscribe(result => {
-          this.delMovie = false;
-          if(!result) {
-              console.log('Delete of movie id: '+this.movie.id+' failed.');
-          } else {
-              this.router.navigateByUrl('/search');
-          }
-      });
+    console.log(
+      "delete movie id: " + this.movie.id + " title: " + this.movie.title
+    );
+    this.delMovie = true;
+    this.movieService.deleteMovieById(this.movie.id).subscribe((result) => {
+      this.delMovie = false;
+      if (!result) {
+        console.log("Delete of movie id: " + this.movie.id + " failed.");
+      } else {
+        this.router.navigateByUrl("/search");
+      }
+    });
   }
 }

@@ -17,10 +17,10 @@ export class MovieFilterCriteria {
   public selectedGeneres: Genere[] = [];
   public releaseFrom: Date = null;
   public releaseTo: Date = null;
-  public movieTitle = '';
-  public movieActor = '';
+  public movieTitle = "";
+  public movieActor = "";
   public minLength = 0;
   public maxLength = 0;
   public minRating = 0;
-  public searchPhrase = new SearchPhrase();   
+  public searchPhrase = new SearchPhrase();
 }

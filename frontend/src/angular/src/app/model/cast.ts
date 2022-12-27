@@ -10,13 +10,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Movie } from './movie';
-import { Actor } from './actor';
+import { Movie } from "./movie";
+import { Actor } from "./actor";
 
 export interface Cast {
-    id: number;
-    character: string;
-    name: string;
-    myMovie: Movie;
-    myActor: Actor;
+  id: number;
+  character: string;
+  name: string;
+  myMovie: Movie;
+  myActor: Actor;
 }

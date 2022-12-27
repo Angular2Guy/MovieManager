@@ -14,12 +14,12 @@ import { Gender } from "./actor";
 import { SearchPhrase } from "./search-phrase";
 
 export class ActorFilterCriteria {
-    public name: string = '';
-    public gender: Gender = Gender.Unknown;
-    public birthdayFrom: Date =  null;
-    public birthdayTo: Date = null;
-    public dead: boolean = false;
-    public popularity: number = 0;
-    public movieCharacter: string = '';
-    public searchPhrase = new SearchPhrase();   
-} 
+  public name: string = "";
+  public gender: Gender = Gender.Unknown;
+  public birthdayFrom: Date = null;
+  public birthdayTo: Date = null;
+  public dead: boolean = false;
+  public popularity: number = 0;
+  public movieCharacter: string = "";
+  public searchPhrase = new SearchPhrase();
+}

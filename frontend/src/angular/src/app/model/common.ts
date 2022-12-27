@@ -10,4 +10,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
- export enum QueryParam {MovieName='movie-title', MoviesBack='filter-movies', ActorsBack='filter-actors', Empty=''}
+export enum QueryParam {
+  MovieName = "movie-title",
+  MoviesBack = "filter-movies",
+  ActorsBack = "filter-actors",
+  Empty = "",
+}

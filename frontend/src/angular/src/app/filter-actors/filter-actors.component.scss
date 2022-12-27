@@ -1,65 +1,64 @@
 .filter-change-btn {
-	position: fixed;
-    bottom: 100px;
-    right: 20px;
-    border-radius: 50%;
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  border-radius: 50%;
 }
 
 .info-text {
-	padding-top: 30px;
-	font-size: 30px;
-	color: #000000; 
-	text-align: center;
-	width: 100%;
+  padding-top: 30px;
+  font-size: 30px;
+  color: #000000;
+  text-align: center;
+  width: 100%;
 }
 
 .filter-text {
-	color: #037bfc;
+  color: #037bfc;
 }
 
 .import-item {
-	cursor: pointer;
-	&:hover {
-		background: #BBBBBB;
-	}
+  cursor: pointer;
+  &:hover {
+    background: #bbbbbb;
+  }
 }
 
 .open-filters {
-	position: fixed;
-    bottom: 20px;
-    right: 20px;
-    border-radius: 50%;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 50%;
 }
 
-
 .back-btn {
-	position: fixed;
-    bottom: 180px;
-    right: 20px;
-    border-radius: 50%;
+  position: fixed;
+  bottom: 180px;
+  right: 20px;
+  border-radius: 50%;
 }
 
 .select-range {
-	display: flex;	
+  display: flex;
 }
 
 .bio-label-input {
-	display: flex;
-	align-items: center;
-	margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.25rem;
 }
 
 .bio-label {
-	width: 200px;
+  width: 200px;
 }
 
 .selected-generes {
-	display: flex;
-	align-items: center;	
+  display: flex;
+  align-items: center;
 }
 
 .my-ul {
-	margin: 0;
-	margin-left: 1rem;
-	padding: 0 !important;
+  margin: 0;
+  margin-left: 1rem;
+  padding: 0 !important;
 }

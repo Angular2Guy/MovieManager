@@ -10,21 +10,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserModule } from "@angular/platform-browser";
+import { NgModule } from "@angular/core";
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
-import { AppRoutingModule } from './app-routing.module';
+import { AppRoutingModule } from "./app-routing.module";
 
-import { AppComponent } from './app.component';
-import { MoviesComponent } from './movies/movies.component';
-import { ActorsComponent } from './actors/actors.component';
-import { SearchComponent } from './search/search.component';
-import { LoginComponent } from './login/login.component';
-import { MovieImportComponent } from './movie-import/movie-import.component';
-import { NgxServiceModule,SimpleChartsConfig } from 'ngx-simple-charts/base-service';
-
+import { AppComponent } from "./app.component";
+import { MoviesComponent } from "./movies/movies.component";
+import { ActorsComponent } from "./actors/actors.component";
+import { SearchComponent } from "./search/search.component";
+import { LoginComponent } from "./login/login.component";
+import { MovieImportComponent } from "./movie-import/movie-import.component";
+import {
+  NgxServiceModule,
+  SimpleChartsConfig,
+} from "ngx-simple-charts/base-service";
 
 @NgModule({
   declarations: [
@@ -33,7 +35,7 @@ import { NgxServiceModule,SimpleChartsConfig } from 'ngx-simple-charts/base-serv
     ActorsComponent,
     SearchComponent,
     LoginComponent,
-    MovieImportComponent
+    MovieImportComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,8 +43,12 @@ import { NgxServiceModule,SimpleChartsConfig } from 'ngx-simple-charts/base-serv
     ReactiveFormsModule,
     HttpClientModule,
     AppRoutingModule,
-    NgxServiceModule.forRoot({tokenRefreshPath: '/rest/auth/refreshToken', logoutPath: '/rest/auth/logout', loginRoute: '/'})
+    NgxServiceModule.forRoot({
+      tokenRefreshPath: "/rest/auth/refreshToken",
+      logoutPath: "/rest/auth/logout",
+      loginRoute: "/",
+    }),
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
- export class SearchPhrase {
-    public phrase = '';
-	public otherWordsInPhrase = 0;
+export class SearchPhrase {
+  public phrase = "";
+  public otherWordsInPhrase = 0;
 }

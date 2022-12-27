@@ -10,50 +10,62 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { catchError, map, tap } from 'rxjs/operators';
-import { User } from '../model/user';
-import { Router } from '@angular/router';
-import { TokenService } from 'ngx-simple-charts/base-service';
+import { Injectable } from "@angular/core";
+import { Observable, of, throwError } from "rxjs";
+import { HttpClient } from "@angular/common/http";
+import { catchError, map, tap } from "rxjs/operators";
+import { User } from "../model/user";
+import { Router } from "@angular/router";
+import { TokenService } from "ngx-simple-charts/base-service";
 
 @Injectable({
- providedIn: 'root',
+  providedIn: "root",
 })
 export class UsersService {
-
-  constructor(private http: HttpClient, private tokenService: TokenService, private router: Router) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+    private router: Router
+  ) {}
 
   public login(login: string, password: string): Observable<number> {
-      if(!login || !password) {
-          return throwError(() => 'login and password needed.');
-      }
-      const u = new User();
-      u.username = login;
-      u.password = password;
-      return this.http.post<User>('/rest/auth/login', u).pipe(map(myUser => {				
-			if(!!myUser?.id && !!myUser?.token && myUser?.secUntilNexLogin <= 0) {
-				this.tokenService.token = myUser.token;
-				this.tokenService.userId = myUser.id;
-				return myUser.secUntilNexLogin;
-			}
-			return !!myUser?.secUntilNexLogin ? myUser?.secUntilNexLogin : 24 * 60 * 60;
-			;
-		}));
+    if (!login || !password) {
+      return throwError(() => "login and password needed.");
+    }
+    const u = new User();
+    u.username = login;
+    u.password = password;
+    return this.http.post<User>("/rest/auth/login", u).pipe(
+      map((myUser) => {
+        if (!!myUser?.id && !!myUser?.token && myUser?.secUntilNexLogin <= 0) {
+          this.tokenService.token = myUser.token;
+          this.tokenService.userId = myUser.id;
+          return myUser.secUntilNexLogin;
+        }
+        return !!myUser?.secUntilNexLogin
+          ? myUser?.secUntilNexLogin
+          : 24 * 60 * 60;
+      })
+    );
   }
 
-  public signin(login: string, password: string, movieDbKey: string): Observable<boolean> {
-      if(!login || !password || !movieDbKey) {
-          return of(false);
-      }
-      const u = new User();
-      u.username = login;
-      u.password = password;
-      u.moviedbkey = movieDbKey;
-      return this.http.post<boolean>('/rest/auth/signin', u).pipe(catchError(error => {
-        console.error( JSON.stringify( error ) );
+  public signin(
+    login: string,
+    password: string,
+    movieDbKey: string
+  ): Observable<boolean> {
+    if (!login || !password || !movieDbKey) {
+      return of(false);
+    }
+    const u = new User();
+    u.username = login;
+    u.password = password;
+    u.moviedbkey = movieDbKey;
+    return this.http.post<boolean>("/rest/auth/signin", u).pipe(
+      catchError((error) => {
+        console.error(JSON.stringify(error));
         return of(false);
-      }));
+      })
+    );
   }
 }

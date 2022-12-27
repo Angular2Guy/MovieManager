@@ -10,9 +10,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
 
-import { SearchComponent } from './search.component';
+import { SearchComponent } from "./search.component";
 
 //describe('SearchComponent', () => {
 //  let component: SearchComponent;

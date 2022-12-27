@@ -11,12 +11,12 @@
    limitations under the License.
  */
 export class User {
-    id?: number;
-    username: string;
-    password: string;
-    moviedbkey?: string;
-    roles?: string;
-    emailAddress?: string;
-	token?: string;
-	secUntilNexLogin?: number;
+  id?: number;
+  username: string;
+  password: string;
+  moviedbkey?: string;
+  roles?: string;
+  emailAddress?: string;
+  token?: string;
+  secUntilNexLogin?: number;
 }
