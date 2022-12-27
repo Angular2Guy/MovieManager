@@ -4,7 +4,7 @@
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel" i18n="@@loginLoginSignin">Login / Signin</h5>
       </div>
-      <div class="modal-body" [formGroup]="loginFormGroup">        
+      <div class="modal-body" [formGroup]="loginFormGroup" *ngIf="!waitingForResponse">        
         <input type="text" class="form-control" i18n-placeholder="@@loginLoginPh" placeholder="login" [formControlName]="ControlName.LoginName" (keyup.enter)="loginUser()" (keyup.escape)="cancelUser()">
         <br/>
         <input type="password" class="form-control" i18n-placeholder="@@loginPassword" placeholder="password" [formControlName]="ControlName.Password" (keyup.enter)="loginUser()" (keyup.escape)="cancelUser()">
@@ -13,10 +13,15 @@
         <br/>
         <div *ngIf="modalMsg.trim().length > 0" [ngClass]="modalMsgType === MessageType.Error ? 'alert alert-danger' : 'alert alert-info'">{{modalMsg}}</div>
       </div>
-      <div class="modal-footer">
+      <div class="modal-footer" *ngIf="!waitingForResponse">
         <button type="button" class="btn btn-primary" (click)="loginUser()" [disabled]="loginInvalid()" i18n="@@loginLogin">Login</button>
         <button type="button" class="btn btn-secondary" (click)="cancelUser()" i18n="@@cancel">Cancel</button>
         <button type="button" class="btn btn-primary" (click)="signinUser()" [disabled]="signinInvalid()" i18n="@@loginSignin">Signin</button>
+      </div>
+      <div class="d-flex justify-content-center align-items-center spinner-container"  *ngIf="waitingForResponse">
+      <div class="spinner-border text-primary myspinner" role="status">
+         <span class="visually-hidden">Loading...</span>
+      </div>
       </div>
     </div>
   </div>

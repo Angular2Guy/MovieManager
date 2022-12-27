@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
     protected modalMsg = '';
     protected modalMsgType = MessageType.Error; 
     protected tillNextLogin = 0;
+    protected waitingForResponse = false;
 
   constructor(private userService: UsersService, formBuilder: FormBuilder, private tokenService: TokenService) { 
 	this.loginFormGroup = formBuilder.group({
@@ -75,6 +76,7 @@ export class LoginComponent implements OnInit {
 	  if(this.loginInvalid()) {
 		  return;
 	  } 
+	  this.waitingForResponse = true;
 	 this.modalMsg = '';
      this.userService.login(this.loginFormGroup.controls[ControlName.LoginName].value, 
      this.loginFormGroup.controls[ControlName.Password].value).subscribe((myTillNextLogin: number) => {
@@ -84,6 +86,7 @@ export class LoginComponent implements OnInit {
         this.modalMsgType = MessageType.Error;
         this.modalMsg = res ? '' : $localize `:@@loginErrorMsg:Login Failed.`;
         this.loginClosed.emit(res);
+        this.waitingForResponse = false;
      });
   }
 
@@ -97,12 +100,14 @@ export class LoginComponent implements OnInit {
 
   signinUser() {
 	 this.modalMsg = '';
+	 this.waitingForResponse = true;
      this.userService.signin(this.loginFormGroup.controls[ControlName.LoginName].value, 
         this.loginFormGroup.controls[ControlName.Password].value, 
         this.loginFormGroup.controls[ControlName.MovieDbKey].value).subscribe((res: boolean) =>{
           this.cancelUser();
           this.modalMsgType = res ? MessageType.Info : MessageType.Error;
           this.modalMsg = res ? $localize `:@@SigninSuccessMsg:Signin successful. Please Login.` : $localize `:@@SigninFailedMsg:Signin failed.`;
+          this.waitingForResponse = false;
       });
   }
 }
