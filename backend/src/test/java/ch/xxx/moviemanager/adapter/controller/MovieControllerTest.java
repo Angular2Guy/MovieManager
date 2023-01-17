@@ -18,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,6 +57,7 @@ public class MovieControllerTest {
 	@BeforeEach
 	public void init() {
 		Mockito.when(this.defaultMapper.convertOnlyMovie(any(Movie.class))).thenCallRealMethod();
+		Mockito.when(this.defaultMapper.convert(any(Movie.class))).thenCallRealMethod();
 		Mockito.when(this.jwtTokenService.resolveToken(any(HttpServletRequest.class))).thenReturn("XXX");
 		Mockito.when(this.jwtTokenService.validateToken(any(String.class))).thenReturn(Boolean.TRUE);
 		Mockito.when(this.jwtTokenService.getAuthentication(any(String.class)))
@@ -63,10 +65,8 @@ public class MovieControllerTest {
 	}
 
 	@Test
-	public void getMovieSearchTest() throws Exception {
-		final Movie myMovie = new Movie();
-		myMovie.setId(1L);
-		myMovie.setTitle("myTitle");
+	public void movieSearchByNameTest() throws Exception {
+		final Movie myMovie = createTestMovieEntity();
 		Mockito.when(service.findMovie(any(String.class), any(String.class))).thenReturn(List.of(myMovie));
 		this.mockMvc
 				.perform(get("/rest/movie/xxx").header(JwtUtils.AUTHORIZATION, String.format("Bearer %s", TOKEN))
@@ -74,5 +74,31 @@ public class MovieControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].id", Matchers.is(Matchers.equalTo(myMovie.getId())), Long.class))
 				.andExpect(jsonPath("$[0].title", Matchers.is(Matchers.equalTo(myMovie.getTitle())), String.class));
+	}
+
+	private Movie createTestMovieEntity() {
+		final Movie myMovie = new Movie();
+		myMovie.setId(1L);
+		myMovie.setTitle("myTitle");
+		return myMovie;
+	}
+	
+	@Test
+	public void movieSearchByIdFoundTest() throws Exception {
+		final Movie myMovie = createTestMovieEntity();
+		Mockito.when(this.service.findMovieById(any(Long.class))).thenReturn(Optional.of(myMovie));
+		this.mockMvc.perform(get("/rest/movie/id/1").header(JwtUtils.AUTHORIZATION, String.format("Bearer %s", TOKEN))
+						.servletPath("/rest/movie"))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.id", Matchers.is(Matchers.equalTo(myMovie.getId())), Long.class))
+		.andExpect(jsonPath("$.title", Matchers.is(Matchers.equalTo(myMovie.getTitle())), String.class));
+	}
+	
+	@Test
+	public void movieSearchByIdNotFoundTest() throws Exception {
+		Mockito.when(this.service.findMovieById(any(Long.class))).thenReturn(Optional.empty());
+		this.mockMvc.perform(get("/rest/movie/id/1").header(JwtUtils.AUTHORIZATION, String.format("Bearer %s", TOKEN))
+						.servletPath("/rest/movie"))
+		.andExpect(status().isNotFound());
 	}
 }
