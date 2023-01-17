@@ -58,14 +58,14 @@ public class MovieService {
 	private final CastRepository castRep;
 	private final ActorRepository actorRep;
 	private final GenereRepository genereRep;
-	private final UserDetailService auds;
+	private final UserDetailService userDetailService;
 	private final DefaultMapper mapper;
 	private final MovieDbRestClient movieDbRestClient;
 
 	public MovieService(MovieRepository movieRep, CastRepository castRep, ActorRepository actorRep,
-			GenereRepository genereRep, UserDetailService auds, DefaultMapper mapper,
+			GenereRepository genereRep, UserDetailService userDetailService, DefaultMapper mapper,
 			MovieDbRestClient movieDbRestClient) {
-		this.auds = auds;
+		this.userDetailService = userDetailService;
 		this.actorRep = actorRep;
 		this.castRep = castRep;
 		this.genereRep = genereRep;
@@ -79,8 +79,8 @@ public class MovieService {
 		return result;
 	}
 
-	public List<Movie> findMoviesByGenere(Long id, String bearerStr) {
-		List<Movie> result = this.movieRep.findByGenereId(id, this.auds.getCurrentUser(bearerStr).getId());
+	public List<Movie> findMoviesByGenereId(Long id, String bearerStr) {
+		List<Movie> result = this.movieRep.findByGenereId(id, this.userDetailService.getCurrentUser(bearerStr).getId());
 		return result;
 	}
 
@@ -92,7 +92,7 @@ public class MovieService {
 	public boolean deleteMovieById(Long id, String bearerStr) {
 		boolean result = true;
 		try {
-			User user = this.auds.getCurrentUser(bearerStr);
+			User user = this.userDetailService.getCurrentUser(bearerStr);
 			Optional<Movie> movieOpt = this.movieRep.findById(id);
 			if (movieOpt.isPresent() && movieOpt.get().getUsers().contains(user)) {
 				Movie movie = movieOpt.get();
@@ -115,12 +115,12 @@ public class MovieService {
 
 	public List<Movie> findMovie(String title, String bearerStr) {
 		PageRequest pageRequest = PageRequest.of(0, 15, Sort.by("title").ascending());
-		List<Movie> result = this.movieRep.findByTitle(title, this.auds.getCurrentUser(bearerStr).getId(), pageRequest);
+		List<Movie> result = this.movieRep.findByTitle(title, this.userDetailService.getCurrentUser(bearerStr).getId(), pageRequest);
 		return result;
 	}
 
 	public List<Movie> findMoviesByPage(Integer page, String bearerStr) {
-		User currentUser = this.auds.getCurrentUser(bearerStr);
+		User currentUser = this.userDetailService.getCurrentUser(bearerStr);
 		List<Movie> result = this.movieRep.findMoviesByPage(currentUser.getId(), PageRequest.of((page - 1), 10));
 		result = result.stream().flatMap(movie -> Stream.of(this.movieRep.findByIdWithCollections(movie.getId())))
 				.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
@@ -128,7 +128,7 @@ public class MovieService {
 	}
 
 	public List<MovieDto> findImportMovie(String title, String bearerStr) {
-		User user = this.auds.getCurrentUser(bearerStr);
+		User user = this.userDetailService.getCurrentUser(bearerStr);
 		String queryStr = this.createQueryStr(title);
 		WrapperMovieDto wrMovie = this.movieDbRestClient.fetchImportMovie(user.getMoviedbkey(), queryStr);
 		List<MovieDto> result = Arrays.asList(wrMovie.getResults());
@@ -142,7 +142,7 @@ public class MovieService {
 	}
 
 	public boolean importMovie(int movieDbId, String bearerStr) throws InterruptedException {
-		User user = this.auds.getCurrentUser(bearerStr);
+		User user = this.userDetailService.getCurrentUser(bearerStr);
 		LOG.info("Start import");
 		LOG.info("Start import generes");
 		WrapperGenereDto result = this.movieDbRestClient.fetchAllGeneres(user.getMoviedbkey());
@@ -163,7 +163,7 @@ public class MovieService {
 		if (movieEntity == null) {
 			LOG.info("Movie not found by id");
 			List<Movie> movies = this.movieRep.findByTitleAndRelDate(movieDto.getTitle(), movieDto.getReleaseDate(),
-					this.auds.getCurrentUser(bearerStr).getId());
+					this.userDetailService.getCurrentUser(bearerStr).getId());
 			if (!movies.isEmpty()) {
 				LOG.info("Movie found by Title and Reldate");
 				movieEntity = movies.get(0);
@@ -225,7 +225,7 @@ public class MovieService {
 
 	public List<Movie> findMoviesByFilterCriteria(String bearerStr, MovieFilterCriteriaDto filterCriteriaDto) {
 		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto,
-				this.auds.getCurrentUser(bearerStr).getId());
+				this.userDetailService.getCurrentUser(bearerStr).getId());
 		SearchTermDto searchTermDto = new SearchTermDto();
 		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());
 		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr, searchTermDto);
@@ -249,7 +249,7 @@ public class MovieService {
 				: this.movieRep.findMoviesBySearchStrings(searchTermDto.getSearchStringDtos());
 		List<Movie> filteredMovies = movies.stream()
 				.filter(myMovie -> myMovie.getUsers().stream()
-						.anyMatch(myUser -> myUser.getId().equals(this.auds.getCurrentUser(bearerStr).getId())))
+						.anyMatch(myUser -> myUser.getId().equals(this.userDetailService.getCurrentUser(bearerStr).getId())))
 				.toList();
 		return filteredMovies;
 	}
