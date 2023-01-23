@@ -6,6 +6,7 @@ Author: Sven Loesekann
 Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, Postgresql, Liquibase, Jpa, Maven, Java, Hibernate Search
 
 ## Articles
+* [The MovieManager project has 3 Test Types](https://angular2guy.wordpress.com/2023/01/22/the-moviemanager-project-has-3-test-types/)
 * [Spring Boot 3 update experience](https://angular2guy.wordpress.com/2022/11/15/spring-boot-3-update-experience/)
 * [An Angular Autocomplete From UI to DB](https://angular2guy.wordpress.com/2021/07/31/an-angular-autocomplete-from-ui-to-db/)
 * [Advanced Kubernetes setup for Spring Boot App with Postgresql DB](https://angular2guy.wordpress.com/2021/07/30/advanced-kubernetes-setup-for-spring-boot-app-with-postgresql-db/)
