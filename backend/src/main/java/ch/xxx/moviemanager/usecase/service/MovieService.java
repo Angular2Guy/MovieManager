@@ -191,6 +191,9 @@ public class MovieService {
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
+				if(c.getCharacter() == null || c.getCharacter().isBlank() || c.getName() == null || c.getName().isBlank()) {
+					continue;
+				}
 				Cast castEntity = this.mapper.convert(c);
 				movieEntity.getCast().add(castEntity);
 				castEntity.setMovie(movieEntity);
