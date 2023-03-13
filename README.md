@@ -24,6 +24,9 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 ## Mission Statement
 The project serves as example for the integration of Angular, Spring Boot with Jpa and relational databases in clean architecture. The Angular frontend uses the Ng-Bootstrap components and the 'ngx-simple-charts' library with its entry point for Jwt token handling. The backend manages/initialzies the H2/Postgresql databases with Liquibase. The data access is done with Jpa and Spring Repositories. Actor bios and Movie overviews are indexed and searched with Hibernate Search. The movies are imported with Spring WebClient. The architecture is checked with ArchUnit in a test. The security setup is done with Spring Security and Jwt Tokens, that are locked after logout. Test examples for the controllers/services/repositories.
 
+## C4 Architecture Diagrams
+The project has a [System Context Diagram](structurizr/diagrams/structurizr-1-SystemContext.svg), a [Container Diagram](structurizr/diagrams/structurizr-1-Containers.svg) and a [Component Diagram](structurizr/diagrams/structurizr-1-Components.svg). The Diagrams have been created with Structurizr. The file runStructurizr.sh contains the commands to use Structurizr and the directory structurizr contains the dsl file.
+
 ## Postgresql setup
 In the postgresql.sh file are the commands to pull and run Postgresql in a Docker image locally. To build a Jar with Postgresql setup build it with 'mvnw clean install -Ddocker=true'. In Eclipse the maven profile 'standalone-postgresql' has to be activated and a run/debug configuration with the VM parameter '-Dspring.profiles.active=prod' has to started. The database will be initialized by Liquibase. The Liquibase scripts are setup with preconditions that the tables/sequences/indexes are only created if they do not exist. 
 
