@@ -79,12 +79,12 @@
 		<dependency>
 			<groupId>net.javacrumbs.shedlock</groupId>
 			<artifactId>shedlock-spring</artifactId>
-			<version>4.34.0</version>
+			<version>5.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>net.javacrumbs.shedlock</groupId>
 			<artifactId>shedlock-provider-jdbc-template</artifactId>
-			<version>4.34.0</version>
+			<version>5.2.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.liquibase</groupId>
@@ -93,12 +93,12 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.12</version>
+			<version>1.6.15</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-data-rest</artifactId>
-			<version>1.6.12</version>
+			<version>1.6.15</version>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
