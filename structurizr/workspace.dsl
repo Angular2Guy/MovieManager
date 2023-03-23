@@ -16,7 +16,7 @@ workspace "MovieManager" "This is a project to show howto manage your movies wit
         	    backendMovieRelatedRepositories = component "Movie related Repositories" "Repositories for Cast / Actor / Genere / Movie."
         	    backendUserTokenRepository = component "User/Token Repositories" "User / Token Repositories"        	    
         	    backendMovieRelatedServices = component "Movie related Services" "Services for Cast / Actor / Genere / Movie."
-        	    backendUserService = component "User Service" "User Service"        	    
+        	    backendUserService = component "User Service" "User Service provides the logic for login / signin / logout."
         	}
         	database = container "Postgresql Db" "Postgresql stores all the data of the system." tag "Database"
         }
