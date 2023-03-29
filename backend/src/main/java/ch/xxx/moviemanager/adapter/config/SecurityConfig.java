@@ -29,15 +29,11 @@ import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-	    securedEnabled = true,
-	    jsr250Enabled = true,
-	    prePostEnabled = true
-	)
+@EnableGlobalMethodSecurity(securedEnabled = true, jsr250Enabled = true, prePostEnabled = true)
 @Order(SecurityProperties.DEFAULT_FILTER_ORDER)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private final JwtTokenService jwtTokenService;
-	
+
 	public SecurityConfig(JwtTokenService jwtTokenService) {
 		this.jwtTokenService = jwtTokenService;
 	}
@@ -45,20 +41,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenService);
-		http.httpBasic()
-		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-		.and().authorizeRequests()		
-		.antMatchers("/rest/auth/**").permitAll()
-		.antMatchers("/rest/**").authenticated()
-		.antMatchers("/**").permitAll()
-		.anyRequest().authenticated()
-		.and().csrf().disable()
-		.headers().frameOptions().sameOrigin()
-		.and().addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
+		http.httpBasic().and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.authorizeRequests().antMatchers("/rest/auth/**").permitAll().antMatchers("/rest/**").authenticated()
+				.antMatchers("/**").permitAll().anyRequest().authenticated().and().csrf().disable().headers()
+				.frameOptions().sameOrigin().xssProtection().and()
+				.contentSecurityPolicy(
+						"default-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';")
+				.and().and().addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
 	}
-	
+
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-	    return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder();
 	}
 }
