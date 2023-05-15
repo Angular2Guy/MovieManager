@@ -17,12 +17,13 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 
-public interface JpaActorRepository extends PagingAndSortingRepository<Actor,Long>{
+public interface JpaActorRepository extends PagingAndSortingRepository<Actor,Long>, CrudRepository<Actor, Long>{
 	@Query("select a from Actor a join a.users u where lower(a.name) like lower(concat('%',:name,'%')) and u.id = :userid")
 	List<Actor> findByActorName(@Param("name") String name, @Param("userid") Long userId, Pageable pageable);
 	

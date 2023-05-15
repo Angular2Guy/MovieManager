@@ -14,18 +14,24 @@ package ch.xxx.moviemanager.adapter.config;
 
 import java.sql.Types;
 
-import org.hibernate.dialect.PostgreSQL10Dialect;
-import org.hibernate.type.descriptor.sql.LongVarcharTypeDescriptor;
-import org.hibernate.type.descriptor.sql.SqlTypeDescriptor;
+import org.hibernate.dialect.PostgreSQLDialect;
+import org.hibernate.type.SqlTypes;
 
-public class PGSQLMapDialect extends PostgreSQL10Dialect {
+public class PGSQLMapDialect extends PostgreSQLDialect {
 
-	@Override
-	public SqlTypeDescriptor remapSqlTypeDescriptor(SqlTypeDescriptor sqlTypeDescriptor) {
-		if (Types.CLOB == sqlTypeDescriptor.getSqlType() || Types.LONGVARCHAR == sqlTypeDescriptor.getSqlType()) {
-			return LongVarcharTypeDescriptor.INSTANCE;
-		}
-		return super.remapSqlTypeDescriptor(sqlTypeDescriptor);
+//	@Override
+//	public SqlTypeDescriptor remapSqlTypeDescriptor(SqlTypeDescriptor sqlTypeDescriptor) {
+//		if (Types.CLOB == sqlTypeDescriptor.getSqlType() || Types.LONGVARCHAR == sqlTypeDescriptor.getSqlType()) {
+//			return LongVarcharTypeDescriptor.INSTANCE;
+//		}
+//		return super.remapSqlTypeDescriptor(sqlTypeDescriptor);
+//	}
+
+	protected String columnType(int sqlTypeCode) {
+		return Types.CLOB == sqlTypeCode ? super.columnType(SqlTypes.LONG32VARCHAR) : super.columnType(sqlTypeCode);
 	}
-
+	
+	protected String castType(int sqlTypeCode) {
+		return Types.CLOB == sqlTypeCode ? super.castType(SqlTypes.LONG32VARCHAR) : super.castType(sqlTypeCode);
+	}
 }
