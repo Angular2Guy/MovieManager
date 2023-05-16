@@ -15,7 +15,7 @@ package ch.xxx.moviemanager.domain.model.entity;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
