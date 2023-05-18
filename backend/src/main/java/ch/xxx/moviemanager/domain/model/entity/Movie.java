@@ -18,6 +18,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.search.engine.backend.types.TermVector;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
+import org.hibernate.search.mapper.pojo.mapping.definition.annotation.Indexed;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -31,15 +35,11 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.TermVector;
-
 @NamedQuery(name = "Movie.count", query = "select count(m) from Movie m")
 @Indexed
 @Entity
 public class Movie extends EntityBase {
-	@Field(termVector = TermVector.YES)
+	@FullTextField(termVector = TermVector.YES)
 	@Lob
 	@Column(columnDefinition = "text")
 	private String overview;
