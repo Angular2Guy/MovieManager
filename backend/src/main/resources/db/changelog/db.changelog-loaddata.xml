@@ -16,21 +16,21 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 	<changeSet id="init-data" author="angular2guy" runOnChange="true">
-		<loadUpdateData file="data/movie.csv" tableName="movie" primaryKey="id"
+		<loadUpdateData file="changelog/data/movie.csv" tableName="movie" primaryKey="id"
 			relativeToChangelogFile="true" />
-		<loadUpdateData  file="data/actor.csv" tableName="actor" primaryKey="id"
+		<loadUpdateData  file="changelog/data/actor.csv" tableName="actor" primaryKey="id"
 			relativeToChangelogFile="true" />
-		<loadUpdateData file="data/cast1.csv" tableName="cast1" primaryKey="id"
+		<loadUpdateData file="changelog/data/cast1.csv" tableName="cast1" primaryKey="id"
 			relativeToChangelogFile="true" />
-		<loadUpdateData file="data/genere.csv" tableName="genere" primaryKey="id"
+		<loadUpdateData file="changelog/data/genere.csv" tableName="genere" primaryKey="id"
 			relativeToChangelogFile="true" />
-		<loadUpdateData file="data/movie_genere.csv" primaryKey="genere_id,movie_id" 
+		<loadUpdateData file="changelog/data/movie_genere.csv" primaryKey="genere_id,movie_id" 
 			tableName="movie_genere" relativeToChangelogFile="true" />		
-		<loadUpdateData file="data/user1.csv" tableName="user1" primaryKey="id"
+		<loadUpdateData file="changelog/data/user1.csv" tableName="user1" primaryKey="id"
 			relativeToChangelogFile="true" />
-		<loadUpdateData file="data/movie_user.csv" tableName="movie_user" primaryKey="user_id,movie_id"
+		<loadUpdateData file="changelog/data/movie_user.csv" tableName="movie_user" primaryKey="user_id,movie_id"
 			relativeToChangelogFile="true" />
-		<loadUpdateData file="data/actor_user.csv" tableName="actor_user" primaryKey="actor_id,user_id"
+		<loadUpdateData file="changelog/data/actor_user.csv" tableName="actor_user" primaryKey="actor_id,user_id"
 			relativeToChangelogFile="true" />
 	</changeSet>
 </databaseChangeLog>
