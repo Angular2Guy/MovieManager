@@ -11,7 +11,6 @@
 
 	<artifactId>moviemanager-backend</artifactId>
 
-	<name>moviemanager</name>
 	<description>Demo project for Spring Boot</description>
 	<packaging>jar</packaging>
 
@@ -73,18 +72,17 @@
 		</dependency>
 		<dependency>
    <groupId>org.hibernate.orm</groupId> 
-   <artifactId>hibernate-core</artifactId>
-   <version>6.2.2.Final</version>
+   <artifactId>hibernate-core</artifactId>   
 </dependency>
 <dependency>
    <groupId>org.hibernate.search</groupId>
    <artifactId>hibernate-search-mapper-orm-orm6</artifactId> 
-   <version>6.2.0.Alpha2</version>
+   <version>6.2.0.Beta1</version>
 </dependency>
 <dependency>
    <groupId>org.hibernate.search</groupId>
    <artifactId>hibernate-search-backend-lucene</artifactId>
-   <version>6.2.0.Alpha2</version>
+   <version>6.2.0.Beta1</version>
 </dependency>
 		<dependency>
 			<groupId>net.javacrumbs.shedlock</groupId>
