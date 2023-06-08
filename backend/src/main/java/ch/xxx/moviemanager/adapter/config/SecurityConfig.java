@@ -39,7 +39,7 @@ public class SecurityConfig {
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenService);
 		HttpSecurity httpSecurity = http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/rest/auth/**").permitAll()
-				.requestMatchers("/rest/**").authenticated().requestMatchers("/**").permitAll().anyRequest()).csrf()
+				.requestMatchers("/rest/**").authenticated().requestMatchers("/**").permitAll()).csrf()
 				.disable().headers()
 				.contentSecurityPolicy(
 						"default-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';")
