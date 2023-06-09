@@ -23,11 +23,7 @@
 		<modifyDataType columnName="movie_id"
 			newDataType="bigint" tableName="movie" />
 	</changeSet>		
-	<changeSet id="29" author="angular2guy">
-		<modifyDataType columnName="movie_id"
-			newDataType="bigint" tableName="movie" />
-	</changeSet>		
-		<changeSet id="30" author="angular2guy">
+	<changeSet id="30" author="angular2guy">
 		<modifyDataType columnName="release_date" 
 			newDataType="timestamp" tableName="movie" />
 			<modifyDataType columnName="release_date" 
