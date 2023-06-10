@@ -21,7 +21,7 @@
 				<sequenceExists sequenceName="hibernate_sequence" />
         	</not>
         </preConditions>        
-		<createSequence sequenceName="hibernate_sequence" startValue="1000" incrementBy="10"/>
+		<createSequence sequenceName="hibernate_sequence" startValue="1000" />
 	</changeSet>
 	<changeSet author="angular2guy" id="2">
         <preConditions onFail="MARK_RAN">

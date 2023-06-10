@@ -86,4 +86,13 @@
 	<changeSet id="37" author="angular2guy" dbms="postgresql">
 		<alterSequence sequenceName="hibernate_sequence" incrementBy="10" />
 	</changeSet>	
+	<changeSet author="angular2guy" id="38" dbms="!postgresql">
+		<preConditions onFail="MARK_RAN">
+			<sequenceExists sequenceName="hibernate_sequence"/>
+		</preConditions>		
+        <dropSequence sequenceName="hibernate_sequence"/>
+	</changeSet>
+	<changeSet author="angular2guy" id="39" dbms="!postgresql">
+		<createSequence sequenceName="hibernate_sequence" startValue="1000" incrementBy="10"/>
+	</changeSet>
 </databaseChangeLog>
