@@ -1,5 +1,5 @@
 # MovieManager
-This is a project to manage my movies. It shows howto use Angular with Spring Boot and Jpa. For development it uses a H2 database. For persistent data it uses Postgresql. The databases are initialized and updated with Liquibase. For fulltext search in actor biographies and movie overviews Hibernate Search is used.
+This is a project to manage my movies. It shows howto use Angular with Spring Boot 3 and Jpa. For development it uses a H2 database. For persistent data it uses Postgresql. The databases are initialized and updated with Liquibase. For fulltext search in actor biographies and movie overviews Hibernate Search is used.
 
 Author: Sven Loesekann
 
