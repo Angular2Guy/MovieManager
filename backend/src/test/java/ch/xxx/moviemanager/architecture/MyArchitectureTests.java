@@ -20,7 +20,7 @@ import static com.tngtech.archunit.lang.conditions.ArchConditions.beAnnotatedWit
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;

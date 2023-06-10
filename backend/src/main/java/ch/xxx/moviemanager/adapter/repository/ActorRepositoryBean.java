@@ -17,19 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.Metamodel;
-import javax.validation.Valid;
-
-import org.apache.lucene.search.Query;
-import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.jpa.Search;
-import org.hibernate.search.query.dsl.QueryBuilder;
+import org.hibernate.search.mapper.orm.Search;
+import org.hibernate.search.mapper.orm.session.SearchSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -42,6 +31,14 @@ import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 import ch.xxx.moviemanager.domain.model.entity.Cast;
 import ch.xxx.moviemanager.domain.model.entity.User;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.metamodel.EntityType;
+import jakarta.persistence.metamodel.Metamodel;
+import jakarta.validation.Valid;
 
 @Repository
 public class ActorRepositoryBean implements ActorRepository {
@@ -114,13 +111,10 @@ public class ActorRepositoryBean implements ActorRepository {
 				&& filterCriteriaDto.getMovieCharacter().trim().length() > 2) {
 			Metamodel m = this.entityManager.getMetamodel();
 			EntityType<Actor> actor_ = m.entity(Actor.class);
-			predicates
-					.add(this.entityManager
-							.getCriteriaBuilder().like(
-									this.entityManager.getCriteriaBuilder()
-											.lower(cActor.join(actor_.getDeclaredList("casts", Cast.class))
-													.get("movieChar")),
-									String.format("%%%s%%", filterCriteriaDto.getMovieCharacter().toLowerCase())));
+			predicates.add(this.entityManager.getCriteriaBuilder()
+					.like(this.entityManager.getCriteriaBuilder()
+							.lower(cActor.join(actor_.getDeclaredList("casts", Cast.class)).get("movieChar")),
+							String.format("%%%s%%", filterCriteriaDto.getMovieCharacter().toLowerCase())));
 		}
 		// user check
 		Metamodel m = this.entityManager.getMetamodel();
@@ -131,17 +125,12 @@ public class ActorRepositoryBean implements ActorRepository {
 		return this.entityManager.createQuery(cq).setMaxResults(1000).getResultList();
 	}
 
-	@SuppressWarnings("unchecked")
 	public List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto) {
 		List<Actor> resultList = List.of();
 		if (searchPhraseDto.getPhrase() != null && searchPhraseDto.getPhrase().trim().length() > 2) {
-			FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-			QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-					.forEntity(Actor.class).get();
-			Query phraseQuery = actorQueryBuilder.phrase().withSlop(searchPhraseDto.getOtherWordsInPhrase())
-					.onField("biography").sentence(searchPhraseDto.getPhrase()).createQuery();
-			resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(1000)
-					.getResultList();
+			SearchSession searchSession = Search.session(this.entityManager);
+			resultList = searchSession.search(Actor.class).where(f -> f.phrase().field("biography")
+					.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase())).fetchHits(1000);
 		}
 		return resultList;
 	}
@@ -149,15 +138,10 @@ public class ActorRepositoryBean implements ActorRepository {
 	public List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings) {
 		StringBuilder stringBuilder = new StringBuilder();
 		searchStrings.forEach(myDto -> stringBuilder.append(" ").append(myDto.getOperator().value).append(" ")
-				.append(myDto.getSearchString()));
-		FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-		QueryBuilder actorQueryBuilder = fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-				.forEntity(Actor.class).get();
-		Query phraseQuery = actorQueryBuilder.simpleQueryString().onField("biography")
-				.matching(stringBuilder.substring(2)).createQuery();
-		@SuppressWarnings("unchecked")
-		List<Actor> resultList = fullTextEntityManager.createFullTextQuery(phraseQuery, Actor.class).setMaxResults(1000)
-				.getResultList();
+				.append(myDto.getSearchString()));		
+		List<Actor> resultList = Search.session(this.entityManager).search(Actor.class)
+				.where(f -> f.simpleQueryString().field("biography").matching(stringBuilder.substring(2)))
+				.fetchHits(1000);
 		return resultList;
 	}
 }

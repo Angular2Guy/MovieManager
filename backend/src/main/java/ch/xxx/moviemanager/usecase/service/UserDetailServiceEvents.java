@@ -14,7 +14,7 @@ package ch.xxx.moviemanager.usecase.service;
 
 import java.util.Optional;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSender;

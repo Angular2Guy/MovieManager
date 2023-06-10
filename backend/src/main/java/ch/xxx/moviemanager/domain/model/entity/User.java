@@ -15,10 +15,10 @@ package ch.xxx.moviemanager.domain.model.entity;
 import java.time.LocalDate;
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="user1")

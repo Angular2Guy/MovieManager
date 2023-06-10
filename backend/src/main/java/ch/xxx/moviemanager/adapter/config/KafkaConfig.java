@@ -15,8 +15,8 @@ package ch.xxx.moviemanager.adapter.config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityManagerFactory;
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManagerFactory;
 
 import org.apache.kafka.clients.DefaultHostResolver;
 import org.apache.kafka.clients.admin.AdminClient;

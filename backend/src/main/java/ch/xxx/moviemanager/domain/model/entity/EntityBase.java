@@ -14,15 +14,16 @@ package ch.xxx.moviemanager.domain.model.entity;
 
 import java.util.Objects;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.SequenceGenerator;
 
 @MappedSuperclass
 public abstract class EntityBase {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	@GeneratedValue(generator = "MySequence")
+	@SequenceGenerator(name = "MySequence",sequenceName = "hibernate_sequence", initialValue = 1000, allocationSize = 10)
 	private Long id;
 	
 	public Long getId() {

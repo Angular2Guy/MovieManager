@@ -71,7 +71,7 @@
 			<column name="movie_id" />
 		</createIndex>
 	</changeSet>
-		<changeSet id="36" author="angular2guy">
+	<changeSet id="36" author="angular2guy">
 		<preConditions onFail="MARK_RAN">
 			<not>
 				<indexExists tableName="movie_user"
@@ -82,5 +82,8 @@
 			tableName="movie_user">
 			<column name="user_id" />
 		</createIndex>
+	</changeSet>
+	<changeSet id="37" author="angular2guy" dbms="postgresql">
+		<alterSequence sequenceName="hibernate_sequence" incrementBy="10" />
 	</changeSet>	
 </databaseChangeLog>

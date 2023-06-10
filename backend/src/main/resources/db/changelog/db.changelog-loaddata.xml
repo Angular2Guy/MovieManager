@@ -18,7 +18,7 @@
 	<changeSet id="init-data" author="angular2guy" runOnChange="true">
 		<loadUpdateData file="data/movie.csv" tableName="movie" primaryKey="id"
 			relativeToChangelogFile="true" />
-		<loadUpdateData  file="data/actor.csv" tableName="actor" primaryKey="id"
+		<loadUpdateData file="data/actor.csv" tableName="actor" primaryKey="id"
 			relativeToChangelogFile="true" />
 		<loadUpdateData file="data/cast1.csv" tableName="cast1" primaryKey="id"
 			relativeToChangelogFile="true" />
