@@ -28,7 +28,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -40,7 +39,6 @@ import jakarta.validation.constraints.Size;
 @Entity
 public class Movie extends EntityBase {
 	@FullTextField(termVector = TermVector.YES)
-	@Lob
 	@Column(columnDefinition = "text")
 	private String overview;
 	private Date releaseDate;

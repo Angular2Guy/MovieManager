@@ -12,26 +12,15 @@
  */
 package ch.xxx.moviemanager.adapter.config;
 
-import java.sql.Types;
-
 import org.hibernate.dialect.PostgreSQLDialect;
-import org.hibernate.type.SqlTypes;
 
 public class PGSQLMapDialect extends PostgreSQLDialect {
 
-//	@Override
-//	public SqlTypeDescriptor remapSqlTypeDescriptor(SqlTypeDescriptor sqlTypeDescriptor) {
-//		if (Types.CLOB == sqlTypeDescriptor.getSqlType() || Types.LONGVARCHAR == sqlTypeDescriptor.getSqlType()) {
-//			return LongVarcharTypeDescriptor.INSTANCE;
-//		}
-//		return super.remapSqlTypeDescriptor(sqlTypeDescriptor);
+//	protected String columnType(int sqlTypeCode) {
+//		return Types.CLOB == sqlTypeCode || SqlTypes.LONG32VARBINARY == sqlTypeCode ? super.columnType(SqlTypes.LONG32VARCHAR) : super.columnType(sqlTypeCode);
 //	}
-
-	protected String columnType(int sqlTypeCode) {
-		return Types.CLOB == sqlTypeCode ? super.columnType(SqlTypes.LONG32VARCHAR) : super.columnType(sqlTypeCode);
-	}
-	
-	protected String castType(int sqlTypeCode) {
-		return Types.CLOB == sqlTypeCode ? super.castType(SqlTypes.LONG32VARCHAR) : super.castType(sqlTypeCode);
-	}
+//	
+//	protected String castType(int sqlTypeCode) {
+//		return Types.CLOB == sqlTypeCode || SqlTypes.LONG32VARBINARY == sqlTypeCode ? super.castType(SqlTypes.LONG32VARCHAR) : super.castType(sqlTypeCode);
+//	}
 }
