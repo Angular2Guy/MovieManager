@@ -47,7 +47,7 @@ public class Actor extends EntityBase {
 	private Date birthday;
 	private Date deathday;
 	@FullTextField(termVector = TermVector.YES)
-	@Lob
+//	@Lob
 	@Column(columnDefinition = "text")
 	private String biography;
 	private Double popularity = 0.0;

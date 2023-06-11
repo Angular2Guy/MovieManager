@@ -12,13 +12,26 @@
  */
 package ch.xxx.moviemanager.adapter.config;
 
+import org.hibernate.boot.model.TypeContributions;
 import org.hibernate.dialect.PostgreSQLDialect;
+import org.hibernate.service.ServiceRegistry;
 import org.hibernate.type.SqlTypes;
+import org.hibernate.type.descriptor.sql.internal.DdlTypeImpl;
+import org.hibernate.type.descriptor.sql.spi.DdlTypeRegistry;
 
 public class PGSQLMapDialect extends PostgreSQLDialect {
 
-	public boolean equivalentTypes(int typeCode1, int typeCode2) {
-		boolean result = super.equivalentTypes(typeCode1, typeCode2) || (SqlTypes.isCharacterOrClobType(typeCode1) && SqlTypes.isCharacterOrClobType(typeCode2));
-		return result;
-	}
+//	@Override
+//	public boolean equivalentTypes(int typeCode1, int typeCode2) {
+//		boolean result = super.equivalentTypes(typeCode1, typeCode2) || (SqlTypes.isCharacterOrClobType(typeCode1) && SqlTypes.isCharacterOrClobType(typeCode2));
+//		return result;
+//	}
+//	
+//	@Override
+//	protected void registerColumnTypes(TypeContributions typeContributions, ServiceRegistry serviceRegistry) {
+//		super.registerColumnTypes(typeContributions, serviceRegistry);
+//		final DdlTypeRegistry ddlTypeRegistry = typeContributions.getTypeConfiguration().getDdlTypeRegistry();
+//		ddlTypeRegistry.addDescriptor( new DdlTypeImpl( SqlTypes.VARCHAR, "clob", this ) );
+//		ddlTypeRegistry.addDescriptor( new DdlTypeImpl( SqlTypes.VARCHAR, "text", this ) );
+//	}
 }

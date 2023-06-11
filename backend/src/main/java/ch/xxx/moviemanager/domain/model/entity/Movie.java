@@ -39,14 +39,14 @@ import jakarta.validation.constraints.Size;
 @Indexed
 @Entity
 public class Movie extends EntityBase {
-	@FullTextField(termVector = TermVector.YES)
-	@Lob
-	@Column(columnDefinition = "text")
-	private String overview;
 	private Date releaseDate;
 	@NotBlank
 	@Size(max=255)
 	private String title;
+	@FullTextField(termVector = TermVector.YES)
+//	@Lob
+	@Column(columnDefinition = "text")
+	private String overview;
 	private Integer runtime = 0;
 	private Long revenue = 0L;
 	private Double voteAverage = 0.0;

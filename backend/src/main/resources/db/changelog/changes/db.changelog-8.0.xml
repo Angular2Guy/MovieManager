@@ -95,4 +95,8 @@
 	<changeSet author="angular2guy" id="39" dbms="!postgresql">
 		<createSequence sequenceName="hibernate_sequence" startValue="1000" incrementBy="10"/>
 	</changeSet>
+	<changeSet id="40" author="angular2guy" dbms="!postgresql">
+		<modifyDataType tableName="movie" columnName="overview" newDataType="varchar(10240)"/>
+		<modifyDataType tableName="actor" columnName="biography" newDataType="varchar(10240)"/>
+	</changeSet>
 </databaseChangeLog>
