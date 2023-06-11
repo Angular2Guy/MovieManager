@@ -13,14 +13,12 @@
 package ch.xxx.moviemanager.adapter.config;
 
 import org.hibernate.dialect.PostgreSQLDialect;
+import org.hibernate.type.SqlTypes;
 
 public class PGSQLMapDialect extends PostgreSQLDialect {
 
-//	protected String columnType(int sqlTypeCode) {
-//		return Types.CLOB == sqlTypeCode || SqlTypes.LONG32VARBINARY == sqlTypeCode ? super.columnType(SqlTypes.LONG32VARCHAR) : super.columnType(sqlTypeCode);
-//	}
-//	
-//	protected String castType(int sqlTypeCode) {
-//		return Types.CLOB == sqlTypeCode || SqlTypes.LONG32VARBINARY == sqlTypeCode ? super.castType(SqlTypes.LONG32VARCHAR) : super.castType(sqlTypeCode);
-//	}
+	public boolean equivalentTypes(int typeCode1, int typeCode2) {
+		boolean result = super.equivalentTypes(typeCode1, typeCode2) || (SqlTypes.isCharacterOrClobType(typeCode1) && SqlTypes.isCharacterOrClobType(typeCode2));
+		return result;
+	}
 }

@@ -28,6 +28,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
@@ -46,6 +47,7 @@ public class Actor extends EntityBase {
 	private Date birthday;
 	private Date deathday;
 	@FullTextField(termVector = TermVector.YES)
+	@Lob
 	@Column(columnDefinition = "text")
 	private String biography;
 	private Double popularity = 0.0;
