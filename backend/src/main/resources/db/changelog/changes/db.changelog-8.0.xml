@@ -99,4 +99,9 @@
 		<modifyDataType tableName="movie" columnName="overview" newDataType="varchar(10240)"/>
 		<modifyDataType tableName="actor" columnName="biography" newDataType="varchar(10240)"/>
 	</changeSet>
+	<changeSet id="41" author="angular2guy">
+		<addColumn tableName="user1">
+			<column defaultValue="0" type="bigint" name="migration"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

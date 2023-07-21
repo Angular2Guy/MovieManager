@@ -12,9 +12,12 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
+import java.nio.charset.Charset;
+import java.security.GeneralSecurityException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,6 +38,12 @@ import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.google.crypto.tink.DeterministicAead;
+import com.google.crypto.tink.InsecureSecretKeyAccess;
+import com.google.crypto.tink.KeysetHandle;
+import com.google.crypto.tink.TinkJsonProtoKeysetFormat;
+import com.google.crypto.tink.daead.DeterministicAeadConfig;
+
 import ch.xxx.moviemanager.domain.common.Role;
 import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
@@ -49,6 +58,7 @@ import ch.xxx.moviemanager.domain.model.entity.UserRepository;
 import ch.xxx.moviemanager.domain.utils.TokenSubjectRole;
 import ch.xxx.moviemanager.usecase.mapper.RevokedTokenMapper;
 import ch.xxx.moviemanager.usecase.mapper.UserMapper;
+import jakarta.annotation.PostConstruct;
 
 public class UserDetailServiceBase {
 	private final static Logger LOG = LoggerFactory.getLogger(UserDetailServiceBase.class);
@@ -63,6 +73,9 @@ public class UserDetailServiceBase {
 	private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(5);
 	@Value("${mail.url.uuid.confirm}")
 	private String confirmUrl;
+	@Value("${tink.json.key}")
+	private String tinkJsonKey;
+	private DeterministicAead daead;
 
 	public UserDetailServiceBase(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			RevokedTokenRepository revokedTokenRepository, JavaMailSender javaMailSender,
@@ -76,6 +89,13 @@ public class UserDetailServiceBase {
 		this.revokedTokenMapper = revokedTokenMapper;
 	}
 
+	@PostConstruct
+	public void init() throws GeneralSecurityException {
+		DeterministicAeadConfig.register();
+		KeysetHandle handle = TinkJsonProtoKeysetFormat.parseKeyset(this.tinkJsonKey, InsecureSecretKeyAccess.get());
+		this.daead = handle.getPrimitive(DeterministicAead.class);
+	}
+	
 	public void updateLoggedOutUsers() {
 		this.updateLoggedOutUsers(LOGOUT_TIMEOUT);
 	}
@@ -148,6 +168,7 @@ public class UserDetailServiceBase {
 			UUID uuid = UUID.randomUUID();
 			entity.setUuid(uuid.toString());
 			entity.setLocked(false);
+			entity.setMoviedbkey(this.encrypt(entity.getMoviedbkey(), entity.getUuid()));
 			entity.setRoles(Role.USERS.name());
 			boolean emailConfirmEnabled = this.confirmUrl != null && !this.confirmUrl.isBlank();
 			entity.setEnabled(!emailConfirmEnabled);
@@ -160,6 +181,18 @@ public class UserDetailServiceBase {
 		return result;
 	}
 
+	public String encrypt(String movieDbKey, String uuid) {
+		byte[] cipherBytes;
+		try {
+			cipherBytes = daead.encryptDeterministically(movieDbKey.getBytes(Charset.defaultCharset()),
+					uuid.getBytes(Charset.defaultCharset()));
+		} catch (GeneralSecurityException e) {
+			throw new RuntimeException(e);
+		}
+		String cipherText = new String(Base64.getEncoder().encode(cipherBytes), Charset.defaultCharset());
+		return cipherText;
+	}
+	
 	public Boolean confirmUuid(String uuid) {
 		return this.confirmUuid(this.userRepository.findByUuid(uuid), uuid);
 	}

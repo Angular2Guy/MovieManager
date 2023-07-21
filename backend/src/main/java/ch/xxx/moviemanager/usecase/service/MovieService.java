@@ -12,8 +12,11 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
+import java.nio.charset.Charset;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -23,10 +26,17 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.crypto.tink.DeterministicAead;
+import com.google.crypto.tink.InsecureSecretKeyAccess;
+import com.google.crypto.tink.KeysetHandle;
+import com.google.crypto.tink.TinkJsonProtoKeysetFormat;
+import com.google.crypto.tink.daead.DeterministicAeadConfig;
 
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.common.CommonUtils;
@@ -49,6 +59,7 @@ import ch.xxx.moviemanager.domain.model.entity.Movie;
 import ch.xxx.moviemanager.domain.model.entity.MovieRepository;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
+import jakarta.annotation.PostConstruct;
 
 @Transactional
 @Service
@@ -61,6 +72,9 @@ public class MovieService {
 	private final UserDetailService userDetailService;
 	private final DefaultMapper mapper;
 	private final MovieDbRestClient movieDbRestClient;
+	@Value("${tink.json.key}")
+	private String tinkJsonKey;
+	private DeterministicAead daead;
 
 	public MovieService(MovieRepository movieRep, CastRepository castRep, ActorRepository actorRep,
 			GenereRepository genereRep, UserDetailService userDetailService, DefaultMapper mapper,
@@ -74,6 +88,13 @@ public class MovieService {
 		this.movieDbRestClient = movieDbRestClient;
 	}
 
+	@PostConstruct
+	public void init() throws GeneralSecurityException {
+		DeterministicAeadConfig.register();
+		KeysetHandle handle = TinkJsonProtoKeysetFormat.parseKeyset(this.tinkJsonKey, InsecureSecretKeyAccess.get());
+		this.daead = handle.getPrimitive(DeterministicAead.class);
+	}
+	
 	public List<Genere> findAllGeneres() {
 		List<Genere> result = this.genereRep.findAll();
 		return result;
@@ -127,10 +148,10 @@ public class MovieService {
 		return result;
 	}
 
-	public List<MovieDto> findImportMovie(String title, String bearerStr) {
+	public List<MovieDto> findImportMovie(String title, String bearerStr) throws GeneralSecurityException {
 		User user = this.userDetailService.getCurrentUser(bearerStr);
 		String queryStr = this.createQueryStr(title);
-		WrapperMovieDto wrMovie = this.movieDbRestClient.fetchImportMovie(user.getMoviedbkey(), queryStr);
+		WrapperMovieDto wrMovie = this.movieDbRestClient.fetchImportMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()), queryStr);
 		List<MovieDto> result = Arrays.asList(wrMovie.getResults());
 		return result;
 	}
@@ -141,11 +162,17 @@ public class MovieService {
 		return true;
 	}
 
-	public boolean importMovie(int movieDbId, String bearerStr) throws InterruptedException {
+	private String decrypt(String cipherText, String uuid) throws GeneralSecurityException {
+		String result = new String(daead.decryptDeterministically(Base64.getDecoder().decode(cipherText),
+				uuid.getBytes(Charset.defaultCharset())));
+		return result;
+	}
+	
+	public boolean importMovie(int movieDbId, String bearerStr) throws InterruptedException, GeneralSecurityException {
 		User user = this.userDetailService.getCurrentUser(bearerStr);
 		LOG.info("Start import");
 		LOG.info("Start import generes");
-		WrapperGenereDto result = this.movieDbRestClient.fetchAllGeneres(user.getMoviedbkey());
+		WrapperGenereDto result = this.movieDbRestClient.fetchAllGeneres(this.decrypt(user.getMoviedbkey(), user.getUuid()));
 		List<Genere> generes = new ArrayList<>(this.genereRep.findAll());
 		for (GenereDto g : result.getGenres()) {
 			Genere genereEntity = generes.stream()
@@ -158,7 +185,7 @@ public class MovieService {
 			}
 		}
 		LOG.info("Start import Movie with Id: {movieDbId}", movieDbId);
-		MovieDto movieDto = this.movieDbRestClient.fetchMovie(user.getMoviedbkey(), movieDbId);
+		MovieDto movieDto = this.movieDbRestClient.fetchMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()), movieDbId);
 		Movie movieEntity = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId()).orElse(null);
 		if (movieEntity == null) {
 			LOG.info("Movie not found by id");
@@ -187,7 +214,7 @@ public class MovieService {
 			LOG.info("adding user to movie");
 			movieEntity.getUsers().add(user);
 		}
-		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(user.getMoviedbkey(), movieDto.getId());
+		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(this.decrypt(user.getMoviedbkey(), user.getUuid()), movieDto.getId());
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
@@ -197,7 +224,7 @@ public class MovieService {
 				Cast castEntity = this.mapper.convert(c);
 				movieEntity.getCast().add(castEntity);
 				castEntity.setMovie(movieEntity);
-				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId(), 300L);
+				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()), c.getId(), 300L);
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : this.mapper.convert(actor);
 				castEntity = this.castRep.save(castEntity);
@@ -211,7 +238,7 @@ public class MovieService {
 		} else {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("update cast for movie");
-				ActorDto actor = this.movieDbRestClient.fetchActor(user.getMoviedbkey(), c.getId(), 300L);
+				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()), c.getId(), 300L);
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.get();
 				if (!actorEntity.getUsers().contains(user)) {

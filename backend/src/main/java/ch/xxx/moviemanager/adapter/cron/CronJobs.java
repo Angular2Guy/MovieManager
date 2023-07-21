@@ -22,6 +22,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import ch.xxx.moviemanager.usecase.service.ActorService;
+import ch.xxx.moviemanager.usecase.service.DataMigrationService;
 import ch.xxx.moviemanager.usecase.service.MovieService;
 import ch.xxx.moviemanager.usecase.service.UserDetailService;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
@@ -29,16 +30,32 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 @Component
 public class CronJobs {
 	private static final Logger LOG = LoggerFactory.getLogger(CronJobs.class);
+	private static volatile boolean MIGRATIONS_DONE = false;
 	private final ActorService actorService;
 	private final MovieService movieService;
 	private final UserDetailService userService;
+	private final DataMigrationService dataMigrationService;
 	private Environment environment;
-	
-	public CronJobs(ActorService actorService, MovieService movieService,UserDetailService userService, Environment environment) {
+
+	public CronJobs(ActorService actorService, MovieService movieService, UserDetailService userService,
+			Environment environment, DataMigrationService dataMigrationService) {
 		this.actorService = actorService;
 		this.movieService = movieService;
 		this.userService = userService;
 		this.environment = environment;
+		this.dataMigrationService = dataMigrationService;
+	}
+
+	@Scheduled(initialDelay = 2000, fixedDelay = 3600000)
+	@SchedulerLock(name = "Migrations_scheduledTask", lockAtLeastFor = "PT2H", lockAtMostFor = "PT3H")
+	public void startMigrations() {
+		if (!MIGRATIONS_DONE) {
+			this.dataMigrationService.encryptUserKeys().thenApply(result -> {
+				LOG.info("Users migrated: {}", result);
+				return result;
+			});
+			MIGRATIONS_DONE = true;
+		}
 	}
 
 	@Scheduled(cron = "5 0 1 * * ?")
@@ -50,12 +67,13 @@ public class CronJobs {
 		this.actorService.cleanup();
 		LOG.info("End cleanup Job");
 	}
-	
+
 	@Scheduled(fixedRate = 90000)
 	@Order(1)
-	// @SchedulerLock(name = "LoggedOutUsers_scheduledTask", lockAtLeastFor = "PT1M", lockAtMostFor = "PT80s")
+	// @SchedulerLock(name = "LoggedOutUsers_scheduledTask", lockAtLeastFor =
+	// "PT1M", lockAtMostFor = "PT80s")
 	public void updateLoggedOutUsers() {
-		if(Stream.of(this.environment.getActiveProfiles()).noneMatch(myProfile -> myProfile.contains("kafka"))) {
+		if (Stream.of(this.environment.getActiveProfiles()).noneMatch(myProfile -> myProfile.contains("kafka"))) {
 			LOG.info("Update logged out users.");
 			this.userService.updateLoggedOutUsers();
 		}

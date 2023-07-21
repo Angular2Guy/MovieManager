@@ -12,14 +12,16 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
+import java.util.List;
 import java.util.Optional;
-
-import jakarta.validation.Valid;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.stereotype.Repository;
 
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.domain.model.entity.UserRepository;
+import jakarta.validation.Valid;
 
 @Repository
 public class UserRepositoryBean implements UserRepository {
@@ -45,5 +47,11 @@ public class UserRepositoryBean implements UserRepository {
 	@Override
 	public Optional<User> findByUuid(String uuid) {
 		return this.jpaUserRepository.findByUuid(uuid);
+	}
+	
+	@Override
+	public List<User> findAll() {
+		 return StreamSupport.stream(this.jpaUserRepository.findAll().spliterator(), false)
+		    .collect(Collectors.toList());
 	}
 }

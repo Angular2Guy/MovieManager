@@ -12,6 +12,7 @@
  */
 package ch.xxx.moviemanager.adapter.controller;
 
+import java.security.GeneralSecurityException;
 import java.util.List;
 
 import org.springframework.http.HttpHeaders;
@@ -38,14 +39,14 @@ public class MovieImportContoller {
 
 	@RequestMapping(value = "/{searchStr}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<MovieDto> getMovieImportSearch(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
-			@PathVariable("searchStr") String searchStr) throws InterruptedException {
+			@PathVariable("searchStr") String searchStr) throws InterruptedException, GeneralSecurityException {
 		List<MovieDto> movies = this.service.findImportMovie(searchStr, bearerStr);
 		return movies;
 	}
 
 	@RequestMapping(value = "/movieid/{movieId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> getMovieImport(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
-			@PathVariable("movieId") int movieId) throws InterruptedException {
+			@PathVariable("movieId") int movieId) throws InterruptedException, GeneralSecurityException {
 		boolean success = this.service.importMovie(movieId, bearerStr);
 		return success ? new ResponseEntity<Boolean>(Boolean.TRUE, HttpStatus.OK)
 				: new ResponseEntity<Boolean>(Boolean.FALSE, HttpStatus.NOT_ACCEPTABLE);

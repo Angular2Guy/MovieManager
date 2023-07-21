@@ -38,7 +38,15 @@ public class User extends EntityBase {
 	private boolean enabled;
 	private String uuid;
 	private LocalDate birthDate;
+	private Long migration;
 	
+	
+	public Long getMigration() {
+		return migration;
+	}
+	public void setMigration(Long migration) {
+		this.migration = migration;
+	}
 	public String getUsername() {
 		return username;
 	}

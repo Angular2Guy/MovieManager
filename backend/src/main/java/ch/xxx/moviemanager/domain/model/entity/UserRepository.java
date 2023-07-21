@@ -12,6 +12,7 @@
  */
 package ch.xxx.moviemanager.domain.model.entity;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository {
@@ -19,4 +20,5 @@ public interface UserRepository {
 	Optional<User> findById(Long id);
 	Optional<User> findByUuid(String uuid);	
 	User save(User user);
+	List<User> findAll();
 }
