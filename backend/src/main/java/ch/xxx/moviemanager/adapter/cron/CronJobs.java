@@ -46,16 +46,18 @@ public class CronJobs {
 		this.dataMigrationService = dataMigrationService;
 	}
 
-	@Scheduled(initialDelay = 2000, fixedDelay = 3600000)
+	@Scheduled(initialDelay = 2000, fixedRate = 36000000)
 	@SchedulerLock(name = "Migrations_scheduledTask", lockAtLeastFor = "PT2H", lockAtMostFor = "PT3H")
 	public void startMigrations() {
+		LOG.info("Start migrations.");
 		if (!MIGRATIONS_DONE) {
 			this.dataMigrationService.encryptUserKeys().thenApply(result -> {
 				LOG.info("Users migrated: {}", result);
 				return result;
 			});
-			MIGRATIONS_DONE = true;
 		}
+		MIGRATIONS_DONE = true;
+		LOG.info("Finished migrations.");
 	}
 
 	@Scheduled(cron = "5 0 1 * * ?")

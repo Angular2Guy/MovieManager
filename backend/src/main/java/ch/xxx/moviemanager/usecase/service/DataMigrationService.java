@@ -12,14 +12,18 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.domain.model.entity.UserRepository;
 
 @Service
@@ -35,14 +39,14 @@ public class DataMigrationService {
 
 	@Async
 	public CompletableFuture<Long> encryptUserKeys() {
-		AtomicLong usersMigrated = new AtomicLong(0L);
-		this.userRepository.findOpenMigrations(1L).stream().map(myUser -> {
+		List<User> migratedUsers = this.userRepository.findOpenMigrations(1L).stream().map(myUser -> {
+			myUser.setUuid(Optional.ofNullable(myUser.getUuid()).filter(myStr -> !myStr.isBlank()).orElse(UUID.randomUUID().toString()));
 			myUser.setMoviedbkey(this.userDetailService.encrypt(myUser.getMoviedbkey(), myUser.getUuid()));
 			myUser.setMigration(myUser.getMigration() + 1);
-			usersMigrated.addAndGet(1L);
 			return myUser;
-		});
-		return CompletableFuture.completedFuture(0L);
+		}).collect(Collectors.toList());
+		this.userRepository.saveAll(migratedUsers);
+		return CompletableFuture.completedFuture(Integer.valueOf(migratedUsers.size()).longValue());
 	}
 
 	

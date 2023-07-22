@@ -59,4 +59,9 @@ public class UserRepositoryBean implements UserRepository {
 	public List<User> findOpenMigrations(Long migrationId) {
 		return this.jpaUserRepository.findOpenMigrations(migrationId);
 	}
+	
+	@Override
+	public Iterable<User> saveAll(Iterable<User> users) {
+		return this.jpaUserRepository.saveAll(users);
+	}
 }

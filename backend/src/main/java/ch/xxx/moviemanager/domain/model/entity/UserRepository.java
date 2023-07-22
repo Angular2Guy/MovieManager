@@ -22,4 +22,5 @@ public interface UserRepository {
 	User save(User user);
 	List<User> findAll();
 	List<User> findOpenMigrations(Long migrationId);
+	Iterable<User> saveAll(Iterable<User> users);
 }
