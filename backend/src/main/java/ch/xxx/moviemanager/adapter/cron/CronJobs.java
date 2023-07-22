@@ -51,13 +51,12 @@ public class CronJobs {
 	public void startMigrations() {
 		LOG.info("Start migrations.");
 		if (!MIGRATIONS_DONE) {
-			this.dataMigrationService.encryptUserKeys().thenApply(result -> {
+			this.dataMigrationService.encryptUserKeys().thenApplyAsync(result -> {
 				LOG.info("Users migrated: {}", result);
 				return result;
 			});
 		}
 		MIGRATIONS_DONE = true;
-		LOG.info("Finished migrations.");
 	}
 
 	@Scheduled(cron = "5 0 1 * * ?")
