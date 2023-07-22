@@ -21,4 +21,5 @@ public interface UserRepository {
 	Optional<User> findByUuid(String uuid);	
 	User save(User user);
 	List<User> findAll();
+	List<User> findOpenMigrations(Long migrationId);
 }

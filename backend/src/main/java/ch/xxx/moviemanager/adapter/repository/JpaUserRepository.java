@@ -12,13 +12,18 @@
  */
 package ch.xxx.moviemanager.adapter.repository;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import ch.xxx.moviemanager.domain.model.entity.User;
 
 public interface JpaUserRepository extends CrudRepository<User, Long> {
 	Optional<User> findByUsername(String username);
 	Optional<User> findByUuid(String uuid);
+	@Query("select u from User u where u.migration < :migrationId")
+	List<User> findOpenMigrations(@Param(value = "migrationId") Long migrationId);
 }

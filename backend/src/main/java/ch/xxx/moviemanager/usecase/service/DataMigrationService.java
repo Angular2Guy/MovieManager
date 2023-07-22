@@ -36,7 +36,7 @@ public class DataMigrationService {
 	@Async
 	public CompletableFuture<Long> encryptUserKeys() {
 		AtomicLong usersMigrated = new AtomicLong(0L);
-		this.userRepository.findAll().stream().filter(myUser -> myUser.getMigration() < 1).map(myUser -> {
+		this.userRepository.findOpenMigrations(1L).stream().map(myUser -> {
 			myUser.setMoviedbkey(this.userDetailService.encrypt(myUser.getMoviedbkey(), myUser.getUuid()));
 			myUser.setMigration(myUser.getMigration() + 1);
 			usersMigrated.addAndGet(1L);

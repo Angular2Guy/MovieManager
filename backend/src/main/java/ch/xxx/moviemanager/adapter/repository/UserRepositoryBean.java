@@ -54,4 +54,9 @@ public class UserRepositoryBean implements UserRepository {
 		 return StreamSupport.stream(this.jpaUserRepository.findAll().spliterator(), false)
 		    .collect(Collectors.toList());
 	}
+	
+	@Override
+	public List<User> findOpenMigrations(Long migrationId) {
+		return this.jpaUserRepository.findOpenMigrations(migrationId);
+	}
 }
