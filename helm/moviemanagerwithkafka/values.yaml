@@ -62,3 +62,4 @@ envApp:
     POSTGRES_USER: dbuser
     POSTGRES_PASSWORD: passwordtoreplace
     POSTGRES_URL: "jdbc:postgresql://postgresservice:5432/movies"
+    TINK_JSON_KEY: '{"primaryKeyId":1047384356,"key":[{"keyData":{"typeUrl":"type.googleapis.com/google.crypto.tink.AesSivKey","value":"EkBtsrB3Aomkmsiq16f9KJQXZX2Y2ZfK3bN1QBBQuxGpSb/5pqQPgqXc5D5FETW6rrBsCv7qIsPyzoEAS2rXPgLx","keyMaterialType":"SYMMETRIC"},"status":"ENABLED","keyId":1047384356,"outputPrefixType":"TINK"}]}'
