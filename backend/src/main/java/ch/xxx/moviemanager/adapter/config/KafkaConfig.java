@@ -86,8 +86,8 @@ public class KafkaConfig {
 		return new KafkaTemplate<>(this.producerFactory);
 	}
 
-	@Bean("kafkaRetryTemplate")
-	public KafkaTemplate<String, String> kafkaRetryTemplate() {
+	@Bean("defaultRetryTopicKafkaTemplate")
+	public KafkaTemplate<String, String> defaultRetryTopicKafkaTemplate() {
 		KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(this.producerFactory);
 		kafkaTemplate.setTransactionIdPrefix(this.transactionIdPrefix);
 		kafkaTemplate.setAllowNonTransactional(true);
