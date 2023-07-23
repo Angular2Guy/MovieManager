@@ -94,6 +94,14 @@ public class KafkaConfig {
 		return kafkaTemplate;
 	}
 
+	@Bean("kafkaRetryTemplate")
+	public KafkaTemplate<String, String> kafkaRetryTemplate() {
+		KafkaTemplate<String, String> kafkaTemplate = new KafkaTemplate<>(this.producerFactory);
+		kafkaTemplate.setTransactionIdPrefix(this.transactionIdPrefix);
+		kafkaTemplate.setAllowNonTransactional(true);
+		return kafkaTemplate;
+	}
+	
 	@Bean
 	public DeadLetterPublishingRecoverer recoverer(
 			@Qualifier("kafkaRetryTemplate") KafkaTemplate<?, ?> bytesKafkaTemplate,
