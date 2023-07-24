@@ -18,10 +18,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
 
 import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 
@@ -38,12 +40,15 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenService);
-		HttpSecurity httpSecurity = http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/rest/auth/**").permitAll()
-				.requestMatchers("/rest/**").authenticated().requestMatchers("/**").permitAll()).csrf()
-				.disable().headers()
-				.contentSecurityPolicy(
-						"default-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';")
-				.and().xssProtection().and().frameOptions().sameOrigin().and()
+		HttpSecurity httpSecurity = http
+				.authorizeHttpRequests(authorize -> authorize.requestMatchers("/rest/auth/**").permitAll()
+						.requestMatchers("/rest/**").authenticated().requestMatchers("/**").permitAll())
+				.csrf(myCsrf -> myCsrf.disable())
+				.sessionManagement(mySm -> mySm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.headers(myHeaders -> myHeaders.xssProtection(myXss -> myXss.headerValue(HeaderValue.ENABLED)))
+				.headers(myHeaders -> myHeaders.contentSecurityPolicy(myCsp -> myCsp.policyDirectives(
+						"default-src 'self' data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';")))
+				.headers(myHeaders -> myHeaders.frameOptions(myFo -> myFo.sameOrigin()))
 				.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
 		return httpSecurity.build();
 	}
