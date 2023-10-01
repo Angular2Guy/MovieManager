@@ -52,11 +52,8 @@ public class AuthenticationController {
 	@PostMapping("/authorize")
 	public AuthCheckDto postAuthorize(@RequestBody AuthCheckDto authcheck, @RequestHeader Map<String, String> header) {
 		String tokenRoles = this.userDetailService.getTokenRoles(header).role();
-		if (tokenRoles != null && tokenRoles.contains(Role.USERS.name()) && !tokenRoles.contains(Role.GUEST.name())) {
-			return new AuthCheckDto(authcheck.getPath(), true);
-		} else {
-			return new AuthCheckDto(authcheck.getPath(), false);
-		}
+		return (tokenRoles != null && tokenRoles.contains(Role.USERS.name()) && !tokenRoles.contains(Role.GUEST.name())) ?
+			new AuthCheckDto(authcheck.getPath(), true) : new AuthCheckDto(authcheck.getPath(), false);		
 	}
 
 	@PostMapping("/signin")

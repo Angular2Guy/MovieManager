@@ -105,30 +105,28 @@ public class MovieRepositoryBean implements MovieRepository {
 		CriteriaQuery<Movie> cq = this.entityManager.getCriteriaBuilder().createQuery(Movie.class);
 		Root<Movie> cMovie = cq.from(Movie.class);
 		List<Predicate> predicates = new ArrayList<>();
-		if (filterCriteriaDto.getReleaseFrom() != null) {
-			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cMovie.<Date>get("releaseDate"),
-					CommonUtils.convert(filterCriteriaDto.getReleaseFrom())));
-		}
-		if (filterCriteriaDto.getReleaseTo() != null) {
-			predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(cMovie.<Date>get("releaseDate"),
-					CommonUtils.convert(filterCriteriaDto.getReleaseTo())));
-		}
-		if (filterCriteriaDto.getMovieTitle() != null && filterCriteriaDto.getMovieTitle().trim().length() > 2) {
-			predicates.add(this.entityManager.getCriteriaBuilder().like(
-					this.entityManager.getCriteriaBuilder().lower(cMovie.get("title")),
-					String.format("%%%s%%", filterCriteriaDto.getMovieTitle().toLowerCase())));
-		}
-		if (filterCriteriaDto.getMovieActor() != null && filterCriteriaDto.getMovieActor().trim().length() > 2) {
-			Metamodel m = this.entityManager.getMetamodel();
-			EntityType<Movie> movie_ = m.entity(Movie.class);
-			predicates
-					.add(this.entityManager
-							.getCriteriaBuilder().like(
+		Optional.ofNullable(filterCriteriaDto.getReleaseFrom())
+				.ifPresent(x -> predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(
+						cMovie.<Date>get("releaseDate"), CommonUtils.convert(filterCriteriaDto.getReleaseFrom()))));
+		Optional.ofNullable(filterCriteriaDto.getReleaseTo())
+				.ifPresent(x -> predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(
+						cMovie.<Date>get("releaseDate"), CommonUtils.convert(filterCriteriaDto.getReleaseTo()))));
+		Optional.ofNullable(filterCriteriaDto.getMovieTitle()).stream().filter(myTitle -> myTitle.trim().length() > 2)
+				.findFirst()
+				.ifPresent(x -> predicates.add(this.entityManager.getCriteriaBuilder().like(
+						this.entityManager.getCriteriaBuilder().lower(cMovie.get("title")),
+						String.format("%%%s%%", filterCriteriaDto.getMovieTitle().toLowerCase()))));
+		Optional.ofNullable(filterCriteriaDto.getMovieActor()).stream().filter(myActor -> myActor.trim().length() > 2)
+				.findFirst().ifPresent(x -> {
+					Metamodel m = this.entityManager.getMetamodel();
+					EntityType<Movie> movie_ = m.entity(Movie.class);
+					predicates
+							.add(this.entityManager.getCriteriaBuilder().like(
 									this.entityManager.getCriteriaBuilder()
 											.lower(cMovie.join(movie_.getDeclaredList("cast", Cast.class))
 													.get("characterName")),
 									String.format("%%%s%%", filterCriteriaDto.getMovieActor().toLowerCase())));
-		}
+				});
 		if (!filterCriteriaDto.getSelectedGeneres().isEmpty()) {
 			Metamodel m = this.entityManager.getMetamodel();
 			EntityType<Movie> movie_ = m.entity(Movie.class);
@@ -159,8 +157,9 @@ public class MovieRepositoryBean implements MovieRepository {
 	public List<Movie> findMoviesByPhrase(SearchPhraseDto searchPhraseDto) {
 		List<Movie> resultList = List.of();
 		if (searchPhraseDto.getPhrase() != null && searchPhraseDto.getPhrase().trim().length() > 2) {
-			resultList = Search.session(this.entityManager).search(Movie.class).where(f -> f.phrase().field("overview")
-					.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase()))
+			resultList = Search
+					.session(this.entityManager).search(Movie.class).where(f -> f.phrase().field("overview")
+							.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase()))
 					.fetchHits(1000);
 		}
 		return resultList;

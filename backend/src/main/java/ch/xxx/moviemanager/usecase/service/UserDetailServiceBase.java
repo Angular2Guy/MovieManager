@@ -95,7 +95,7 @@ public class UserDetailServiceBase {
 		KeysetHandle handle = TinkJsonProtoKeysetFormat.parseKeyset(this.tinkJsonKey, InsecureSecretKeyAccess.get());
 		this.daead = handle.getPrimitive(DeterministicAead.class);
 	}
-	
+
 	public void updateLoggedOutUsers() {
 		this.updateLoggedOutUsers(LOGOUT_TIMEOUT);
 	}
@@ -121,11 +121,9 @@ public class UserDetailServiceBase {
 	}
 
 	public RefreshTokenDto refreshToken(String bearerToken) {
-		Optional<String> tokenOpt = this.jwtTokenService.resolveToken(bearerToken);
-		if (tokenOpt.isEmpty()) {
-			throw new AuthorizationServiceException("Invalid token");
-		}
-		String newToken = this.jwtTokenService.refreshToken(tokenOpt.get());
+		String token = this.jwtTokenService.resolveToken(bearerToken)
+				.orElseThrow(() -> new AuthorizationServiceException("Invalid token"));
+		String newToken = this.jwtTokenService.refreshToken(token);
 		LOG.info("Jwt Token refreshed.");
 		return new RefreshTokenDto(newToken);
 	}
@@ -192,7 +190,7 @@ public class UserDetailServiceBase {
 		String cipherText = new String(Base64.getEncoder().encode(cipherBytes), Charset.defaultCharset());
 		return cipherText;
 	}
-	
+
 	public Boolean confirmUuid(String uuid) {
 		return this.confirmUuid(this.userRepository.findByUuid(uuid), uuid);
 	}
@@ -293,7 +291,7 @@ public class UserDetailServiceBase {
 	public void sendKafkaEvent(KafkaEventDto kafkaEventDto) {
 		LOG.info("KafkaEvent not send.");
 	}
-	
+
 	/*
 	 * public List<UserDto> loadAll() { return
 	 * this.userRepository.findAll().stream() .flatMap(entity ->

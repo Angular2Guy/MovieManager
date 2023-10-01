@@ -53,7 +53,7 @@ public class ActorController {
 	public List<ActorDto> getActorSearch(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@PathVariable("name") String name) throws InterruptedException {
 		List<ActorDto> actors = this.service.findActor(name, bearerStr).stream()
-				.map(a -> this.mapper.convertOnlyActor(a)).toList();
+				.map(this.mapper::convertOnlyActor).toList();
 		return actors;
 	}
 
@@ -65,7 +65,7 @@ public class ActorController {
 		Optional<ActorDto> actorOpt = this.service.findActorById(id, bearerStr).stream()
 				.filter(myActor -> myActor.getCasts().stream()
 						.filter(c -> c.getMovie().getUsers().contains(currentUser)).findFirst().isPresent())
-				.map(a -> this.mapper.convert(a)).findFirst();
+				.map(this.mapper::convert).findFirst();
 		return actorOpt.stream().map(myActor -> new ResponseEntity<ActorDto>(myActor, HttpStatus.OK)).findFirst()
 				.orElse(new ResponseEntity<ActorDto>(new ActorDto(), HttpStatus.NOT_FOUND));
 	}
@@ -74,7 +74,7 @@ public class ActorController {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ActorDto> getPagesByNumber(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@RequestParam("page") Integer page) throws InterruptedException {
-		List<ActorDto> actors = this.service.findActorsByPage(page, bearerStr).stream().map(a -> this.mapper.convert(a))
+		List<ActorDto> actors = this.service.findActorsByPage(page, bearerStr).stream().map(this.mapper::convert)
 				.collect(Collectors.toList());
 		return actors;
 	}
@@ -83,14 +83,14 @@ public class ActorController {
 	public List<ActorDto> getActorsByCriteria(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@RequestBody ActorFilterCriteriaDto filterCriteria) {
 		return this.service.findActorsByFilterCriteria(bearerStr, filterCriteria).stream()
-				.map(m -> this.mapper.convert(m)).toList();
+				.map(this.mapper::convert).toList();
 	}
 	
 	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public List<ActorDto> postSearchTerm(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			SearchTermDto searchTermDto) {
 		List<ActorDto> results = this.service.findActorsBySearchTerm(bearerStr, searchTermDto).stream()
-				.map(myActor -> this.mapper.convert(myActor)).toList();
+				.map(this.mapper::convert).toList();
 		return results;
 	}
 }

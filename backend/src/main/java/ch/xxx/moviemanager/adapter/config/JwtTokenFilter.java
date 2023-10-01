@@ -16,22 +16,20 @@
 package ch.xxx.moviemanager.adapter.config;
 
 import java.io.IOException;
+import java.util.Optional;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.GenericFilterBean;
+
+import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
+public class JwtTokenFilter extends GenericFilterBean {
 
-import ch.xxx.moviemanager.usecase.service.JwtTokenService;
-
-
-public class JwtTokenFilter extends GenericFilterBean {	
-	
 	private JwtTokenService jwtTokenProvider;
 
 	public JwtTokenFilter(JwtTokenService jwtTokenProvider) {
@@ -42,11 +40,11 @@ public class JwtTokenFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
 			throws IOException, ServletException {
 
-		String token = jwtTokenProvider.resolveToken((HttpServletRequest) req);
-		if (token != null && jwtTokenProvider.validateToken(token)) {
-			Authentication auth = token != null ? jwtTokenProvider.getAuthentication(token) : null;
-			SecurityContextHolder.getContext().setAuthentication(auth);
-		}		
+		Optional<String> tokenOpt = jwtTokenProvider.resolveToken((HttpServletRequest) req);
+		tokenOpt.stream().filter(myToken -> jwtTokenProvider.validateToken(myToken)).findFirst().ifPresentOrElse(
+				token -> SecurityContextHolder.getContext()
+						.setAuthentication(jwtTokenProvider.getAuthentication(token)),
+				() -> SecurityContextHolder.getContext().setAuthentication(null));
 
 		filterChain.doFilter(req, res);
 	}

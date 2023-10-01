@@ -72,13 +72,13 @@ public class MovieController {
 	public List<MovieDto> getGeneresById(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@PathVariable("id") Long id) throws InterruptedException {
 		List<MovieDto> movies = this.service.findMoviesByGenereId(id, bearerStr).stream()
-				.map(m -> this.mapper.convertMovieWithGenere(m)).toList();
+				.map(this.mapper::convertMovieWithGenere).toList();
 		return movies;
 	}
 
 	@RequestMapping(value = "/generes", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<GenereDto> getGeneres() throws InterruptedException {
-		List<GenereDto> generes = this.service.findAllGeneres().stream().map(gen -> this.mapper.convert(gen)).toList();
+		List<GenereDto> generes = this.service.findAllGeneres().stream().map(this.mapper::convert).toList();
 		return generes;
 	}
 
@@ -86,7 +86,7 @@ public class MovieController {
 			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<MovieDto> getPagesByNumber(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@RequestParam("page") Integer page) throws InterruptedException {
-		List<MovieDto> movies = this.service.findMoviesByPage(page, bearerStr).stream().map(m -> this.mapper.convert(m))
+		List<MovieDto> movies = this.service.findMoviesByPage(page, bearerStr).stream().map(this.mapper::convert)
 				.toList();
 		return movies;
 	}
@@ -95,14 +95,14 @@ public class MovieController {
 	public List<MovieDto> getMoviesByCriteria(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@RequestBody MovieFilterCriteriaDto filterCriteria) {
 		return this.service.findMoviesByFilterCriteria(bearerStr, filterCriteria).stream()
-				.map(m -> this.mapper.convert(m)).toList();
+				.map(this.mapper::convert).toList();
 	}
 
 	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public List<MovieDto> postSearchTerm(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			SearchTermDto searchTermDto) {
 		List<MovieDto> results = this.service.findMoviesBySearchTerm(bearerStr, searchTermDto).stream()
-				.map(myMovie -> this.mapper.convert(myMovie)).toList();
+				.map(this.mapper::convert).toList();
 		return results;
 	}
 }

@@ -83,39 +83,35 @@ public class ActorRepositoryBean implements ActorRepository {
 		CriteriaQuery<Actor> cq = this.entityManager.getCriteriaBuilder().createQuery(Actor.class);
 		Root<Actor> cActor = cq.from(Actor.class);
 		List<Predicate> predicates = new ArrayList<>();
-		if (filterCriteriaDto.getBirthdayFrom() != null) {
-			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cActor.<Date>get("birthday"),
-					CommonUtils.convert(filterCriteriaDto.getBirthdayFrom())));
-		}
-		if (filterCriteriaDto.getBirthdayTo() != null) {
-			predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(cActor.<Date>get("birthday"),
-					CommonUtils.convert(filterCriteriaDto.getBirthdayTo())));
-		}
-		if (filterCriteriaDto.getDead()) {
-			predicates.add(this.entityManager.getCriteriaBuilder().isNotNull(cActor.<Date>get("deathday")));
-		}
-		if (filterCriteriaDto.getGender() != null && !filterCriteriaDto.getGender().equals(Gender.Unknown)) {
-			predicates.add(this.entityManager.getCriteriaBuilder().equal(cActor.get("gender"),
-					filterCriteriaDto.getGender().getCode()));
-		}
-		if (filterCriteriaDto.getName() != null && filterCriteriaDto.getName().trim().length() > 2) {
-			predicates.add(this.entityManager.getCriteriaBuilder().like(
-					this.entityManager.getCriteriaBuilder().lower(cActor.get("name")),
-					String.format("%%%s%%", filterCriteriaDto.getName().toLowerCase())));
-		}
+		Optional.ofNullable(filterCriteriaDto.getBirthdayFrom())
+				.ifPresent(x -> predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(
+						cActor.<Date>get("birthday"), CommonUtils.convert(filterCriteriaDto.getBirthdayFrom()))));
+		Optional.ofNullable(filterCriteriaDto.getBirthdayTo())
+				.ifPresent(x -> predicates.add(this.entityManager.getCriteriaBuilder().lessThanOrEqualTo(
+						cActor.<Date>get("birthday"), CommonUtils.convert(filterCriteriaDto.getBirthdayTo()))));
+		Optional.ofNullable(filterCriteriaDto.getDead()).ifPresent(
+				x -> predicates.add(this.entityManager.getCriteriaBuilder().isNotNull(cActor.<Date>get("deathday"))));
+		Optional.ofNullable(filterCriteriaDto.getGender()).stream().filter(myGender -> !Gender.Unknown.equals(myGender))
+				.findFirst().ifPresent(x -> predicates.add(this.entityManager.getCriteriaBuilder()
+						.equal(cActor.get("gender"), filterCriteriaDto.getGender().getCode())));
+		Optional.ofNullable(filterCriteriaDto.getName()).stream().filter(myName -> myName.trim().length() > 2)
+				.findFirst()
+				.ifPresent(x -> predicates.add(this.entityManager.getCriteriaBuilder().like(
+						this.entityManager.getCriteriaBuilder().lower(cActor.get("name")),
+						String.format("%%%s%%", filterCriteriaDto.getName().toLowerCase()))));
 		if (filterCriteriaDto.getPopularity() > 0) {
 			predicates.add(this.entityManager.getCriteriaBuilder().greaterThanOrEqualTo(cActor.get("popularity"),
 					Double.valueOf(Integer.valueOf(filterCriteriaDto.getPopularity()).toString())));
 		}
-		if (filterCriteriaDto.getMovieCharacter() != null
-				&& filterCriteriaDto.getMovieCharacter().trim().length() > 2) {
-			Metamodel m = this.entityManager.getMetamodel();
-			EntityType<Actor> actor_ = m.entity(Actor.class);
-			predicates.add(this.entityManager.getCriteriaBuilder()
-					.like(this.entityManager.getCriteriaBuilder()
-							.lower(cActor.join(actor_.getDeclaredList("casts", Cast.class)).get("movieChar")),
-							String.format("%%%s%%", filterCriteriaDto.getMovieCharacter().toLowerCase())));
-		}
+		Optional.ofNullable(filterCriteriaDto.getMovieCharacter()).stream()
+				.filter(myCharacter -> myCharacter.trim().length() > 2).findFirst().ifPresent(x -> {
+					Metamodel m = this.entityManager.getMetamodel();
+					EntityType<Actor> actor_ = m.entity(Actor.class);
+					predicates.add(this.entityManager.getCriteriaBuilder()
+							.like(this.entityManager.getCriteriaBuilder()
+									.lower(cActor.join(actor_.getDeclaredList("casts", Cast.class)).get("movieChar")),
+									String.format("%%%s%%", filterCriteriaDto.getMovieCharacter().toLowerCase())));
+				});
 		// user check
 		Metamodel m = this.entityManager.getMetamodel();
 		EntityType<Actor> actor_ = m.entity(Actor.class);
@@ -126,19 +122,20 @@ public class ActorRepositoryBean implements ActorRepository {
 	}
 
 	public List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto) {
-		List<Actor> resultList = List.of();
-		if (searchPhraseDto.getPhrase() != null && searchPhraseDto.getPhrase().trim().length() > 2) {
+		final List<Actor> resultList = new ArrayList<>();
+		Optional.ofNullable(searchPhraseDto.getPhrase()).stream().filter(myPhrase -> myPhrase.trim().length() > 2).findFirst().ifPresent(x -> {
 			SearchSession searchSession = Search.session(this.entityManager);
-			resultList = searchSession.search(Actor.class).where(f -> f.phrase().field("biography")
-					.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase())).fetchHits(1000);
-		}
+			resultList.addAll(searchSession.search(Actor.class).where(f -> f.phrase().field("biography")
+					.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase()))
+					.fetchHits(1000));
+		});		
 		return resultList;
 	}
 
 	public List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings) {
 		StringBuilder stringBuilder = new StringBuilder();
 		searchStrings.forEach(myDto -> stringBuilder.append(" ").append(myDto.getOperator().value).append(" ")
-				.append(myDto.getSearchString()));		
+				.append(myDto.getSearchString()));
 		List<Actor> resultList = Search.session(this.entityManager).search(Actor.class)
 				.where(f -> f.simpleQueryString().field("biography").matching(stringBuilder.substring(2)))
 				.fetchHits(1000);

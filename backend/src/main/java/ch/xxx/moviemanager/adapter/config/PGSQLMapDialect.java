@@ -12,12 +12,7 @@
  */
 package ch.xxx.moviemanager.adapter.config;
 
-import org.hibernate.boot.model.TypeContributions;
 import org.hibernate.dialect.PostgreSQLDialect;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.type.SqlTypes;
-import org.hibernate.type.descriptor.sql.internal.DdlTypeImpl;
-import org.hibernate.type.descriptor.sql.spi.DdlTypeRegistry;
 
 public class PGSQLMapDialect extends PostgreSQLDialect {
 
