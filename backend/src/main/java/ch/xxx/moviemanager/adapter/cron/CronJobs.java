@@ -30,7 +30,7 @@ import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 @Component
 public class CronJobs {
 	private static final Logger LOG = LoggerFactory.getLogger(CronJobs.class);
-	private static volatile boolean MIGRATIONS_DONE = false;
+	private static volatile boolean migrationsDone = false;
 	private final ActorService actorService;
 	private final MovieService movieService;
 	private final UserDetailService userService;
@@ -50,13 +50,13 @@ public class CronJobs {
 	@SchedulerLock(name = "Migrations_scheduledTask", lockAtLeastFor = "PT2H", lockAtMostFor = "PT3H")
 	public void startMigrations() {
 		LOG.info("Start migrations.");
-		if (!MIGRATIONS_DONE) {
+		if (!migrationsDone) {
 			this.dataMigrationService.encryptUserKeys().thenApplyAsync(result -> {
 				LOG.info("Users migrated: {}", result);
 				return result;
 			});
 		}
-		MIGRATIONS_DONE = true;
+		migrationsDone = true;
 	}
 
 	@Scheduled(cron = "5 0 1 * * ?")
