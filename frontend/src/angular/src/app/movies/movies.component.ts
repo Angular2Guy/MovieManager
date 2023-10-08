@@ -10,11 +10,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { MoviesService } from "../services/movies.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Movie } from "../model/movie";
 import { QueryParam } from "../model/common";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-movies",
@@ -26,6 +27,7 @@ export class MoviesComponent implements OnInit {
   protected delMovie = false;
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
+  private readonly destroy: DestroyRef = inject(DestroyRef);  
 
   constructor(
     private route: ActivatedRoute,
@@ -47,7 +49,7 @@ export class MoviesComponent implements OnInit {
       "delete movie id: " + this.movie.id + " title: " + this.movie.title
     );
     this.delMovie = true;
-    this.movieService.deleteMovieById(this.movie.id).subscribe((result) => {
+    this.movieService.deleteMovieById(this.movie.id).pipe(takeUntilDestroyed(this.destroy)).subscribe((result) => {
       this.delMovie = false;
       if (!result) {
         console.log("Delete of movie id: " + this.movie.id + " failed.");

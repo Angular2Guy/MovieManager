@@ -10,11 +10,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { QueryParam } from "../model/common";
 import { Movie } from "../model/movie";
 import { MoviesService } from "../services/movies.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 enum ImportState {
   Idle = "idle",
@@ -33,6 +34,8 @@ export class MovieImportComponent implements OnInit {
   protected ImportState = ImportState;
   protected importState = ImportState.Idle;
   protected importMovies: Movie[] = [];
+  private readonly destroy: DestroyRef = inject(DestroyRef);
+  
 
   constructor(
     private moviesService: MoviesService,
@@ -58,7 +61,7 @@ export class MovieImportComponent implements OnInit {
   }
 
   private loadMatchingMovies(movieTitle: string) {
-    this.moviesService.importMovieByTitle(movieTitle).subscribe((m) => {
+    this.moviesService.importMovieByTitle(movieTitle).pipe(takeUntilDestroyed(this.destroy)).subscribe((m) => {
       this.importMovies = this.addNums(m);
       this.importState = ImportState.Idle;
     });
@@ -68,7 +71,7 @@ export class MovieImportComponent implements OnInit {
     this.importState = ImportState.Importing;
     this.importMovies = [];
     this.moviesService
-      .importMovieByMovieDbId(movie.movie_id)
+      .importMovieByMovieDbId(movie.movie_id).pipe(takeUntilDestroyed(this.destroy))
       .subscribe((imported) => {
         this.importState = imported
           ? ImportState.ImportSuccess

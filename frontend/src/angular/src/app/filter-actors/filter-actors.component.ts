@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import {
   NgbDateStruct,
@@ -22,6 +22,7 @@ import { Actor, Gender } from "../model/actor";
 import { ActorFilterCriteria } from "../model/actor-filter-criteria";
 import { QueryParam } from "../model/common";
 import { ActorsService } from "../services/actors.service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-filter-actors",
@@ -36,6 +37,7 @@ export class FilterActorsComponent implements OnInit {
   protected ngbBirthdayTo: NgbDateStruct;
   protected closeResult = "";
   protected filterCriteria = new ActorFilterCriteria();
+  private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
     private actorsService: ActorsService,
@@ -112,7 +114,7 @@ export class FilterActorsComponent implements OnInit {
         .searchPhrase.otherWordsInPhrase
         ? 0
         : this.filterCriteria.searchPhrase.otherWordsInPhrase;
-      this.actorsService.findActorsByCriteria(this.filterCriteria).subscribe({
+      this.actorsService.findActorsByCriteria(this.filterCriteria).pipe(takeUntilDestroyed(this.destroy)).subscribe({
         next: (result) => (this.filteredActors = result),
         error: (failed) => {
           console.log(failed);

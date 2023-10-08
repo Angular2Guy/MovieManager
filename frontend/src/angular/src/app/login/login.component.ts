@@ -10,10 +10,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output, DestroyRef, inject } from "@angular/core";
 import { UsersService } from "../services/users.service";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { TokenService } from "ngx-simple-charts/base-service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 enum ControlName {
   LoginName = "loginName",
@@ -42,6 +43,7 @@ export class LoginComponent implements OnInit {
   protected modalMsgType = MessageType.Error;
   protected tillNextLogin = 0;
   protected waitingForResponse = false;
+  private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
     private userService: UsersService,
@@ -94,7 +96,7 @@ export class LoginComponent implements OnInit {
       .login(
         this.loginFormGroup.controls[ControlName.LoginName].value,
         this.loginFormGroup.controls[ControlName.Password].value
-      )
+      ).pipe(takeUntilDestroyed(this.destroy))
       .subscribe((myTillNextLogin: number) => {
         const res = myTillNextLogin <= 0;
         this.tillNextLogin = myTillNextLogin;
@@ -122,7 +124,7 @@ export class LoginComponent implements OnInit {
         this.loginFormGroup.controls[ControlName.LoginName].value,
         this.loginFormGroup.controls[ControlName.Password].value,
         this.loginFormGroup.controls[ControlName.MovieDbKey].value
-      )
+      ).pipe(takeUntilDestroyed(this.destroy))
       .subscribe((res: boolean) => {
         this.cancelUser();
         this.modalMsgType = res ? MessageType.Info : MessageType.Error;

@@ -9,7 +9,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from "@angular/router";
 import { Actor, Gender } from "../model/actor";
 import { QueryParam } from "../model/common";
@@ -25,6 +26,7 @@ export class ActorsComponent implements OnInit {
   protected actor: Actor = null;
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
+  private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
     private route: ActivatedRoute,
@@ -34,6 +36,7 @@ export class ActorsComponent implements OnInit {
   public ngOnInit() {
     this.actorService
       .findActorById(Number(this.route.snapshot.paramMap.get("id")))
+      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((actor) => (this.actor = actor));
     this.backParam = !this.route.snapshot.queryParams?.back
       ? QueryParam.Empty

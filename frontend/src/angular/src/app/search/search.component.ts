@@ -17,6 +17,8 @@ import {
   ViewChild,
   ElementRef,
   AfterViewInit,
+  DestroyRef,
+  inject,
 } from "@angular/core";
 import { Movie } from "../model/movie";
 import { Actor } from "../model/actor";
@@ -36,6 +38,7 @@ import {
 import { ActivatedRoute, Router } from "@angular/router";
 import { QueryParam } from "../model/common";
 import { TokenService } from "ngx-simple-charts/base-service";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-search",
@@ -62,6 +65,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   protected loading = false;
   protected allMoviesLoaded = false;
   private actorListOffset = 0;
+  private readonly destroy: DestroyRef = inject(DestroyRef);  
 
   constructor(
     private actorService: ActorsService,
@@ -101,7 +105,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   showGenere(id: number) {
     this.showMenu = false;
     this.moviesByGenLoading = true;
-    this.movieService.findMoviesByGenereId(id).subscribe((res) => {
+    this.movieService.findMoviesByGenereId(id).pipe(takeUntilDestroyed(this.destroy)).subscribe((res) => {
       this.moviesByGenere = res;
       this.moviesByGenLoading = false;
     });
@@ -129,7 +133,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
           of([])
         )
       ),
-      tap(() => (this.actorsLoading = false))
+      tap(() => (this.actorsLoading = false)),
+      takeUntilDestroyed(this.destroy)
     );
     this.movies = this.movieTitle.valueChanges.pipe(
       debounceTime(400),
@@ -144,10 +149,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
           of([])
         )
       ),
-      tap(() => (this.moviesLoading = false))
+      tap(() => (this.moviesLoading = false)),
+      takeUntilDestroyed(this.destroy)
     );
     if (!!this.tokenService.userId) {
-      this.movieService.allGeneres().subscribe((res) => (this.generes = res));
+      this.movieService.allGeneres().pipe(takeUntilDestroyed(this.destroy)).subscribe((res) => (this.generes = res));
     }
     this.route.url.subscribe(() => {
       if (!!this.tokenService.userId) {

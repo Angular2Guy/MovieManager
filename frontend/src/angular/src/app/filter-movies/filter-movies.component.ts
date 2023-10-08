@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit } from "@angular/core";
+import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import {
   NgbDateStruct,
@@ -23,6 +23,7 @@ import { Genere } from "../model/genere";
 import { Movie } from "../model/movie";
 import { MoviesService } from "../services/movies.service";
 import { QueryParam } from "../model/common";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
   selector: "app-filter-movies",
@@ -38,6 +39,7 @@ export class FilterMoviesComponent implements OnInit {
   protected filterCriteria = new MovieFilterCriteria();
   protected ngbReleaseFrom: NgbDateStruct;
   protected ngbReleaseTo: NgbDateStruct;
+  private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
     private offcanvasService: NgbOffcanvas,
@@ -97,7 +99,7 @@ export class FilterMoviesComponent implements OnInit {
         .searchPhrase.otherWordsInPhrase
         ? 0
         : this.filterCriteria.searchPhrase.otherWordsInPhrase;
-      this.movieService.findMoviesByCriteria(this.filterCriteria).subscribe({
+      this.movieService.findMoviesByCriteria(this.filterCriteria).pipe(takeUntilDestroyed(this.destroy)).subscribe({
         next: (result) => (this.filteredMovies = result),
         error: (failed) => {
           console.log(failed);
