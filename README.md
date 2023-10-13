@@ -55,7 +55,7 @@ Postgresql 13.x or newer.
 
 Eclipse IDE for Enterprise Java and Web Developers newest version.
 
-Java 17 or newer
+Java 21 or newer
 
 Maven 3.8.2 or newer.
 
