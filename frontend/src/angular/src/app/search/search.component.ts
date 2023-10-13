@@ -179,7 +179,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this.movieService
       .findMoviesByPage(this.scMoviesPageEnd)
-      .pipe(catchError((error) => this.handleRxJsProblem(error)))
+      .pipe(catchError((error) => this.handleRxJsProblem(error)), takeUntilDestroyed(this.destroy))
       .subscribe((res) => {
         if (res.length > 0) {
           this.scrollMovies = this.scrollMovies.concat(res);
@@ -193,7 +193,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   loginClosed(closed: boolean) {
     if (!!this.tokenService.userId && closed) {
-      this.movieService.allGeneres().subscribe((res) => (this.generes = res));
+      this.movieService.allGeneres().pipe(takeUntilDestroyed(this.destroy)).subscribe((res) => (this.generes = res));
       this.initScrollMovies();
     }
   }
@@ -203,6 +203,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.allMoviesLoaded = false;
     this.movieService
       .findMoviesByPage(this.scMoviesPageEnd)
+      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((res) => {
         this.scrollMovies = this.scrollMovies.concat(res);
         this.scMoviesPageEnd += 1;
