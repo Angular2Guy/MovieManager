@@ -25,7 +25,6 @@ import { Actor } from "../model/actor";
 import { Genere } from "../model/genere";
 import { ActorsService } from "../services/actors.service";
 import { MoviesService } from "../services/movies.service";
-import { UsersService } from "../services/users.service";
 import { iif, of, Observable } from "rxjs";
 import { FormControl } from "@angular/forms";
 import {
@@ -69,20 +68,20 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   constructor(
     private actorService: ActorsService,
-    private movieService: MoviesService,
-    private userService: UsersService,
+    private movieService: MoviesService,    
     private tokenService: TokenService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   @HostListener("window:scroll", ["$event"])
-  scroll($event: any) {
+  scroll($event: Event) {
     const ypos = window.pageYOffset + window.innerHeight;
     const contentHeight = !this.moviesRef
       ? 100000000
       : this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;
-    if (ypos >= contentHeight) {
+    //console.log(contentHeight, window.innerHeight);
+    if (ypos >= contentHeight || contentHeight < window.innerHeight) {
       this.fetchMore();
     }
   }
@@ -207,6 +206,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
       .subscribe((res) => {
         this.scrollMovies = this.scrollMovies.concat(res);
         this.scMoviesPageEnd += 1;
+        this.scroll({} as Event);
       });
   }
 }
