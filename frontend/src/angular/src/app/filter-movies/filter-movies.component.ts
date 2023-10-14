@@ -25,6 +25,11 @@ import { MoviesService } from "../services/movies.service";
 import { QueryParam } from "../model/common";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
+enum FulltextFilter {
+	PhraseFilter = "phraseFilter",
+	WordFilter = "wordFilter"
+}
+
 @Component({
   selector: "app-filter-movies",
   templateUrl: "./filter-movies.component.html",
@@ -39,6 +44,8 @@ export class FilterMoviesComponent implements OnInit {
   protected filterCriteria = new MovieFilterCriteria();
   protected ngbReleaseFrom: NgbDateStruct;
   protected ngbReleaseTo: NgbDateStruct;
+  protected FullTextFilter = FulltextFilter;
+  protected filterType = FulltextFilter.PhraseFilter;
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
@@ -72,7 +79,11 @@ export class FilterMoviesComponent implements OnInit {
       );
   }
 
-  public back() {
+  public switchFilters(): void {
+	  this.filterType = this.filterType === this.FullTextFilter.PhraseFilter ? this.FullTextFilter.WordFilter : this.FullTextFilter.PhraseFilter;
+  }
+
+  public back(): void {
     this.router.navigate(["search"]);
   }
 

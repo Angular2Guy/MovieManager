@@ -18,6 +18,7 @@ import {
   NgbDropdownModule,
   NgbOffcanvasModule,
   NgbRatingModule,
+  NgbPopoverModule,
 } from "@ng-bootstrap/ng-bootstrap";
 import { FilterMoviesRoutingModule } from "./filter-movies-routing.module";
 import { FilterMoviesComponent } from "./filter-movies.component";
@@ -32,6 +33,7 @@ import { FilterMoviesComponent } from "./filter-movies.component";
     NgbDatepickerModule,
     NgbDropdownModule,
     NgbRatingModule,
+    NgbPopoverModule,
     FilterMoviesRoutingModule,
   ],
 })
