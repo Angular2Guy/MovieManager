@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 
@@ -41,8 +42,8 @@ public class SecurityConfig {
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenService);
 		HttpSecurity httpSecurity = http
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers("/rest/auth/**").permitAll()
-						.requestMatchers("/rest/**").authenticated().requestMatchers("/**").permitAll())
+				.authorizeHttpRequests(authorize -> authorize.requestMatchers(AntPathRequestMatcher.antMatcher("/rest/auth/**")).permitAll()
+						.requestMatchers(AntPathRequestMatcher.antMatcher("/rest/**")).authenticated().requestMatchers(AntPathRequestMatcher.antMatcher("/**")).permitAll())
 				.csrf(myCsrf -> myCsrf.disable())
 				.sessionManagement(mySm -> mySm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.headers(myHeaders -> myHeaders.xssProtection(myXss -> myXss.headerValue(HeaderValue.ENABLED)))
