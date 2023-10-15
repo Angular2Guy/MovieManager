@@ -12,7 +12,9 @@
  */
 package ch.xxx.moviemanager.domain.model.dto;
 
-public class SearchStringDto {
+import com.fasterxml.jackson.annotation.JsonValue;
+
+public class SearchStringDto {	
 	public static enum Operator {
 		AND("+"), OR("|"), NOT("-");
 
@@ -20,6 +22,11 @@ public class SearchStringDto {
 
 		private Operator(String value) {
 			this.value = value;
+		}
+		
+		@JsonValue
+		public String value() {
+			return this.value;
 		}
 	}
 
