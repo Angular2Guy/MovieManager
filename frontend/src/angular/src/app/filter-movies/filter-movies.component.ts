@@ -129,7 +129,7 @@ export class FilterMoviesComponent implements OnInit {
 
   private createSearchStrings(): SearchString[] {
 	  const opsMap = new Map([[Operator.AND.toString(), Operator.AND], [Operator.NOT.toString(), Operator.NOT], [Operator.OR.toString(), Operator.OR]]);	 
-	  console.log(this.searchWords.split(' ')); 
+	  //console.log(this.searchWords.split(' ')); 
 	  const searchWords = this.searchWords.split(' ').map(str => str.trim())
 	    .filter(str => !!opsMap.get(str[0]) && str.length > 4).map(str => new SearchString(str.substring(1).trim(), opsMap.get(str[0])));	  
 	  return searchWords;

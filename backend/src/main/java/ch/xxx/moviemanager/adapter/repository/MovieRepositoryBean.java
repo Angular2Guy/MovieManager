@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.hibernate.search.mapper.orm.Search;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -42,6 +44,7 @@ import jakarta.validation.Valid;
 
 @Repository
 public class MovieRepositoryBean implements MovieRepository {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MovieRepository.class);
 	private final JpaMovieRepository jpaMovieRepository;
 	private final EntityManager entityManager;
 
@@ -170,6 +173,7 @@ public class MovieRepositoryBean implements MovieRepository {
 				.where((f, root) -> {
 					root.add(f.matchAll());
 					searchStrings.forEach(myDto -> {
+//						LOGGER.info("Op: {}, Val: {}", myDto.getOperator(), myDto.getSearchString());
 						switch(myDto.getOperator()) {
 						case SearchStringDto.Operator.AND -> root.add(f.match().field("overview").matching(myDto.getSearchString()));
 						case SearchStringDto.Operator.NOT -> root.add(f.not(f.match().field("overview").matching(myDto.getSearchString())));

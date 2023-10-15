@@ -264,9 +264,7 @@ public class MovieService {
 	public List<Movie> findMoviesByFilterCriteria(String bearerStr, MovieFilterCriteriaDto filterCriteriaDto) {
 		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto,
 				this.userDetailService.getCurrentUser(bearerStr).getId());
-		SearchTermDto searchTermDto = new SearchTermDto();
-		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchTermDto().getSearchPhraseDto());
-		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr, searchTermDto);
+		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr, filterCriteriaDto.getSearchTermDto());
 		List<Movie> results = jpaMovies;
 		if (!ftMovies.isEmpty()) {
 			Collection<Long> dublicates = CommonUtils
@@ -283,10 +281,10 @@ public class MovieService {
 		List<Movie> filteredMovies = List.of();
 		if(Optional.ofNullable(searchTermDto.getSearchPhraseDto().getPhrase()).stream()
 				.anyMatch(myPhrase -> Optional.ofNullable(myPhrase).stream()
-						.anyMatch(phrase -> phrase.trim().length() > 2)) || !searchTermDto.getSearchStringDtos().isEmpty()) {
-		List<Movie> movies = searchTermDto.getSearchStringDtos().isEmpty()
+						.anyMatch(phrase -> phrase.trim().length() > 2)) || !Arrays.asList(searchTermDto.getSearchStringDtos()).isEmpty()) {
+		List<Movie> movies = Arrays.asList(searchTermDto.getSearchStringDtos()).isEmpty()
 				? this.movieRep.findMoviesByPhrase(searchTermDto.getSearchPhraseDto())
-				: this.movieRep.findMoviesBySearchStrings(searchTermDto.getSearchStringDtos());
+				: this.movieRep.findMoviesBySearchStrings(Arrays.asList(searchTermDto.getSearchStringDtos()));
 		filteredMovies = movies.stream()
 				.filter(myMovie -> myMovie.getUsers().stream().anyMatch(
 						myUser -> myUser.getId().equals(this.userDetailService.getCurrentUser(bearerStr).getId())))

@@ -25,7 +25,7 @@ public class SearchStringDto {
 		}
 		
 		@JsonValue
-		public String value() {
+		public String getValue() {
 			return this.value;
 		}
 	}

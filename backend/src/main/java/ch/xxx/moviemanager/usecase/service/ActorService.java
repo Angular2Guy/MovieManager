@@ -12,6 +12,7 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -96,7 +97,7 @@ public class ActorService {
 	public List<Actor> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
 		List<Actor> actors = searchTermDto.getSearchPhraseDto() != null
 				? this.actorRep.findActorsByPhrase(searchTermDto.getSearchPhraseDto())
-				: this.actorRep.findActorsBySearchStrings(searchTermDto.getSearchStringDtos());
+				: this.actorRep.findActorsBySearchStrings(Arrays.asList(searchTermDto.getSearchStringDtos()));
 		List<Actor> filteredActors = actors.stream().filter(myActor -> myActor.getUsers().stream()
 				.anyMatch(myUser -> myUser.getId().equals(this.auds.getCurrentUser(bearerStr).getId()))).toList();
 		return filteredActors;

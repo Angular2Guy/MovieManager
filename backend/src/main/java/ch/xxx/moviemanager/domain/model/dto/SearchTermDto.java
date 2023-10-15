@@ -12,16 +12,13 @@
  */
 package ch.xxx.moviemanager.domain.model.dto;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SearchTermDto {
 	@JsonProperty("searchPhrase")
 	private SearchPhraseDto searchPhraseDto = new SearchPhraseDto();
 	@JsonProperty("searchStrings")
-	private List<SearchStringDto> searchStringDtos = new LinkedList<>();
+	private SearchStringDto[] searchStringDtos = new SearchStringDto[0];
 	
 	public SearchPhraseDto getSearchPhraseDto() {
 		return searchPhraseDto;
@@ -29,10 +26,10 @@ public class SearchTermDto {
 	public void setSearchPhraseDto(SearchPhraseDto searchPhraseDto) {
 		this.searchPhraseDto = searchPhraseDto;
 	}
-	public List<SearchStringDto> getSearchStringDtos() {
+	public SearchStringDto[] getSearchStringDtos() {
 		return searchStringDtos;
 	}
-	public void setSearchStringDtos(List<SearchStringDto> searchStringDtos) {
+	public void setSearchStringDtos(SearchStringDto[] searchStringDtos) {
 		this.searchStringDtos = searchStringDtos;
 	}
 }
