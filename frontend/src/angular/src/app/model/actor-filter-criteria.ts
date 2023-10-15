@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Gender } from "./actor";
-import { SearchPhrase } from "./search-phrase";
+import { SearchTerm } from "./search-term";
 
 export class ActorFilterCriteria {
   public name: string = "";
@@ -21,5 +21,5 @@ export class ActorFilterCriteria {
   public dead: boolean = false;
   public popularity: number = 0;
   public movieCharacter: string = "";
-  public searchPhrase = new SearchPhrase();
+  public searchTerm = new SearchTerm();  
 }

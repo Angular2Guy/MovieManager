@@ -22,16 +22,10 @@ import { MovieFilterCriteria } from "../model/movie-filter-criteria";
 import { Genere } from "../model/genere";
 import { Movie } from "../model/movie";
 import { MoviesService } from "../services/movies.service";
-import { QueryParam } from "../model/common";
+import { FulltextFilter, QueryParam } from "../model/common";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { SearchPhrase } from "../model/search-phrase";
 import { SearchTerm } from "../model/search-term";
 import { Operator, SearchString } from "../model/search-string";
-
-enum FulltextFilter {
-	PhraseFilter = "phraseFilter",
-	WordFilter = "wordFilter"
-}
 
 @Component({
   selector: "app-filter-movies",

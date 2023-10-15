@@ -202,8 +202,10 @@
           />
         </div>
         <textarea
+          i18n-ngbPopover="@@filterMoviesPhrasePopover"
           ngbPopover="Enter a phrase to search for and select the number of other words allowed in it."
 	      triggers="mouseenter:mouseleave"
+	      i18n-popoverTitle="@@filterMoviesPhrasePopoverTitle"
 	      popoverTitle="Phrase search"
           rows="2"
           id="overview"
@@ -226,8 +228,10 @@
       <ng-container *ngSwitchCase="FullTextFilter.WordFilter">
          <div class="mb-3">	
 		  <textarea
+		  i18n-ngbPopover="@@filterMoviesWordsPopover"
           ngbPopover="Enter required included(+) and excluded(-) words and or(|). +plane |car -train"
 	      triggers="mouseenter:mouseleave"
+	      i18n-popoverTitle="@@filterMoviesWordsPopoverTitle"
 	      popoverTitle="Word search"
           rows="2"
           id="overview"

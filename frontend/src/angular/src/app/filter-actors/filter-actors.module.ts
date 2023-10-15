@@ -17,6 +17,7 @@ import {
   NgbDatepickerModule,
   NgbOffcanvasModule,
   NgbRatingModule,
+  NgbPopoverModule,
 } from "@ng-bootstrap/ng-bootstrap";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { FilterActorsRoutingModule } from "./filter-actors-routing.module";
@@ -28,6 +29,7 @@ import { FilterActorsRoutingModule } from "./filter-actors-routing.module";
     NgbOffcanvasModule,
     NgbDatepickerModule,
     NgbRatingModule,
+    NgbPopoverModule,
     FormsModule,
     ReactiveFormsModule,
     FilterActorsRoutingModule,

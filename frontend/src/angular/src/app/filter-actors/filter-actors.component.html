@@ -139,16 +139,25 @@
         ></ngb-rating>
       </div>
       <div class="mb-3">
+		  <span i18n="@@filterActorsInBio">In Biography</span>
+		  <button class="btn btn-outline-primary float-end"
+          (click)="switchFilters()"
+          type="button"
+          i18n="@@filterActorsSwitchFilter">Switch filter</button>
+      </div>
+      <ng-container [ngSwitch]="filterType">
+		<ng-container *ngSwitchCase="FullTextFilter.PhraseFilter">
+      <div class="mb-3">
         <div class="bio-label-input">
           <label
             for="bio"
             class="form-label bio-label"
-            i18n="@@filterActorsInBio"
-            >In Biography</label
+            i18n="@@filterActorsOtherWords"
+            >Other words</label
           >
           <input
             type="number"
-            [(ngModel)]="filterCriteria.searchPhrase.otherWordsInPhrase"
+            [(ngModel)]="filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase"
             name="otherWordsInPhrase"
             class="form-control"
             id="otherWordsInPhrase"
@@ -157,9 +166,14 @@
           />
         </div>
         <textarea
+          i18n-ngbPopover="@@filterActorsPhrasePopover"
+          ngbPopover="Enter a phrase to search for and select the number of other words allowed in it."
+	      triggers="mouseenter:mouseleave"
+	      i18n-popoverTitle="@@filterActorsPhrasePopoverTitle"
+	      popoverTitle="Phrase search"
           rows="2"
           id="bio"
-          [(ngModel)]="filterCriteria.searchPhrase.phrase"
+          [(ngModel)]="filterCriteria.searchTerm.searchPhrase.phrase"
           name="phrase"
           class="form-control"
         ></textarea>
@@ -174,6 +188,34 @@
           Reset Filters
         </button>
       </div>
+      </ng-container>
+      <ng-container *ngSwitchCase="FullTextFilter.WordFilter">
+		<div class="mb-3">	
+		  <textarea
+		  i18n-ngbPopover="@@filterActorsWordsPopover"
+          ngbPopover="Enter required included(+) and excluded(-) words and or(|). +plane |car -train"
+	      triggers="mouseenter:mouseleave"
+	      i18n-popoverTitle="@@filterActorsWordsPopoverTitle"
+	      popoverTitle="Word search"
+          rows="2"
+          id="overview"
+          [(ngModel)]="searchWords"
+          name="search words"
+          class="form-control"
+        ></textarea>
+      </div>
+      <div class="mb-3 float-end">
+        <button
+          class="btn btn-outline-primary"
+          (click)="resetFilters()"
+          type="button"
+          i18n="@@resetFilters"
+        >
+          Reset Filters
+        </button>
+      </div>  
+	  </ng-container>
+      </ng-container>	  
     </form>
   </div>
 </ng-template>

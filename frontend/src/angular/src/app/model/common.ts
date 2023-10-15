@@ -16,3 +16,8 @@ export enum QueryParam {
   ActorsBack = "filter-actors",
   Empty = "",
 }
+
+export enum FulltextFilter {
+	PhraseFilter = "phraseFilter",
+	WordFilter = "wordFilter"
+}

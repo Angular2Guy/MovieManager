@@ -20,9 +20,11 @@ import {
 } from "@ng-bootstrap/ng-bootstrap";
 import { Actor, Gender } from "../model/actor";
 import { ActorFilterCriteria } from "../model/actor-filter-criteria";
-import { QueryParam } from "../model/common";
+import { FulltextFilter, QueryParam } from "../model/common";
 import { ActorsService } from "../services/actors.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { SearchTerm } from "../model/search-term";
+import { Operator, SearchString } from "../model/search-string";
 
 @Component({
   selector: "app-filter-actors",
@@ -37,6 +39,9 @@ export class FilterActorsComponent implements OnInit {
   protected ngbBirthdayTo: NgbDateStruct;
   protected closeResult = "";
   protected filterCriteria = new ActorFilterCriteria();
+  protected FullTextFilter = FulltextFilter;
+  protected filterType = FulltextFilter.PhraseFilter;
+  protected searchWords = '';
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
@@ -51,7 +56,7 @@ export class FilterActorsComponent implements OnInit {
   }
 
   public open(content: unknown) {
-    this.filterCriteria.searchPhrase.otherWordsInPhrase = null;
+    this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
     this.offcanvasService
       .open(content, { ariaLabelledBy: "offcanvas-basic-title" })
       .result.then(
@@ -81,14 +86,20 @@ export class FilterActorsComponent implements OnInit {
     this.filterCriteria.gender = Gender.Unknown;
     this.filterCriteria.movieCharacter = "";
     this.filterCriteria.name = "";
-    this.filterCriteria.popularity = 0;
-    this.filterCriteria.searchPhrase.otherWordsInPhrase = null;
-    this.filterCriteria.searchPhrase.phrase = "";
+    this.filterCriteria.popularity = 0;    
+    this.filterCriteria.searchTerm.searchPhrase.phrase = '';
+    this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
+    this.filterCriteria.searchTerm.searchStrings = [];  
     this.closeResult = "";
   }
 
   public showFilterMovies(): void {
     this.router.navigate(["/filter-movies"]);
+  }
+
+  public switchFilters(): void {
+	  this.filterCriteria.searchTerm = new SearchTerm();
+	  this.filterType = this.filterType === this.FullTextFilter.PhraseFilter ? this.FullTextFilter.WordFilter : this.FullTextFilter.PhraseFilter;
   }
 
   private getDismissReason(reason: unknown): void {
@@ -110,10 +121,11 @@ export class FilterActorsComponent implements OnInit {
             this.ngbBirthdayTo.month,
             this.ngbBirthdayTo.day
           );
-      this.filterCriteria.searchPhrase.otherWordsInPhrase = !this.filterCriteria
+      this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = !this.filterCriteria.searchTerm
         .searchPhrase.otherWordsInPhrase
         ? 0
-        : this.filterCriteria.searchPhrase.otherWordsInPhrase;
+        : this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase;
+      this.filterCriteria.searchTerm.searchStrings = this.createSearchStrings();
       this.actorsService.findActorsByCriteria(this.filterCriteria).pipe(takeUntilDestroyed(this.destroy)).subscribe({
         next: (result) => (this.filteredActors = result),
         error: (failed) => {
@@ -122,5 +134,13 @@ export class FilterActorsComponent implements OnInit {
         },
       });
     }
+  }
+  
+  private createSearchStrings(): SearchString[] {
+	  const opsMap = new Map([[Operator.AND.toString(), Operator.AND], [Operator.NOT.toString(), Operator.NOT], [Operator.OR.toString(), Operator.OR]]);	 
+	  //console.log(this.searchWords.split(' ')); 
+	  const searchWords = this.searchWords.split(' ').map(str => str.trim())
+	    .filter(str => !!opsMap.get(str[0]) && str.length > 4).map(str => new SearchString(str.substring(1).trim(), opsMap.get(str[0])));	  
+	  return searchWords;
   }
 }
