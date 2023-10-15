@@ -45,6 +45,7 @@ import jakarta.validation.Valid;
 @Repository
 public class MovieRepositoryBean implements MovieRepository {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MovieRepository.class);
+	private static final String OVERVIEW = "overview";
 	private final JpaMovieRepository jpaMovieRepository;
 	private final EntityManager entityManager;
 
@@ -161,7 +162,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		List<Movie> resultList = List.of();
 		if (searchPhraseDto.getPhrase() != null && searchPhraseDto.getPhrase().trim().length() > 2) {
 			resultList = Search
-					.session(this.entityManager).search(Movie.class).where(f -> f.phrase().field("overview")
+					.session(this.entityManager).search(Movie.class).where(f -> f.phrase().field(OVERVIEW)
 							.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase()))
 					.fetchHits(1000);
 		}
@@ -174,13 +175,16 @@ public class MovieRepositoryBean implements MovieRepository {
 					root.add(f.matchAll());
 					searchStrings.forEach(myDto -> {
 //						LOGGER.info("Op: {}, Val: {}", myDto.getOperator(), myDto.getSearchString());
-						switch(myDto.getOperator()) {
-						case SearchStringDto.Operator.AND -> root.add(f.match().field("overview").matching(myDto.getSearchString()));
-						case SearchStringDto.Operator.NOT -> root.add(f.not(f.match().field("overview").matching(myDto.getSearchString())));
-						case SearchStringDto.Operator.OR -> root.add(f.or().add(f.match().field("overview").matching(myDto.getSearchString())));
+						switch (myDto.getOperator()) {
+						case SearchStringDto.Operator.AND ->
+							root.add(f.match().field(OVERVIEW).matching(myDto.getSearchString()));
+						case SearchStringDto.Operator.NOT ->
+							root.add(f.not(f.match().field(OVERVIEW).matching(myDto.getSearchString())));
+						case SearchStringDto.Operator.OR ->
+							root.add(f.or().add(f.match().field(OVERVIEW).matching(myDto.getSearchString())));
 						}
 					});
-					})
+				})
 				.fetchHits(1000);
 		return resultList;
 	}

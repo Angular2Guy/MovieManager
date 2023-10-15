@@ -31,6 +31,7 @@ import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
+import ch.xxx.moviemanager.domain.model.entity.Movie;
 import ch.xxx.moviemanager.domain.model.entity.User;
 
 @Service
@@ -77,13 +78,9 @@ public class ActorService {
 	public List<Actor> findActorsByFilterCriteria(String bearerStr, ActorFilterCriteriaDto filterCriteriaDto) {
 		User currentUser = this.auds.getCurrentUser(bearerStr);
 		List<Actor> jpaActors = this.actorRep.findByFilterCriteria(filterCriteriaDto, currentUser.getId());
-		SearchTermDto searchTermDto = new SearchTermDto();
-		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());
-		List<Actor> ftActors = this.findActorsBySearchTerm(bearerStr, searchTermDto);
+		List<Actor> ftActors = this.findActorsBySearchTerm(bearerStr, filterCriteriaDto.getSearchTermDto());
 		List<Actor> results = jpaActors;
-		if (filterCriteriaDto.getSearchPhraseDto() != null
-				&& !Objects.isNull(filterCriteriaDto.getSearchPhraseDto().getPhrase())
-				&& filterCriteriaDto.getSearchPhraseDto().getPhrase().length() > 2) {
+		if (!ftActors.isEmpty()) {
 			Collection<Long> dublicates = CommonUtils
 					.findDublicates(Stream.of(jpaActors, ftActors).flatMap(List::stream).toList());
 			results = Stream.of(jpaActors, ftActors).flatMap(List::stream)
@@ -95,11 +92,16 @@ public class ActorService {
 	}
 	
 	public List<Actor> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
+		List<Actor> filteredActors = List.of();
+		if(Optional.ofNullable(searchTermDto.getSearchPhraseDto().getPhrase()).stream()
+				.anyMatch(myPhrase -> Optional.ofNullable(myPhrase).stream()
+						.anyMatch(phrase -> phrase.trim().length() > 2)) || !Arrays.asList(searchTermDto.getSearchStringDtos()).isEmpty()) {
 		List<Actor> actors = searchTermDto.getSearchPhraseDto() != null
 				? this.actorRep.findActorsByPhrase(searchTermDto.getSearchPhraseDto())
 				: this.actorRep.findActorsBySearchStrings(Arrays.asList(searchTermDto.getSearchStringDtos()));
-		List<Actor> filteredActors = actors.stream().filter(myActor -> myActor.getUsers().stream()
+		filteredActors = actors.stream().filter(myActor -> myActor.getUsers().stream()
 				.anyMatch(myUser -> myUser.getId().equals(this.auds.getCurrentUser(bearerStr).getId()))).toList();
+		}
 		return filteredActors;
 	}
 }

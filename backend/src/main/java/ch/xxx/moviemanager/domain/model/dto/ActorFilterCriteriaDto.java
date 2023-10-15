@@ -28,8 +28,8 @@ public class ActorFilterCriteriaDto {
     private Boolean dead;
     private int popularity;
     private String movieCharacter;
-    @JsonProperty("searchPhrase")
-    private SearchPhraseDto searchPhraseDto = new SearchPhraseDto();
+    @JsonProperty("searchTerm")
+    private SearchTermDto searchTermDto = new SearchTermDto();
     
 	public String getName() {
 		return name;
@@ -73,10 +73,10 @@ public class ActorFilterCriteriaDto {
 	public void setMovieCharacter(String movieCharacter) {
 		this.movieCharacter = movieCharacter;
 	}
-	public SearchPhraseDto getSearchPhraseDto() {
-		return searchPhraseDto;
+	public SearchTermDto getSearchTermDto() {
+		return searchTermDto;
 	}
-	public void setSearchPhraseDto(SearchPhraseDto searchPhraseDto) {
-		this.searchPhraseDto = searchPhraseDto;
+	public void setSearchTermDto(SearchTermDto searchTermDto) {
+		this.searchTermDto = searchTermDto;
 	}
 }

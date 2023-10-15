@@ -19,6 +19,8 @@ import java.util.Optional;
 
 import org.hibernate.search.mapper.orm.Search;
 import org.hibernate.search.mapper.orm.session.SearchSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -42,6 +44,8 @@ import jakarta.validation.Valid;
 
 @Repository
 public class ActorRepositoryBean implements ActorRepository {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ActorRepositoryBean.class);
+	private static final String BIOGRAPHY = "biography";
 	private final JpaActorRepository jpaActorRepository;
 	private final EntityManager entityManager;
 
@@ -123,22 +127,31 @@ public class ActorRepositoryBean implements ActorRepository {
 
 	public List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto) {
 		final List<Actor> resultList = new ArrayList<>();
-		Optional.ofNullable(searchPhraseDto.getPhrase()).stream().filter(myPhrase -> myPhrase.trim().length() > 2).findFirst().ifPresent(x -> {
-			SearchSession searchSession = Search.session(this.entityManager);
-			resultList.addAll(searchSession.search(Actor.class).where(f -> f.phrase().field("biography")
-					.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase()))
-					.fetchHits(1000));
-		});		
+		Optional.ofNullable(searchPhraseDto.getPhrase()).stream().filter(myPhrase -> myPhrase.trim().length() > 2)
+				.findFirst().ifPresent(x -> {
+					SearchSession searchSession = Search.session(this.entityManager);
+					resultList.addAll(searchSession.search(Actor.class).where(f -> f.phrase().field(BIOGRAPHY)
+							.matching(searchPhraseDto.getPhrase()).slop(searchPhraseDto.getOtherWordsInPhrase()))
+							.fetchHits(1000));
+				});
 		return resultList;
 	}
 
 	public List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings) {
-		StringBuilder stringBuilder = new StringBuilder();
-		searchStrings.forEach(myDto -> stringBuilder.append(" ").append(myDto.getOperator().value).append(" ")
-				.append(myDto.getSearchString()));
-		List<Actor> resultList = Search.session(this.entityManager).search(Actor.class)
-				.where(f -> f.simpleQueryString().field("biography").matching(stringBuilder.substring(2)))
-				.fetchHits(1000);
+		List<Actor> resultList = Search.session(this.entityManager).search(Actor.class).where((f, root) -> {
+			root.add(f.matchAll());
+			searchStrings.forEach(myDto -> {
+//						LOGGER.info("Op: {}, Val: {}", myDto.getOperator(), myDto.getSearchString());
+				switch (myDto.getOperator()) {
+				case SearchStringDto.Operator.AND ->
+					root.add(f.match().field(BIOGRAPHY).matching(myDto.getSearchString()));
+				case SearchStringDto.Operator.NOT ->
+					root.add(f.not(f.match().field(BIOGRAPHY).matching(myDto.getSearchString())));
+				case SearchStringDto.Operator.OR ->
+					root.add(f.or().add(f.match().field(BIOGRAPHY).matching(myDto.getSearchString())));
+				}
+			});
+		}).fetchHits(1000);
 		return resultList;
 	}
 }
