@@ -165,14 +165,18 @@ public class MovieRepositoryBean implements MovieRepository {
 		return resultList;
 	}
 
-	public List<Movie> findMoviesBySearchStrings(List<SearchStringDto> searchStrings) {
-		StringBuilder stringBuilder = new StringBuilder();
-		searchStrings.stream().filter(
-				searchStringDto -> searchStringDto.getOperator() != null && searchStringDto.getSearchString() != null)
-				.toList().forEach(myDto -> stringBuilder.append(" ").append(myDto.getOperator().value).append(" ")
-						.append(myDto.getSearchString()));
+	public List<Movie> findMoviesBySearchStrings(List<SearchStringDto> searchStrings) {		
 		List<Movie> resultList = Search.session(this.entityManager).search(Movie.class)
-				.where(f -> f.simpleQueryString().field("overview").matching(stringBuilder.substring(2)))
+				.where((f, root) -> {
+					root.add(f.matchAll());
+					searchStrings.forEach(myDto -> {
+						switch(myDto.getOperator()) {
+						case SearchStringDto.Operator.AND -> root.add(f.match().field("overview").matching(myDto.getSearchString()));
+						case SearchStringDto.Operator.NOT -> root.add(f.not(f.match().field("overview").matching(myDto.getSearchString())));
+						case SearchStringDto.Operator.OR -> root.add(f.or().add(f.match().field("overview").matching(myDto.getSearchString())));
+						}
+					});
+					})
 				.fetchHits(1000);
 		return resultList;
 	}

@@ -11,7 +11,7 @@
    limitations under the License.
  */
 import { Genere } from "./genere";
-import { SearchPhrase } from "./search-phrase";
+import { SearchTerm } from "./search-term";
 
 export class MovieFilterCriteria {
   public selectedGeneres: Genere[] = [];
@@ -22,5 +22,5 @@ export class MovieFilterCriteria {
   public minLength = 0;
   public maxLength = 0;
   public minRating = 0;
-  public searchPhrase = new SearchPhrase();
+  public searchTerm = new SearchTerm();
 }

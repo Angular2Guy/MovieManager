@@ -10,8 +10,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-export class SearchPhrase {
+export enum Operator {
+	AND = "+",
+	OR = "|",
+	NOT = "-"
+}
+
+export class SearchString {
   constructor(
-  public phrase = "",
-  public otherWordsInPhrase = 0) {}
+  public searchString = "",
+  public operator = Operator.AND) {}
 }

@@ -94,7 +94,7 @@ public class MovieService {
 		KeysetHandle handle = TinkJsonProtoKeysetFormat.parseKeyset(this.tinkJsonKey, InsecureSecretKeyAccess.get());
 		this.daead = handle.getPrimitive(DeterministicAead.class);
 	}
-	
+
 	public List<Genere> findAllGeneres() {
 		List<Genere> result = this.genereRep.findAll();
 		return result;
@@ -136,7 +136,8 @@ public class MovieService {
 
 	public List<Movie> findMovie(String title, String bearerStr) {
 		PageRequest pageRequest = PageRequest.of(0, 15, Sort.by("title").ascending());
-		List<Movie> result = this.movieRep.findByTitle(title, this.userDetailService.getCurrentUser(bearerStr).getId(), pageRequest);
+		List<Movie> result = this.movieRep.findByTitle(title, this.userDetailService.getCurrentUser(bearerStr).getId(),
+				pageRequest);
 		return result;
 	}
 
@@ -151,7 +152,8 @@ public class MovieService {
 	public List<MovieDto> findImportMovie(String title, String bearerStr) throws GeneralSecurityException {
 		User user = this.userDetailService.getCurrentUser(bearerStr);
 		String queryStr = this.createQueryStr(title);
-		WrapperMovieDto wrMovie = this.movieDbRestClient.fetchImportMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()), queryStr);
+		WrapperMovieDto wrMovie = this.movieDbRestClient
+				.fetchImportMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()), queryStr);
 		List<MovieDto> result = Arrays.asList(wrMovie.getResults());
 		return result;
 	}
@@ -167,12 +169,13 @@ public class MovieService {
 				uuid.getBytes(Charset.defaultCharset())));
 		return result;
 	}
-	
+
 	public boolean importMovie(int movieDbId, String bearerStr) throws InterruptedException, GeneralSecurityException {
 		User user = this.userDetailService.getCurrentUser(bearerStr);
 		LOG.info("Start import");
 		LOG.info("Start import generes");
-		WrapperGenereDto result = this.movieDbRestClient.fetchAllGeneres(this.decrypt(user.getMoviedbkey(), user.getUuid()));
+		WrapperGenereDto result = this.movieDbRestClient
+				.fetchAllGeneres(this.decrypt(user.getMoviedbkey(), user.getUuid()));
 		List<Genere> generes = new ArrayList<>(this.genereRep.findAll());
 		for (GenereDto g : result.getGenres()) {
 			Genere genereEntity = generes.stream()
@@ -185,7 +188,8 @@ public class MovieService {
 			}
 		}
 		LOG.info("Start import Movie with Id: {movieDbId}", movieDbId);
-		MovieDto movieDto = this.movieDbRestClient.fetchMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()), movieDbId);
+		MovieDto movieDto = this.movieDbRestClient.fetchMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()),
+				movieDbId);
 		Movie movieEntity = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId()).orElse(null);
 		if (movieEntity == null) {
 			LOG.info("Movie not found by id");
@@ -214,17 +218,20 @@ public class MovieService {
 			LOG.info("adding user to movie");
 			movieEntity.getUsers().add(user);
 		}
-		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(this.decrypt(user.getMoviedbkey(), user.getUuid()), movieDto.getId());
+		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(this.decrypt(user.getMoviedbkey(), user.getUuid()),
+				movieDto.getId());
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
-				if(c.getCharacter() == null || c.getCharacter().isBlank() || c.getName() == null || c.getName().isBlank()) {
+				if (c.getCharacter() == null || c.getCharacter().isBlank() || c.getName() == null
+						|| c.getName().isBlank()) {
 					continue;
 				}
 				Cast castEntity = this.mapper.convert(c);
 				movieEntity.getCast().add(castEntity);
 				castEntity.setMovie(movieEntity);
-				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()), c.getId(), 300L);
+				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()),
+						c.getId(), 300L);
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : this.mapper.convert(actor);
 				castEntity = this.castRep.save(castEntity);
@@ -238,7 +245,8 @@ public class MovieService {
 		} else {
 			for (CastDto c : wrCast.getCast()) {
 				LOG.info("update cast for movie");
-				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()), c.getId(), 300L);
+				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()),
+						c.getId(), 300L);
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
 				Actor actorEntity = actorOpt.get();
 				if (!actorEntity.getUsers().contains(user)) {
@@ -257,12 +265,10 @@ public class MovieService {
 		List<Movie> jpaMovies = this.movieRep.findByFilterCriteria(filterCriteriaDto,
 				this.userDetailService.getCurrentUser(bearerStr).getId());
 		SearchTermDto searchTermDto = new SearchTermDto();
-		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchPhraseDto());
+		searchTermDto.setSearchPhraseDto(filterCriteriaDto.getSearchTermDto().getSearchPhraseDto());
 		List<Movie> ftMovies = this.findMoviesBySearchTerm(bearerStr, searchTermDto);
 		List<Movie> results = jpaMovies;
-		if (filterCriteriaDto.getSearchPhraseDto() != null
-				&& !Objects.isNull(filterCriteriaDto.getSearchPhraseDto().getPhrase())
-				&& filterCriteriaDto.getSearchPhraseDto().getPhrase().length() > 2) {
+		if (!ftMovies.isEmpty()) {
 			Collection<Long> dublicates = CommonUtils
 					.findDublicates(Stream.of(jpaMovies, ftMovies).flatMap(List::stream).toList());
 			results = Stream.of(jpaMovies, ftMovies).flatMap(List::stream)
@@ -274,13 +280,18 @@ public class MovieService {
 	}
 
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
-		List<Movie> movies = searchTermDto.getSearchPhraseDto() != null
+		List<Movie> filteredMovies = List.of();
+		if(Optional.ofNullable(searchTermDto.getSearchPhraseDto().getPhrase()).stream()
+				.anyMatch(myPhrase -> Optional.ofNullable(myPhrase).stream()
+						.anyMatch(phrase -> phrase.trim().length() > 2)) || !searchTermDto.getSearchStringDtos().isEmpty()) {
+		List<Movie> movies = searchTermDto.getSearchStringDtos().isEmpty()
 				? this.movieRep.findMoviesByPhrase(searchTermDto.getSearchPhraseDto())
 				: this.movieRep.findMoviesBySearchStrings(searchTermDto.getSearchStringDtos());
-		List<Movie> filteredMovies = movies.stream()
-				.filter(myMovie -> myMovie.getUsers().stream()
-						.anyMatch(myUser -> myUser.getId().equals(this.userDetailService.getCurrentUser(bearerStr).getId())))
+		filteredMovies = movies.stream()
+				.filter(myMovie -> myMovie.getUsers().stream().anyMatch(
+						myUser -> myUser.getId().equals(this.userDetailService.getCurrentUser(bearerStr).getId())))
 				.toList();
+		}
 		return filteredMovies;
 	}
 }

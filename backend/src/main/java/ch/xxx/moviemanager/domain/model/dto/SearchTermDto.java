@@ -15,8 +15,12 @@ package ch.xxx.moviemanager.domain.model.dto;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class SearchTermDto {
-	private SearchPhraseDto searchPhraseDto;
+	@JsonProperty("searchPhrase")
+	private SearchPhraseDto searchPhraseDto = new SearchPhraseDto();
+	@JsonProperty("searchStrings")
 	private List<SearchStringDto> searchStringDtos = new LinkedList<>();
 	
 	public SearchPhraseDto getSearchPhraseDto() {

@@ -27,9 +27,9 @@ public class MovieFilterCriteriaDto {
 	private String movieActor;
 	private int minLength;
 	private int maxLength;
-	private int minRating;
-	@JsonProperty("searchPhrase")
-	private SearchPhraseDto searchPhraseDto = new SearchPhraseDto();
+	private int minRating;	
+	@JsonProperty("searchTerm")
+	private SearchTermDto searchTermDto = new SearchTermDto();
 	
 	public List<GenereDto> getSelectedGeneres() {
 		return selectedGeneres;
@@ -79,10 +79,10 @@ public class MovieFilterCriteriaDto {
 	public void setMinRating(int minRating) {
 		this.minRating = minRating;
 	}
-	public SearchPhraseDto getSearchPhraseDto() {
-		return searchPhraseDto;
+	public SearchTermDto getSearchTermDto() {
+		return searchTermDto;
 	}
-	public void setSearchPhraseDto(SearchPhraseDto searchPhraseDto) {
-		this.searchPhraseDto = searchPhraseDto;
+	public void setSearchTermDto(SearchTermDto searchTermDto) {
+		this.searchTermDto = searchTermDto;
 	}
 }

@@ -24,6 +24,9 @@ import { Movie } from "../model/movie";
 import { MoviesService } from "../services/movies.service";
 import { QueryParam } from "../model/common";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { SearchPhrase } from "../model/search-phrase";
+import { SearchTerm } from "../model/search-term";
+import { Operator, SearchString } from "../model/search-string";
 
 enum FulltextFilter {
 	PhraseFilter = "phraseFilter",
@@ -46,6 +49,7 @@ export class FilterMoviesComponent implements OnInit {
   protected ngbReleaseTo: NgbDateStruct;
   protected FullTextFilter = FulltextFilter;
   protected filterType = FulltextFilter.PhraseFilter;
+  protected searchWords = '';
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
@@ -59,6 +63,7 @@ export class FilterMoviesComponent implements OnInit {
     this.ngbRatingConfig.max = 10;
     this.movieService
       .allGeneres()
+      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
         next: (myGeneres) => (this.generes = myGeneres),
         error: (failed) => this.router.navigate(["/"]),
@@ -66,7 +71,7 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public open(content: unknown) {
-    this.filterCriteria.searchPhrase.otherWordsInPhrase = null;
+    this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
     this.offcanvasService
       .open(content, { ariaLabelledBy: "offcanvas-basic-title" })
       .result.then(
@@ -80,7 +85,8 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public switchFilters(): void {
-	  this.filterType = this.filterType === this.FullTextFilter.PhraseFilter ? this.FullTextFilter.WordFilter : this.FullTextFilter.PhraseFilter;
+	  this.filterCriteria.searchTerm = new SearchTerm();
+	  this.filterType = this.filterType === this.FullTextFilter.PhraseFilter ? this.FullTextFilter.WordFilter : this.FullTextFilter.PhraseFilter;	  
   }
 
   public back(): void {
@@ -106,10 +112,11 @@ export class FilterMoviesComponent implements OnInit {
             this.ngbReleaseTo.month,
             this.ngbReleaseTo.day
           );
-      this.filterCriteria.searchPhrase.otherWordsInPhrase = !this.filterCriteria
+      this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = !this.filterCriteria.searchTerm
         .searchPhrase.otherWordsInPhrase
         ? 0
-        : this.filterCriteria.searchPhrase.otherWordsInPhrase;
+        : this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase;
+      this.filterCriteria.searchTerm.searchStrings = this.createSearchStrings();
       this.movieService.findMoviesByCriteria(this.filterCriteria).pipe(takeUntilDestroyed(this.destroy)).subscribe({
         next: (result) => (this.filteredMovies = result),
         error: (failed) => {
@@ -118,6 +125,13 @@ export class FilterMoviesComponent implements OnInit {
         },
       });
     }
+  }
+
+  private createSearchStrings(): SearchString[] {
+	  const opsMap = new Map([[Operator.AND.toString(), Operator.AND], [Operator.NOT.toString(), Operator.NOT], [Operator.OR.toString(), Operator.OR]]);	  
+	  const searchWords = this.searchWords.split(' ').map(str => str.trim())
+	    .filter(str => !!opsMap.get(str[0]) && str.length < 4).map(str => new SearchString(str.substring(1).trim(), opsMap.get(str[0])));	  
+	  return searchWords;
   }
 
   public addToSelectedGenere(genere: Genere): void {
@@ -160,7 +174,8 @@ export class FilterMoviesComponent implements OnInit {
     this.filterCriteria.minLength = 0;
     this.filterCriteria.maxLength = 0;
     this.filterCriteria.minRating = 0;
-    this.filterCriteria.searchPhrase.phrase = "";
-    this.filterCriteria.searchPhrase.otherWordsInPhrase = null;
+    this.filterCriteria.searchTerm.searchPhrase.phrase = '';
+    this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
+    this.filterCriteria.searchTerm.searchStrings = [];    
   }
 }
