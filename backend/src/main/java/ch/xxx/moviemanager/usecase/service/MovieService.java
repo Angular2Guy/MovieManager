@@ -232,11 +232,11 @@ public class MovieService {
 				castEntity.setMovie(movieEntity);
 				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()),
 						c.getId(), 300L);
-				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
-				Actor actorEntity = actorOpt.isPresent() ? actorOpt.get() : this.mapper.convert(actor);
+				Actor actorEntity = this.actorRep.findByActorId(actor.getActorId(), user.getId())
+						.orElse(this.mapper.convert(actor));
 				castEntity = this.castRep.save(castEntity);
-				if (actorOpt.isEmpty()) {
-					actorEntity = this.actorRep.save(actorEntity);
+				actorEntity = this.actorRep.save(actorEntity);
+				if (!actorEntity.getUsers().contains(user)) {
 					actorEntity.getUsers().add(user);
 				}
 				actorEntity.getCasts().add(castEntity);
@@ -248,7 +248,8 @@ public class MovieService {
 				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()),
 						c.getId(), 300L);
 				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
-				Actor actorEntity = actorOpt.get();
+				Actor actorEntity = actorOpt.orElse(this.mapper.convert(actor));
+				actorEntity = this.actorRep.save(actorEntity);
 				if (!actorEntity.getUsers().contains(user)) {
 					actorEntity.getUsers().add(user);
 				}
@@ -279,16 +280,16 @@ public class MovieService {
 
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
 		List<Movie> filteredMovies = List.of();
-		if(Optional.ofNullable(searchTermDto.getSearchPhraseDto().getPhrase()).stream()
-				.anyMatch(myPhrase -> Optional.ofNullable(myPhrase).stream()
-						.anyMatch(phrase -> phrase.trim().length() > 2)) || !Arrays.asList(searchTermDto.getSearchStringDtos()).isEmpty()) {
-		List<Movie> movies = Arrays.asList(searchTermDto.getSearchStringDtos()).isEmpty()
-				? this.movieRep.findMoviesByPhrase(searchTermDto.getSearchPhraseDto())
-				: this.movieRep.findMoviesBySearchStrings(Arrays.asList(searchTermDto.getSearchStringDtos()));
-		filteredMovies = movies.stream()
-				.filter(myMovie -> myMovie.getUsers().stream().anyMatch(
-						myUser -> myUser.getId().equals(this.userDetailService.getCurrentUser(bearerStr).getId())))
-				.toList();
+		if (Optional.ofNullable(searchTermDto.getSearchPhraseDto().getPhrase()).stream().anyMatch(
+				myPhrase -> Optional.ofNullable(myPhrase).stream().anyMatch(phrase -> phrase.trim().length() > 2))
+				|| !Arrays.asList(searchTermDto.getSearchStringDtos()).isEmpty()) {
+			List<Movie> movies = Arrays.asList(searchTermDto.getSearchStringDtos()).isEmpty()
+					? this.movieRep.findMoviesByPhrase(searchTermDto.getSearchPhraseDto())
+					: this.movieRep.findMoviesBySearchStrings(Arrays.asList(searchTermDto.getSearchStringDtos()));
+			filteredMovies = movies.stream()
+					.filter(myMovie -> myMovie.getUsers().stream().anyMatch(
+							myUser -> myUser.getId().equals(this.userDetailService.getCurrentUser(bearerStr).getId())))
+					.toList();
 		}
 		return filteredMovies;
 	}
