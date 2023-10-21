@@ -179,7 +179,7 @@ public class MovieService {
 		List<Genere> generes = new ArrayList<>(this.genereRep.findAll());
 		for (GenereDto g : result.getGenres()) {
 			Genere genereEntity = generes.stream()
-					.filter(myGenere -> myGenere.getGenereId() != null && myGenere.getGenereId().equals(g.getId()))
+					.filter(myGenere -> Optional.ofNullable(myGenere.getGenereId()).stream().anyMatch(myGenereId -> myGenereId.equals(g.getId())))
 					.findFirst().orElse(this.mapper.convert(g));
 			if (genereEntity.getId() == null) {
 				genereEntity = genereRep.save(genereEntity);
@@ -190,8 +190,9 @@ public class MovieService {
 		LOG.info("Start import Movie with Id: {movieDbId}", movieDbId);
 		MovieDto movieDto = this.movieDbRestClient.fetchMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()),
 				movieDbId);
-		Movie movieEntity = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId()).orElse(null);
-		if (movieEntity == null) {
+		Optional<Movie> movieOpt = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId());
+		Movie movieEntity = movieOpt.isPresent() ? movieOpt.get() : null; 
+		if (movieOpt.isEmpty()) {
 			LOG.info("Movie not found by id");
 			List<Movie> movies = this.movieRep.findByTitleAndRelDate(movieDto.getTitle(), movieDto.getReleaseDate(),
 					this.userDetailService.getCurrentUser(bearerStr).getId());
@@ -255,6 +256,7 @@ public class MovieService {
 				}
 			}
 		}
+		LOG.info("Finished import");
 		return true;
 	}
 
