@@ -100,6 +100,11 @@
 		<modifyDataType tableName="actor" columnName="biography" newDataType="varchar(10240)"/>
 	</changeSet>
 	<changeSet id="41" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="user1" columnName="migration"/>		
+			</not>
+		</preConditions>
 		<addColumn tableName="user1">
 			<column defaultValue="0" type="bigint" name="migration"/>
 		</addColumn>
