@@ -21,7 +21,7 @@ import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
 public interface MovieDbRestClient {
 	MovieDto fetchMovie(String moviedbkey, long movieDbId);
 	
-	WrapperCastDto fetchCast(String moviedbkey, Long movieId, Long delay);
+	WrapperCastDto fetchCast(String moviedbkey, Long movieId);
 	
 	ActorDto fetchActor(String moviedbkey, Integer castId);
 	
