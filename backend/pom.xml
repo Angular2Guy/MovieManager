@@ -76,12 +76,12 @@ http://www.apache.org/licenses/LICENSE-2.0
 		<dependency>
 			<groupId>org.hibernate.search</groupId>
 			<artifactId>hibernate-search-mapper-orm-orm6</artifactId>
-			<version>6.2.0.Final</version>
+			<version>6.2.2.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate.search</groupId>
 			<artifactId>hibernate-search-backend-lucene</artifactId>
-			<version>6.2.0.Final</version>
+			<version>6.2.2.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>net.javacrumbs.shedlock</groupId>
