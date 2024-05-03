@@ -13,13 +13,13 @@
 package ch.xxx.moviemanager.adapter.client;
 
 import java.net.URI;
-import java.time.Duration;
 import java.util.Arrays;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,24 +35,28 @@ import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
 public class MovieDbRestClientBean implements MovieDbRestClient {
 	private final static Logger LOG = LoggerFactory.getLogger(MovieDbRestClientBean.class);
 	private final ObjectMapper objectMapper;
+	private final RestClient restClient;
 
 	public MovieDbRestClientBean(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
+		var httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+		httpRequestFactory.setConnectTimeout(5000);
+		httpRequestFactory.setConnectionRequestTimeout(5000);
+		this.restClient = RestClient.builder().requestFactory(httpRequestFactory).build();
 	}
 
-	public WrapperGenereDto fetchAllGeneres(String moviedbkey) {
-		WrapperGenereDto result = WebClient
-				.create().get().uri(URI.create(String
+	public WrapperGenereDto fetchAllGeneres(String moviedbkey) {		
+		WrapperGenereDto result = this.restClient.get().uri(URI.create(String
 						.format("https://api.themoviedb.org/3/genre/movie/list?api_key=%s&language=en-US", moviedbkey)))
-				.retrieve().bodyToMono(WrapperGenereDto.class).block(Duration.ofSeconds(10L));
+				.retrieve().body(WrapperGenereDto.class);
 		return result;
 	}
 
 	public MovieDto fetchMovie(String moviedbkey, long movieDbId) {
-		MovieDto wrMovie = WebClient.create().get()
+		MovieDto wrMovie = this.restClient.get()
 				.uri(URI.create(String.format("https://api.themoviedb.org/3/movie/%d?api_key=%s&language=en-US",
 						movieDbId, moviedbkey)))
-				.retrieve().bodyToMono(MovieDto.class).block(Duration.ofSeconds(10L));
+				.retrieve().body(MovieDto.class);
 		return wrMovie;
 	}
 
@@ -66,23 +70,29 @@ public class MovieDbRestClientBean implements MovieDbRestClient {
 	}
 
 	public WrapperCastDto fetchCast(String moviedbkey, Long movieId) {
-		WrapperCastDto wrCast = WebClient.create().get()
-				.uri(URI.create(
-						String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s", movieId, moviedbkey)))
-				.retrieve().bodyToMono(WrapperCastDto.class).delayElement(Duration.ofMillis(300L))
-				.block(Duration.ofSeconds(10L));
+		WrapperCastDto wrCast = null;
+		try {
+			Thread.sleep(300L);
+			wrCast = this.restClient.get()
+					.uri(URI.create(
+							String.format("https://api.themoviedb.org/3/movie/%d/credits?api_key=%s", movieId, moviedbkey)))
+					.retrieve().body(WrapperCastDto.class);
+		} catch (InterruptedException e) {
+			LOG.warn("fetchCast failed.",e);
+		}
 		return wrCast;
 	}
 
 	public ActorDto fetchActor(String moviedbkey, Integer castId, Long delay) {
-		ActorDto actor = WebClient.create().get().uri(URI.create(
-				String.format("https://api.themoviedb.org/3/person/%d?api_key=%s&language=en-US", castId, moviedbkey)))
-				.retrieve().bodyToMono(ActorDto.class)
-//				.bodyToMono(String.class)
-//				.map(bodyStr -> {
-//					return parseJsonToDto(bodyStr, ActorDto.class);
-//				})
-				.delayElement(Duration.ofMillis(delay)).block(Duration.ofSeconds(10L));
+		ActorDto actor = null;
+		try {
+			Thread.sleep(delay);
+			actor = this.restClient.get().uri(URI.create(
+					String.format("https://api.themoviedb.org/3/person/%d?api_key=%s&language=en-US", castId, moviedbkey)))
+					.retrieve().body(ActorDto.class);
+		} catch (Exception e) {
+			LOG.warn("fetchActor failed.",e);
+		}						
 		return actor;
 	}
 
@@ -91,9 +101,9 @@ public class MovieDbRestClientBean implements MovieDbRestClient {
 	}
 
 	public WrapperMovieDto fetchImportMovie(String moviedbkey, String queryStr) {
-		WrapperMovieDto wrMovie = WebClient.create().get().uri(URI.create(String.format(
+		WrapperMovieDto wrMovie = this.restClient.get().uri(URI.create(String.format(
 				"https://api.themoviedb.org/3/search/movie?api_key=%s&language=en-US&query=%s&page=1&include_adult=false",
-				moviedbkey, queryStr))).retrieve().bodyToMono(WrapperMovieDto.class).block(Duration.ofSeconds(10L));
+				moviedbkey, queryStr))).retrieve().body(WrapperMovieDto.class);
 		MovieDto[] movieArray = Arrays.stream(wrMovie.getResults()).map(movieDto -> {
 			movieDto.setMovieId(movieDto.getId());
 			movieDto.setId(null);
