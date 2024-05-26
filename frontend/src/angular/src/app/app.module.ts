@@ -12,7 +12,7 @@
  */
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
-import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 
 import { AppRoutingModule } from "./app-routing.module";
@@ -28,27 +28,21 @@ import {
   SimpleChartsConfig,
 } from "ngx-simple-charts/base-service";
 
-@NgModule({
-  declarations: [
-    AppComponent,
-    MoviesComponent,
-    ActorsComponent,
-    SearchComponent,
-    LoginComponent,
-    MovieImportComponent,
-  ],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    NgxServiceModule.forRoot({
-      tokenRefreshPath: "/rest/auth/refreshToken",
-      logoutPath: "/rest/auth/logout",
-      loginRoute: "/",
-    }),
-  ],
-  bootstrap: [AppComponent],
-})
+@NgModule({ declarations: [
+        AppComponent,
+        MoviesComponent,
+        ActorsComponent,
+        SearchComponent,
+        LoginComponent,
+        MovieImportComponent,
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppRoutingModule,
+        NgxServiceModule.forRoot({
+            tokenRefreshPath: "/rest/auth/refreshToken",
+            logoutPath: "/rest/auth/logout",
+            loginRoute: "/",
+        })], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class AppModule {}

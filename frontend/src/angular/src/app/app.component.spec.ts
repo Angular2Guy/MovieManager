@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { HttpClientModule } from "@angular/common/http";
+import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
 import { NgxServiceModule } from "ngx-simple-charts/base-service";
@@ -19,17 +19,15 @@ import { AppComponent } from "./app.component";
 describe("AppComponent", () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        RouterTestingModule,
-        HttpClientModule,
+    declarations: [AppComponent],
+    imports: [RouterTestingModule,
         NgxServiceModule.forRoot({
-          tokenRefreshPath: "/rest/auth/refreshToken",
-          logoutPath: "/rest/auth/logout",
-          loginRoute: "/",
-        }),
-      ],
-      declarations: [AppComponent],
-    }).compileComponents();
+            tokenRefreshPath: "/rest/auth/refreshToken",
+            logoutPath: "/rest/auth/logout",
+            loginRoute: "/",
+        })],
+    providers: [provideHttpClient(withInterceptorsFromDi())]
+}).compileComponents();
   }));
   it("should create the app", waitForAsync(() => {
     const fixture = TestBed.createComponent(AppComponent);
