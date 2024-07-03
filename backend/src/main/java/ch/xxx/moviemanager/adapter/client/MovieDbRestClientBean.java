@@ -15,13 +15,8 @@ package ch.xxx.moviemanager.adapter.client;
 import java.net.URI;
 import java.util.Arrays;
 
-import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
-import org.apache.hc.core5.util.Timeout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -41,15 +36,9 @@ public class MovieDbRestClientBean implements MovieDbRestClient {
 	private final ObjectMapper objectMapper;
 	private final RestClient restClient;
 
-	public MovieDbRestClientBean(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
-
-		RequestConfig requestConfig = RequestConfig.custom().setResponseTimeout(Timeout.ofMilliseconds(5000)).build();
-		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
-		var factory = new HttpComponentsClientHttpRequestFactory(httpClient);
-		factory.setConnectTimeout(2000);
-		factory.setConnectionRequestTimeout(2000);
-		this.restClient = RestClient.builder().requestFactory(factory).build();
+	public MovieDbRestClientBean(ObjectMapper objectMapper, RestClient restClient) {
+		this.objectMapper = objectMapper;		
+		this.restClient = restClient;
 	}
 
 	public WrapperGenereDto fetchAllGeneres(String moviedbkey) {
