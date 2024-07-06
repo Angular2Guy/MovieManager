@@ -54,8 +54,8 @@ public class MovieController {
 	}
 
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public MovieDto getMovieSearchById(@PathVariable("id") Long id) throws InterruptedException {
-		MovieDto result = this.mapper.convert(this.service.findMovieById(id).orElseThrow(
+	public MovieDto getMovieSearchById(@PathVariable("id") Long id,@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr) throws InterruptedException {
+		MovieDto result = this.mapper.convert(this.service.findMovieById(id, bearerStr).orElseThrow(
 				() -> new ResourceNotFoundException(String.format("Failed to find movie with id: %d", id))));
 		return result;
 	}

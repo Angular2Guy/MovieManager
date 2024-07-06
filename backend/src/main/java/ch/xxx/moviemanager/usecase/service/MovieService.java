@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -105,8 +104,10 @@ public class MovieService {
 		return result;
 	}
 
-	public Optional<Movie> findMovieById(Long id) {
-		Optional<Movie> result = this.movieRep.findById(id);
+	public Optional<Movie> findMovieById(Long id, String bearerStr) {
+		final var user = this.userDetailService.getCurrentUser(bearerStr);
+		Optional<Movie> result = this.movieRep.findById(id)
+				.filter(myMovie -> myMovie.getUsers().stream().anyMatch(myUser -> myUser.getId().equals(user.getId())));
 		return result;
 	}
 
@@ -179,7 +180,8 @@ public class MovieService {
 		List<Genere> generes = new ArrayList<>(this.genereRep.findAll());
 		for (GenereDto g : result.getGenres()) {
 			Genere genereEntity = generes.stream()
-					.filter(myGenere -> Optional.ofNullable(myGenere.getGenereId()).stream().anyMatch(myGenereId -> myGenereId.equals(g.getId())))
+					.filter(myGenere -> Optional.ofNullable(myGenere.getGenereId()).stream()
+							.anyMatch(myGenereId -> myGenereId.equals(g.getId())))
 					.findFirst().orElse(this.mapper.convert(g));
 			if (genereEntity.getId() == null) {
 				genereEntity = genereRep.save(genereEntity);
@@ -191,7 +193,7 @@ public class MovieService {
 		MovieDto movieDto = this.movieDbRestClient.fetchMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()),
 				movieDbId);
 		Optional<Movie> movieOpt = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId());
-		Movie movieEntity = movieOpt.isPresent() ? movieOpt.get() : null; 
+		Movie movieEntity = movieOpt.isPresent() ? movieOpt.get() : null;
 		if (movieOpt.isEmpty()) {
 			LOG.info("Movie not found by id");
 			List<Movie> movies = this.movieRep.findByTitleAndRelDate(movieDto.getTitle(), movieDto.getReleaseDate(),
