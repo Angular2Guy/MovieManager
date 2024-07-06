@@ -67,8 +67,11 @@ public class MovieServiceTest {
 	@Test
 	public void findMovieById() throws Exception {
 		final Movie myMovie = this.createTestMovieEntity();
-		Mockito.when(this.movieRep.findById(any(Long.class))).thenReturn(Optional.of(myMovie));		
-		Optional<Movie> movieOpt = this.movieService.findMovieById(1L);
+		Mockito.when(this.movieRep.findById(any(Long.class))).thenReturn(Optional.of(myMovie));
+		final User myUser = new User();
+		myUser.setId(1L);
+		Mockito.when(this.userDetailService.getCurrentUser(any(String.class))).thenReturn(myUser);
+		Optional<Movie> movieOpt = this.movieService.findMovieById(1L, "");
 		Assertions.assertTrue(movieOpt.isPresent());
 		Assertions.assertEquals(movieOpt.get().getId(), myMovie.getId());
 	}
@@ -83,6 +86,9 @@ public class MovieServiceTest {
 		final Movie myMovie = new Movie();
 		myMovie.setId(1L);
 		myMovie.setTitle("myTitle");
+		var user = new User();
+		user.setId(1L);
+		myMovie.getUsers().add(user);
 		return myMovie;
 	}
 }

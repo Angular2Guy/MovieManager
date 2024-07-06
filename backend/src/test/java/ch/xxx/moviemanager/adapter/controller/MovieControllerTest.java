@@ -99,7 +99,7 @@ public class MovieControllerTest {
 	public void movieSearchByIdFoundTest() throws Exception {
 		final String TOKEN = this.jwtTokenService.createToken("XXX", List.of(Role.USERS), Optional.empty());
 		Movie myMovie = createTestMovieEntity();
-		Mockito.when(this.service.findMovieById(any(Long.class))).thenReturn(Optional.of(myMovie));
+		Mockito.when(this.service.findMovieById(any(Long.class), any(String.class))).thenReturn(Optional.of(myMovie));
 		this.mockMvc
 				.perform(get("/rest/movie/id/1").header(JwtUtils.AUTHORIZATION, String.format("Bearer %s", TOKEN))
 						.servletPath("/rest/movie/id/1"))
@@ -111,7 +111,7 @@ public class MovieControllerTest {
 	@Test
 	public void movieSearchByIdNotFoundTest() throws Exception {
 		final String TOKEN = this.jwtTokenService.createToken("XXX", List.of(Role.USERS), Optional.empty());
-		Mockito.when(this.service.findMovieById(any(Long.class))).thenReturn(Optional.empty());
+		Mockito.when(this.service.findMovieById(any(Long.class), any(String.class))).thenReturn(Optional.empty());
 		this.mockMvc.perform(get("/rest/movie/id/1").header(JwtUtils.AUTHORIZATION, String.format("Bearer %s", TOKEN))
 				.servletPath("/rest/movie/id/1")).andExpect(status().isNotFound());
 	}
