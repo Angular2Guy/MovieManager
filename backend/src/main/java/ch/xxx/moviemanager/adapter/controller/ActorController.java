@@ -31,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
-import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.ActorService;
 import ch.xxx.moviemanager.usecase.service.UserDetailService;
@@ -52,8 +51,8 @@ public class ActorController {
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<ActorDto> getActorSearch(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@PathVariable("name") String name) throws InterruptedException {
-		List<ActorDto> actors = this.service.findActor(name, bearerStr).stream()
-				.map(this.mapper::convertOnlyActor).toList();
+		List<ActorDto> actors = this.service.findActor(name, bearerStr).stream().map(this.mapper::convertOnlyActor)
+				.toList();
 		return actors;
 	}
 
@@ -61,11 +60,8 @@ public class ActorController {
 	public ResponseEntity<ActorDto> getActorSearchById(
 			@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr, @PathVariable("id") Long id)
 			throws InterruptedException {
-		final User currentUser = this.auds.getCurrentUser(bearerStr);
-		Optional<ActorDto> actorOpt = this.service.findActorById(id, bearerStr).stream()
-				.filter(myActor -> myActor.getCasts().stream()
-						.filter(c -> c.getMovie().getUsers().contains(currentUser)).findFirst().isPresent())
-				.map(this.mapper::convert).findFirst();
+		Optional<ActorDto> actorOpt = this.service.findActorById(id, bearerStr).stream().map(this.mapper::convert)
+				.findFirst();
 		return actorOpt.stream().map(myActor -> new ResponseEntity<ActorDto>(myActor, HttpStatus.OK)).findFirst()
 				.orElse(new ResponseEntity<ActorDto>(new ActorDto(), HttpStatus.NOT_FOUND));
 	}
@@ -82,10 +78,10 @@ public class ActorController {
 	@RequestMapping(value = "/filter-criteria", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public List<ActorDto> getActorsByCriteria(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@RequestBody ActorFilterCriteriaDto filterCriteria) {
-		return this.service.findActorsByFilterCriteria(bearerStr, filterCriteria).stream()
-				.map(this.mapper::convert).toList();
+		return this.service.findActorsByFilterCriteria(bearerStr, filterCriteria).stream().map(this.mapper::convert)
+				.toList();
 	}
-	
+
 	@RequestMapping(value = "/searchterm", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public List<ActorDto> postSearchTerm(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			SearchTermDto searchTermDto) {

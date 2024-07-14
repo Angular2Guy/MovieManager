@@ -114,11 +114,6 @@ public class ActorControllerTest {
     @Test
     public void testGetActorSearchByIdFound() throws Exception {
         Actor actor = createTestActor();
-        var cast = new Cast();
-        var movie = new Movie();
-        movie.getUsers().add(this.auds.getCurrentUser("XXX"));
-        cast.setMovie(movie);
-        actor.getCasts().add(cast);
         Mockito.when(service.findActorById(any(), any())).thenReturn(Optional.of(actor));
 
         mockMvc.perform(get("/rest/actor/id/{id}", 1L)

@@ -66,7 +66,9 @@ public class ActorService {
 	public Optional<Actor> findActorById(Long id, String bearerStr) {
 		final User user = this.auds.getCurrentUser(bearerStr);
 		Optional<Actor> result = this.actorRep.findById(id)
-				.filter(myActor -> myActor.getUsers().stream().anyMatch(myUser -> user.getId().equals(myUser.getId())));
+				.filter(myActor -> myActor.getUsers().stream().anyMatch(myUser -> user.getId().equals(myUser.getId())))
+				.filter(myActor -> myActor.getCasts().stream()
+						.filter(c -> c.getMovie().getUsers().contains(user)).findFirst().isPresent());
 		return result;
 	}
 

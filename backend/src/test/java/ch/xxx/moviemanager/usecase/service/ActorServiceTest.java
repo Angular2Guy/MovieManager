@@ -31,6 +31,8 @@ import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
+import ch.xxx.moviemanager.domain.model.entity.Cast;
+import ch.xxx.moviemanager.domain.model.entity.Movie;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 
@@ -86,6 +88,11 @@ public class ActorServiceTest {
         Actor myActor = createTestActorEntity();
         User user = new User();
         user.setId(1L);
+        var cast = new Cast();
+        var movie = new Movie();
+        movie.getUsers().add(user);
+        cast.setMovie(movie);
+        myActor.getCasts().add(cast);
         Mockito.when(userDetailService.getCurrentUser("YYY")).thenReturn(user);
         Mockito.when(actorRep.findById(any())).thenReturn(Optional.of(myActor));
         Optional<Actor> actorOpt = actorService.findActorById(1L, "YYY");
