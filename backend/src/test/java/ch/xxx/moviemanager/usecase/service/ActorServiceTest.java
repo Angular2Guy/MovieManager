@@ -12,7 +12,6 @@
  */
 package ch.xxx.moviemanager.usecase.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
 import java.util.List;
@@ -25,87 +24,104 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
-import ch.xxx.moviemanager.domain.model.dto.SearchPhraseDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
 import ch.xxx.moviemanager.domain.model.entity.User;
+import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 
 @ExtendWith(SpringExtension.class)
 public class ActorServiceTest {
-	@Mock
-	private ActorRepository actorRep;
-	@Mock
-	private UserDetailService userDetailService;
-	@InjectMocks
-	private ActorService movieService;
 
-	@Test
-	public void findActorsByPage() throws Exception {
-		final Actor myActor = new Actor();
-		myActor.setId(1L);
-		myActor.setName("myName");
-		User user = new User();
-		user.setId(1L);
-		myActor.getUsers().add(user);
-		Mockito.when(this.actorRep.findActorsByPage(any(Long.class), any(PageRequest.class)))
-				.thenReturn(List.of(myActor));
-		final User myUser = new User();
-		myUser.setId(1L);
-		Mockito.when(this.userDetailService.getCurrentUser(any(String.class))).thenReturn(myUser);
-		List<Actor> actors = this.movieService.findActorsByPage(1, "");
-		Assertions.assertNotNull(actors);
-		Assertions.assertEquals(actors.get(0).getId(), myActor.getId());
-	}
+    @Mock
+    private ActorRepository actorRep;
 
-	@Test
-	public void findActorById() throws Exception {
-		final Actor myActor = new Actor();
-		myActor.setId(1L);
-		myActor.setName("myName");
-		User user = new User();
-		user.setId(1L);
-		myActor.getUsers().add(user);
-		Mockito.when(this.actorRep.findById(any(Long.class))).thenReturn(Optional.of(myActor));
-		final User myUser = new User();
-		myUser.setId(1L);
-		Mockito.when(this.userDetailService.getCurrentUser(any(String.class))).thenReturn(myUser);
-		Optional<Actor> actorOpt = this.movieService.findActorById(1L, "");
-		Assertions.assertTrue(actorOpt.isPresent());
-		Assertions.assertEquals(actorOpt.get().getId(), myActor.getId());
-	}
+    @Mock
+    private UserDetailService userDetailService;
 
-	@Test
-	public void findActorsByFilterCriteria() throws Exception {
-		final Actor myActor = new Actor();
-		myActor.setId(1L);
-		myActor.setName("myName");
-		User user = new User();
-		user.setId(1L);
-		myActor.getUsers().add(user);
-		Mockito.when(this.actorRep.findByFilterCriteria(any(), any(Long.class))).thenReturn(List.of(myActor));
-		final User myUser = new User();
-		myUser.setId(1L);
-		Mockito.when(this.userDetailService.getCurrentUser(any(String.class))).thenReturn(myUser);
-		ActorFilterCriteriaDto filterCriteria = new ActorFilterCriteriaDto();
-		SearchTermDto searchTerm = new SearchTermDto();
-		var searchPhraseDto = new SearchPhraseDto();
-		searchPhraseDto.setPhrase("mySearch");
-		searchPhraseDto.setOtherWordsInPhrase(0);
-		searchTerm.setSearchPhraseDto(searchPhraseDto);
-		filterCriteria.setSearchTermDto(searchTerm);
-		List<Actor> actors = this.movieService.findActorsByFilterCriteria("", filterCriteria);
-		Assertions.assertNotNull(actors);
-		assertThat(actors.get(0)).extracting(Actor::getName).isEqualTo("myName");
-	}
+    @Mock
+    private DefaultMapper mapper;
 
-	@Test
-	public void cleanup() throws Exception {
-		Mockito.when(this.actorRep.findUnusedActors()).thenReturn(List.of());
-		boolean result = this.movieService.cleanup();
-		Assertions.assertTrue(result);
-	}
+    @InjectMocks
+    private ActorService actorService;
+
+    @Test
+    public void testCleanup() {
+        List<Actor> unusedActors = List.of(new Actor());
+        Mockito.when(actorRep.findUnusedActors()).thenReturn(unusedActors);
+        Assertions.assertTrue(actorService.cleanup());
+        Mockito.verify(actorRep).findUnusedActors();
+    }
+
+    @Test
+    public void testFindActor() {
+        Actor myActor = createTestActorEntity();
+        User user = new User();
+        user.setId(1L);
+        Mockito.when(userDetailService.getCurrentUser("YYY")).thenReturn(user);
+        Mockito.when(actorRep.findByActorName("XXX", 1L, PageRequest.of(0, 15, Sort.by("name").ascending()))).thenReturn(List.of(myActor));
+        List<Actor> actors = actorService.findActor("XXX", "YYY");
+        Assertions.assertNotNull(actors);
+        Assertions.assertEquals(actors.get(0).getId(), myActor.getId());
+    }
+
+    @Test
+    public void testFindActorsByPage() {
+        Actor myActor = createTestActorEntity();
+        User user = new User();
+        user.setId(1L);
+        Mockito.when(userDetailService.getCurrentUser("YYY")).thenReturn(user);
+        Mockito.when(actorRep.findActorsByPage(1L, PageRequest.of((0), 10))).thenReturn(List.of(myActor));
+        List<Actor> actors = actorService.findActorsByPage(1, "YYY");
+        Assertions.assertNotNull(actors);
+        Assertions.assertEquals(actors.get(0).getId(), myActor.getId());
+    }
+
+    @Test
+    public void testFindActorById() {
+        Actor myActor = createTestActorEntity();
+        User user = new User();
+        user.setId(1L);
+        Mockito.when(userDetailService.getCurrentUser("YYY")).thenReturn(user);
+        Mockito.when(actorRep.findById(any())).thenReturn(Optional.of(myActor));
+        Optional<Actor> actorOpt = actorService.findActorById(1L, "YYY");
+        Assertions.assertTrue(actorOpt.isPresent());
+        Assertions.assertEquals(actorOpt.get().getId(), myActor.getId());
+    }
+
+    @Test
+    public void testFindActorsByFilterCriteria() {
+        ActorFilterCriteriaDto filterCriteriaDto = new ActorFilterCriteriaDto();
+        Mockito.when(userDetailService.getCurrentUser("YYY")).thenReturn(new User());
+        List<Actor> jpaActors = List.of(createTestActorEntity());
+        List<Actor> ftActors = List.of(createTestActorEntity());
+        Mockito.when(actorRep.findByFilterCriteria(any(), any())).thenReturn(jpaActors);
+        Mockito.when(actorRep.findActorsByPhrase(any())).thenReturn(ftActors);
+        List<Actor> actors = actorService.findActorsByFilterCriteria("YYY", filterCriteriaDto);
+        Assertions.assertNotNull(actors);
+    }
+
+    @Test
+    public void testFindActorsBySearchTerm() {
+        SearchTermDto searchTermDto = new SearchTermDto();
+        Mockito.when(userDetailService.getCurrentUser("YYY")).thenReturn(new User());
+        List<Actor> actors = List.of(createTestActorEntity());
+        Mockito.when(actorRep.findActorsByPhrase(any())).thenReturn(actors);
+        List<Actor> foundActors = actorService.findActorsBySearchTerm("YYY", searchTermDto);
+        Assertions.assertNotNull(foundActors);
+    }
+
+    private Actor createTestActorEntity() {
+        Actor myActor = new Actor();
+        myActor.setId(1L);
+        myActor.setName("myName");
+        var user = new User();
+        user.setId(1L);
+        myActor.getUsers().add(user);
+        return myActor;
+    }
 }
