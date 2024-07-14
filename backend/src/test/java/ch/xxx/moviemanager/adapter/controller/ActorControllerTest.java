@@ -42,14 +42,11 @@ import ch.xxx.moviemanager.domain.common.Role;
 import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.domain.model.entity.Actor;
-import ch.xxx.moviemanager.domain.model.entity.Cast;
-import ch.xxx.moviemanager.domain.model.entity.Movie;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.domain.utils.JwtUtils;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.ActorService;
 import ch.xxx.moviemanager.usecase.service.JwtTokenService;
-import ch.xxx.moviemanager.usecase.service.UserDetailService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @WebMvcTest(controllers = ActorController.class, includeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
@@ -69,8 +66,6 @@ public class ActorControllerTest {
     @MockBean
     private DefaultMapper mapper;
 
-    @MockBean
-    private UserDetailService auds;
     
 	@MockBean
 	private JwtTokenService jwtTokenService;
@@ -90,7 +85,6 @@ public class ActorControllerTest {
 		Mockito.when(this.jwtTokenService.getAuthentication(any(String.class))).thenCallRealMethod();		
 		Mockito.when(this.jwtTokenService.getUsername(any(String.class))).thenReturn("XXX");	
 		Mockito.when(this.jwtTokenService.getAuthorities(any(String.class))).thenReturn(List.of(Role.USERS));
-		Mockito.when(this.auds.getCurrentUser(any(String.class))).thenReturn(user);
 		ReflectionTestUtils.setField(this.jwtTokenService, "secretKey", TEST_SECRECT_KEY);
 		Mockito.doCallRealMethod().when(this.jwtTokenService).init();
 		this.jwtTokenService.init();

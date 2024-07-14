@@ -40,12 +40,10 @@ import ch.xxx.moviemanager.usecase.service.UserDetailService;
 public class ActorController {
 	private final ActorService service;
 	private final DefaultMapper mapper;
-	private final UserDetailService auds;
 
-	public ActorController(ActorService service, DefaultMapper mapper, UserDetailService auds) {
+	public ActorController(ActorService service, DefaultMapper mapper) {
 		this.service = service;
 		this.mapper = mapper;
-		this.auds = auds;
 	}
 
 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
