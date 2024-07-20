@@ -33,7 +33,6 @@ import ch.xxx.moviemanager.domain.model.dto.ActorFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.ActorService;
-import ch.xxx.moviemanager.usecase.service.UserDetailService;
 
 @RestController
 @RequestMapping("rest/actor")
