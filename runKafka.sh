@@ -2,7 +2,9 @@
 # network config for KRaft
 docker network create app-tier --driver bridge
 # Kafka with KRaft
-docker run -d --name kafka-server \
+docker run -d \
+    -p 9092:9092 \
+    --name kafka-server \
     --hostname kafka-server \
     --network app-tier \
     -e KAFKA_CFG_NODE_ID=0 \
@@ -12,3 +14,6 @@ docker run -d --name kafka-server \
     -e KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka-server:9093 \
     -e KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER \
     bitnami/kafka:latest
+# Start Kafka with KRaft
+docker start kafka-server
+    
