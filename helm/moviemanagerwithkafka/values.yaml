@@ -18,6 +18,7 @@ kafkaImageVersion: latest
 zookeeperImageName: bitnami/zookeeper
 zookeeperImageVersion: latest
 kafkaServiceName: kafkaservice
+kafkaControllerServiceName: kafkacontrollerservice
 zookeeperServiceName: zookeeperservice
 
 secret:
