@@ -155,21 +155,10 @@ spec:
   ports:
   - port: 9092
     protocol: TCP
+  - port: 9093
+    protocol: TCP	
   selector:
     app: {{ .Values.kafkaName }}    
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ .Values.kafkaControllerServiceName }}
-  labels:
-    app: {{ .Values.kafkaControllerServiceName }}
-spec:
-  ports:
-  - port: 9093
-    protocol: TCP
-  selector:
-    app: {{ .Values.kafkaName }}
 ---
 apiVersion: apps/v1
 kind: Deployment
