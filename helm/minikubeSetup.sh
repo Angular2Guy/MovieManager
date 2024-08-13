@@ -6,7 +6,7 @@ minikube ip
 http://<minikube ip>:<node-port>/
 
 minikube config set memory 16384
-minikube config set cpu 2
+minikube config set cpus 4
 minikube config set driver docker
 minikube addons list
 minikube addons enable metrics-server

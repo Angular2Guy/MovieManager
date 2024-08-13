@@ -82,21 +82,3 @@ Create envKafka values
   value: {{ $val | quote }}
 {{- end}}
 {{- end }}
-
-{{/*
-Create envZookeeper values
-*/}}
-{{- define "helpers.list-envZookeeper-variables"}}
-{{- $secretName := .Values.secret.nameZookeeper -}}
-{{- range $key, $val := .Values.envZookeeper.secret }}
-- name: {{ $key }}
-  valueFrom:
-    secretKeyRef:
-      name: {{ $secretName }}
-      key: {{ $key }}
-{{- end}}
-{{- range $key, $val := .Values.envZookeeper.normal }}
-- name: {{ $key }}
-  value: {{ $val | quote }}
-{{- end}}
-{{- end }}
