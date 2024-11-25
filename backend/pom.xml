@@ -233,15 +233,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 				<plugins>
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>process-aot</id>
-								<goals>
-									<goal>process-aot</goal>
-								</goals>
-							</execution>
-						</executions>
+						<artifactId>spring-boot-maven-plugin</artifactId>						
 					</plugin>
 				</plugins>
 			</build>
