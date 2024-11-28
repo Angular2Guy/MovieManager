@@ -14,6 +14,9 @@ package ch.xxx.moviemanager.adapter.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,13 +26,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ch.xxx.moviemanager.domain.exceptions.ResourceNotFoundException;
-import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.GenereDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
+import ch.xxx.moviemanager.domain.model.dto.MovieFilterCriteriaDto;
 import ch.xxx.moviemanager.domain.model.dto.SearchTermDto;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.MovieService;
@@ -37,6 +39,7 @@ import ch.xxx.moviemanager.usecase.service.MovieService;
 @RestController
 @RequestMapping("rest/movie")
 public class MovieController {
+	private static final Logger LOG = LoggerFactory.getLogger(MovieController.class);
 	private final MovieService service;
 	private final DefaultMapper mapper;
 
@@ -82,11 +85,11 @@ public class MovieController {
 		return generes;
 	}
 
-	@RequestMapping(value = "/pages", params = {
-			"page" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/pages", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<MovieDto> getPagesByNumber(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
-			@RequestParam("page") Integer page) throws InterruptedException {
-		List<MovieDto> movies = this.service.findMoviesByPage(page, bearerStr).stream().map(this.mapper::convert)
+			Pageable pageable) throws InterruptedException {
+		LOG.debug(String.format("page=%d, size=%d, sort=%s", pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort()));
+		List<MovieDto> movies = this.service.findMoviesByPage(pageable.getPageNumber(), bearerStr).stream().map(this.mapper::convert)
 				.toList();
 		return movies;
 	}

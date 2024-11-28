@@ -25,7 +25,7 @@ export class MoviesService {
   constructor(private http: HttpClient) {}
 
   public findMoviesByPage(page: number): Observable<Movie[]> {
-    return this.http.get<Movie[]>("/rest/movie/pages?page=" + page).pipe(
+    return this.http.get<Movie[]>(`/rest/movie/pages?page=${page}&size=15&sort=title,asc`).pipe(
       catchError((error) => {
         console.error(JSON.stringify(error));
         return throwError(error);
