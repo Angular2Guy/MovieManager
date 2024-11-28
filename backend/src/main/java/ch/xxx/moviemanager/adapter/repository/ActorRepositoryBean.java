@@ -95,7 +95,7 @@ public class ActorRepositoryBean implements ActorRepository {
 						cActor.<Date>get("birthday"), CommonUtils.convert(filterCriteriaDto.getBirthdayTo()))));
 		Optional.ofNullable(filterCriteriaDto.getDead()).ifPresent(
 				x -> predicates.add(this.entityManager.getCriteriaBuilder().isNotNull(cActor.<Date>get("deathday"))));
-		Optional.ofNullable(filterCriteriaDto.getGender()).stream().filter(myGender -> !Gender.Unknown.equals(myGender))
+		Optional.ofNullable(filterCriteriaDto.getGender()).stream().filter(java.util.function.Predicate.not(Gender.Unknown::equals))
 				.findFirst().ifPresent(x -> predicates.add(this.entityManager.getCriteriaBuilder()
 						.equal(cActor.get("gender"), filterCriteriaDto.getGender().getCode())));
 		Optional.ofNullable(filterCriteriaDto.getName()).stream().filter(myName -> myName.trim().length() > 2)

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Async;
@@ -40,7 +41,7 @@ public class DataMigrationService {
 	@Async
 	public CompletableFuture<Long> encryptUserKeys() {
 		List<User> migratedUsers = this.userRepository.findOpenMigrations(1L).stream().map(myUser -> {
-			myUser.setUuid(Optional.ofNullable(myUser.getUuid()).filter(myStr -> !myStr.isBlank()).orElse(UUID.randomUUID().toString()));
+			myUser.setUuid(Optional.ofNullable(myUser.getUuid()).filter(Predicate.not(String::isBlank)).orElse(UUID.randomUUID().toString()));
 			myUser.setMoviedbkey(this.userDetailService.encrypt(myUser.getMoviedbkey(), myUser.getUuid()));
 			myUser.setMigration(myUser.getMigration() + 1);
 			return myUser;
