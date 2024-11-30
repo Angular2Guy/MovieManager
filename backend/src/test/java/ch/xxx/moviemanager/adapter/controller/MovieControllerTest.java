@@ -30,6 +30,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -52,11 +53,11 @@ public class MovieControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
-	@MockBean
+	@MockitoBean
 	private MovieService service;
-	@MockBean
+	@MockitoBean
 	private JwtTokenService jwtTokenService;
-	@MockBean
+	@MockitoBean
 	private DefaultMapper defaultMapper;
 
 	@SuppressWarnings("unchecked")
