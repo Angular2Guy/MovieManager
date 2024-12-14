@@ -18,9 +18,10 @@ import { QueryParam } from "../model/common";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
-  selector: "app-movies",
-  templateUrl: "./movies.component.html",
-  styleUrls: ["./movies.component.scss"],
+    selector: "app-movies",
+    templateUrl: "./movies.component.html",
+    styleUrls: ["./movies.component.scss"],
+    standalone: false
 })
 export class MoviesComponent implements OnInit {
   protected movie: Movie = null;

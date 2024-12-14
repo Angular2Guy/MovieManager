@@ -26,9 +26,10 @@ enum ImportState {
 }
 
 @Component({
-  selector: "app-movie-import",
-  templateUrl: "./movie-import.component.html",
-  styleUrls: ["./movie-import.component.scss"],
+    selector: "app-movie-import",
+    templateUrl: "./movie-import.component.html",
+    styleUrls: ["./movie-import.component.scss"],
+    standalone: false
 })
 export class MovieImportComponent implements OnInit {
   protected ImportState = ImportState;

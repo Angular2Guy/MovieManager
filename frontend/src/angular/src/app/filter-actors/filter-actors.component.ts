@@ -27,9 +27,10 @@ import { SearchTerm } from "../model/search-term";
 import { Operator, SearchString } from "../model/search-string";
 
 @Component({
-  selector: "app-filter-actors",
-  templateUrl: "./filter-actors.component.html",
-  styleUrls: ["./filter-actors.component.scss"],
+    selector: "app-filter-actors",
+    templateUrl: "./filter-actors.component.html",
+    styleUrls: ["./filter-actors.component.scss"],
+    standalone: false
 })
 export class FilterActorsComponent implements OnInit {
   protected gender = Gender;

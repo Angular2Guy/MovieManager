@@ -28,9 +28,10 @@ import { SearchTerm } from "../model/search-term";
 import { Operator, SearchString } from "../model/search-string";
 
 @Component({
-  selector: "app-filter-movies",
-  templateUrl: "./filter-movies.component.html",
-  styleUrls: ["./filter-movies.component.scss"],
+    selector: "app-filter-movies",
+    templateUrl: "./filter-movies.component.html",
+    styleUrls: ["./filter-movies.component.scss"],
+    standalone: false
 })
 export class FilterMoviesComponent implements OnInit {
   protected filteredMovies: Movie[] = [];

@@ -40,9 +40,10 @@ import { TokenService } from "ngx-simple-charts/base-service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 
 @Component({
-  selector: "app-search",
-  templateUrl: "./search.component.html",
-  styleUrls: ["./search.component.scss"],
+    selector: "app-search",
+    templateUrl: "./search.component.html",
+    styleUrls: ["./search.component.scss"],
+    standalone: false
 })
 export class SearchComponent implements OnInit, AfterViewInit {
   @ViewChild("movies") moviesRef: ElementRef;

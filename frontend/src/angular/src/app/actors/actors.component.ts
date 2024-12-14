@@ -17,9 +17,10 @@ import { QueryParam } from "../model/common";
 import { ActorsService } from "../services/actors.service";
 
 @Component({
-  selector: "app-actors",
-  templateUrl: "./actors.component.html",
-  styleUrls: ["./actors.component.scss"],
+    selector: "app-actors",
+    templateUrl: "./actors.component.html",
+    styleUrls: ["./actors.component.scss"],
+    standalone: false
 })
 export class ActorsComponent implements OnInit {
   protected gender = Gender;
