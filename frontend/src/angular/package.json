@@ -29,7 +29,7 @@
     "@angular/platform-browser": "^19.0.4",
     "@angular/platform-browser-dynamic": "^19.0.4",
     "@angular/router": "^19.0.4",
-    "@ng-bootstrap/ng-bootstrap": "^18.0.0-rc.0",
+    "@ng-bootstrap/ng-bootstrap": "^18.0.0",
     "ngx-simple-charts": "^19.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.2",
