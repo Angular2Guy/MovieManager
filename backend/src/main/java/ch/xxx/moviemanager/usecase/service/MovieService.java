@@ -130,7 +130,7 @@ public class MovieService {
 				}
 			}
 		} catch (RuntimeException re) {
-			LOG.error("Delete movie failed.",re);
+			LOG.error("Delete movie failed.", re);
 			result = false;
 		}
 		return result;
@@ -147,7 +147,7 @@ public class MovieService {
 		User currentUser = this.userDetailService.getCurrentUser(bearerStr);
 		List<Movie> result = this.movieRep.findMoviesByPage(currentUser.getId(), PageRequest.of((page - 1), 10));
 		result = result.stream().flatMap(movie -> Stream.of(this.movieRep.findByIdWithCollections(movie.getId())))
-				.filter(Optional::isPresent).map(Optional::get).collect(Collectors.toList());
+				.flatMap(Optional::stream).collect(Collectors.toList());
 		return result;
 	}
 
