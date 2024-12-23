@@ -31,7 +31,7 @@ import ch.xxx.moviemanager.domain.model.entity.UserRepository;
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 public class DataMigrationService {
 	private final UserRepository userRepository;
-	private final UserDetailService userDetailService;	
+	private final UserDetailService userDetailService;
 
 	public DataMigrationService(UserRepository userRepository, UserDetailService userDetailService) {
 		this.userRepository = userRepository;
@@ -40,15 +40,18 @@ public class DataMigrationService {
 
 	@Async
 	public CompletableFuture<Long> encryptUserKeys() {
-		List<User> migratedUsers = this.userRepository.findOpenMigrations(1L).stream().map(myUser -> {
-			myUser.setUuid(Optional.ofNullable(myUser.getUuid()).filter(Predicate.not(String::isBlank)).orElse(UUID.randomUUID().toString()));
-			myUser.setMoviedbkey(this.userDetailService.encrypt(myUser.getMoviedbkey(), myUser.getUuid()));
-			myUser.setMigration(myUser.getMigration() + 1);
-			return myUser;
-		}).collect(Collectors.toList());
+		List<User> migratedUsers = this.userRepository.findOpenMigrations(1L).stream().map(myUser -> updateUser(myUser))
+				.collect(Collectors.toList());
 		this.userRepository.saveAll(migratedUsers);
 		return CompletableFuture.completedFuture(Integer.valueOf(migratedUsers.size()).longValue());
 	}
 
-	
+	private User updateUser(User myUser) {
+		myUser.setUuid(Optional.ofNullable(myUser.getUuid()).filter(Predicate.not(String::isBlank))
+				.orElse(UUID.randomUUID().toString()));
+		myUser.setMoviedbkey(this.userDetailService.encrypt(myUser.getMoviedbkey(), myUser.getUuid()));
+		myUser.setMigration(myUser.getMigration() + 1);
+		return myUser;
+	}
+
 }

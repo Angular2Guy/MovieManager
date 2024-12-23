@@ -114,9 +114,9 @@ public class MovieService {
 	public boolean deleteMovieById(Long id, String bearerStr) {
 		boolean result = true;
 		try {
-			User user = this.userDetailService.getCurrentUser(bearerStr);
+			final User user = this.userDetailService.getCurrentUser(bearerStr);
 			Optional<Movie> movieOpt = this.movieRep.findById(id);
-			if (movieOpt.isPresent() && movieOpt.get().getUsers().contains(user)) {
+			if (movieOpt.stream().map(myMovie -> myMovie.getUsers()).anyMatch(myUsers -> myUsers.contains(user))) {
 				Movie movie = movieOpt.get();
 				movie.getUsers().remove(user);
 				if (movie.getUsers().isEmpty()) {
@@ -130,6 +130,7 @@ public class MovieService {
 				}
 			}
 		} catch (RuntimeException re) {
+			LOG.error("Delete movie failed.",re);
 			result = false;
 		}
 		return result;
@@ -178,11 +179,11 @@ public class MovieService {
 		WrapperGenereDto result = this.movieDbRestClient
 				.fetchAllGeneres(this.decrypt(user.getMoviedbkey(), user.getUuid()));
 		List<Genere> generes = new ArrayList<>(this.genereRep.findAll());
-		for (GenereDto g : result.getGenres()) {
+		for (GenereDto gDto : result.getGenres()) {
 			Genere genereEntity = generes.stream()
 					.filter(myGenere -> Optional.ofNullable(myGenere.getGenereId()).stream()
-							.anyMatch(myGenereId -> myGenereId.equals(g.getId())))
-					.findFirst().orElse(this.mapper.convert(g));
+							.anyMatch(myGenereId -> myGenereId.equals(gDto.getId())))
+					.findFirst().orElse(this.mapper.convert(gDto));
 			if (genereEntity.getId() == null) {
 				genereEntity = genereRep.save(genereEntity);
 				generes.add(genereEntity);
@@ -224,17 +225,17 @@ public class MovieService {
 		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(this.decrypt(user.getMoviedbkey(), user.getUuid()),
 				movieDto.getId());
 		if (movieEntity.getCast().isEmpty()) {
-			for (CastDto c : wrCast.getCast()) {
+			for (CastDto cDto : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
-				if (c.getCharacter() == null || c.getCharacter().isBlank() || c.getName() == null
-						|| c.getName().isBlank()) {
+				if (cDto.getCharacter() == null || cDto.getCharacter().isBlank() || cDto.getName() == null
+						|| cDto.getName().isBlank()) {
 					continue;
 				}
-				Cast castEntity = this.mapper.convert(c);
+				Cast castEntity = this.mapper.convert(cDto);
 				movieEntity.getCast().add(castEntity);
 				castEntity.setMovie(movieEntity);
 				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()),
-						c.getId(), 300L);
+						cDto.getId(), 300L);
 				Actor actorEntity = this.actorRep.findByActorId(actor.getActorId(), user.getId())
 						.orElse(this.mapper.convert(actor));
 				castEntity = this.castRep.save(castEntity);
@@ -246,12 +247,12 @@ public class MovieService {
 				castEntity.setActor(actorEntity);
 			}
 		} else {
-			for (CastDto c : wrCast.getCast()) {
+			for (CastDto cDto : wrCast.getCast()) {
 				LOG.info("update cast for movie");
 				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()),
-						c.getId(), 300L);
-				Optional<Actor> actorOpt = this.actorRep.findByActorId(actor.getActorId(), user.getId());
-				Actor actorEntity = actorOpt.orElse(this.mapper.convert(actor));
+						cDto.getId(), 300L);
+				Actor actorEntity = this.actorRep.findByActorId(actor.getActorId(), user.getId())
+						.orElse(this.mapper.convert(actor));
 				actorEntity = this.actorRep.save(actorEntity);
 				if (!actorEntity.getUsers().contains(user)) {
 					actorEntity.getUsers().add(user);

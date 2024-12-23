@@ -16,17 +16,4 @@ import org.hibernate.dialect.PostgreSQLDialect;
 
 public class PGSQLMapDialect extends PostgreSQLDialect {
 
-//	@Override
-//	public boolean equivalentTypes(int typeCode1, int typeCode2) {
-//		boolean result = super.equivalentTypes(typeCode1, typeCode2) || (SqlTypes.isCharacterOrClobType(typeCode1) && SqlTypes.isCharacterOrClobType(typeCode2));
-//		return result;
-//	}
-//	
-//	@Override
-//	protected void registerColumnTypes(TypeContributions typeContributions, ServiceRegistry serviceRegistry) {
-//		super.registerColumnTypes(typeContributions, serviceRegistry);
-//		final DdlTypeRegistry ddlTypeRegistry = typeContributions.getTypeConfiguration().getDdlTypeRegistry();
-//		ddlTypeRegistry.addDescriptor( new DdlTypeImpl( SqlTypes.VARCHAR, "clob", this ) );
-//		ddlTypeRegistry.addDescriptor( new DdlTypeImpl( SqlTypes.VARCHAR, "text", this ) );
-//	}
 }
