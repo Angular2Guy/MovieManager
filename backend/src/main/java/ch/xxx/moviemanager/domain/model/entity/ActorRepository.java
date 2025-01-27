@@ -29,6 +29,8 @@ public interface ActorRepository {
 	Optional<Actor> findById(Long id);
 	Actor save(Actor actorEntity);
 	List<Actor> findUnusedActors();
+	List<Long> findDublicateActorIds();
+	List<Actor> findByActorIdIn(List<Long> ids);
 	List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto);
 	List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings);
 	List<Actor> findByFilterCriteria(ActorFilterCriteriaDto filterCriteriaDto, Long userId);

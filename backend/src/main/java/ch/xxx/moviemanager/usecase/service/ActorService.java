@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -47,6 +49,21 @@ public class ActorService {
 	public boolean cleanup() {
 		this.actorRep.findUnusedActors().forEach(
 				actor -> LOG.info(String.format("Unused Actor id: %d name: %s", actor.getId(), actor.getName())));
+		//fix for actor dublicates
+		/*
+		final var actorMap = this.actorRep.findByActorIdIn(this.actorRep.findDublicateActorIds()).stream()
+				.collect(Collectors.groupingBy(actor -> actor.getActorId(), Collectors.toList()));
+		final var resultCount = new AtomicLong(0L);
+		actorMap.forEach((actorId, myActors) -> {
+			if (myActors.size() > 1) {
+				myActors.stream().filter(actor -> !actor.equals(myActors.getFirst())).forEach(actor -> {
+					this.actorRep.deleteById(actor.getId());
+					resultCount.set(resultCount.get() + 1);
+				});
+			}
+		});
+		LOG.info("Actors deleted {}.", resultCount.get());
+		*/
 		return true;
 	}
 
@@ -67,8 +84,8 @@ public class ActorService {
 		final User user = this.auds.getCurrentUser(bearerStr);
 		Optional<Actor> result = this.actorRep.findById(id)
 				.filter(myActor -> myActor.getUsers().stream().anyMatch(myUser -> user.getId().equals(myUser.getId())))
-				.filter(myActor -> myActor.getCasts().stream()
-						.filter(c -> c.getMovie().getUsers().contains(user)).findFirst().isPresent());
+				.filter(myActor -> myActor.getCasts().stream().filter(c -> c.getMovie().getUsers().contains(user))
+						.findFirst().isPresent());
 		return result;
 	}
 

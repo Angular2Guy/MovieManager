@@ -38,7 +38,7 @@ public interface JpaMovieRepository extends PagingAndSortingRepository<Movie,Lon
 	@Query("select e from Movie e join e.users u where lower(e.title) like lower(concat('%',:title,'%')) and e.releaseDate = :relDate and u.id = :userid order by e.title")
 	List<Movie> findByTitleAndRelDate(@Param("title") String title, @Param("relDate") Date releaseDate, @Param("userid") Long userId);
 	
-	@Query("select m from Movie m join m.users u join m.cast where m.movieId = :movieId and u.id = :userId")
+	@Query("select m from Movie m join m.users u join fetch m.cast where m.movieId = :movieId and u.id = :userId")
 	Optional<Movie> findByMovieId(Long movieId, Long userId);
 	
 	@Query("select m from Movie m join m.users u where u.id = :userId order by m.title")	

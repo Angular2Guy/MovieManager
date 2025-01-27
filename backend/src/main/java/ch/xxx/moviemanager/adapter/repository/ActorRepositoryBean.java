@@ -79,6 +79,11 @@ public class ActorRepositoryBean implements ActorRepository {
 	}
 
 	@Override
+	public List<Long> findDublicateActorIds() {
+		return this.jpaActorRepository.findDublicateActorIds();
+	}
+	
+	@Override
 	public List<Actor> findUnusedActors() {
 		return this.jpaActorRepository.findUnusedActors();
 	}
@@ -153,5 +158,10 @@ public class ActorRepositoryBean implements ActorRepository {
 			});
 		}).fetchHits(1000);
 		return resultList;
+	}
+
+	@Override
+	public List<Actor> findByActorIdIn(List<Long> ids) {		
+		return this.jpaActorRepository.findByActorIdIn(ids);
 	}
 }

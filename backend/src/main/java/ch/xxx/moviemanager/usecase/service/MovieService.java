@@ -223,7 +223,7 @@ public class MovieService {
 			movieEntity.getUsers().add(user);
 		}
 		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(this.decrypt(user.getMoviedbkey(), user.getUuid()),
-				movieDto.getId());
+				movieDto.getId());		
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto cDto : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
@@ -236,7 +236,7 @@ public class MovieService {
 				castEntity.setMovie(movieEntity);
 				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()),
 						cDto.getId(), 300L);
-				Actor actorEntity = this.actorRep.findByActorId(actor.getActorId(), user.getId())
+				Actor actorEntity = this.actorRep.findByActorId(actor.getId(), user.getId())
 						.orElse(this.mapper.convert(actor));
 				castEntity = this.castRep.save(castEntity);
 				actorEntity = this.actorRep.save(actorEntity);
@@ -251,7 +251,7 @@ public class MovieService {
 				LOG.info("update cast for movie");
 				ActorDto actor = this.movieDbRestClient.fetchActor(this.decrypt(user.getMoviedbkey(), user.getUuid()),
 						cDto.getId(), 300L);
-				Actor actorEntity = this.actorRep.findByActorId(actor.getActorId(), user.getId())
+				Actor actorEntity = this.actorRep.findByActorId(actor.getId(), user.getId())
 						.orElse(this.mapper.convert(actor));
 				actorEntity = this.actorRep.save(actorEntity);
 				if (!actorEntity.getUsers().contains(user)) {
