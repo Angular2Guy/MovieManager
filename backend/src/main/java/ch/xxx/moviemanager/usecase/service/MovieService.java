@@ -179,51 +179,28 @@ public class MovieService {
 		WrapperGenereDto result = this.movieDbRestClient
 				.fetchAllGeneres(this.decrypt(user.getMoviedbkey(), user.getUuid()));
 		List<Genere> generes = new ArrayList<>(this.genereRep.findAll());
-		for (GenereDto gDto : result.getGenres()) {
-			Genere genereEntity = generes.stream()
-					.filter(myGenere -> Optional.ofNullable(myGenere.getGenereId()).stream()
-							.anyMatch(myGenereId -> myGenereId.equals(gDto.getId())))
-					.findFirst().orElse(this.mapper.convert(gDto));
-			if (genereEntity.getId() == null) {
-				genereEntity = genereRep.save(genereEntity);
-				generes.add(genereEntity);
+		generes.addAll(this.findMissingGeneres(result, generes));
 
-			}
-		}
 		LOG.info("Start import Movie with Id: {movieDbId}", movieDbId);
 		MovieDto movieDto = this.movieDbRestClient.fetchMovie(this.decrypt(user.getMoviedbkey(), user.getUuid()),
 				movieDbId);
 		Optional<Movie> movieOpt = this.movieRep.findByMovieId(movieDto.getMovieId(), user.getId());
-		Movie movieEntity = movieOpt.isPresent() ? movieOpt.get() : null;
-		if (movieOpt.isEmpty()) {
+		Movie movieEntity = movieOpt.orElseGet(() -> {
 			LOG.info("Movie not found by id");
-			List<Movie> movies = this.movieRep.findByTitleAndRelDate(movieDto.getTitle(), movieDto.getReleaseDate(),
-					this.userDetailService.getCurrentUser(bearerStr).getId());
-			if (!movies.isEmpty()) {
-				LOG.info("Movie found by Title and Reldate");
-				movieEntity = movies.get(0);
-				movieEntity.setMovieId(movieDto.getId());
-			} else {
-				LOG.info("creating new Movie");
-				movieEntity = this.mapper.convert(movieDto);
-				movieEntity.setMovieId(movieDto.getId());
-				for (Long genId : movieDto.getGenres().stream().map(myGenere -> myGenere.getId()).toList()) {
-					Optional<Genere> myResult = generes.stream()
-							.filter(myGenere -> genId.equals(myGenere.getGenereId())).findFirst();
-					if (myResult.isPresent()) {
-						movieEntity.getGeneres().add(myResult.get());
-						myResult.get().getMovies().add(movieEntity);
-					}
-				}
-				movieEntity = this.movieRep.save(movieEntity);
-			}
-		}
+			Movie result1 = this.movieRep
+					.findByTitleAndRelDate(movieDto.getTitle(), movieDto.getReleaseDate(),
+							this.userDetailService.getCurrentUser(bearerStr).getId())
+					.stream().findFirst().orElseGet(() -> this.createNewMovie(generes, movieDto));
+			result1.setMovieId(movieDto.getId());
+			return result1;
+		});
+
 		if (!movieEntity.getUsers().contains(user)) {
 			LOG.info("adding user to movie");
 			movieEntity.getUsers().add(user);
 		}
 		WrapperCastDto wrCast = this.movieDbRestClient.fetchCast(this.decrypt(user.getMoviedbkey(), user.getUuid()),
-				movieDto.getId());		
+				movieDto.getId());
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto cDto : wrCast.getCast()) {
 				LOG.info("Creating new cast for movie");
@@ -261,6 +238,28 @@ public class MovieService {
 		}
 		LOG.info("Finished import");
 		return true;
+	}
+
+	private Movie createNewMovie(List<Genere> generes, MovieDto movieDto) {
+		LOG.info("creating new Movie");
+		final var result2 = this.mapper.convert(movieDto);
+		movieDto.getGenres().stream().map(myGenere -> myGenere.getId()).forEach(genId -> {
+			generes.stream().filter(myGenere -> genId.equals(myGenere.getGenereId())).findFirst()
+					.ifPresent(myResult -> {
+						result2.getGeneres().add(myResult);
+						myResult.getMovies().add(result2);
+					});
+		});
+		return this.movieRep.save(result2);
+	}
+
+	private List<Genere> findMissingGeneres(WrapperGenereDto result, List<Genere> generes) {
+		return Arrays.asList(result.getGenres()).stream()
+				.filter(gDto -> generes.stream()
+						.filter(myGenere -> Optional.ofNullable(myGenere.getGenereId()).stream()
+								.anyMatch(myGenereId -> myGenereId.equals(gDto.getId())))
+						.findFirst().isEmpty())
+				.flatMap(myDto -> Stream.of(genereRep.save(this.mapper.convert(myDto)))).toList();
 	}
 
 	private String createQueryStr(String str) {
