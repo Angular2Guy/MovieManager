@@ -38,10 +38,7 @@ public class DefaultMapper {
 	
 	public MovieDto convert(Movie entity) {
 		MovieDto dto = convertMovie(entity, false);
-		entity.getCast().forEach(c -> {
-			CastDto castDto = convert(c, true);
-			dto.getMyCast().add(castDto);
-		});
+		entity.getCast().forEach(c -> dto.getMyCast().add(convert(c, true)));
 		return dto;
 	}
 
@@ -52,10 +49,7 @@ public class DefaultMapper {
 	
 	public ActorDto convert(Actor entity) {
 		ActorDto dto = convertActor(entity);
-		entity.getCasts().forEach(c -> {
-			CastDto castDto = convert(c, false);
-			dto.getMyCasts().add(castDto);
-		});
+		entity.getCasts().forEach(c -> dto.getMyCasts().add(convert(c, false)));
 		return dto;
 	}
 
@@ -90,10 +84,7 @@ public class DefaultMapper {
 		dto.setBudget(entity.getBudget());
 		dto.setMovieId(entity.getMovieId());
 		if (!noGeneres) {
-			entity.getGeneres().forEach(g -> {
-				GenereDto genereDto = convert(g);
-				dto.getMyGenere().add(genereDto);
-			});
+			entity.getGeneres().forEach(g -> dto.getMyGenere().add(convert(g)));
 		}
 		return dto;
 	}

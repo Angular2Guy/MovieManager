@@ -20,6 +20,7 @@ import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -203,9 +204,9 @@ public class MovieService {
 				movieDto.getId());
 		if (movieEntity.getCast().isEmpty()) {
 			for (CastDto cDto : wrCast.getCast()) {
-				LOG.info("Creating new cast for movie");
-				if (cDto.getCharacter() == null || cDto.getCharacter().isBlank() || cDto.getName() == null
-						|| cDto.getName().isBlank()) {
+				LOG.info("Creating new cast for movie");				
+				if (checkNullOrBlank(cDto.getCharacter())  || 
+						checkNullOrBlank(cDto.getName())) {
 					continue;
 				}
 				Cast castEntity = this.mapper.convert(cDto);
@@ -238,6 +239,10 @@ public class MovieService {
 		}
 		LOG.info("Finished import");
 		return true;
+	}
+
+	private boolean checkNullOrBlank(String value) {
+		return Optional.ofNullable(value).stream().filter(Predicate.not(String::isBlank)).findFirst().isEmpty();
 	}
 
 	private Movie createNewMovie(List<Genere> generes, MovieDto movieDto) {
