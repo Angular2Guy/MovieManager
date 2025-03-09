@@ -13,11 +13,15 @@
 package ch.xxx.moviemanager.domain.producer;
 
 import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
+import ch.xxx.moviemanager.domain.model.dto.LogoutEvent;
 import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
+import ch.xxx.moviemanager.domain.model.dto.SigninEvent;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 
 public interface EventProducer {
 	void sendLogoutMsg(RevokedTokenDto revokedTokenDto);
 	void sendNewUserMsg(UserDto appUserDto);
 	void sendKafkaEvent(KafkaEventDto kafkaEventDto);
+	void receiveLogoutEvent(LogoutEvent logoutEvent);
+	void receiveSigninEvent(SigninEvent signinEvent);
 }

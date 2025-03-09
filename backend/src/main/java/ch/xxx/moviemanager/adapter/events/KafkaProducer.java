@@ -24,16 +24,21 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.xxx.moviemanager.adapter.config.KafkaConfig;
 import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
 import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
+import ch.xxx.moviemanager.domain.model.dto.LogoutEvent;
 import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
+import ch.xxx.moviemanager.domain.model.dto.SigninEvent;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.domain.producer.EventProducer;
+import jakarta.transaction.Transactional;
 
 @Service
 @Profile("kafka | prod-kafka")
@@ -50,6 +55,13 @@ public class KafkaProducer implements EventProducer {
 		this.adminClient = adminClient;
 	}
 
+	@Async
+	@Transactional
+	@TransactionalEventListener
+	public void receiveLogoutEvent(LogoutEvent logoutEvent) {
+		this.sendLogoutMsg(logoutEvent.revokedTokenDto());
+	}	
+	
 	@Override
 	public void sendLogoutMsg(RevokedTokenDto revokedTokenDto) {
 		try {
@@ -64,6 +76,13 @@ public class KafkaProducer implements EventProducer {
 		LOGGER.info("send logout msg: {}", revokedTokenDto.toString());
 	}
 
+	@Async
+	@Transactional
+	@TransactionalEventListener
+	public void receiveSigninEvent(SigninEvent signinEvent) {
+		this.sendNewUserMsg(signinEvent.userDto());
+	}
+	
 	@Override
 	public void sendNewUserMsg(UserDto appUserDto) {
 		try {
