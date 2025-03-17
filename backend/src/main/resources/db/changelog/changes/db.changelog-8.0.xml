@@ -34,7 +34,7 @@
 			tableName="cast1">
 			<column name="character_name" />
 		</createIndex>
-	</changeSet>	
+	</changeSet>
 	<changeSet id="33" author="angular2guy">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -46,7 +46,7 @@
 			tableName="actor_user">
 			<column name="actor_id" />
 		</createIndex>
-	</changeSet>	
+	</changeSet>
 	<changeSet id="34" author="angular2guy">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -58,7 +58,7 @@
 			tableName="actor_user">
 			<column name="user_id" />
 		</createIndex>
-	</changeSet>		
+	</changeSet>
 	<changeSet id="35" author="angular2guy">
 		<preConditions onFail="MARK_RAN">
 			<not>
@@ -84,29 +84,50 @@
 		</createIndex>
 	</changeSet>
 	<changeSet id="37" author="angular2guy" dbms="postgresql">
-		<alterSequence sequenceName="hibernate_sequence" incrementBy="10" />
-	</changeSet>	
+		<alterSequence sequenceName="hibernate_sequence"
+			incrementBy="10" />
+	</changeSet>
 	<changeSet author="angular2guy" id="38" dbms="!postgresql">
 		<preConditions onFail="MARK_RAN">
-			<sequenceExists sequenceName="hibernate_sequence"/>
-		</preConditions>		
-        <dropSequence sequenceName="hibernate_sequence"/>
+			<sequenceExists sequenceName="hibernate_sequence" />
+		</preConditions>
+		<dropSequence sequenceName="hibernate_sequence" />
 	</changeSet>
 	<changeSet author="angular2guy" id="39" dbms="!postgresql">
-		<createSequence sequenceName="hibernate_sequence" startValue="1000" incrementBy="10"/>
+		<createSequence sequenceName="hibernate_sequence"
+			startValue="1000" incrementBy="10" />
 	</changeSet>
 	<changeSet id="40" author="angular2guy" dbms="!postgresql">
-		<modifyDataType tableName="movie" columnName="overview" newDataType="varchar(10240)"/>
-		<modifyDataType tableName="actor" columnName="biography" newDataType="varchar(10240)"/>
+		<modifyDataType tableName="movie" columnName="overview"
+			newDataType="varchar(10240)" />
+		<modifyDataType tableName="actor"
+			columnName="biography" newDataType="varchar(10240)" />
 	</changeSet>
 	<changeSet id="41" author="angular2guy">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<columnExists tableName="user1" columnName="migration"/>		
+				<columnExists tableName="user1" columnName="migration" />
 			</not>
 		</preConditions>
 		<addColumn tableName="user1">
-			<column defaultValue="0" type="bigint" name="migration"/>
+			<column defaultValue="0" type="bigint" name="migration" />
 		</addColumn>
+	</changeSet>
+	<changeSet id="42" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="event_publication" />
+			</not>
+		</preConditions>
+		<createTable tableName="event_publication">
+			<column name="id" type="uuid">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="completion_date" type="datetime"></column>
+			<column name="event_type" type="varchar(4096)"></column>
+			<column name="listener_id" type="varchar(4096)"></column>
+			<column name="publication_date" type="datetime"></column>
+			<column name="serialized_event" type="varchar(32767)"></column>
+		</createTable>
 	</changeSet>
 </databaseChangeLog>

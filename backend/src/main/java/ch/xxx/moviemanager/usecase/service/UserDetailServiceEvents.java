@@ -30,6 +30,7 @@ import ch.xxx.moviemanager.domain.model.entity.RevokedTokenRepository;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.domain.model.entity.UserRepository;
 import ch.xxx.moviemanager.domain.producer.EventProducer;
+import ch.xxx.moviemanager.domain.producer.EventPublications;
 import ch.xxx.moviemanager.usecase.mapper.RevokedTokenMapper;
 import ch.xxx.moviemanager.usecase.mapper.UserMapper;
 import jakarta.transaction.Transactional;
@@ -41,15 +42,17 @@ public class UserDetailServiceEvents extends UserDetailServiceBase implements Us
 	private static final long LOGOUT_TIMEOUT = 95L;
 	private final EventProducer eventProducer;
 	private final ApplicationEventPublisher applicationEventPublisher;
+	private final EventPublications eventPublications;
 
 	public UserDetailServiceEvents(UserRepository userRepository, PasswordEncoder passwordEncoder,
 			RevokedTokenMapper revokedTokenMapper, RevokedTokenRepository revokedTokenRepository,
 			JavaMailSender javaMailSender, EventProducer eventProducer, JwtTokenService jwtTokenService,
-			UserMapper userMapper, ApplicationEventPublisher applicationEventPublisher) {
+			UserMapper userMapper, ApplicationEventPublisher applicationEventPublisher, EventPublications eventPublications) {
 		super(userRepository, passwordEncoder, revokedTokenRepository, javaMailSender, jwtTokenService, userMapper,
 				revokedTokenMapper);
 		this.eventProducer = eventProducer;
 		this.applicationEventPublisher = applicationEventPublisher;
+		this.eventPublications = eventPublications;
 	}
 
 	@Override
@@ -66,6 +69,16 @@ public class UserDetailServiceEvents extends UserDetailServiceBase implements Us
 		return appUserOpt.isPresent();
 	}
 
+	@Override
+	public void cleanup() {
+		this.eventPublications.clearPublishedEvents();
+	}
+	
+	@Override
+	public void eventRetry() {
+		this.eventPublications.resubmitUnpublishedEvents();
+	}
+	
 	public Boolean signinMsg(UserDto appUserDto) {
 		return super.signin(appUserDto, true, false).isPresent();
 	}

@@ -66,7 +66,16 @@ public class CronJobs {
 		LOG.info("Start cleanup Job");
 		this.movieService.cleanup();
 		this.actorService.cleanup();
+		this.userService.cleanup();
 		LOG.info("End cleanup Job");
+	}
+	
+	@Scheduled(cron = "10 0 * * * ?")
+	@SchedulerLock(name = "EventRetry_scheduledTask", lockAtLeastFor = "PT45M", lockAtMostFor = "PT55M")
+	public void eventRetry() {
+		LOG.info("Start eventretry Job");
+		this.userService.eventRetry();
+		LOG.info("End eventretry Job");
 	}
 
 	@Scheduled(fixedRate = 90000)

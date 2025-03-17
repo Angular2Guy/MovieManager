@@ -96,6 +96,14 @@ public class UserDetailServiceBase {
 		this.daead = handle.getPrimitive(DeterministicAead.class);
 	}
 
+	public void cleanup() {
+		
+	}
+	
+	public void eventRetry() {
+		
+	}
+	
 	public void updateLoggedOutUsers() {
 		this.updateLoggedOutUsers(LOGOUT_TIMEOUT);
 	}

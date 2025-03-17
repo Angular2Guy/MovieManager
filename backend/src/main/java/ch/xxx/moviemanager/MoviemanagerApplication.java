@@ -14,12 +14,14 @@ package ch.xxx.moviemanager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.modulith.Modulithic;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 
 
 @SpringBootApplication
+@Modulithic
 @OpenAPIDefinition(info = @Info(title = "MovieManager API", version = "1.0", description = "MovieManager Api Information"))
 public class MoviemanagerApplication {
 

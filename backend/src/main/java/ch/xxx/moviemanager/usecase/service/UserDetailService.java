@@ -33,4 +33,6 @@ public interface UserDetailService {
 	void updateLoggedOutUsers();
 	void sendKafkaEvent(KafkaEventDto kafkaEventDto);
 	String encrypt(String movieDbKey, String uuid);
+	void cleanup();
+	void eventRetry();
 }
