@@ -8,6 +8,7 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 [![CodeQL](https://github.com/Angular2Guy/MovieManager/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Angular2Guy/MovieManager/actions/workflows/codeql-analysis.yml)
 
 ## Articles
+* [A simple Transactional Outbox Pattern implementation with Spring](https://angular2guy.wordpress.com/2025/03/17/a-simple-transactional-outbox-pattern-with-spring/)
 * [Using KRaft Kafka for development and Kubernetes deployment](https://angular2guy.wordpress.com/2024/08/17/using-kraft-kafka-for-development-and-kubernetes-deployment/)
 * [An advanced complex datamigration solution](https://angular2guy.wordpress.com/2023/07/22/an-advanced-complex-datamigration-solution/)
 * [The MovieManager project has 3 Test Types](https://angular2guy.wordpress.com/2023/01/22/the-moviemanager-project-has-3-test-types/)
