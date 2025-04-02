@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -45,8 +46,9 @@ public class ActorService {
 	}
 
 	public boolean cleanup() {
-		this.actorRep.findUnusedActors().forEach(
-				actor -> LOG.info(String.format("Unused Actor id: %d name: %s", actor.getId(), actor.getName())));
+		var unusedActors = this.actorRep.findUnusedActors().stream().peek(
+				actor -> LOG.info(String.format("Unused Actor id: %d name: %s", actor.getId(), actor.getName()))).collect(Collectors.toList());
+		this.actorRep.deleteAll(unusedActors);
 		//fix for actor dublicates
 		/*
 		final var actorMap = this.actorRep.findByActorIdIn(this.actorRep.findDublicateActorIds()).stream()

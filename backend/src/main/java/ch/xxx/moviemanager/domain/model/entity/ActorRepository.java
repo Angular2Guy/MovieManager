@@ -12,6 +12,7 @@
  */
 package ch.xxx.moviemanager.domain.model.entity;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public interface ActorRepository {
 	List<Actor> findByActorName(String name, Long userId, Pageable pageable);
 	Optional<Actor> findByActorId(Long actorId, Long userId);
 	void deleteById(Long id);
+	void deleteAll(Collection<Actor> actors);
 	Optional<Actor> findById(Long id);
 	Actor save(Actor actorEntity);
 	List<Actor> findUnusedActors();

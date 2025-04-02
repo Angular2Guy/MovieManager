@@ -162,8 +162,17 @@ public class MovieService {
 	}
 
 	public boolean cleanup() {
-		this.movieRep.findUnusedMovies().forEach(
-				movie -> LOG.info(String.format("Unused Movie id: %d title: %s", movie.getId(), movie.getTitle())));
+		var unusedMovies = this.movieRep.findUnusedMovies().stream().peek(
+				movie -> LOG.info(String.format("Unused Movie id: %d title: %s", movie.getId(), movie.getTitle()))).collect(Collectors.toList());
+		unusedMovies.forEach(movie -> {
+			this.movieRep.deleteById(movie.getId());
+			movie.getCast().forEach(cast -> {
+				cast.getActor().getCasts().remove(cast);
+				cast.setActor(null);
+				cast.setMovie(null);
+			});			
+			movie.getCast().clear();
+		});
 		return true;
 	}
 

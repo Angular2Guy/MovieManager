@@ -13,6 +13,7 @@
 package ch.xxx.moviemanager.adapter.repository;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -54,26 +55,37 @@ public class ActorRepositoryBean implements ActorRepository {
 		this.entityManager = entityManagerFactory.createEntityManager();
 	}
 
+	@Override
 	public Optional<Actor> findById(Long id) {
 		return this.jpaActorRepository.findById(id);
 	}
 
+	@Override
 	public Actor save(@Valid Actor actorEntity) {
 		return this.jpaActorRepository.save(actorEntity);
 	}
 
+	@Override
+	public void deleteAll(Collection<Actor> actors) {
+		this.jpaActorRepository.deleteAll(actors);
+	}
+	
+	@Override
 	public void deleteById(Long id) {
 		this.jpaActorRepository.deleteById(id);
 	}
 
+	@Override
 	public List<Actor> findByActorName(String name, Long userId, Pageable pageable) {
 		return this.jpaActorRepository.findByActorName(name, userId, pageable);
 	}
 
+	@Override
 	public Optional<Actor> findByActorId(Long actorId, Long userId) {
 		return this.jpaActorRepository.findByActorId(actorId, userId);
 	}
 
+	@Override
 	public List<Actor> findActorsByPage(Long userId, Pageable pageble) {
 		return this.findActorsByPage(userId, pageble);
 	}
@@ -88,6 +100,7 @@ public class ActorRepositoryBean implements ActorRepository {
 		return this.jpaActorRepository.findUnusedActors();
 	}
 
+	@Override
 	public List<Actor> findByFilterCriteria(ActorFilterCriteriaDto filterCriteriaDto, Long userId) {
 		CriteriaQuery<Actor> cq = this.entityManager.getCriteriaBuilder().createQuery(Actor.class);
 		Root<Actor> cActor = cq.from(Actor.class);
@@ -130,6 +143,7 @@ public class ActorRepositoryBean implements ActorRepository {
 		return this.entityManager.createQuery(cq).setMaxResults(1000).getResultList();
 	}
 
+	@Override
 	public List<Actor> findActorsByPhrase(SearchPhraseDto searchPhraseDto) {
 		final List<Actor> resultList = new ArrayList<>();
 		Optional.ofNullable(searchPhraseDto.getPhrase()).stream().filter(myPhrase -> myPhrase.trim().length() > 2)
@@ -142,6 +156,7 @@ public class ActorRepositoryBean implements ActorRepository {
 		return resultList;
 	}
 
+	@Override
 	public List<Actor> findActorsBySearchStrings(List<SearchStringDto> searchStrings) {
 		List<Actor> resultList = Search.session(this.entityManager).search(Actor.class).where((f, root) -> {
 			root.add(f.matchAll());

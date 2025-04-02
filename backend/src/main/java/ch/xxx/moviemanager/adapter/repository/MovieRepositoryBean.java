@@ -105,6 +105,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		return this.jpaMovieRepository.findByIdWithCollections(ids);
 	}
 
+	@Override
 	public List<Movie> findByFilterCriteria(MovieFilterCriteriaDto filterCriteriaDto, Long userId) {
 		CriteriaQuery<Movie> cq = this.entityManager.getCriteriaBuilder().createQuery(Movie.class);
 		Root<Movie> cMovie = cq.from(Movie.class);
@@ -158,6 +159,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		return this.entityManager.createQuery(cq).setMaxResults(1000).getResultList();
 	}
 
+	@Override
 	public List<Movie> findMoviesByPhrase(SearchPhraseDto searchPhraseDto) {
 		List<Movie> resultList = List.of();
 		if (searchPhraseDto.getPhrase() != null && searchPhraseDto.getPhrase().trim().length() > 2) {
@@ -169,6 +171,7 @@ public class MovieRepositoryBean implements MovieRepository {
 		return resultList;
 	}
 
+	@Override
 	public List<Movie> findMoviesBySearchStrings(List<SearchStringDto> searchStrings) {		
 		List<Movie> resultList = Search.session(this.entityManager).search(Movie.class)
 				.where((f, root) -> {
