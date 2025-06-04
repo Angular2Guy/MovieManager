@@ -62,7 +62,7 @@
     "prettier": "^3.3.3",
     "webpack-bundle-analyzer": "^4.5.0",
     "eslint": "^9.28.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "@angular-eslint/builder": "^20.0.0-alpha.1",
     "@angular-eslint/eslint-plugin": "^20.0.0-alpha.1",
