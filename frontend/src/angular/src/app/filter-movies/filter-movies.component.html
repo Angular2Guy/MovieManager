@@ -4,7 +4,7 @@
       class="offcanvas-title"
       id="offcanvas-basic-title"
       i18n="@@filtersAvailiable"
-    >
+      >
       Filters availiable
     </h4>
     <button
@@ -20,304 +20,315 @@
         <div class="mb-3 me-1">
           <label for="releasedAfter" i18n="@@filterMoviesReleasedAfter"
             >Released after</label
-          >
-          <div class="input-group">
-            <input
-              id="releasedBefore"
-              class="form-control"
-              [(ngModel)]="ngbReleaseFrom"
-              placeholder="yyyy-mm-dd"
-              name="dpFrom"
-              ngbDatepicker
-              #dpFrom="ngbDatepicker"
-            />
-            <button
-              class="btn btn-outline-secondary calendar"
-              (click)="dpFrom.toggle()"
-              type="button"
-            ></button>
-          </div>
-        </div>
-        <div class="mb-3 ms-1">
-          <label for="releasedBefore" i18n="@@filterMoviesReleasedBefore"
-            >Released before</label
-          >
-          <div class="input-group">
-            <input
-              id="releasedAfter"
-              [(ngModel)]="ngbReleaseTo"
-              class="form-control"
-              placeholder="yyyy-mm-dd"
-              name="dpTo"
-              ngbDatepicker
-              #dpTo="ngbDatepicker"
-            />
-            <button
-              class="btn btn-outline-secondary calendar"
-              (click)="dpTo.toggle()"
-              type="button"
-            ></button>
-          </div>
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="title" class="form-label" i18n="@@title">Title</label>
-        <input
-          type="text"
-          [(ngModel)]="filterCriteria.movieTitle"
-          name="title"
-          class="form-control"
-          id="title"
-          i18n-placeholder="@@phTitle"
-          placeholder="title"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="actor" class="form-label" i18n="@@actor">Actor</label>
-        <input
-          type="text"
-          [(ngModel)]="filterCriteria.movieActor"
-          name="actor"
-          class="form-control"
-          id="actor"
-          i18n-placeholder="@@phActor"
-          placeholder="actor"
-        />
-      </div>
-      <div class="mb-3">
-        <div class="col">
-          <div ngbDropdown class="d-inline-block">
-            <label
-              for="dropdownGeneres"
-              class="form-label"
-              i18n="@@filterMoviesSelectedGeneres"
-              >Selected Generes</label
             >
-            <div class="select-range">
-              <div>
-                <button
-                  type="button"
-                  class="form-control btn btn-outline-primary"
-                  id="dropdownGeneres"
-                  ngbDropdownToggle
-                >
-                  Generes
-                </button>
-                <div ngbDropdownMenu aria-labelledby="dropdownGeneres">
-                  <button
-                    ngbDropdownItem
-                    (click)="addToSelectedGenere(myGenere)"
-                    *ngFor="let myGenere of generes"
-                  >
-                    {{ myGenere.name }}
-                  </button>
-                </div>
-              </div>
-              <div
-                class="selected-generes"
-                *ngIf="selectedGeneresStr.length > 0"
+            <div class="input-group">
+              <input
+                id="releasedBefore"
+                class="form-control"
+                [(ngModel)]="ngbReleaseFrom"
+                placeholder="yyyy-mm-dd"
+                name="dpFrom"
+                ngbDatepicker
+                #dpFrom="ngbDatepicker"
+                />
+              <button
+                class="btn btn-outline-secondary calendar"
+                (click)="dpFrom.toggle()"
+                type="button"
+              ></button>
+            </div>
+          </div>
+          <div class="mb-3 ms-1">
+            <label for="releasedBefore" i18n="@@filterMoviesReleasedBefore"
+              >Released before</label
               >
-                <div class="ms-1">{{ selectedGeneresStr }}</div>
-                <div
-                  class="ms-1 btn-close"
-                  (click)="resetSelectedGeneres()"
-                ></div>
+              <div class="input-group">
+                <input
+                  id="releasedAfter"
+                  [(ngModel)]="ngbReleaseTo"
+                  class="form-control"
+                  placeholder="yyyy-mm-dd"
+                  name="dpTo"
+                  ngbDatepicker
+                  #dpTo="ngbDatepicker"
+                  />
+                <button
+                  class="btn btn-outline-secondary calendar"
+                  (click)="dpTo.toggle()"
+                  type="button"
+                ></button>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="select-range">
-        <div class="mb-3 me-1">
-          <label
-            for="min-length"
-            class="form-label"
-            i18n="@@filterMoviesMinLength"
-            >Min Length</label
-          >
-          <input
-            type="number"
-            [(ngModel)]="filterCriteria.minLength"
-            name="minLength"
-            class="form-control"
-            id="min-length"
-            i18n-placeholder="@@phMinutes"
-            placeholder="minutes"
-          />
-        </div>
-        <div class="mb-3 ms-1">
-          <label
-            for="max-length"
-            class="form-label"
-            i18n="@@filterMoviesMaxLength"
-            >Max Length</label
-          >
-          <input
-            type="number"
-            [(ngModel)]="filterCriteria.maxLength"
-            name="maxLength"
-            class="form-control"
-            id="max-length"
-            i18n-placeholder="@@phMinutes"
-            placeholder="minutes"
-          />
-        </div>
-      </div>
-      <div class="mb-3">
-        <div for="rating" class="mb-1" i18n="@@filterMoviesMinRating">
+          <div class="mb-3">
+            <label for="title" class="form-label" i18n="@@title">Title</label>
+            <input
+              type="text"
+              [(ngModel)]="filterCriteria.movieTitle"
+              name="title"
+              class="form-control"
+              id="title"
+              i18n-placeholder="@@phTitle"
+              placeholder="title"
+              />
+          </div>
+          <div class="mb-3">
+            <label for="actor" class="form-label" i18n="@@actor">Actor</label>
+            <input
+              type="text"
+              [(ngModel)]="filterCriteria.movieActor"
+              name="actor"
+              class="form-control"
+              id="actor"
+              i18n-placeholder="@@phActor"
+              placeholder="actor"
+              />
+          </div>
+          <div class="mb-3">
+            <div class="col">
+              <div ngbDropdown class="d-inline-block">
+                <label
+                  for="dropdownGeneres"
+                  class="form-label"
+                  i18n="@@filterMoviesSelectedGeneres"
+                  >Selected Generes</label
+                  >
+                  <div class="select-range">
+                    <div>
+                      <button
+                        type="button"
+                        class="form-control btn btn-outline-primary"
+                        id="dropdownGeneres"
+                        ngbDropdownToggle
+                        >
+                        Generes
+                      </button>
+                      <div ngbDropdownMenu aria-labelledby="dropdownGeneres">
+                        @for (myGenere of generes; track myGenere) {
+                          <button
+                            ngbDropdownItem
+                            (click)="addToSelectedGenere(myGenere)"
+                            >
+                            {{ myGenere.name }}
+                          </button>
+                        }
+                      </div>
+                    </div>
+                    @if (selectedGeneresStr.length > 0) {
+                      <div
+                        class="selected-generes"
+                        >
+                        <div class="ms-1">{{ selectedGeneresStr }}</div>
+                        <div
+                          class="ms-1 btn-close"
+                          (click)="resetSelectedGeneres()"
+                        ></div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="select-range">
+              <div class="mb-3 me-1">
+                <label
+                  for="min-length"
+                  class="form-label"
+                  i18n="@@filterMoviesMinLength"
+                  >Min Length</label
+                  >
+                  <input
+                    type="number"
+                    [(ngModel)]="filterCriteria.minLength"
+                    name="minLength"
+                    class="form-control"
+                    id="min-length"
+                    i18n-placeholder="@@phMinutes"
+                    placeholder="minutes"
+                    />
+                </div>
+                <div class="mb-3 ms-1">
+                  <label
+                    for="max-length"
+                    class="form-label"
+                    i18n="@@filterMoviesMaxLength"
+                    >Max Length</label
+                    >
+                    <input
+                      type="number"
+                      [(ngModel)]="filterCriteria.maxLength"
+                      name="maxLength"
+                      class="form-control"
+                      id="max-length"
+                      i18n-placeholder="@@phMinutes"
+                      placeholder="minutes"
+                      />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div for="rating" class="mb-1" i18n="@@filterMoviesMinRating">
           Min Rating
         </div>
-        <ngb-rating
-          id="rating"
-          [(ngModel)]="filterCriteria.minRating"
-          name="minRating"
-          [rate]="0"
-        ></ngb-rating>
-      </div>
-      <div class="mb-3">
-		  <span i18n="@@filterMoviesInOverview">In Overview</span>
-		  <button class="btn btn-outline-primary float-end"
-          (click)="switchFilters()"
-          type="button"
-          i18n="@@filterMoviesSwitchFilter">Switch filter</button>
-      </div>
-      <ng-container [ngSwitch]="filterType">
-		  <ng-container *ngSwitchCase="FullTextFilter.PhraseFilter">
-      <div class="mb-3">		  
-        <div class="overview-label-input">
-          <label
-            for="overview"
-            class="form-label overview-label"
-            i18n="@@filterMoviesOtherWords"            
-            >Other words</label
-          >
-          <input
-            type="number"
-            [(ngModel)]="filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase"
-            name="otherWordsInPhrase"
-            class="form-control"
-            id="otherWordsInPhrase"
-            i18n-placeholder="@@phOtherWords"
-            placeholder="other words"
-          />
-        </div>
-        <textarea
-          i18n-ngbPopover="@@filterMoviesPhrasePopover"
-          ngbPopover="Enter a phrase to search for and select the number of other words allowed in it."
-	      triggers="mouseenter:mouseleave"
-	      i18n-popoverTitle="@@filterMoviesPhrasePopoverTitle"
-	      popoverTitle="Phrase search"
-          rows="2"
-          id="overview"
-          [(ngModel)]="filterCriteria.searchTerm.searchPhrase.phrase"
-          name="phrase"
-          class="form-control"
-        ></textarea>
-      </div>
-      <div class="mb-3 float-end">
-        <button
-          class="btn btn-outline-primary"
-          (click)="resetFilters()"
-          type="button"
-          i18n="@@resetFilters"
-        >
+                  <ngb-rating
+                    id="rating"
+                    [(ngModel)]="filterCriteria.minRating"
+                    name="minRating"
+                    [rate]="0"
+                  ></ngb-rating>
+                </div>
+                <div class="mb-3">
+                  <span i18n="@@filterMoviesInOverview">In Overview</span>
+                  <button class="btn btn-outline-primary float-end"
+                    (click)="switchFilters()"
+                    type="button"
+                  i18n="@@filterMoviesSwitchFilter">Switch filter</button>
+                </div>
+                @switch (filterType) {
+                  @case (FullTextFilter.PhraseFilter) {
+                    <div class="mb-3">
+                      <div class="overview-label-input">
+                        <label
+                          for="overview"
+                          class="form-label overview-label"
+                          i18n="@@filterMoviesOtherWords"
+                          >Other words</label
+                          >
+                          <input
+                            type="number"
+                            [(ngModel)]="filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase"
+                            name="otherWordsInPhrase"
+                            class="form-control"
+                            id="otherWordsInPhrase"
+                            i18n-placeholder="@@phOtherWords"
+                            placeholder="other words"
+                            />
+                        </div>
+                        <textarea
+                          i18n-ngbPopover="@@filterMoviesPhrasePopover"
+                          ngbPopover="Enter a phrase to search for and select the number of other words allowed in it."
+                          triggers="mouseenter:mouseleave"
+                          i18n-popoverTitle="@@filterMoviesPhrasePopoverTitle"
+                          popoverTitle="Phrase search"
+                          rows="2"
+                          id="overview"
+                          [(ngModel)]="filterCriteria.searchTerm.searchPhrase.phrase"
+                          name="phrase"
+                          class="form-control"
+                        ></textarea>
+                      </div>
+                      <div class="mb-3 float-end">
+                        <button
+                          class="btn btn-outline-primary"
+                          (click)="resetFilters()"
+                          type="button"
+                          i18n="@@resetFilters"
+                          >
           Reset Filters
         </button>
-      </div>
-      </ng-container>
-      <ng-container *ngSwitchCase="FullTextFilter.WordFilter">
-         <div class="mb-3">	
-		  <textarea
-		  i18n-ngbPopover="@@filterMoviesWordsPopover"
-          ngbPopover="Enter required included(+) and excluded(-) words and or(|). +plane |car -train"
-	      triggers="mouseenter:mouseleave"
-	      i18n-popoverTitle="@@filterMoviesWordsPopoverTitle"
-	      popoverTitle="Word search"
-          rows="2"
-          id="overview"
-          [(ngModel)]="searchWords"
-          name="search words"
-          class="form-control"
-        ></textarea>
-      </div>
-      <div class="mb-3 float-end">
-        <button
-          class="btn btn-outline-primary"
-          (click)="resetFilters()"
-          type="button"
-          i18n="@@resetFilters"
-        >
+                      </div>
+                    }
+                    @case (FullTextFilter.WordFilter) {
+                      <div class="mb-3">
+                        <textarea
+                          i18n-ngbPopover="@@filterMoviesWordsPopover"
+                          ngbPopover="Enter required included(+) and excluded(-) words and or(|). +plane |car -train"
+                          triggers="mouseenter:mouseleave"
+                          i18n-popoverTitle="@@filterMoviesWordsPopoverTitle"
+                          popoverTitle="Word search"
+                          rows="2"
+                          id="overview"
+                          [(ngModel)]="searchWords"
+                          name="search words"
+                          class="form-control"
+                        ></textarea>
+                      </div>
+                      <div class="mb-3 float-end">
+                        <button
+                          class="btn btn-outline-primary"
+                          (click)="resetFilters()"
+                          type="button"
+                          i18n="@@resetFilters"
+                          >
           Reset Filters
         </button>
-      </div>
-      </ng-container>
-      </ng-container>
-    </form>
-  </div>
-</ng-template>
-<div class="container-fluid">
-  <div>
-    <div class="row">
-      <div class="col">
-        <button class="btn btn-primary back-btn" (click)="back()" i18n="@@back">
+                      </div>
+                    }
+                  }
+                </form>
+              </div>
+            </ng-template>
+            <div class="container-fluid">
+              <div>
+                <div class="row">
+                  <div class="col">
+                    <button class="btn btn-primary back-btn" (click)="back()" i18n="@@back">
           Back
         </button>
-        <button
-          class="btn btn-primary filter-change-btn"
-          (click)="showFilterActors()"
-          i18n="@@filterMoviesFilterActors"
-        >
+                    <button
+                      class="btn btn-primary filter-change-btn"
+                      (click)="showFilterActors()"
+                      i18n="@@filterMoviesFilterActors"
+                      >
           Filter<br />Actors
         </button>
-        <button
-          class="btn btn-primary open-filters"
-          (click)="open(content)"
-          i18n="@@filterMoviesOpenFilters"
-        >
+                    <button
+                      class="btn btn-primary open-filters"
+                      (click)="open(content)"
+                      i18n="@@filterMoviesOpenFilters"
+                      >
           Open<br />Filters
         </button>
-        <div
-          class="info-text filter-text"
-          *ngIf="filtering"
-          i18n="@@filterMoviesFilteringMovies"
-        >
+                    @if (filtering) {
+                      <div
+                        class="info-text filter-text"
+                        i18n="@@filterMoviesFilteringMovies"
+                        >
           Filtering Movies
         </div>
-        <div class="info-text filter-text" *ngIf="filtering">
-          <img src="assets/svg/spinner.svg" />
-        </div>
-        <div
-          class="info-text"
-          *ngIf="!filtering && filteredMovies.length === 0"
-          i18n="@@filterMoviesNoMoviesFound"
-        >
+                    }
+                    @if (filtering) {
+                      <div class="info-text filter-text">
+                        <img src="assets/svg/spinner.svg" />
+                      </div>
+                    }
+                    @if (!filtering && filteredMovies.length === 0) {
+                      <div
+                        class="info-text"
+                        i18n="@@filterMoviesNoMoviesFound"
+                        >
           No Movies found. Try different filter settings.
         </div>
-        <table class="table" *ngIf="!filtering && filteredMovies.length > 0">
-          <tr>
-            <th i18n="@@title">Title</th>
-            <th i18n="@@release">Release</th>
-            <th i18n="@@generes">Generes</th>
-            <th i18n="@@overview">Overview</th>
-          </tr>
-          <tr
-            *ngFor="let movie of filteredMovies"
-            (click)="selectMovie(movie)"
-            class="import-item"
-          >
-            <td class="my-text-center">{{ movie.title }}</td>
-            <td class="my-text-center">
-              {{ movie.release_date | date : "dd.MM.yyyy" }}
-            </td>
-            <td class="my-text-center">
-              <ul *ngFor="let genere of movie?.myGenere" class="my-ul">
-                <li>{{ genere.name }}</li>
-              </ul>
-            </td>
-            <td class="my-text-center">{{ movie.overview }}</td>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+                    }
+                    @if (!filtering && filteredMovies.length > 0) {
+                      <table class="table">
+                        <tr>
+                          <th i18n="@@title">Title</th>
+                          <th i18n="@@release">Release</th>
+                          <th i18n="@@generes">Generes</th>
+                          <th i18n="@@overview">Overview</th>
+                        </tr>
+                        @for (movie of filteredMovies; track movie) {
+                          <tr
+                            (click)="selectMovie(movie)"
+                            class="import-item"
+                            >
+                            <td class="my-text-center">{{ movie.title }}</td>
+                            <td class="my-text-center">
+                              {{ movie.release_date | date : "dd.MM.yyyy" }}
+                            </td>
+                            <td class="my-text-center">
+                              @for (genere of movie?.myGenere; track genere) {
+                                <ul class="my-ul">
+                                  <li>{{ genere.name }}</li>
+                                </ul>
+                              }
+                            </td>
+                            <td class="my-text-center">{{ movie.overview }}</td>
+                          </tr>
+                        }
+                      </table>
+                    }
+                  </div>
+                </div>
+              </div>
+            </div>

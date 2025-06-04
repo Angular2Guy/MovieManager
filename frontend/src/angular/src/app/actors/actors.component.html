@@ -1,60 +1,72 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-      <a
-        *ngIf="backParam === queryParam.Empty"
-        [routerLink]="['/search']"
-        i18n="@@back"
-        >Back</a
-      >
-      <a
-        *ngIf="backParam === queryParam.ActorsBack"
-        [routerLink]="['/filter-actors']"
-        i18n="@@back"
-        >Back</a
-      >
-    </div>
-  </div>
-  <div class="row">
-    <div class="col" i18n="@@actorName">Name: {{ actor?.name }}</div>
-  </div>
-  <div class="row">
-    <div class="col" i18n="@@actorBirthday">
+      @if (backParam === queryParam.Empty) {
+        <a
+          [routerLink]="['/search']"
+          i18n="@@back"
+          >Back</a
+          >
+        }
+        @if (backParam === queryParam.ActorsBack) {
+          <a
+            [routerLink]="['/filter-actors']"
+            i18n="@@back"
+            >Back</a
+            >
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="col" i18n="@@actorName">Name: {{ actor?.name }}</div>
+      </div>
+      <div class="row">
+        <div class="col" i18n="@@actorBirthday">
       Birthday: {{ actor?.birthday | date : "dd.MM.yyyy" }}
     </div>
-  </div>
-  <div class="row">
-    <div class="col" i18n="@@actorBiography">
+      </div>
+      <div class="row">
+        <div class="col" i18n="@@actorBiography">
       Biography: {{ actor?.biography }}
     </div>
-  </div>
-  <div class="row">
-    <div class="col" [ngSwitch]="actor?.gender">
-      <span *ngSwitchCase="gender.Female" i18n="@@actorGenderFemale"
-        >Gender: Female</span
-      >
-      <span *ngSwitchCase="gender.Male" i18n="@@actorGenderMale"
-        >Gender: Male</span
-      >
-      <span *ngSwitchDefault i18n="@@actorGenderUnknown">Gender: Unknown</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col" i18n="@@actorPlaceOfBirth">
+      </div>
+      <div class="row">
+        <div class="col">
+          @switch (actor?.gender) {
+            @case (gender.Female) {
+              <span i18n="@@actorGenderFemale"
+                >Gender: Female</span
+                >
+              }
+              @case (gender.Male) {
+                <span i18n="@@actorGenderMale"
+                  >Gender: Male</span
+                  >
+                }
+                @default {
+                  <span i18n="@@actorGenderUnknown">Gender: Unknown</span>
+                }
+              }
+            </div>
+          </div>
+          <div class="row">
+            <div class="col" i18n="@@actorPlaceOfBirth">
       Place of birth: {{ actor?.place_of_birth }}
     </div>
-  </div>
-  <div class="row">
-    <div class="col">
-      <span i18n="@@actorCast">Cast:</span>
-      <ul *ngFor="let cast of actor?.myCasts">
-        <li>
-          {{ cast.character }} -
-          <a [routerLink]="['/movie', cast.myMovie.id]">{{
-            cast.myMovie.title
-          }}</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
+          </div>
+          <div class="row">
+            <div class="col">
+              <span i18n="@@actorCast">Cast:</span>
+              @for (cast of actor?.myCasts; track cast) {
+                <ul>
+                  <li>
+                    {{ cast.character }} -
+                    <a [routerLink]="['/movie', cast.myMovie.id]">{{
+                      cast.myMovie.title
+                    }}</a>
+                  </li>
+                </ul>
+              }
+            </div>
+          </div>
+        </div>

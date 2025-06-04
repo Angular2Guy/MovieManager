@@ -12,165 +12,182 @@
             placeholder="movie-title"
             aria-describedby="importMovieByTitle"
             [formControl]="importMovieTitle"
-          />
+            />
           <label
             class="my-floating-labels"
             for="importMovieByTitle"
             i18n="@@searchImportMovieTitle"
             >Import Movie Title</label
-          >
-        </div>
-        <div>
-          <button
-            class="btn btn-secondary mb-3"
-            type="button"
-            [disabled]="this.importMovieTitle.value.length < 3"
-            (click)="importMovie()"
-            i18n="@@searchSearchForMovie"
-          >
-            Search for Movie
-          </button>
-        </div>
-      </div>
-      <div class="col-3">
-        <div class="form-floating">
-          <input
-            type="text"
-            id="MovieByTitle"
-            class="form-control"
-            i18n-placeholder="@@phMovieTitle"
-            placeholder="movie-title"
-            aria-describedby="searchMovieTitle"
-            [formControl]="movieTitle"
-          />
-          <label
-            class="my-floating-labels"
-            for="MovieByTitle"
-            i18n="@@searchSearchMovieByTitle"
-            >Search for Movie by Title</label
-          >
-        </div>
-        <div *ngIf="movieTitle.value" class="searchList my-dropdown-menu">
-          <span *ngIf="moviesLoading" i18n="@@loading">Loading</span>
-          <ng-container *ngFor="let movie of movies | async">
-            <a
-              class="dropdown-item"
-              *ngIf="!moviesLoading"
-              [routerLink]="['/movie', movie.id]"
-              >{{ movie.title }}</a
-            >
-          </ng-container>
-        </div>
-      </div>
-      <div class="col-3">
-        <div class="form-floating">
-          <input
-            type="text"
-            id="MovieByActor"
-            class="form-control"
-            i18n-placeholder="@@phActorName"
-            placeholder="actor-name"
-            aria-describedby="searchMovieActor"
-            [formControl]="movieActor"
-          />
-          <label
-            class="my-floating-labels"
-            for="MovieByActor"
-            i18n="@@searchSearchActorByName"
-            >Search for Actor by Name</label
-          >
-        </div>
-        <div *ngIf="movieActor.value" class="searchList my-dropdown-menu">
-          <span *ngIf="actorsLoading" 1i8n="@@loading">Loading</span>
-          <ng-container *ngFor="let actor of actors | async">
-            <a
-              class="dropdown-item"
-              *ngIf="!actorsLoading"
-              [routerLink]="['/actor', actor.id]"
-              >{{ actor.name }}</a
-            >
-          </ng-container>
-        </div>
-      </div>
-      <div class="col-2 my-dropdown">
-        <div class="dropdown mb-3">
-          <button
-            class="btn btn-secondary ngbDropdownToggle"
-            type="button"
-            (click)="dropDown()"
-            i18n="@@generes"
-          >
-            Generes
-          </button>
-          <div class="dropdown-menu my-dropdown-menu" [class.show]="showMenu">
-            <a
-              class="dropdown-item my-dropdown-item"
-              *ngFor="let gen of generes"
-              (click)="showGenere(gen.id)"
-              >{{ gen.name }}</a
             >
           </div>
+          <div>
+            <button
+              class="btn btn-secondary mb-3"
+              type="button"
+              [disabled]="this.importMovieTitle.value.length < 3"
+              (click)="importMovie()"
+              i18n="@@searchSearchForMovie"
+              >
+            Search for Movie
+          </button>
+          </div>
         </div>
-        <div
-          [style.display]="moviesByGenLoading ? 'block' : 'none'"
-          class="searchList my-dropdown-menu my-genere-menu-margin"
-        >
-          <span i18n="@@loading">Loading</span>
-        </div>
-        <div
-          *ngIf="moviesByGenere.length > 0"
-          class="searchList my-dropdown-menu my-genere-menu-margin"
-        >
-          <a
-            class="dropdown-item my-dropdown-item"
-            [routerLink]="['/movie', movie.id]"
-            *ngFor="let movie of moviesByGenere"
-            >{{ movie.title }}</a
-          >
-        </div>
-        <div class="mb-3 filter-movies">
-          <button
-            class="btn btn-secondary"
-            i18n="@@searchFilterMovies"
-            (click)="showFilterMovies()"
-          >
+        <div class="col-3">
+          <div class="form-floating">
+            <input
+              type="text"
+              id="MovieByTitle"
+              class="form-control"
+              i18n-placeholder="@@phMovieTitle"
+              placeholder="movie-title"
+              aria-describedby="searchMovieTitle"
+              [formControl]="movieTitle"
+              />
+            <label
+              class="my-floating-labels"
+              for="MovieByTitle"
+              i18n="@@searchSearchMovieByTitle"
+              >Search for Movie by Title</label
+              >
+            </div>
+            @if (movieTitle.value) {
+              <div class="searchList my-dropdown-menu">
+                @if (moviesLoading) {
+                  <span i18n="@@loading">Loading</span>
+                }
+                @for (movie of movies | async; track movie) {
+                  @if (!moviesLoading) {
+                    <a
+                      class="dropdown-item"
+                      [routerLink]="['/movie', movie.id]"
+                      >{{ movie.title }}</a
+                      >
+                    }
+                  }
+                </div>
+              }
+            </div>
+            <div class="col-3">
+              <div class="form-floating">
+                <input
+                  type="text"
+                  id="MovieByActor"
+                  class="form-control"
+                  i18n-placeholder="@@phActorName"
+                  placeholder="actor-name"
+                  aria-describedby="searchMovieActor"
+                  [formControl]="movieActor"
+                  />
+                <label
+                  class="my-floating-labels"
+                  for="MovieByActor"
+                  i18n="@@searchSearchActorByName"
+                  >Search for Actor by Name</label
+                  >
+                </div>
+                @if (movieActor.value) {
+                  <div class="searchList my-dropdown-menu">
+                    @if (actorsLoading) {
+                      <span 1i8n="@@loading">Loading</span>
+                    }
+                    @for (actor of actors | async; track actor) {
+                      @if (!actorsLoading) {
+                        <a
+                          class="dropdown-item"
+                          [routerLink]="['/actor', actor.id]"
+                          >{{ actor.name }}</a
+                          >
+                        }
+                      }
+                    </div>
+                  }
+                </div>
+                <div class="col-2 my-dropdown">
+                  <div class="dropdown mb-3">
+                    <button
+                      class="btn btn-secondary ngbDropdownToggle"
+                      type="button"
+                      (click)="dropDown()"
+                      i18n="@@generes"
+                      >
+            Generes
+          </button>
+                    <div class="dropdown-menu my-dropdown-menu" [class.show]="showMenu">
+                      @for (gen of generes; track gen) {
+                        <a
+                          class="dropdown-item my-dropdown-item"
+                          (click)="showGenere(gen.id)"
+                          >{{ gen.name }}</a
+                          >
+                        }
+                      </div>
+                    </div>
+                    <div
+                      [style.display]="moviesByGenLoading ? 'block' : 'none'"
+                      class="searchList my-dropdown-menu my-genere-menu-margin"
+                      >
+                      <span i18n="@@loading">Loading</span>
+                    </div>
+                    @if (moviesByGenere.length > 0) {
+                      <div
+                        class="searchList my-dropdown-menu my-genere-menu-margin"
+                        >
+                        @for (movie of moviesByGenere; track movie) {
+                          <a
+                            class="dropdown-item my-dropdown-item"
+                            [routerLink]="['/movie', movie.id]"
+                            >{{ movie.title }}</a
+                            >
+                          }
+                        </div>
+                      }
+                      <div class="mb-3 filter-movies">
+                        <button
+                          class="btn btn-secondary"
+                          i18n="@@searchFilterMovies"
+                          (click)="showFilterMovies()"
+                          >
             Filter Movies
           </button>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col" #movies *ngIf="true">
-        <table class="table">
-          <thead #header>
-            <tr>
-              <th i18n="@@title">Title</th>
-              <th i18n="@@release">Release</th>
-              <th i18n="@@generes">Generes</th>
-              <th i18n="@@overview">Overview</th>
-            </tr>
-          </thead>
-
-          <tbody #container>
-            <tr
-              *ngFor="let movie of scrollMovies"
-              (dblclick)="movieDetails(movie)"
-              class="import-movie"
-            >
-              <td class="my-text-center">{{ movie.title }}</td>
-              <td class="my-text-center">
-                {{ movie.release_date | date : "dd.MM.yyyy" }}
-              </td>
-              <td class="my-list-center">
-                <ul *ngFor="let genere of movie?.myGenere">
-                  <li>{{ genere.name }}</li>
-                </ul>
-              </td>
-              <td class="my-text-center">{{ movie.overview }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    @if (true) {
+                      <div class="col" #movies>
+                        <table class="table">
+                          <thead #header>
+                            <tr>
+                              <th i18n="@@title">Title</th>
+                              <th i18n="@@release">Release</th>
+                              <th i18n="@@generes">Generes</th>
+                              <th i18n="@@overview">Overview</th>
+                            </tr>
+                          </thead>
+                          <tbody #container>
+                            @for (movie of scrollMovies; track movie) {
+                              <tr
+                                (dblclick)="movieDetails(movie)"
+                                class="import-movie"
+                                >
+                                <td class="my-text-center">{{ movie.title }}</td>
+                                <td class="my-text-center">
+                                  {{ movie.release_date | date : "dd.MM.yyyy" }}
+                                </td>
+                                <td class="my-list-center">
+                                  @for (genere of movie?.myGenere; track genere) {
+                                    <ul>
+                                      <li>{{ genere.name }}</li>
+                                    </ul>
+                                  }
+                                </td>
+                                <td class="my-text-center">{{ movie.overview }}</td>
+                              </tr>
+                            }
+                          </tbody>
+                        </table>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>

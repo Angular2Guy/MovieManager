@@ -5,62 +5,72 @@
         <button class="btn btn-primary back-btn" (click)="back()" i18n="@@back">
           Back
         </button>
-        <div
-          class="info-text"
-          *ngIf="importState === ImportState.Importing"
-          i18n="@@movieImportImporting"
-        >
+        @if (importState === ImportState.Importing) {
+          <div
+            class="info-text"
+            i18n="@@movieImportImporting"
+            >
           Importing...
         </div>
-        <div
-          class="info-text"
-          *ngIf="importState === ImportState.MoviesLoading"
-          i18n="@@movieImportMoviesLoading"
-        >
+        }
+        @if (importState === ImportState.MoviesLoading) {
+          <div
+            class="info-text"
+            i18n="@@movieImportMoviesLoading"
+            >
           Movies loading...
         </div>
-        <div
-          class="info-text"
-          *ngIf="importState === ImportState.Idle && importMovies.length === 0"
-          i18n="@@movieImportNoMoviesFound"
-        >
+        }
+        @if (importState === ImportState.Idle && importMovies.length === 0) {
+          <div
+            class="info-text"
+            i18n="@@movieImportNoMoviesFound"
+            >
           No Movies found
         </div>
-        <div
-          class="info-text success-text"
-          *ngIf="importState === ImportState.ImportSuccess"
-          i18n="@@movieImportSuccess"
-        >
+        }
+        @if (importState === ImportState.ImportSuccess) {
+          <div
+            class="info-text success-text"
+            i18n="@@movieImportSuccess"
+            >
           Movie import successful. Redirecting back.
         </div>
-        <div
-          class="info-text failure-text"
-          *ngIf="importState === ImportState.ImportFailed"
-          i18n="@@movieImportFailed"
-        >
+        }
+        @if (importState === ImportState.ImportFailed) {
+          <div
+            class="info-text failure-text"
+            i18n="@@movieImportFailed"
+            >
           Movie import failed. Please try again later. Redirecting back.
         </div>
-        <div class="info-text" *ngIf="!(importState === ImportState.Idle)">
-          <img src="assets/svg/spinner.svg" />
-        </div>
-        <table class="table" *ngIf="importMovies.length > 0">
-          <tr>
-            <th i18n="@@title">Title</th>
-            <th i18n="@@release">Release</th>
-            <th i18n="@@overview">Overview</th>
-          </tr>
-          <tr
-            *ngFor="let movie of importMovies"
-            (click)="importSelMovie(movie)"
-            class="import-movie"
-          >
-            <td class="my-text-center">{{ movie.title }}</td>
-            <td class="my-text-center">
-              {{ movie.release_date | date : "dd.MM.yyyy" }}
-            </td>
-            <td class="my-text-center">{{ movie.overview }}</td>
-          </tr>
-        </table>
+        }
+        @if (!(importState === ImportState.Idle)) {
+          <div class="info-text">
+            <img src="assets/svg/spinner.svg" />
+          </div>
+        }
+        @if (importMovies.length > 0) {
+          <table class="table">
+            <tr>
+              <th i18n="@@title">Title</th>
+              <th i18n="@@release">Release</th>
+              <th i18n="@@overview">Overview</th>
+            </tr>
+            @for (movie of importMovies; track movie) {
+              <tr
+                (click)="importSelMovie(movie)"
+                class="import-movie"
+                >
+                <td class="my-text-center">{{ movie.title }}</td>
+                <td class="my-text-center">
+                  {{ movie.release_date | date : "dd.MM.yyyy" }}
+                </td>
+                <td class="my-text-center">{{ movie.overview }}</td>
+              </tr>
+            }
+          </table>
+        }
       </div>
     </div>
   </div>
