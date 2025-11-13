@@ -13,9 +13,13 @@
 import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import {
+  NgbDatepickerModule,
   NgbDateStruct,
   NgbOffcanvas,
+  NgbOffcanvasModule,
+  NgbPopoverModule,
   NgbRatingConfig,
+  NgbRatingModule,
   OffcanvasDismissReasons,
 } from "@ng-bootstrap/ng-bootstrap";
 import { Actor, Gender } from "../model/actor";
@@ -25,12 +29,20 @@ import { ActorsService } from "../services/actors.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SearchTerm } from "../model/search-term";
 import { Operator, SearchString } from "../model/search-string";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: "app-filter-actors",
+    imports: [CommonModule,
+    NgbOffcanvasModule,
+    NgbDatepickerModule,
+    NgbRatingModule,
+    NgbPopoverModule,
+    FormsModule,
+    ReactiveFormsModule],
     templateUrl: "./filter-actors.component.html",
     styleUrls: ["./filter-actors.component.scss"],
-    standalone: false
 })
 export class FilterActorsComponent implements OnInit {
   protected gender = Gender;

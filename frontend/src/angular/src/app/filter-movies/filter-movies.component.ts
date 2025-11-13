@@ -13,9 +13,14 @@
 import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { Router } from "@angular/router";
 import {
+  NgbDatepickerModule,
   NgbDateStruct,
+  NgbDropdownModule,
   NgbOffcanvas,
+  NgbOffcanvasModule,
+  NgbPopoverModule,
   NgbRatingConfig,
+  NgbRatingModule,
   OffcanvasDismissReasons,
 } from "@ng-bootstrap/ng-bootstrap";
 import { MovieFilterCriteria } from "../model/movie-filter-criteria";
@@ -26,12 +31,22 @@ import { FulltextFilter, QueryParam } from "../model/common";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { SearchTerm } from "../model/search-term";
 import { Operator, SearchString } from "../model/search-string";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: "app-filter-movies",
+    imports: [
+      CommonModule,
+    FormsModule,  
+    ReactiveFormsModule,
+    NgbOffcanvasModule,
+    NgbDatepickerModule,
+    NgbDropdownModule,
+    NgbRatingModule,
+    NgbPopoverModule],
     templateUrl: "./filter-movies.component.html",
-    styleUrls: ["./filter-movies.component.scss"],
-    standalone: false
+    styleUrls: ["./filter-movies.component.scss"],    
 })
 export class FilterMoviesComponent implements OnInit {
   protected filteredMovies: Movie[] = [];

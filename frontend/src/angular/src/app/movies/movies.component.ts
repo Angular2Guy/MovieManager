@@ -12,16 +12,17 @@
  */
 import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { MoviesService } from "../services/movies.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { Movie } from "../model/movie";
 import { QueryParam } from "../model/common";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: "app-movies",
+    imports: [RouterModule,CommonModule],
     templateUrl: "./movies.component.html",
-    styleUrls: ["./movies.component.scss"],
-    standalone: false
+    styleUrls: ["./movies.component.scss"],    
 })
 export class MoviesComponent implements OnInit {
   protected movie: Movie = null;

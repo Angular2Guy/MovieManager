@@ -26,7 +26,7 @@ import { Genere } from "../model/genere";
 import { ActorsService } from "../services/actors.service";
 import { MoviesService } from "../services/movies.service";
 import { iif, of, Observable } from "rxjs";
-import { FormControl } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
   tap,
   debounceTime,
@@ -34,16 +34,18 @@ import {
   switchMap,
   catchError,
 } from "rxjs/operators";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { QueryParam } from "../model/common";
 import { TokenService } from "ngx-simple-charts/base-service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { CommonModule } from "@angular/common";
+import { LoginComponent } from "../login/login.component";
 
 @Component({
     selector: "app-search",
+    imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, LoginComponent],
     templateUrl: "./search.component.html",
-    styleUrls: ["./search.component.scss"],
-    standalone: false
+    styleUrls: ["./search.component.scss"],    
 })
 export class SearchComponent implements OnInit, AfterViewInit {
   @ViewChild("movies") moviesRef: ElementRef;

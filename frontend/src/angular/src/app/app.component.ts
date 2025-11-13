@@ -11,14 +11,14 @@
    limitations under the License.
  */
 import { Component } from "@angular/core";
-import { Router } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
 import { TokenService } from "ngx-simple-charts/base-service";
 
 @Component({
     selector: "app-root",
+    imports: [RouterModule],
     templateUrl: "./app.component.html",
-    styleUrls: ["./app.component.scss"],
-    standalone: false
+    styleUrls: ["./app.component.scss"],    
 })
 export class AppComponent {
   protected title = "app";

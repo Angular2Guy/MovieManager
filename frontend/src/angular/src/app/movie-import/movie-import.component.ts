@@ -11,11 +11,12 @@
    limitations under the License.
  */
 import { Component, DestroyRef, OnInit, inject } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { QueryParam } from "../model/common";
 import { Movie } from "../model/movie";
 import { MoviesService } from "../services/movies.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { CommonModule } from "@angular/common";
 
 enum ImportState {
   Idle = "idle",
@@ -27,9 +28,9 @@ enum ImportState {
 
 @Component({
     selector: "app-movie-import",
+    imports: [CommonModule, RouterModule],
     templateUrl: "./movie-import.component.html",
-    styleUrls: ["./movie-import.component.scss"],
-    standalone: false
+    styleUrls: ["./movie-import.component.scss"],    
 })
 export class MovieImportComponent implements OnInit {
   protected ImportState = ImportState;

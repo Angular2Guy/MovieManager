@@ -11,16 +11,17 @@
  */
 import { Component, DestroyRef, OnInit, inject } from "@angular/core";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterModule } from "@angular/router";
 import { Actor, Gender } from "../model/actor";
 import { QueryParam } from "../model/common";
 import { ActorsService } from "../services/actors.service";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: "app-actors",
+    imports: [CommonModule,RouterModule],
     templateUrl: "./actors.component.html",
-    styleUrls: ["./actors.component.scss"],
-    standalone: false
+    styleUrls: ["./actors.component.scss"],    
 })
 export class ActorsComponent implements OnInit {
   protected gender = Gender;

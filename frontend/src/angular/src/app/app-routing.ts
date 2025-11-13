@@ -10,37 +10,27 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { NgModule } from "@angular/core";
-import { Routes, RouterModule } from "@angular/router";
+import { Routes } from "@angular/router";
 import { SearchComponent } from "./search/search.component";
-import { MoviesComponent } from "./movies/movies.component";
-import { ActorsComponent } from "./actors/actors.component";
-import { MovieImportComponent } from "./movie-import/movie-import.component";
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: "search", component: SearchComponent },
-  { path: "movie/:id", component: MoviesComponent },
-  { path: "actor/:id", component: ActorsComponent },
-  { path: "movie-import", component: MovieImportComponent },
+  { path: "movie/:id", loadComponent: () => import("./movies/movies.component").then(m => m.MoviesComponent) },
+  { path: "actor/:id",  loadComponent: () => import("./actors/actors.component").then(m => m.ActorsComponent) },
+  { path: "movie-import", loadComponent: () => import("./movie-import/movie-import.component").then(m => m.MovieImportComponent) },
   {
     path: "filter-movies",
-    loadChildren: () =>
-      import("./filter-movies/filter-movies.module").then(
-        (m) => m.FilterMoviesModule
+    loadComponent: () =>
+      import("./filter-movies/filter-movies.component").then(
+        (m) => m.FilterMoviesComponent
       ),
   },
   {
     path: "filter-actors",
-    loadChildren: () =>
-      import("./filter-actors/filter-actors.module").then(
-        (m) => m.FilterActorsModule
+    loadComponent: () =>
+      import("./filter-actors/filter-actors.component").then(
+        (m) => m.FilterActorsComponent
       ),
   },
   { path: "**", redirectTo: "/search", pathMatch: "full" },
 ];
-
-@NgModule({
-  imports: [RouterModule.forRoot(routes, {})],
-  exports: [RouterModule],
-})
-export class AppRoutingModule {}
