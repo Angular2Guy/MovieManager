@@ -11,10 +11,9 @@
    limitations under the License.
  */
 import { Routes } from "@angular/router";
-import { SearchComponent } from "./search/search.component";
 
 export const routes: Routes = [
-  { path: "search", component: SearchComponent },
+  { path: "search", loadComponent: () => import("./search/search.component").then(m => m.SearchComponent) },
   { path: "movie/:id", loadComponent: () => import("./movies/movies.component").then(m => m.MoviesComponent) },
   { path: "actor/:id",  loadComponent: () => import("./actors/actors.component").then(m => m.ActorsComponent) },
   { path: "movie-import", loadComponent: () => import("./movie-import/movie-import.component").then(m => m.MovieImportComponent) },

@@ -13,7 +13,7 @@
 import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { routes } from './app-routing.module';
+import { routes } from './app-routing';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { NgxServiceModule } from 'ngx-simple-charts/base-service';
