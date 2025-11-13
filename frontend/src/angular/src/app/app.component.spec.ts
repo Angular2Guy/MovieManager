@@ -13,20 +13,19 @@
 import { provideHttpClient, withInterceptorsFromDi } from "@angular/common/http";
 import { TestBed, waitForAsync } from "@angular/core/testing";
 import { RouterTestingModule } from "@angular/router/testing";
-import { NgxServiceModule } from "ngx-simple-charts/base-service";
+import { NgxServiceModule, TokenService } from "ngx-simple-charts/base-service";
 import { AppComponent } from "./app.component";
 
 describe("AppComponent", () => {
   beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-    declarations: [AppComponent],
-    imports: [RouterTestingModule,
+    TestBed.configureTestingModule({    
+    imports: [RouterTestingModule,AppComponent,
         NgxServiceModule.forRoot({
             tokenRefreshPath: "/rest/auth/refreshToken",
             logoutPath: "/rest/auth/logout",
             loginRoute: "/",
         })],
-    providers: [provideHttpClient(withInterceptorsFromDi())]
+    providers: [provideHttpClient(withInterceptorsFromDi()), TokenService]
 }).compileComponents();
   }));
   it("should create the app", waitForAsync(() => {
