@@ -59,6 +59,7 @@ public class ActorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
     private JsonMapper jsonMapper;
 
     @MockitoBean
