@@ -28,8 +28,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.event.TransactionalEventListener;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ch.xxx.moviemanager.adapter.config.KafkaConfig;
 import ch.xxx.moviemanager.domain.exceptions.AuthenticationException;
 import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
@@ -39,19 +37,20 @@ import ch.xxx.moviemanager.domain.model.dto.SigninEvent;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.domain.producer.EventProducer;
 import jakarta.transaction.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 @Profile("kafka | prod-kafka")
 public class KafkaProducer implements EventProducer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaProducer.class);
 	private final KafkaTemplate<String, String> kafkaTemplate;
-	private final ObjectMapper objectMapper;
+	private final JsonMapper jsonMapper;
 	private final AdminClient adminClient;
 
-	public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper,
+	public KafkaProducer(KafkaTemplate<String, String> kafkaTemplate, JsonMapper jsonMapper,
 			AdminClient adminClient) {
 		this.kafkaTemplate = kafkaTemplate;
-		this.objectMapper = objectMapper;
+		this.jsonMapper = jsonMapper;
 		this.adminClient = adminClient;
 	}
 
@@ -65,7 +64,7 @@ public class KafkaProducer implements EventProducer {
 	@Override
 	public void sendLogoutMsg(RevokedTokenDto revokedTokenDto) {
 		try {
-			String msg = this.objectMapper.writeValueAsString(revokedTokenDto);
+			String msg = this.jsonMapper.writeValueAsString(revokedTokenDto);
 			CompletableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
 					.send(KafkaConfig.USER_LOGOUT_TOPIC, revokedTokenDto.getUuid(), msg);
 			listenableFuture.get(2, TimeUnit.SECONDS);
@@ -86,7 +85,7 @@ public class KafkaProducer implements EventProducer {
 	@Override
 	public void sendNewUserMsg(UserDto appUserDto) {
 		try {
-			String msg = this.objectMapper.writeValueAsString(appUserDto);
+			String msg = this.jsonMapper.writeValueAsString(appUserDto);
 			CompletableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
 					.send(KafkaConfig.NEW_USER_TOPIC, appUserDto.getUsername(), msg);
 			listenableFuture.get(2, TimeUnit.SECONDS);

@@ -30,7 +30,7 @@ public class ApplicationConfig {
 		RequestConfig requestConfig = RequestConfig.custom().setResponseTimeout(Timeout.ofMilliseconds(5000)).build();
 		CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultRequestConfig(requestConfig).build();
 		var factory = new HttpComponentsClientHttpRequestFactory(httpClient);
-		factory.setConnectTimeout(2000);
+		factory.setReadTimeout(3000);
 		factory.setConnectionRequestTimeout(2000);
 		return RestClient.builder().requestFactory(factory).build();
 	}

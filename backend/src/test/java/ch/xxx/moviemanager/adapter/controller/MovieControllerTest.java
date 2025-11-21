@@ -25,8 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -43,8 +42,9 @@ import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 import ch.xxx.moviemanager.usecase.service.MovieService;
 import jakarta.servlet.http.HttpServletRequest;
 
+
 @WebMvcTest(controllers = MovieController.class, includeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
-		SecurityConfig.class, JwtTokenService.class }))
+		SecurityConfig.class, JwtTokenService.class }))		
 @WithMockUser
 public class MovieControllerTest {
 	private static final String TEST_SECRECT_KEY = "w1a7WlSUrqEfDvlVd47SGlwSb9CJk1BymiIhXXZP82MyNNxsY1krgpb0bQt-Z9uohLRR6afgBsRHP_qiaHQhb"

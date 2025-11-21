@@ -23,8 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.model.entity.ActorRepository;
@@ -35,7 +35,7 @@ import ch.xxx.moviemanager.domain.model.entity.MovieRepository;
 import ch.xxx.moviemanager.domain.model.entity.User;
 import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 public class MovieServiceTest {
 	@Mock
 	private MovieRepository movieRep;

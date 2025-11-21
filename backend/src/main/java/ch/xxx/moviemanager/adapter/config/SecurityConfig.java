@@ -12,10 +12,8 @@
  */
 package ch.xxx.moviemanager.adapter.config;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,13 +22,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 
 @Configuration
 @EnableWebSecurity
-@Order(SecurityProperties.DEFAULT_FILTER_ORDER)
 public class SecurityConfig {
 	private final JwtTokenService jwtTokenService;
 
@@ -42,8 +38,8 @@ public class SecurityConfig {
 	public SecurityFilterChain configure(HttpSecurity http) throws Exception {
 		JwtTokenFilter customFilter = new JwtTokenFilter(jwtTokenService);
 		HttpSecurity httpSecurity = http
-				.authorizeHttpRequests(authorize -> authorize.requestMatchers(AntPathRequestMatcher.antMatcher("/rest/auth/**")).permitAll()
-						.requestMatchers(AntPathRequestMatcher.antMatcher("/rest/**")).authenticated().requestMatchers(AntPathRequestMatcher.antMatcher("/**")).permitAll())
+				.authorizeHttpRequests(authorize -> authorize.requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/rest/auth/**")).permitAll()
+						.requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/rest/**")).authenticated().requestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/**")).permitAll())
 				.csrf(myCsrf -> myCsrf.disable())
 				.sessionManagement(mySm -> mySm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.headers(myHeaders -> myHeaders.xssProtection(myXss -> myXss.headerValue(HeaderValue.ENABLED)))

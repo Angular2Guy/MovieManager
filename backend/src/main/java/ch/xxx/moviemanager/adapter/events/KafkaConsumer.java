@@ -21,37 +21,35 @@ import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.retrytopic.TopicSuffixingStrategy;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.xxx.moviemanager.adapter.config.KafkaConfig;
 import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
 import ch.xxx.moviemanager.domain.model.dto.RevokedTokenDto;
 import ch.xxx.moviemanager.domain.model.dto.UserDto;
 import ch.xxx.moviemanager.usecase.service.UserDetailServiceEvents;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 @Profile("kafka | prod-kafka")
 public class KafkaConsumer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
-	private final ObjectMapper objectMapper;
+	private final JsonMapper jsonMapper;
 	private final UserDetailServiceEvents appUserService;
 	private final KafkaListenerDltHandler kafkaListenerDltHandler;
 
-	public KafkaConsumer(ObjectMapper objectMapper, UserDetailServiceEvents appUserService, KafkaListenerDltHandler kafkaListenerDltHandler) {
-		this.objectMapper = objectMapper;
+	public KafkaConsumer(JsonMapper jsonMapper, UserDetailServiceEvents appUserService, KafkaListenerDltHandler kafkaListenerDltHandler) {
+		this.jsonMapper = jsonMapper;
 		this.appUserService = appUserService;
 		this.kafkaListenerDltHandler = kafkaListenerDltHandler;
 	}
 
-	@RetryableTopic(kafkaTemplate = "kafkaRetryTemplate", attempts = "3", backoff = @Backoff(delay = 1000, multiplier = 2.0), autoCreateTopics = "true", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
+	@RetryableTopic(kafkaTemplate = "kafkaRetryTemplate", attempts = "3", autoCreateTopics = "true", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
 	@KafkaListener(topics = KafkaConfig.NEW_USER_TOPIC)
 	public void consumerForNewUserTopic(String message) {
 		LOGGER.info("consumerForNewUserTopic [{}]", message);
 		try {
-			UserDto dto = this.objectMapper.readValue(message, UserDto.class);
+			UserDto dto = this.jsonMapper.readValue(message, UserDto.class);
 			this.appUserService.signinMsg(dto);
 		} catch (Exception e) {
 			LOGGER.warn("send failed consumerForNewUserTopic [{}]", message);
@@ -64,12 +62,12 @@ public class KafkaConsumer {
 		LOGGER.info(in + " from " + topic);
 	}
 
-	@RetryableTopic(attempts = "3", backoff = @Backoff(delay = 1000, multiplier = 2.0), autoCreateTopics = "true", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
+	@RetryableTopic(attempts = "3", autoCreateTopics = "true", topicSuffixingStrategy = TopicSuffixingStrategy.SUFFIX_WITH_INDEX_VALUE)
 	@KafkaListener(topics = KafkaConfig.USER_LOGOUT_TOPIC)
 	public void consumerForUserLogoutsTopic(String message)  {
 		LOGGER.info("consumerForUserLogoutsTopic [{}]", message);
 		try {
-			RevokedTokenDto dto = this.objectMapper.readValue(message, RevokedTokenDto.class);
+			RevokedTokenDto dto = this.jsonMapper.readValue(message, RevokedTokenDto.class);
 			this.appUserService.logoutMsg(dto);
 		} catch (Exception e) {
 			LOGGER.warn("send failed consumerForUserLogoutsTopic [{}]", message);

@@ -18,38 +18,35 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import jakarta.transaction.Transactional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ch.xxx.moviemanager.adapter.config.KafkaConfig;
 import ch.xxx.moviemanager.domain.model.dto.KafkaEventDto;
+import jakarta.transaction.Transactional;
+import tools.jackson.databind.json.JsonMapper;
 
 @Transactional
 @Service
 public class KafkaListenerDltHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(KafkaConsumer.class);
 	private final KafkaTemplate<String, String> kafkaTemplate;
-	private final ObjectMapper objectMapper;
+	private final JsonMapper jsonMapper;
 
-	public KafkaListenerDltHandler(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+	public KafkaListenerDltHandler(KafkaTemplate<String, String> kafkaTemplate, JsonMapper jsonMapper) {
 		this.kafkaTemplate = kafkaTemplate;
-		this.objectMapper = objectMapper;
+		this.jsonMapper = jsonMapper;
 	}
 
 	public boolean sendToDefaultDlt(KafkaEventDto dto) {
 		try {
 			CompletableFuture<SendResult<String, String>> listenableFuture = this.kafkaTemplate
-					.send(KafkaConfig.DEFAULT_DLT_TOPIC, UUID.randomUUID().toString(), this.objectMapper.writeValueAsString(dto));
+					.send(KafkaConfig.DEFAULT_DLT_TOPIC, UUID.randomUUID().toString(), this.jsonMapper.writeValueAsString(dto));
 			listenableFuture.get(3, TimeUnit.SECONDS);
-		} catch (InterruptedException | ExecutionException | TimeoutException | JsonProcessingException e) {
+		} catch (InterruptedException | ExecutionException | TimeoutException e) {
 			throw new RuntimeException(e);
 		}
 		LOGGER.info("Message send to {}. {}", KafkaConfig.DEFAULT_DLT_TOPIC, dto.toString());

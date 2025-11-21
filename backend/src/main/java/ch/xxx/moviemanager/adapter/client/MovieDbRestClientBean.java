@@ -20,24 +20,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import ch.xxx.moviemanager.domain.client.MovieDbRestClient;
 import ch.xxx.moviemanager.domain.model.dto.ActorDto;
 import ch.xxx.moviemanager.domain.model.dto.MovieDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperCastDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperGenereDto;
 import ch.xxx.moviemanager.domain.model.dto.WrapperMovieDto;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 public class MovieDbRestClientBean implements MovieDbRestClient {
 	private final static Logger LOG = LoggerFactory.getLogger(MovieDbRestClientBean.class);
-	private final ObjectMapper objectMapper;
+	private final JsonMapper jsonMapper;
 	private final RestClient restClient;
 
-	public MovieDbRestClientBean(ObjectMapper objectMapper, RestClient restClient) {
-		this.objectMapper = objectMapper;		
+	public MovieDbRestClientBean(JsonMapper jsonMapper, RestClient restClient) {
+		this.jsonMapper = jsonMapper;		
 		this.restClient = restClient;
 	}
 
@@ -58,11 +56,7 @@ public class MovieDbRestClientBean implements MovieDbRestClient {
 
 	private <T> T parseJsonToDto(String bodyStr, Class<T> result) {
 		LOG.info(bodyStr);
-		try {
-			return this.objectMapper.readValue(bodyStr, result);
-		} catch (JacksonException e) {
-			throw new RuntimeException("Failed to parse movie json.", e);
-		}
+		return this.jsonMapper.readValue(bodyStr, result);
 	}
 
 	public WrapperCastDto fetchCast(String moviedbkey, Long movieId) {

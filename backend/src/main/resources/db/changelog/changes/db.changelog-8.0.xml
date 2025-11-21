@@ -130,4 +130,34 @@
 			<column name="serialized_event" type="varchar(32767)"></column>
 		</createTable>
 	</changeSet>
+	<changeSet id="43" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="event_publication" columnName="completion_attempts" />
+			</not>
+		</preConditions>
+		<addColumn tableName="event_publication">
+			<column type="bigint" name="completion_attempts" />
+		</addColumn>
+	</changeSet>
+	<changeSet id="44" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="event_publication" columnName="last_resubmission_date" />
+			</not>
+		</preConditions>
+		<addColumn tableName="event_publication">
+			<column type="timestamp" name="last_resubmission_date" />
+		</addColumn>
+	</changeSet>
+		<changeSet id="45" author="angular2guy">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="event_publication" columnName="status" />
+			</not>
+		</preConditions>
+		<addColumn tableName="event_publication">
+			<column type="varchar(20)" name="status" />
+		</addColumn>
+	</changeSet>	
 </databaseChangeLog>

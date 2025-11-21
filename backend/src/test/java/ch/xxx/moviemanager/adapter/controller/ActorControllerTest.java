@@ -26,7 +26,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
@@ -34,8 +34,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ch.xxx.moviemanager.adapter.config.SecurityConfig;
 import ch.xxx.moviemanager.domain.common.Role;
@@ -48,6 +46,8 @@ import ch.xxx.moviemanager.usecase.mapper.DefaultMapper;
 import ch.xxx.moviemanager.usecase.service.ActorService;
 import ch.xxx.moviemanager.usecase.service.JwtTokenService;
 import jakarta.servlet.http.HttpServletRequest;
+import tools.jackson.databind.json.JsonMapper;
+
 
 @WebMvcTest(controllers = ActorController.class, includeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {
 		SecurityConfig.class, JwtTokenService.class }))
@@ -59,6 +59,7 @@ public class ActorControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    private JsonMapper jsonMapper;
 
     @MockitoBean
     private ActorService service;
@@ -150,7 +151,7 @@ public class ActorControllerTest {
 
         mockMvc.perform(post("/rest/actor/filter-criteria")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(criteria))
+                .content(this.jsonMapper.writeValueAsString(criteria))
                 .header(JwtUtils.AUTHORIZATION, String.format("Bearer %s", this.token))
                 .servletPath("/rest/actor/filter-criteria"))
                 .andExpect(status().isOk())
@@ -166,7 +167,7 @@ public class ActorControllerTest {
 
         mockMvc.perform(post("/rest/actor/searchterm")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(searchTerm))
+                .content(this.jsonMapper.writeValueAsString(searchTerm))
                 .header(JwtUtils.AUTHORIZATION, String.format("Bearer %s", this.token))
                 .servletPath("/rest/actor/searchterm"))
                 .andExpect(status().isOk())
