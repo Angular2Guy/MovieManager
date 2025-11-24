@@ -27,7 +27,7 @@ http://www.apache.org/licenses/LICENSE-2.0
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>25</java.version>
-		<spring-modulith.version>2.0.0-RC1</spring-modulith.version>
+		<spring-modulith.version>2.0.0</spring-modulith.version>
 		<!-- <npm.test.script>test-chromium</npm.test.script> -->
 		<npm.test.script>test</npm.test.script>
 	</properties>
