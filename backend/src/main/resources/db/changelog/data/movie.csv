@@ -1,2 +1,2 @@
 id,overview,release_date,title,movie_id,runtime,revenue,vote_average,vote_count,budget
-1,Test Movie overview,2015-01-01 12:00:00,Test Movie Title,1,95,600000000,6.6,10102,300000000
+1,"Test Movie overview",2015-01-01 12:00:00,"Test Movie Title",1,95,600000000,6.6,10102,300000000
