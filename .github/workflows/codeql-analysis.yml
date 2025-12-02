@@ -74,16 +74,25 @@ jobs:
       uses: github/codeql-action/autobuild@v3
 
     - name: Find fat jar
+      if: matrix.language == 'java'
       id: jar
       run: |
         JAR_PATH=$(find . -type f -name "*SNAPSHOT.jar" | head -n 1)
         echo "Found JAR: $JAR_PATH"
         echo "jar=$JAR_PATH" >> $GITHUB_OUTPUT
 
-    - name: Unpack fat jar
+    - name: Unpack fat jar and create AOT cache
+      if: matrix.language == 'java'
+      id: aot
       run: |
         java -Djarmode=tools -jar ${{ steps.jar.outputs.jar }} extract --destination extracted
-        ls -las extracted/*
+        java -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:AOTCacheOutput=app.aot -Dspring.context.exit=onRefresh -Djava.security.egd=file:/dev/./urandom -jar extracted/moviemanager-backend-0.0.1-SNAPSHOT.jar  --spring.profiles.active=prod
+        AOT_PATH=$(find . -type f -name "app.aot" | head -n 1)
+        echo "Found file: $AOT_PATH"
+        echo "aot=$AOT_PATH" >> $GITHUB_OUTPUT
+        EXTRACTED_PATH=$(find . -type d -name "extracted" | head -n 1)
+        echo "Found directory: $EXTRACTED_PATH"
+        echo "extracted=$EXTRACTED_PATH" >> $GITHUB_OUTPUT
 
 
 #    - name: Login to Docker Hub
@@ -94,6 +103,7 @@ jobs:
 
     - name: Build and push
       uses: docker/build-push-action@v6
+      if: matrix.language == 'java'
       with:
         context: .
         file: ./Dockerfile
