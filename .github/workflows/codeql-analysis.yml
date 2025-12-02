@@ -76,7 +76,7 @@ jobs:
     - name: Find fat jar
       id: jar
       run: |
-        JAR_PATH=$(find . -type f -name "*.jar" | head -n 1)
+        JAR_PATH=$(find . -type f -name "*SNAPSHOT.jar" | head -n 1)
         echo "Found JAR: $JAR_PATH"
         echo "jar=$JAR_PATH" >> $GITHUB_OUTPUT
 
