@@ -89,6 +89,10 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
+        context: .
+        file: ./Dockerfile
+        build-args: |
+          JAR_PATH=${{ steps.jar.outputs.jar }}        
         push: false
         tags: angular2guy/moviemanager:latest
 
