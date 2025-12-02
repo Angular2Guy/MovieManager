@@ -86,13 +86,14 @@ jobs:
         echo "Found JAR: $JAR_PATH"
         echo "jar=$JAR_PATH" >> $GITHUB_OUTPUT
 
+#        java -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:AOTCacheOutput=app.aot -Dspring.context.exit=onRefresh -Djava.security.egd=file:/dev/./urandom -jar extracted/moviemanager-backend-0.0.1-SNAPSHOT.jar  --spring.profiles.active=prod
+
     - name: Unpack fat jar and create AOT cache
       if: matrix.language == 'java'
       id: aot
       run: |
         unset JAVA_TOOL_OPTIONS
         java -Djarmode=tools -jar ${{ steps.jar.outputs.jar }} extract --destination extracted
-#        java -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:AOTCacheOutput=app.aot -Dspring.context.exit=onRefresh -Djava.security.egd=file:/dev/./urandom -jar extracted/moviemanager-backend-0.0.1-SNAPSHOT.jar  --spring.profiles.active=prod
         java -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:AOTMode=record -XX:AOTConfiguration=app.aotconf -Dspring.context.exit=onRefresh -Djava.security.egd=file:/dev/./urandom -jar extracted/moviemanager-backend-0.0.1-SNAPSHOT.jar  --spring.profiles.active=prod
         java -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:AOTMode=create -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -Dspring.context.exit=onRefresh -Djava.security.egd=file:/dev/./urandom -jar extracted/moviemanager-backend-0.0.1-SNAPSHOT.jar  --spring.profiles.active=prod
         AOT_PATH=$(find . -type f -name "app.aot" | head -n 1)
