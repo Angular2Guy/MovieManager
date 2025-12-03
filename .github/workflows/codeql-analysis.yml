@@ -91,14 +91,8 @@ jobs:
     - name: Unpack fat jar and create AOT cache
       if: matrix.language == 'java'
       id: aot
-      run: |
-        unset JAVA_TOOL_OPTIONS
-        java -Djarmode=tools -jar ${{ steps.jar.outputs.jar }} extract --destination extracted
-        java -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:AOTMode=record -XX:AOTConfiguration=app.aotconf -Dspring.context.exit=onRefresh -Djava.security.egd=file:/dev/./urandom -jar extracted/moviemanager-backend-0.0.1-SNAPSHOT.jar  --spring.profiles.active=prod
-        java -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:AOTMode=create -XX:AOTConfiguration=app.aotconf -XX:AOTCache=app.aot -Dspring.context.exit=onRefresh -Djava.security.egd=file:/dev/./urandom -jar extracted/moviemanager-backend-0.0.1-SNAPSHOT.jar  --spring.profiles.active=prod
-        AOT_PATH=$(find . -type f -name "app.aot" | head -n 1)
-        echo "Found file: $AOT_PATH"
-        echo "aot=$AOT_PATH" >> $GITHUB_OUTPUT
+      run: |        
+        java -Djarmode=tools -jar ${{ steps.jar.outputs.jar }} extract --destination extracted        
         EXTRACTED_PATH=$(find . -type d -name "extracted" | head -n 1)
         echo "Found directory: $EXTRACTED_PATH"
         echo "extracted=$EXTRACTED_PATH" >> $GITHUB_OUTPUT
@@ -117,7 +111,8 @@ jobs:
         context: .
         file: ./Dockerfile
         build-args: |
-          JAR_PATH=${{ steps.jar.outputs.jar }}        
+          JAR_PATH=${{ steps.jar.outputs.jar }}
+          LIB_PATH=${{ steps.aot.outputs.extracted }}        
         push: false
         tags: angular2guy/moviemanager:latest
 
