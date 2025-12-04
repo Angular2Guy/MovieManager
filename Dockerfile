@@ -1,5 +1,5 @@
 #FROM eclipse-temurin:25-jdk-alpine
-FROM eclipse-temurin:25-jdk
+FROM mcr.microsoft.com/openjdk/jdk:25-azurelinux
 VOLUME /tmp
 WORKDIR /
 ARG LIB_PATH
