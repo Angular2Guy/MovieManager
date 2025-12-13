@@ -1,5 +1,5 @@
 FROM eclipse-temurin:25-jdk-alpine
-#FROM mcr.microsoft.com/openjdk/jdk:25-azurelinux
+#FROM bellsoft/liberica-runtime-container:jdk-25-glibc
 VOLUME /tmp
 WORKDIR /
 ARG LIB_PATH
