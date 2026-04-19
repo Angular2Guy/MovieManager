@@ -14,12 +14,10 @@ RUN java $JAVA_OPTS -XX:AOTCacheOutput=app.aot \
     -Dspring.profiles.active=prod \
     -jar application.jar || echo "AOT Training finished with exit code $?"
 
-
 FROM eclipse-temurin:25-jdk-alpine
 #FROM bellsoft/liberica-openjre-debian:25-cds
 WORKDIR /application
-COPY --from=builder /builder/extracted/ ./
-COPY --from=trainer /at-work/app.aot ./app.aot
+COPY --from=trainer /at-work/ ./
 
 ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:MaxDirectMemorySize=64m"
 ENTRYPOINT exec java $JAVA_OPTS \
