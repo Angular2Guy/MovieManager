@@ -1,5 +1,4 @@
 FROM eclipse-temurin:25-jdk-alpine AS builder
-#FROM bellsoft/liberica-openjre-debian:25-cds AS builder
 WORKDIR /builder
 ARG JAR_FILE=backend/target/*.jar
 COPY ${JAR_FILE} application.jar
@@ -13,7 +12,7 @@ ENV JAVA_OPTS="-Xmx384m -Xms384m \
                -XX:MaxGCPauseMillis=50 \
                -XX:+UseCompressedOops \
                -XX:+UseCompressedClassPointers \
-               -XX:-UseCompactObjectHeaders \
+               -XX:+UseCompactObjectHeaders \
                -XX:MaxDirectMemorySize=64m \
                -XX:+UseStringDeduplication"
 RUN java $JAVA_OPTS -XX:+AOTClassLinking \
@@ -23,7 +22,6 @@ RUN java $JAVA_OPTS -XX:+AOTClassLinking \
     -jar application.jar || echo "AOT Training finished with exit code $?"
 
 FROM eclipse-temurin:25-jdk-alpine
-#FROM bellsoft/liberica-openjre-debian:25-cds
 WORKDIR /application
 COPY --from=trainer /at-work/ ./
 
@@ -31,8 +29,10 @@ ENV JAVA_OPTS="-XX:+UseG1GC \
                -XX:MaxGCPauseMillis=50 \
                -XX:+UseCompressedOops \
                -XX:+UseCompressedClassPointers \
-               -XX:-UseCompactObjectHeaders \
+               -XX:+UseCompactObjectHeaders \
                -XX:MaxDirectMemorySize=64m \
+               -XX:+UnlockDiagnosticVMOptions \
+               -XX:ArchiveRelocationMode=0 \
                -XX:+UseStringDeduplication"
 ENTRYPOINT exec java $JAVA_OPTS -XX:+AOTClassLinking \
     -XX:AOTCache=app.aot \
