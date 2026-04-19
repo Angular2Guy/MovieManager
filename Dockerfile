@@ -9,7 +9,6 @@ FROM eclipse-temurin:25-jdk-alpine
 #FROM bellsoft/liberica-openjre-debian:25-cds
 WORKDIR /application
 COPY --from=builder /builder/extracted/ ./
-RUN ls -las application.jar
 
 ENV JAVA_OPTS="-XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:MaxDirectMemorySize=64m"
 RUN java $JAVA_OPTS -XX:AOTCacheOutput=/app.aot -Dspring.context.exit=onRefresh -jar application.jar --spring.profiles.active=prod || true
