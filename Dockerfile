@@ -31,8 +31,6 @@ ENV JAVA_OPTS="-XX:+UseG1GC \
                -XX:+UseCompressedClassPointers \
                -XX:+UseCompactObjectHeaders \
                -XX:MaxDirectMemorySize=64m \
-               -XX:+UnlockDiagnosticVMOptions \
-               -XX:ArchiveRelocationMode=0 \
                -XX:+UseStringDeduplication"
 ENTRYPOINT exec java $JAVA_OPTS -XX:+AOTClassLinking \
     -XX:AOTCache=app.aot \
