@@ -21,3 +21,5 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+/extracted/
+/app.aot
