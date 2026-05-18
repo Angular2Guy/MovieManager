@@ -24,6 +24,8 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    env:
+      POSTGRES_URL: jdbc:postgresql://postgres:5432/movies
     services:
       postgres:
         image: postgres:latest
@@ -87,15 +89,25 @@ jobs:
 
 #        java -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -XX:AOTCacheOutput=app.aot -Dspring.context.exit=onRefresh -Djava.security.egd=file:/dev/./urandom -jar extracted/moviemanager-backend-0.0.1-SNAPSHOT.jar  --spring.profiles.active=prod
 
-    - name: Unpack fat jar and create AOT cache
+    - name: Unpack fat jar
       if: matrix.language == 'java'
-      id: aot
+      id: UNPACK
       run: |        
         java -Djarmode=tools -jar ${{ steps.jar.outputs.jar }} extract --destination extracted        
         EXTRACTED_PATH=$(find . -type d -name "extracted" | head -n 1)
         echo "Found directory: $EXTRACTED_PATH"
         echo "extracted=$EXTRACTED_PATH" >> $GITHUB_OUTPUT
 
+    - name: Create AOT cache
+      if: matrix.language == 'java'
+      id: AOT
+      run: |
+        java ${{ env.JAVA_OPTS }} -XX:+AOTClassLinking \
+            -XX:AOTCacheOutput=app.aot \
+            -Dspring.context.exit=onRefresh \
+            -Dspring.datasource.url=${{ env.POSTGRES_URL }} \
+            -Dspring.profiles.active=prod \
+            -jar ${{ steps.jar.outputs.jar }} || echo "AOT Training finished with exit code $?"
 
 #    - name: Login to Docker Hub
 #      uses: docker/login-action@v3
@@ -111,8 +123,7 @@ jobs:
         file: ./Dockerfile
         build-args: |
           JAR_PATH=${{ steps.jar.outputs.jar }}
-          LIB_PATH=${{ steps.aot.outputs.extracted }}  
-          POSTGRES_URL=jdbc:postgresql://postgres:5432/movies
+          LIB_PATH=${{ steps.aot.outputs.extracted }}            
         push: false
         tags: angular2guy/moviemanager:latest
 

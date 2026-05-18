@@ -1,31 +1,11 @@
-FROM eclipse-temurin:25-jdk-alpine AS builder
-WORKDIR /builder
-ARG JAR_FILE=backend/target/*.jar
-COPY ${JAR_FILE} application.jar
-RUN java -Djarmode=tools -jar application.jar extract --destination extracted
-
-FROM eclipse-temurin:25-jdk-alpine AS trainer
-WORKDIR /at-work
-COPY --from=builder /builder/extracted/ ./
-ENV JAVA_OPTS="-Xmx384m -Xms384m \
-               -XX:+UseG1GC \
-               -XX:MaxGCPauseMillis=50 \
-               -XX:+UseCompressedOops \
-               -XX:+UseCompressedClassPointers \
-               -XX:+UseCompactObjectHeaders \
-               -XX:MaxDirectMemorySize=64m \
-               -XX:+UseStringDeduplication"
-ARG POSTGRES_URL=jdbc:postgresql://localhost:5432/movies
-RUN java $JAVA_OPTS -XX:+AOTClassLinking \
-    -XX:AOTCacheOutput=app.aot \
-    -Dspring.context.exit=onRefresh \
-    -Dspring.datasource.url=$POSTGRES_URL \
-    -Dspring.profiles.active=prod \
-    -jar application.jar || echo "AOT Training finished with exit code $?"
-
 FROM eclipse-temurin:25-jdk-alpine
 WORKDIR /application
+
 COPY --from=trainer /at-work/ ./
+ARG JAR_FILE=backend/target/*.jar
+COPY ${JAR_FILE} application.jar
+COPY extracted/ extracted/
+COPY app.aot app.aot
 
 ENV JAVA_OPTS="-XX:+UseG1GC \
                -XX:MaxGCPauseMillis=50 \
@@ -34,6 +14,7 @@ ENV JAVA_OPTS="-XX:+UseG1GC \
                -XX:+UseCompactObjectHeaders \
                -XX:MaxDirectMemorySize=64m \
                -XX:+UseStringDeduplication"
+               
 ENTRYPOINT exec java $JAVA_OPTS -XX:+AOTClassLinking \
     -XX:AOTCache=app.aot \
     -Xlog:aot \
