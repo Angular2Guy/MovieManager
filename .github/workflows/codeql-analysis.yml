@@ -24,7 +24,6 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
-
     services:
       postgres:
         image: postgres:latest
@@ -112,7 +111,8 @@ jobs:
         file: ./Dockerfile
         build-args: |
           JAR_PATH=${{ steps.jar.outputs.jar }}
-          LIB_PATH=${{ steps.aot.outputs.extracted }}        
+          LIB_PATH=${{ steps.aot.outputs.extracted }}  
+          POSTGRES_URL=jdbc:postgresql://postgres:5432/movies
         push: false
         tags: angular2guy/moviemanager:latest
 
