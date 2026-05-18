@@ -16,7 +16,7 @@ ENV JAVA_OPTS="-Xmx384m -Xms384m \
                -XX:MaxDirectMemorySize=64m \
                -XX:+UseStringDeduplication"
 ENV POSTGRES_URL=jdbc:postgresql://localhost:5432/movies
-RUN java $JAVA_OPTS -XX:+AOTClassLinking \
+RUN POSTGRES_URL java $JAVA_OPTS -XX:+AOTClassLinking \
     -XX:AOTCacheOutput=app.aot \
     -Dspring.context.exit=onRefresh \
     -Dspring.profiles.active=prod \
