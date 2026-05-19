@@ -25,7 +25,7 @@ jobs:
     name: Analyze
     runs-on: ubuntu-latest
     env:
-      POSTGRES_URL: jdbc:postgresql://postgres:5432/movies
+      POSTGRES_URL: jdbc:postgresql://localhost:5432/movies
     services:
       postgres:
         image: postgres:latest
