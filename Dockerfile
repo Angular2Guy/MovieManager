@@ -1,7 +1,6 @@
 FROM eclipse-temurin:25-jdk-alpine
 WORKDIR /application
 
-COPY --from=trainer /at-work/ ./
 ARG JAR_FILE=backend/target/*.jar
 COPY ${JAR_FILE} application.jar
 COPY extracted/ extracted/
