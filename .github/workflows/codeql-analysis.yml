@@ -100,7 +100,7 @@ jobs:
 
     - name: find extracted jar
       if: matrix.language == 'java'
-      id: AOT
+      id: EXTRACT
       run: |
         EXTRACTED_JAR=$(find ${{ steps.unpack.outputs.extracted }} -type f -name "*.jar" | head -n 1)
         echo "Found extracted JAR: $EXTRACTED_JAR"
