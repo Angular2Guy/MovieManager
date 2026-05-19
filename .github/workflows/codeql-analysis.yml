@@ -103,6 +103,7 @@ jobs:
       id: EXTRACT
       run: |
         EXTRACTED_JAR=$(find ${{ steps.unpack.outputs.extracted }} -type f -name "*.jar" | head -n 1)
+        EXTRACTED_JAR=${EXTRACTED_JAR:2}
         echo "Found extracted JAR: $EXTRACTED_JAR"
         echo "extracted=$EXTRACTED_JAR" >> $GITHUB_OUTPUT
 
