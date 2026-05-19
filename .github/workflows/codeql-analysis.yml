@@ -98,17 +98,33 @@ jobs:
         echo "Found directory: $EXTRACTED_PATH"
         echo "extracted=$EXTRACTED_PATH" >> $GITHUB_OUTPUT
 
+    - name: find extracted jar
+      if: matrix.language == 'java'
+      id: AOT
+      run: |
+        EXTRACTED_JAR=$(find ${{ steps.unpack.outputs.extracted }} -type f -name "*.jar" | head -n 1)
+        echo "Found extracted JAR: $EXTRACTED_JAR"
+        echo "extracted=$EXTRACTED_JAR" >> $GITHUB_OUTPUT
+
     - name: Create AOT cache
       if: matrix.language == 'java'
       id: AOT
       run: |
-        java ${{ env.JAVA_OPTS }} -XX:+AOTClassLinking \
+        JAVA_OPTS="-XX:+UseG1GC \
+               -XX:MaxGCPauseMillis=50 \
+               -XX:+UseCompressedOops \
+               -XX:+UseCompressedClassPointers \
+               -XX:+UseCompactObjectHeaders \
+               -XX:MaxDirectMemorySize=64m \
+               -XX:+UseStringDeduplication"
+        java $JAVA_OPTS -XX:+AOTClassLinking \
             -XX:AOTCacheOutput=app.aot \
             -Xlog:class+path=info \
+            -Xlog:aot=info \
             -Dspring.context.exit=onRefresh \
             -Dspring.datasource.url=${{ env.POSTGRES_URL }} \
             -Dspring.profiles.active=prod \
-            -jar ${{ steps.jar.outputs.jar }} || echo "AOT Training finished with exit code $?"
+            -jar ${{ steps.aot.outputs.extracted }} || echo "AOT Training finished with exit code $?"
 
 #    - name: Login to Docker Hub
 #      uses: docker/login-action@v3
