@@ -111,9 +111,7 @@ jobs:
       if: matrix.language == 'java'
       id: AOT
       env:
-        JAVA_TOOL_OPTIONS: ''
-        JDK_JAVA_OPTIONS: ''
-        _JAVA_OPTIONS: ''
+        JAVA_TOOL_OPTIONS: ""
       run: |
         EXTRACTED_JAR=${{ steps.EXTRACT.outputs.extracted }}
         echo "jar=$EXTRACTED_JAR"
