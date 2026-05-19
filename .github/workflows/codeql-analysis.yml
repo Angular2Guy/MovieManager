@@ -104,6 +104,7 @@ jobs:
       run: |
         java ${{ env.JAVA_OPTS }} -XX:+AOTClassLinking \
             -XX:AOTCacheOutput=app.aot \
+            -Xlog:class+path=info \
             -Dspring.context.exit=onRefresh \
             -Dspring.datasource.url=${{ env.POSTGRES_URL }} \
             -Dspring.profiles.active=prod \
