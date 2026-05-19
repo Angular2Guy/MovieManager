@@ -113,6 +113,7 @@ jobs:
       env:
         JAVA_TOOL_OPTIONS: ''
         JDK_JAVA_OPTIONS: ''
+        _JAVA_OPTIONS: ''
       run: |
         EXTRACTED_JAR=${{ steps.EXTRACT.outputs.extracted }}
         echo "jar=$EXTRACTED_JAR"
