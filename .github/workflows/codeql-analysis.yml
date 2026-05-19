@@ -110,6 +110,9 @@ jobs:
     - name: Create AOT cache
       if: matrix.language == 'java'
       id: AOT
+      env:
+        JAVA_TOOL_OPTIONS: ''
+        JDK_JAVA_OPTIONS: ''
       run: |
         EXTRACTED_JAR=${{ steps.EXTRACT.outputs.extracted }}
         echo "jar=$EXTRACTED_JAR"
