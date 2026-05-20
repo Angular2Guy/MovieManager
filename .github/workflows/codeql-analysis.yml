@@ -118,7 +118,7 @@ jobs:
                -XX:+UseStringDeduplication"
         java $JAVA_OPTS -XX:+AOTClassLinking \
             -XX:AOTCacheOutput=app.aot \            
-            -Xlog:aot=info \
+            -Xlog:aot \
             -Dspring.context.exit=onRefresh \
             -Dspring.datasource.url=${{ env.POSTGRES_URL }} \
             -Dspring.profiles.active=prod \
