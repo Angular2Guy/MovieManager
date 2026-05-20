@@ -100,10 +100,6 @@ jobs:
     - name: Create AOT cache
       if: matrix.language == 'java'
       id: AOT
-      env:        
-        JAVA_TOOL_OPTIONS: ""
-        _JAVA_OPTIONS: ""
-        JDK_JAVA_OPTIONS: ""
       run: |
         EXTRACTED_JAR=${{ steps.EXTRACT.outputs.extracted }}
         echo "jar=$EXTRACTED_JAR"
@@ -118,8 +114,7 @@ jobs:
                -XX:MaxDirectMemorySize=64m \
                -XX:+UseStringDeduplication"
         java $JAVA_OPTS -XX:+AOTClassLinking \
-            -XX:AOTCacheOutput=app.aot \
-            -Xlog:class+path=info \
+            -XX:AOTCacheOutput=app.aot \            
             -Xlog:aot=info \
             -Dspring.context.exit=onRefresh \
             -Dspring.datasource.url=${{ env.POSTGRES_URL }} \
@@ -139,7 +134,7 @@ jobs:
         context: .
         file: ./Dockerfile
         build-args: |
-          JAR_PATH=${{ steps.jar.outputs.jar }}
+          JAR_PATH=${{ steps.EXTRACT.outputs.extracted }}
           LIB_PATH=${{ steps.aot.outputs.extracted }}            
         push: false
         tags: angular2guy/moviemanager:latest

@@ -16,6 +16,6 @@ ENV JAVA_OPTS="-XX:+UseG1GC \
                
 ENTRYPOINT exec java $JAVA_OPTS -XX:+AOTClassLinking \
     -XX:AOTCache=app.aot \
-    -Xlog:aot \
+    -Xlog:aot=info \
     -Djava.security.egd=file:/dev/./urandom \
     -jar application.jar
