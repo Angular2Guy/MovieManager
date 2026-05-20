@@ -8,8 +8,7 @@ COPY app.aot app.aot
 
 ENV JAVA_OPTS="-XX:+UseG1GC \
                -XX:MaxGCPauseMillis=50 \
-               -XX:+UseCompressedOops \
-               -XX:+UseCompressedClassPointers \
+               -XX:+UseCompressedOops \               
                -XX:+UseCompactObjectHeaders \
                -XX:MaxDirectMemorySize=64m \
                -XX:+UseStringDeduplication"
