@@ -110,6 +110,7 @@ jobs:
         echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
         echo "_JAVA_OPTIONS=$_JAVA_OPTIONS"
         echo "JDK_JAVA_OPTIONS=$JDK_JAVA_OPTIONS"
+        ls -las $EXTRACTED_JAR
         JAVA_OPTS="-XX:+UseG1GC \
                -XX:MaxGCPauseMillis=50 \
                -XX:+UseCompressedOops \               
