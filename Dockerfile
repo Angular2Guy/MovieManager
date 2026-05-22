@@ -1,9 +1,10 @@
-FROM eclipse-temurin:25-jdk-alpine
+#FROM eclipse-temurin:25.0.3_9-jdk-alpine
+FROM eclipse-temurin:25.0.3_9-jdk-jammy
 WORKDIR /application
 
-ARG JAR_FILE=backend/target/*.jar
-COPY ${JAR_FILE} application.jar
-COPY extracted/ extracted/
+ARG JAR_FILE=extracted/*.jar
+COPY ${JAR_FILE} moviemanager-backend-0.0.1-SNAPSHOT.jar
+COPY extracted/ ./
 COPY app.aot app.aot
 
 ENV JAVA_OPTS="-XX:+UseG1GC \
@@ -15,6 +16,6 @@ ENV JAVA_OPTS="-XX:+UseG1GC \
                
 ENTRYPOINT exec java $JAVA_OPTS -XX:+AOTClassLinking \
     -XX:AOTCache=app.aot \
-    -Xlog:aot \
+    -Xlog:class+path=info \
     -Djava.security.egd=file:/dev/./urandom \
-    -jar application.jar
+    -jar moviemanager-backend-0.0.1-SNAPSHOT.jar
