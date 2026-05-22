@@ -135,8 +135,6 @@ jobs:
         echo "JDK_VERSION=$JDK_VERSION"
         echo "VERSION=$VERSION" 
         MY_VERSION="jdk=$VERSION"
-        echo "MY_VERSION=$MY_VERSION"
-        echo "jdk_version=$MY_VERSION" >> $GITHUB_OUTPUT
 
     - name: Build and push
       uses: docker/build-push-action@v6
