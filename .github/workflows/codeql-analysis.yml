@@ -109,11 +109,7 @@ jobs:
         echo "jar=$EXTRACTED_JAR"
         echo "JAVA_TOOL_OPTIONS=$JAVA_TOOL_OPTIONS"
         echo "_JAVA_OPTIONS=$_JAVA_OPTIONS"
-        echo "JDK_JAVA_OPTIONS=$JDK_JAVA_OPTIONS"
-        JDK_VERSION=$(java -version 2>&1)
-        VERSION=$(echo "$JDK_VERSION" | sed -n 's/.*build \([^[:space:]]*\)-LTS.*/\1/p')
-        echo "JDK_VERSION=$JDK_VERSION"
-        echo "VERSION=$VERSION"
+        echo "JDK_JAVA_OPTIONS=$JDK_JAVA_OPTIONS"        
         JAVA_OPTS="-XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseCompressedOops -XX:+UseCompactObjectHeaders -XX:MaxDirectMemorySize=64m -XX:+UseStringDeduplication"
         java $JAVA_OPTS \
             -XX:+AOTClassLinking \
@@ -130,6 +126,16 @@ jobs:
 #        username: ${{ vars.DOCKERHUB_USERNAME }}
 #        password: ${{ secrets.DOCKERHUB_TOKEN }}    
 
+    - name: Show Jdk version
+      if: matrix.language == 'java'
+      id: JDK
+      run: |
+        JDK_VERSION=$(java -version 2>&1)
+        VERSION=$(echo "$JDK_VERSION" | sed -n 's/.*build \([^[:space:]]*\)-LTS.*/\1/p')
+        echo "JDK_VERSION=$JDK_VERSION"
+        echo "VERSION=$VERSION"                
+        echo "jdk=$VERSION" >> $GITHUB_OUTPUT
+
     - name: Build and push
       uses: docker/build-push-action@v6
       if: matrix.language == 'java'
@@ -137,6 +143,7 @@ jobs:
         context: .
         file: ./Dockerfile
         build-args: |
+          JDK_VERSION=${{ steps.JDK.outputs.jdk }}
           JAR_PATH=${{ steps.EXTRACT.outputs.extracted }}
           LIB_PATH=${{ steps.aot.outputs.extracted }}            
         push: false
