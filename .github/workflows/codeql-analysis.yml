@@ -133,8 +133,10 @@ jobs:
         JDK_VERSION=$(java -version 2>&1)
         VERSION=$(echo "$JDK_VERSION" | sed -n 's/.*build \([^[:space:]]*\)-LTS.*/\1/p')
         echo "JDK_VERSION=$JDK_VERSION"
-        echo "VERSION=$VERSION"                
-        echo "jdk=$VERSION" >> $GITHUB_OUTPUT
+        echo "VERSION=$VERSION" 
+        MY_VERSION="jdk=$VERSION"
+        echo "MY_VERSION=$MY_VERSION"
+        echo "$MY_VERSION" >> $GITHUB_OUTPUT
 
     - name: Build and push
       uses: docker/build-push-action@v6
