@@ -136,7 +136,7 @@ jobs:
         echo "VERSION=$VERSION" 
         MY_VERSION="jdk=$VERSION"
         echo "MY_VERSION=$MY_VERSION"
-        echo "$MY_VERSION" >> $GITHUB_OUTPUT
+        echo "jdk_version=$MY_VERSION" >> $GITHUB_OUTPUT
 
     - name: Build and push
       uses: docker/build-push-action@v6
@@ -145,7 +145,7 @@ jobs:
         context: .
         file: ./Dockerfile
         build-args: |
-          JDK_VERSION=${{ steps.JDK.outputs.jdk }}
+          JDK_VERSION=${{ steps.JDK.outputs.jdk_version }}
           JAR_PATH=${{ steps.EXTRACT.outputs.extracted }}
           LIB_PATH=${{ steps.aot.outputs.extracted }}            
         push: false
