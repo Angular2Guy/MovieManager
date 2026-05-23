@@ -8,6 +8,7 @@ Technologies: Angular, Angular-Cli, Ng-Bootstrap, Typescript, Spring Boot, H2, P
 [![CodeQL](https://github.com/Angular2Guy/MovieManager/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Angular2Guy/MovieManager/actions/workflows/codeql-analysis.yml)
 
 ## Articles
+* [A Spring Boot App with half the startup time](https://angular2guy.wordpress.com/2026/05/23/a-spring-boot-app-with-half-the-startup-time/)
 * [React vs Angular based on 2 Real Applications](https://angular2guy.wordpress.com/2025/11/09/react-vs-angular-based-on-2-real-applications/)
 * [A simple Transactional Outbox Pattern implementation with Spring](https://angular2guy.wordpress.com/2025/03/17/a-simple-transactional-outbox-pattern-with-spring/)
 * [Using KRaft Kafka for development and Kubernetes deployment](https://angular2guy.wordpress.com/2024/08/17/using-kraft-kafka-for-development-and-kubernetes-deployment/)
