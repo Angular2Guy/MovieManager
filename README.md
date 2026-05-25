@@ -34,7 +34,7 @@ The project serves as example for the integration of Angular, Spring Boot with J
 ## C4 Architecture Diagrams
 The project has a [System Context Diagram](structurizr/diagrams/structurizr-1-SystemContext.svg), a [Container Diagram](structurizr/diagrams/structurizr-1-Containers.svg) and a [Component Diagram](structurizr/diagrams/structurizr-1-Components.svg). The Diagrams have been created with Structurizr. The file runStructurizr.sh contains the commands to use Structurizr and the directory structurizr contains the dsl file.
 
-## Use and use AOT Cache of Project Leyden in the Docker Image
+## Use AOT Cache of Project Leyden in the Docker Image
 The build now creates a AOT cache and uses it in the Docker image. The AOT cache can be used to cut the startup time in half. The AOT cache is a feature of project [Leyden](https://openjdk.org/projects/leyden/) to shift work at startup time to build time.
 
 ## Postgresql setup
