@@ -35,7 +35,7 @@ The project serves as example for the integration of Angular, Spring Boot with J
 The project has a [System Context Diagram](structurizr/diagrams/structurizr-1-SystemContext.svg), a [Container Diagram](structurizr/diagrams/structurizr-1-Containers.svg) and a [Component Diagram](structurizr/diagrams/structurizr-1-Components.svg). The Diagrams have been created with Structurizr. The file runStructurizr.sh contains the commands to use Structurizr and the directory structurizr contains the dsl file.
 
 ## Use AOT Cache of Project Leyden in the Docker Image
-The build now creates a AOT cache and uses it in the Docker image. The AOT cache can be used to cut the startup time in half. The AOT cache is a feature of project [Leyden](https://openjdk.org/projects/leyden/) to shift work at startup time to build time.
+The build creates an AOT cache and uses it in the Docker image. The AOT cache can be used to cut the startup time in half. The AOT cache is a feature of project [Leyden](https://openjdk.org/projects/leyden/) to shift work from startup time to build time.
 
 ## Postgresql setup
 In the postgresql.sh file are the commands to pull and run Postgresql in a Docker image locally. To build a Jar with Postgresql setup build it with 'mvnw clean install -Ddocker=true'. In Eclipse the maven profile 'standalone-postgresql' has to be activated and a run/debug configuration with the VM parameter '-Dspring.profiles.active=prod' has to started. The database will be initialized by Liquibase. The Liquibase scripts are setup with preconditions that the tables/sequences/indexes are only created if they do not exist. 
