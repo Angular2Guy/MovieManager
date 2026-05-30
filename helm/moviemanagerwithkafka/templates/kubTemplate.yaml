@@ -179,7 +179,7 @@ spec:
       labels:
         app: {{ .Values.webAppName }}
     spec:
-      containers:
+      containers:        
       - name: {{ .Values.webAppName }}
         image: "{{ .Values.webImageName }}:{{ .Values.webImageVersion }}" 
         imagePullPolicy: Always
@@ -206,6 +206,11 @@ spec:
             port: 8080
           failureThreshold: 60
           periodSeconds: 5
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh","-c","sleep 5"]
+        terminationGracePeriodSeconds: 30
 ---
 apiVersion: v1
 kind: Service

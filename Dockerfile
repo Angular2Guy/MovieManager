@@ -12,7 +12,8 @@ ENV JAVA_OPTS="-XX:+UseG1GC \
                -XX:+UseCompressedOops \               
                -XX:+UseCompactObjectHeaders \
                -XX:MaxDirectMemorySize=64m \
-               -XX:+UseStringDeduplication"
+               -XX:+UseStringDeduplication \
+               -XX:+ExitOnOutOfMemoryError" 
                
 ENTRYPOINT exec java $JAVA_OPTS -XX:+AOTClassLinking \
     -XX:AOTCache=app.aot \
