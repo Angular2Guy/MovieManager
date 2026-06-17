@@ -57,8 +57,8 @@ export class FilterActorsComponent implements OnInit {
   protected gender = Gender;
   protected filtering = false;
   protected filteredActors: Actor[] = [];
-  protected ngbBirthdayFrom: NgbDateStruct;
-  protected ngbBirthdayTo: NgbDateStruct;
+  protected ngbBirthdayFrom: NgbDateStruct | null = null;
+  protected ngbBirthdayTo: NgbDateStruct | null = null;
   protected closeResult = "";
   protected filterCriteria = new ActorFilterCriteria();
   protected FullTextFilter = FulltextFilter;

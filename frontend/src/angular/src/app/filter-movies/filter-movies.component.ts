@@ -63,8 +63,8 @@ export class FilterMoviesComponent implements OnInit {
   protected generes: Genere[] = [];
   protected closeResult = "";
   protected filterCriteria = new MovieFilterCriteria();
-  protected ngbReleaseFrom: NgbDateStruct;
-  protected ngbReleaseTo: NgbDateStruct;
+  protected ngbReleaseFrom: NgbDateStruct | null = null;
+  protected ngbReleaseTo: NgbDateStruct | null = null;
   protected FullTextFilter = FulltextFilter;
   protected filterType = FulltextFilter.PhraseFilter;
   protected searchWords = "";

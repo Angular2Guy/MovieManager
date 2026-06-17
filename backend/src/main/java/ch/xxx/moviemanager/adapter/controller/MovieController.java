@@ -66,6 +66,9 @@ public class MovieController {
 	@RequestMapping(value = "/id/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Boolean> deleteMovieById(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String bearerStr,
 			@PathVariable("id") Long id) throws InterruptedException {
+		if(id == null || id <= 0) {
+			return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
+		}
 		boolean result = this.service.deleteMovieById(id, bearerStr);
 		return result ? new ResponseEntity<Boolean>(result, HttpStatus.OK)
 				: new ResponseEntity<Boolean>(result, HttpStatus.NOT_FOUND);

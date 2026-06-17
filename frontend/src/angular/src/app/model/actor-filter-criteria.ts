@@ -16,8 +16,8 @@ import { SearchTerm } from "./search-term";
 export class ActorFilterCriteria {
   public name: string = "";
   public gender: Gender = Gender.Unknown;
-  public birthdayFrom: Date = null;
-  public birthdayTo: Date = null;
+  public birthdayFrom: Date | null = null;
+  public birthdayTo: Date | null = null;
   public dead: boolean = false;
   public popularity: number = 0;
   public movieCharacter: string = "";

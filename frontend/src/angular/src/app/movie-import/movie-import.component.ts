@@ -56,7 +56,7 @@ export class MovieImportComponent implements OnInit {
       if (!!queryParamMap.get(QueryParam.MovieName)) {
         this.importState = ImportState.MoviesLoading;
         this.loadMatchingMovies(
-          decodeURIComponent(queryParamMap.get(QueryParam.MovieName)),
+          decodeURIComponent(queryParamMap.get(QueryParam.MovieName) ?? ''),
         );
       } else {
         this.router.navigate(["search"]);

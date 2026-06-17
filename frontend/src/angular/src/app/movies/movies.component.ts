@@ -32,7 +32,7 @@ import { CommonModule } from "@angular/common";
   styleUrls: ["./movies.component.scss"],
 })
 export class MoviesComponent implements OnInit {
-  protected movie: Movie = null;
+  protected movie!: Movie | null;
   protected delMovie = false;
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
@@ -55,16 +55,16 @@ export class MoviesComponent implements OnInit {
 
   deleteMovie() {
     console.log(
-      "delete movie id: " + this.movie.id + " title: " + this.movie.title,
+      "delete movie id: " + this.movie?.id + " title: " + this.movie?.title,
     );
     this.delMovie = true;
     this.movieService
-      .deleteMovieById(this.movie.id)
+      .deleteMovieById(this.movie?.id || -1)
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((result) => {
         this.delMovie = false;
         if (!result) {
-          console.log("Delete of movie id: " + this.movie.id + " failed.");
+          console.log("Delete of movie id: " + this.movie?.id + " failed.");
         } else {
           this.router.navigateByUrl("/search");
         }

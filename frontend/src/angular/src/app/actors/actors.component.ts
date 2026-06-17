@@ -32,7 +32,7 @@ import { CommonModule } from "@angular/common";
 })
 export class ActorsComponent implements OnInit {
   protected gender = Gender;
-  protected actor: Actor = null;
+  protected actor: Actor | null = null;
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
   private readonly destroy: DestroyRef = inject(DestroyRef);

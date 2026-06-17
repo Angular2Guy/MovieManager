@@ -34,6 +34,8 @@ import {
   distinctUntilChanged,
   switchMap,
   catchError,
+  filter,
+  map,
 } from "rxjs/operators";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { QueryParam } from "../model/common";
@@ -56,12 +58,12 @@ import { LoginComponent } from "../login/login.component";
   styleUrls: ["./search.component.scss"],
 })
 export class SearchComponent implements OnInit, AfterViewInit {
-  @ViewChild("movies") moviesRef: ElementRef;
-  protected generes: Genere[];
+  @ViewChild("movies") moviesRef!: ElementRef;
+  protected generes!: Genere[];
   protected movieTitle = new FormControl("");
-  protected movies: Observable<Movie[]>;
+  protected movies!: Observable<Movie[]>;
   protected movieActor = new FormControl("");
-  protected actors: Observable<Actor[]>;
+  protected actors!: Observable<Actor[]>;
   protected importMovies: Movie[] = [];
   protected importMovieTitle = new FormControl("");
   protected actorsLoading = false;
@@ -98,7 +100,7 @@ export class SearchComponent implements OnInit, AfterViewInit {
   }
 
   importMovie() {
-    const myTitle = encodeURIComponent(this.importMovieTitle.value);
+    const myTitle = encodeURIComponent(this.importMovieTitle.value ?? '');
     this.router.navigate(["movie-import"], {
       queryParams: { [QueryParam.MovieName]: myTitle },
     });
@@ -134,6 +136,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.actors = this.movieActor.valueChanges.pipe(
+      filter((name: string | null) => !!name && name.length > 2),
+      map((name: string | null) => name ?? ''),
       debounceTime(400),
       distinctUntilChanged(),
       tap(() => (this.actorsLoading = true)),
@@ -150,6 +154,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
       takeUntilDestroyed(this.destroy),
     );
     this.movies = this.movieTitle.valueChanges.pipe(
+      filter((title: string | null) => !!title && title.length > 2),
+      map((title: string | null) => title ?? ''),
       debounceTime(400),
       distinctUntilChanged(),
       tap(() => (this.moviesLoading = true)),

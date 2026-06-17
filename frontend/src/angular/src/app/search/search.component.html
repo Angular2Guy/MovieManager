@@ -24,7 +24,7 @@
             <button
               class="btn btn-secondary mb-3"
               type="button"
-              [disabled]="this.importMovieTitle.value.length < 3"
+              [disabled]="!this.importMovieTitle.value || this.importMovieTitle.value.length < 3"
               (click)="importMovie()"
               i18n="@@searchSearchForMovie"
               >

@@ -15,8 +15,8 @@ import { SearchTerm } from "./search-term";
 
 export class MovieFilterCriteria {
   public selectedGeneres: Genere[] = [];
-  public releaseFrom: Date = null;
-  public releaseTo: Date = null;
+  public releaseFrom: Date | null = null;
+  public releaseTo: Date | null = null;
   public movieTitle = "";
   public movieActor = "";
   public minLength = 0;

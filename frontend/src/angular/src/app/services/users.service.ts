@@ -37,7 +37,7 @@ export class UsersService {
     u.password = password;
     return this.http.post<User>("/rest/auth/login", u).pipe(
       map((myUser) => {
-        if (!!myUser?.id && !!myUser?.token && myUser?.secUntilNexLogin <= 0) {
+        if (!!myUser?.id && !!myUser?.token && myUser?.secUntilNexLogin && myUser?.secUntilNexLogin <= 0) {
           this.tokenService.token = myUser.token;
           this.tokenService.userId = myUser.id;
           return myUser.secUntilNexLogin;

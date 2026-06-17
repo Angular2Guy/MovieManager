@@ -23,7 +23,7 @@ import { ActorFilterCriteria } from "../model/actor-filter-criteria";
 export class ActorsService {
   constructor(private http: HttpClient) {}
 
-  public findActorById(id: number): Observable<Actor> {
+  public findActorById(id: number): Observable<Actor | null> {
     if (!id && id !== 0) {
       return of(null);
     }

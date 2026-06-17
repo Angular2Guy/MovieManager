@@ -42,7 +42,7 @@ export class MoviesService {
     );
   }
 
-  public findMovieById(id: number): Observable<Movie> {
+  public findMovieById(id: number): Observable<Movie | null> {
     if (!id && id !== 0) {
       return of(null);
     }

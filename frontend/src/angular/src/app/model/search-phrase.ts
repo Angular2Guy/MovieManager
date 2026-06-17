@@ -12,6 +12,6 @@
  */
 export class SearchPhrase {
   constructor(
-  public phrase = "",
-  public otherWordsInPhrase = 0) {}
+  public phrase: string = "",
+  public otherWordsInPhrase: number | null = null) {}
 }
