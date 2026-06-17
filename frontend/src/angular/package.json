@@ -30,7 +30,7 @@
     "@angular/platform-browser-dynamic": "^22.0.1",
     "@angular/router": "^22.0.1",
     "@ng-bootstrap/ng-bootstrap": "^21.0.0-rc.0",
-    "ngx-simple-charts": "^21.0.0",
+    "ngx-simple-charts": "^22.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.2",
     "rxjs": "^7.4.0",
