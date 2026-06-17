@@ -57,7 +57,7 @@ import { LoginComponent } from "../login/login.component";
   changeDetection: ChangeDetectionStrategy.Eager,
   styleUrls: ["./search.component.scss"],
 })
-export class SearchComponent implements OnInit, AfterViewInit {
+export class SearchComponent implements OnInit {
   @ViewChild("movies") moviesRef!: ElementRef;
   protected generes!: Genere[];
   protected movieTitle = new FormControl("");
@@ -76,7 +76,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
   protected scMoviesPageEnd = 1;
   protected loading = false;
   protected allMoviesLoaded = false;
-  private actorListOffset = 0;
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
@@ -92,8 +91,8 @@ export class SearchComponent implements OnInit, AfterViewInit {
     const ypos = window.pageYOffset + window.innerHeight;
     const contentHeight = !this.moviesRef
       ? 100000000
-      : this.moviesRef.nativeElement.offsetHeight + this.actorListOffset;
-    //console.log(contentHeight, window.innerHeight);
+      : this.moviesRef.nativeElement.offsetHeight + this.moviesRef.nativeElement.getBoundingClientRect().y;
+    console.log(ypos, contentHeight, window.innerHeight, this.moviesRef.nativeElement.getBoundingClientRect().y);
     if (ypos >= contentHeight || contentHeight < window.innerHeight) {
       this.fetchMore();
     }
@@ -188,11 +187,6 @@ export class SearchComponent implements OnInit, AfterViewInit {
     console.log(error);
     this.router.navigate(["/"]);
     return of([]);
-  }
-
-  ngAfterViewInit(): void {
-    this.actorListOffset =
-      this.moviesRef.nativeElement.getBoundingClientRect().y;
   }
 
   fetchMore() {
