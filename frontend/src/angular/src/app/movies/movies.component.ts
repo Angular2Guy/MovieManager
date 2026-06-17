@@ -10,7 +10,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, DestroyRef, OnInit, inject } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { MoviesService } from "../services/movies.service";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { Movie } from "../model/movie";
@@ -19,22 +25,23 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CommonModule } from "@angular/common";
 
 @Component({
-    selector: "app-movies",
-    imports: [RouterModule,CommonModule],
-    templateUrl: "./movies.component.html",
-    styleUrls: ["./movies.component.scss"],    
+  selector: "app-movies",
+  imports: [RouterModule, CommonModule],
+  templateUrl: "./movies.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ["./movies.component.scss"],
 })
 export class MoviesComponent implements OnInit {
   protected movie: Movie = null;
   protected delMovie = false;
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
-  private readonly destroy: DestroyRef = inject(DestroyRef);  
+  private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private movieService: MoviesService
+    private movieService: MoviesService,
   ) {}
 
   ngOnInit() {
@@ -48,16 +55,19 @@ export class MoviesComponent implements OnInit {
 
   deleteMovie() {
     console.log(
-      "delete movie id: " + this.movie.id + " title: " + this.movie.title
+      "delete movie id: " + this.movie.id + " title: " + this.movie.title,
     );
     this.delMovie = true;
-    this.movieService.deleteMovieById(this.movie.id).pipe(takeUntilDestroyed(this.destroy)).subscribe((result) => {
-      this.delMovie = false;
-      if (!result) {
-        console.log("Delete of movie id: " + this.movie.id + " failed.");
-      } else {
-        this.router.navigateByUrl("/search");
-      }
-    });
+    this.movieService
+      .deleteMovieById(this.movie.id)
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe((result) => {
+        this.delMovie = false;
+        if (!result) {
+          console.log("Delete of movie id: " + this.movie.id + " failed.");
+        } else {
+          this.router.navigateByUrl("/search");
+        }
+      });
   }
 }

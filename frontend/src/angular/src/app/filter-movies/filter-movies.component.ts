@@ -10,7 +10,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, DestroyRef, OnInit, inject } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { Router } from "@angular/router";
 import {
   NgbDatepickerModule,
@@ -35,18 +41,20 @@ import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 
 @Component({
-    selector: "app-filter-movies",
-    imports: [
-      CommonModule,
-    FormsModule,  
+  selector: "app-filter-movies",
+  imports: [
+    CommonModule,
+    FormsModule,
     ReactiveFormsModule,
     NgbOffcanvasModule,
     NgbDatepickerModule,
     NgbDropdownModule,
     NgbRatingModule,
-    NgbPopoverModule],
-    templateUrl: "./filter-movies.component.html",
-    styleUrls: ["./filter-movies.component.scss"],    
+    NgbPopoverModule,
+  ],
+  templateUrl: "./filter-movies.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ["./filter-movies.component.scss"],
 })
 export class FilterMoviesComponent implements OnInit {
   protected filteredMovies: Movie[] = [];
@@ -59,14 +67,14 @@ export class FilterMoviesComponent implements OnInit {
   protected ngbReleaseTo: NgbDateStruct;
   protected FullTextFilter = FulltextFilter;
   protected filterType = FulltextFilter.PhraseFilter;
-  protected searchWords = '';
+  protected searchWords = "";
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
     private offcanvasService: NgbOffcanvas,
     public ngbRatingConfig: NgbRatingConfig,
     private movieService: MoviesService,
-    private router: Router
+    private router: Router,
   ) {}
 
   public ngOnInit(): void {
@@ -90,13 +98,16 @@ export class FilterMoviesComponent implements OnInit {
         },
         (reason) => {
           this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        }
+        },
       );
   }
 
   public switchFilters(): void {
-	  this.filterCriteria.searchTerm = new SearchTerm();
-	  this.filterType = this.filterType === this.FullTextFilter.PhraseFilter ? this.FullTextFilter.WordFilter : this.FullTextFilter.PhraseFilter;	  
+    this.filterCriteria.searchTerm = new SearchTerm();
+    this.filterType =
+      this.filterType === this.FullTextFilter.PhraseFilter
+        ? this.FullTextFilter.WordFilter
+        : this.FullTextFilter.PhraseFilter;
   }
 
   public back(): void {
@@ -113,43 +124,55 @@ export class FilterMoviesComponent implements OnInit {
         : new Date(
             this.ngbReleaseFrom.year,
             this.ngbReleaseFrom.month,
-            this.ngbReleaseFrom.day
+            this.ngbReleaseFrom.day,
           );
       this.filterCriteria.releaseTo = !this.ngbReleaseTo
         ? null
         : new Date(
             this.ngbReleaseTo.year,
             this.ngbReleaseTo.month,
-            this.ngbReleaseTo.day
+            this.ngbReleaseTo.day,
           );
-      this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = !this.filterCriteria.searchTerm
-        .searchPhrase.otherWordsInPhrase
+      this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = !this
+        .filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase
         ? 0
         : this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase;
       this.filterCriteria.searchTerm.searchStrings = this.createSearchStrings();
-      this.movieService.findMoviesByCriteria(this.filterCriteria).pipe(takeUntilDestroyed(this.destroy)).subscribe({
-        next: (result) => (this.filteredMovies = result),
-        error: (failed) => {
-          console.log(failed);
-          this.router.navigate(["/"]);
-        },
-      });
+      this.movieService
+        .findMoviesByCriteria(this.filterCriteria)
+        .pipe(takeUntilDestroyed(this.destroy))
+        .subscribe({
+          next: (result) => (this.filteredMovies = result),
+          error: (failed) => {
+            console.log(failed);
+            this.router.navigate(["/"]);
+          },
+        });
     }
   }
 
   private createSearchStrings(): SearchString[] {
-	  const opsMap = new Map([[Operator.AND.toString(), Operator.AND], [Operator.NOT.toString(), Operator.NOT], [Operator.OR.toString(), Operator.OR]]);	 
-	  //console.log(this.searchWords.split(' ')); 
-	  const searchWords = this.searchWords.split(' ').map(str => str.trim())
-	    .filter(str => !!opsMap.get(str[0]) && str.length > 4).map(str => new SearchString(str.substring(1).trim(), opsMap.get(str[0])));	  
-	  return searchWords;
+    const opsMap = new Map([
+      [Operator.AND.toString(), Operator.AND],
+      [Operator.NOT.toString(), Operator.NOT],
+      [Operator.OR.toString(), Operator.OR],
+    ]);
+    //console.log(this.searchWords.split(' '));
+    const searchWords = this.searchWords
+      .split(" ")
+      .map((str) => str.trim())
+      .filter((str) => !!opsMap.get(str[0]) && str.length > 4)
+      .map(
+        (str) => new SearchString(str.substring(1).trim(), opsMap.get(str[0])),
+      );
+    return searchWords;
   }
 
   public addToSelectedGenere(genere: Genere): void {
     if (
       this.filterCriteria.selectedGeneres.length < 2 &&
       this.filterCriteria.selectedGeneres.filter(
-        (myGen) => genere.id === myGen.id
+        (myGen) => genere.id === myGen.id,
       ).length === 0
     ) {
       this.selectedGeneresStr = `${this.selectedGeneresStr} ${genere.name}`;
@@ -185,8 +208,8 @@ export class FilterMoviesComponent implements OnInit {
     this.filterCriteria.minLength = 0;
     this.filterCriteria.maxLength = 0;
     this.filterCriteria.minRating = 0;
-    this.filterCriteria.searchTerm.searchPhrase.phrase = '';
+    this.filterCriteria.searchTerm.searchPhrase.phrase = "";
     this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
-    this.filterCriteria.searchTerm.searchStrings = [];    
+    this.filterCriteria.searchTerm.searchStrings = [];
   }
 }

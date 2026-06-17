@@ -10,7 +10,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, DestroyRef, OnInit, inject } from "@angular/core";
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { QueryParam } from "../model/common";
 import { Movie } from "../model/movie";
@@ -27,22 +33,22 @@ enum ImportState {
 }
 
 @Component({
-    selector: "app-movie-import",
-    imports: [CommonModule, RouterModule],
-    templateUrl: "./movie-import.component.html",
-    styleUrls: ["./movie-import.component.scss"],    
+  selector: "app-movie-import",
+  imports: [CommonModule, RouterModule],
+  templateUrl: "./movie-import.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ["./movie-import.component.scss"],
 })
 export class MovieImportComponent implements OnInit {
   protected ImportState = ImportState;
   protected importState = ImportState.Idle;
   protected importMovies: Movie[] = [];
   private readonly destroy: DestroyRef = inject(DestroyRef);
-  
 
   constructor(
     private moviesService: MoviesService,
     private router: Router,
-    private activeRoute: ActivatedRoute
+    private activeRoute: ActivatedRoute,
   ) {}
 
   ngOnInit(): void {
@@ -50,7 +56,7 @@ export class MovieImportComponent implements OnInit {
       if (!!queryParamMap.get(QueryParam.MovieName)) {
         this.importState = ImportState.MoviesLoading;
         this.loadMatchingMovies(
-          decodeURIComponent(queryParamMap.get(QueryParam.MovieName))
+          decodeURIComponent(queryParamMap.get(QueryParam.MovieName)),
         );
       } else {
         this.router.navigate(["search"]);
@@ -63,17 +69,21 @@ export class MovieImportComponent implements OnInit {
   }
 
   private loadMatchingMovies(movieTitle: string) {
-    this.moviesService.importMovieByTitle(movieTitle).pipe(takeUntilDestroyed(this.destroy)).subscribe((m) => {
-      this.importMovies = this.addNums(m);
-      this.importState = ImportState.Idle;
-    });
+    this.moviesService
+      .importMovieByTitle(movieTitle)
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe((m) => {
+        this.importMovies = this.addNums(m);
+        this.importState = ImportState.Idle;
+      });
   }
 
   importSelMovie(movie: Movie) {
     this.importState = ImportState.Importing;
     this.importMovies = [];
     this.moviesService
-      .importMovieByMovieDbId(movie.movie_id).pipe(takeUntilDestroyed(this.destroy))
+      .importMovieByMovieDbId(movie.movie_id)
+      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((imported) => {
         this.importState = imported
           ? ImportState.ImportSuccess

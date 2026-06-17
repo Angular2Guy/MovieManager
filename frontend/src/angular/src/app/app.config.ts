@@ -10,21 +10,31 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { ApplicationConfig, importProvidersFrom } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { ApplicationConfig, importProvidersFrom } from "@angular/core";
+import { provideRouter } from "@angular/router";
 
-import { routes } from './app-routing';
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { NgxServiceModule } from 'ngx-simple-charts/base-service';
+import { routes } from "./app-routing";
+import { provideAnimations } from "@angular/platform-browser/animations";
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+  withXhr,
+} from "@angular/common/http";
+import { NgxServiceModule } from "ngx-simple-charts/base-service";
 
 export const appConfig: ApplicationConfig = {
-
-  providers: [provideRouter(routes), provideAnimations(), importProvidersFrom(NgxServiceModule.forRoot({
-            tokenRefreshPath: "/rest/auth/refreshToken",
-            logoutPath: "/rest/auth/logout",
-            loginRoute: "/",
-        })), provideHttpClient(withInterceptorsFromDi())],
+  providers: [
+    provideRouter(routes),
+    provideAnimations(),
+    importProvidersFrom(
+      NgxServiceModule.forRoot({
+        tokenRefreshPath: "/rest/auth/refreshToken",
+        logoutPath: "/rest/auth/logout",
+        loginRoute: "/",
+      }),
+    ),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
+  ],
 };
 
 /*

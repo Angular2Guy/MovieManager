@@ -10,9 +10,23 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, OnInit, EventEmitter, Output, DestroyRef, inject } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  DestroyRef,
+  inject,
+  ChangeDetectionStrategy,
+} from "@angular/core";
 import { UsersService } from "../services/users.service";
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from "@angular/forms";
 import { TokenService } from "ngx-simple-charts/base-service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { CommonModule } from "@angular/common";
@@ -30,10 +44,11 @@ enum MessageType {
 }
 
 @Component({
-    selector: "app-login",
-    imports: [CommonModule, FormsModule, ReactiveFormsModule],
-    templateUrl: "./login.component.html",
-    styleUrls: ["./login.component.scss"],    
+  selector: "app-login",
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  templateUrl: "./login.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
   @Output() loginClosed = new EventEmitter<boolean>();
@@ -50,7 +65,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private userService: UsersService,
     formBuilder: FormBuilder,
-    private tokenService: TokenService
+    private tokenService: TokenService,
   ) {
     this.loginFormGroup = formBuilder.group({
       [ControlName.LoginName]: [
@@ -97,8 +112,9 @@ export class LoginComponent implements OnInit {
     this.userService
       .login(
         this.loginFormGroup.controls[ControlName.LoginName].value,
-        this.loginFormGroup.controls[ControlName.Password].value
-      ).pipe(takeUntilDestroyed(this.destroy))
+        this.loginFormGroup.controls[ControlName.Password].value,
+      )
+      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((myTillNextLogin: number) => {
         const res = myTillNextLogin <= 0;
         this.tillNextLogin = myTillNextLogin;
@@ -125,8 +141,9 @@ export class LoginComponent implements OnInit {
       .signin(
         this.loginFormGroup.controls[ControlName.LoginName].value,
         this.loginFormGroup.controls[ControlName.Password].value,
-        this.loginFormGroup.controls[ControlName.MovieDbKey].value
-      ).pipe(takeUntilDestroyed(this.destroy))
+        this.loginFormGroup.controls[ControlName.MovieDbKey].value,
+      )
+      .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((res: boolean) => {
         this.cancelUser();
         this.modalMsgType = res ? MessageType.Info : MessageType.Error;

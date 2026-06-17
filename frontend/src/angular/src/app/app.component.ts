@@ -10,20 +10,24 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component } from "@angular/core";
+import { Component, ChangeDetectionStrategy } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { TokenService } from "ngx-simple-charts/base-service";
 
 @Component({
-    selector: "app-root",
-    imports: [RouterModule],
-    templateUrl: "./app.component.html",
-    styleUrls: ["./app.component.scss"],    
+  selector: "app-root",
+  imports: [RouterModule],
+  templateUrl: "./app.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
   protected title = "app";
 
-  constructor(private tokenService: TokenService, private router: Router) {}
+  constructor(
+    private tokenService: TokenService,
+    private router: Router,
+  ) {}
 
   public loggedIn(): boolean {
     return !!this.tokenService.userId;

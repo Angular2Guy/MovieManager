@@ -9,8 +9,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, DestroyRef, OnInit, inject } from "@angular/core";
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  inject,
+  ChangeDetectionStrategy,
+} from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, RouterModule } from "@angular/router";
 import { Actor, Gender } from "../model/actor";
 import { QueryParam } from "../model/common";
@@ -18,10 +24,11 @@ import { ActorsService } from "../services/actors.service";
 import { CommonModule } from "@angular/common";
 
 @Component({
-    selector: "app-actors",
-    imports: [CommonModule,RouterModule],
-    templateUrl: "./actors.component.html",
-    styleUrls: ["./actors.component.scss"],    
+  selector: "app-actors",
+  imports: [CommonModule, RouterModule],
+  templateUrl: "./actors.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ["./actors.component.scss"],
 })
 export class ActorsComponent implements OnInit {
   protected gender = Gender;
@@ -32,7 +39,7 @@ export class ActorsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private actorService: ActorsService
+    private actorService: ActorsService,
   ) {}
 
   public ngOnInit() {

@@ -19,6 +19,7 @@ import {
   AfterViewInit,
   DestroyRef,
   inject,
+  ChangeDetectionStrategy,
 } from "@angular/core";
 import { Movie } from "../model/movie";
 import { Actor } from "../model/actor";
@@ -42,10 +43,17 @@ import { CommonModule } from "@angular/common";
 import { LoginComponent } from "../login/login.component";
 
 @Component({
-    selector: "app-search",
-    imports: [CommonModule, RouterModule, FormsModule, ReactiveFormsModule, LoginComponent],
-    templateUrl: "./search.component.html",
-    styleUrls: ["./search.component.scss"],    
+  selector: "app-search",
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    LoginComponent,
+  ],
+  templateUrl: "./search.component.html",
+  changeDetection: ChangeDetectionStrategy.Eager,
+  styleUrls: ["./search.component.scss"],
 })
 export class SearchComponent implements OnInit, AfterViewInit {
   @ViewChild("movies") moviesRef: ElementRef;
@@ -67,14 +75,14 @@ export class SearchComponent implements OnInit, AfterViewInit {
   protected loading = false;
   protected allMoviesLoaded = false;
   private actorListOffset = 0;
-  private readonly destroy: DestroyRef = inject(DestroyRef);  
+  private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
     private actorService: ActorsService,
-    private movieService: MoviesService,    
+    private movieService: MoviesService,
     private tokenService: TokenService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
   ) {}
 
   @HostListener("window:scroll", ["$event"])
@@ -107,10 +115,13 @@ export class SearchComponent implements OnInit, AfterViewInit {
   showGenere(id: number) {
     this.showMenu = false;
     this.moviesByGenLoading = true;
-    this.movieService.findMoviesByGenereId(id).pipe(takeUntilDestroyed(this.destroy)).subscribe((res) => {
-      this.moviesByGenere = res;
-      this.moviesByGenLoading = false;
-    });
+    this.movieService
+      .findMoviesByGenereId(id)
+      .pipe(takeUntilDestroyed(this.destroy))
+      .subscribe((res) => {
+        this.moviesByGenere = res;
+        this.moviesByGenLoading = false;
+      });
   }
 
   showFilterMovies(): void {
@@ -132,11 +143,11 @@ export class SearchComponent implements OnInit, AfterViewInit {
           this.actorService
             .findActorByName(name)
             .pipe(catchError((error) => this.handleRxJsProblem(error))),
-          of([])
-        )
+          of([]),
+        ),
       ),
       tap(() => (this.actorsLoading = false)),
-      takeUntilDestroyed(this.destroy)
+      takeUntilDestroyed(this.destroy),
     );
     this.movies = this.movieTitle.valueChanges.pipe(
       debounceTime(400),
@@ -148,14 +159,17 @@ export class SearchComponent implements OnInit, AfterViewInit {
           this.movieService
             .findMovieByTitle(title)
             .pipe(catchError((error) => this.handleRxJsProblem(error))),
-          of([])
-        )
+          of([]),
+        ),
       ),
       tap(() => (this.moviesLoading = false)),
-      takeUntilDestroyed(this.destroy)
+      takeUntilDestroyed(this.destroy),
     );
     if (!!this.tokenService.userId) {
-      this.movieService.allGeneres().pipe(takeUntilDestroyed(this.destroy)).subscribe((res) => (this.generes = res));
+      this.movieService
+        .allGeneres()
+        .pipe(takeUntilDestroyed(this.destroy))
+        .subscribe((res) => (this.generes = res));
     }
     this.route.url.subscribe(() => {
       if (!!this.tokenService.userId) {
@@ -182,7 +196,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
     this.loading = true;
     this.movieService
       .findMoviesByPage(this.scMoviesPageEnd)
-      .pipe(catchError((error) => this.handleRxJsProblem(error)), takeUntilDestroyed(this.destroy))
+      .pipe(
+        catchError((error) => this.handleRxJsProblem(error)),
+        takeUntilDestroyed(this.destroy),
+      )
       .subscribe((res) => {
         if (res.length > 0) {
           this.scrollMovies = this.scrollMovies.concat(res);
@@ -196,7 +213,10 @@ export class SearchComponent implements OnInit, AfterViewInit {
 
   loginClosed(closed: boolean) {
     if (!!this.tokenService.userId && closed) {
-      this.movieService.allGeneres().pipe(takeUntilDestroyed(this.destroy)).subscribe((res) => (this.generes = res));
+      this.movieService
+        .allGeneres()
+        .pipe(takeUntilDestroyed(this.destroy))
+        .subscribe((res) => (this.generes = res));
       this.initScrollMovies();
     }
   }
