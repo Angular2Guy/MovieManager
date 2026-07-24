@@ -7,7 +7,9 @@ COPY ${JAR_FILE} moviemanager-backend-0.0.1-SNAPSHOT.jar
 COPY extracted/ ./
 COPY app.aot app.aot
 
+# params for 2GB of container memory limit
 ENV JAVA_OPTS="-XX:+UseG1GC \
+               -XX:MaxRAMPercentage=60 \
                -XX:MaxGCPauseMillis=50 \
                -XX:+UseCompressedOops \               
                -XX:+UseCompactObjectHeaders \
