@@ -34,7 +34,6 @@ import { ActorFilterCriteria } from "../model/actor-filter-criteria";
 import { FulltextFilter, QueryParam } from "../model/common";
 import { ActorsService } from "../services/actors.service";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { SearchTerm } from "../model/search-term";
 import { Operator, SearchString } from "../model/search-string";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -61,9 +60,15 @@ export class FilterActorsComponent implements OnInit {
   protected ngbBirthdayFrom = signal<NgbDateStruct | null>(null);
   protected ngbBirthdayTo = signal<NgbDateStruct | null>(null);
   protected closeResult = signal("");
-  protected filterCriteria = new ActorFilterCriteria();
   protected FullTextFilter = FulltextFilter;
   protected filterType = signal(FulltextFilter.PhraseFilter);
+  protected name = signal("");
+  protected actorGender = signal(Gender.Unknown);
+  protected dead = signal(false);
+  protected popularity = signal(0);
+  protected movieCharacter = signal("");
+  protected phrase = signal("");
+  protected otherWordsInPhrase = signal<number | null>(null);
   protected searchWords = "";
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
@@ -79,7 +84,7 @@ export class FilterActorsComponent implements OnInit {
   }
 
   public open(content: unknown) {
-    this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
+    this.otherWordsInPhrase.set(null);
     this.offcanvasService
       .open(content, { ariaLabelledBy: "offcanvas-basic-title" })
       .result.then(
@@ -103,16 +108,14 @@ export class FilterActorsComponent implements OnInit {
   }
 
   public resetFilters(): void {
-    this.filterCriteria.birthdayFrom = null;
-    this.filterCriteria.birthdayTo = null;
-    this.filterCriteria.dead = false;
-    this.filterCriteria.gender = Gender.Unknown;
-    this.filterCriteria.movieCharacter = "";
-    this.filterCriteria.name = "";
-    this.filterCriteria.popularity = 0;
-    this.filterCriteria.searchTerm.searchPhrase.phrase = "";
-    this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
-    this.filterCriteria.searchTerm.searchStrings = [];
+    this.name.set("");
+    this.actorGender.set(Gender.Unknown);
+    this.dead.set(false);
+    this.popularity.set(0);
+    this.movieCharacter.set("");
+    this.phrase.set("");
+    this.otherWordsInPhrase.set(null);
+    this.searchWords = "";
     this.closeResult.set("");
   }
 
@@ -121,7 +124,8 @@ export class FilterActorsComponent implements OnInit {
   }
 
   public switchFilters(): void {
-    this.filterCriteria.searchTerm = new SearchTerm();
+    this.phrase.set("");
+    this.otherWordsInPhrase.set(null);
     this.filterType.set(
       this.filterType() === this.FullTextFilter.PhraseFilter
         ? this.FullTextFilter.WordFilter
@@ -133,36 +137,51 @@ export class FilterActorsComponent implements OnInit {
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
     } else {
-      this.filterCriteria.birthdayFrom = !this.ngbBirthdayFrom()
-        ? null
-        : new Date(
-            this.ngbBirthdayFrom()!.year,
-            this.ngbBirthdayFrom()!.month,
-            this.ngbBirthdayFrom()!.day,
-          );
-      this.filterCriteria.birthdayTo = !this.ngbBirthdayTo()
-        ? null
-        : new Date(
-            this.ngbBirthdayTo()!.year,
-            this.ngbBirthdayTo()!.month,
-            this.ngbBirthdayTo()!.day,
-          );
-      this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = !this
-        .filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase
-        ? 0
-        : this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase;
-      this.filterCriteria.searchTerm.searchStrings = this.createSearchStrings();
+      this.filtering.set(true);
+      const criteria = this.buildCriteria();
       this.actorsService
-        .findActorsByCriteria(this.filterCriteria)
+        .findActorsByCriteria(criteria)
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
-          next: (result) => this.filteredActors.set(result),
+          next: (result) => {
+            this.filteredActors.set(result);
+            this.filtering.set(false);
+          },
           error: (failed) => {
             console.log(failed);
+            this.filtering.set(false);
             this.router.navigate(["/"]);
           },
         });
     }
+  }
+
+  private buildCriteria(): ActorFilterCriteria {
+    const criteria = new ActorFilterCriteria();
+    criteria.name = this.name();
+    criteria.gender = this.actorGender();
+    criteria.dead = this.dead();
+    criteria.popularity = this.popularity();
+    criteria.movieCharacter = this.movieCharacter();
+    criteria.birthdayFrom = !this.ngbBirthdayFrom()
+      ? null
+      : new Date(
+          this.ngbBirthdayFrom()!.year,
+          this.ngbBirthdayFrom()!.month,
+          this.ngbBirthdayFrom()!.day,
+        );
+    criteria.birthdayTo = !this.ngbBirthdayTo()
+      ? null
+      : new Date(
+          this.ngbBirthdayTo()!.year,
+          this.ngbBirthdayTo()!.month,
+          this.ngbBirthdayTo()!.day,
+        );
+    criteria.searchTerm.searchPhrase.phrase = this.phrase();
+    criteria.searchTerm.searchPhrase.otherWordsInPhrase =
+      this.otherWordsInPhrase();
+    criteria.searchTerm.searchStrings = this.createSearchStrings();
+    return criteria;
   }
 
   private createSearchStrings(): SearchString[] {

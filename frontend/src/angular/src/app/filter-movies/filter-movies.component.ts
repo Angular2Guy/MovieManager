@@ -36,7 +36,6 @@ import { Movie } from "../model/movie";
 import { MoviesService } from "../services/movies.service";
 import { FulltextFilter, QueryParam } from "../model/common";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
-import { SearchTerm } from "../model/search-term";
 import { Operator, SearchString } from "../model/search-string";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
@@ -60,14 +59,21 @@ import { CommonModule } from "@angular/common";
 export class FilterMoviesComponent implements OnInit {
   protected filteredMovies = signal<Movie[]>([]);
   protected filtering = signal(false);
+  protected selectedGeneres = signal<Genere[]>([]);
   protected selectedGeneresStr = signal("");
   protected generes = signal<Genere[]>([]);
   protected closeResult = signal("");
-  protected filterCriteria = new MovieFilterCriteria();
   protected ngbReleaseFrom = signal<NgbDateStruct | null>(null);
   protected ngbReleaseTo = signal<NgbDateStruct | null>(null);
   protected FullTextFilter = FulltextFilter;
   protected filterType = signal(FulltextFilter.PhraseFilter);
+  protected movieTitle = signal("");
+  protected movieActor = signal("");
+  protected minLength = signal(0);
+  protected maxLength = signal(0);
+  protected minRating = signal(0);
+  protected phrase = signal("");
+  protected otherWordsInPhrase = signal<number | null>(null);
   protected searchWords = "";
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
@@ -90,7 +96,7 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public open(content: unknown) {
-    this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
+    this.otherWordsInPhrase.set(null);
     this.offcanvasService
       .open(content, { ariaLabelledBy: "offcanvas-basic-title" })
       .result.then(
@@ -104,7 +110,8 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public switchFilters(): void {
-    this.filterCriteria.searchTerm = new SearchTerm();
+    this.phrase.set("");
+    this.otherWordsInPhrase.set(null);
     this.filterType.set(
       this.filterType() === this.FullTextFilter.PhraseFilter
         ? this.FullTextFilter.WordFilter
@@ -120,36 +127,52 @@ export class FilterMoviesComponent implements OnInit {
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
     } else {
-      this.filterCriteria.releaseFrom = !this.ngbReleaseFrom()
-        ? null
-        : new Date(
-            this.ngbReleaseFrom()!.year,
-            this.ngbReleaseFrom()!.month,
-            this.ngbReleaseFrom()!.day,
-          );
-      this.filterCriteria.releaseTo = !this.ngbReleaseTo()
-        ? null
-        : new Date(
-            this.ngbReleaseTo()!.year,
-            this.ngbReleaseTo()!.month,
-            this.ngbReleaseTo()!.day,
-          );
-      this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = !this
-        .filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase
-        ? 0
-        : this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase;
-      this.filterCriteria.searchTerm.searchStrings = this.createSearchStrings();
+      this.filtering.set(true);
+      const criteria = this.buildCriteria();
       this.movieService
-        .findMoviesByCriteria(this.filterCriteria)
+        .findMoviesByCriteria(criteria)
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
-          next: (result) => this.filteredMovies.set(result),
+          next: (result) => {
+            this.filteredMovies.set(result);
+            this.filtering.set(false);
+          },
           error: (failed) => {
             console.log(failed);
+            this.filtering.set(false);
             this.router.navigate(["/"]);
           },
         });
     }
+  }
+
+  private buildCriteria(): MovieFilterCriteria {
+    const criteria = new MovieFilterCriteria();
+    criteria.movieTitle = this.movieTitle();
+    criteria.movieActor = this.movieActor();
+    criteria.minLength = this.minLength();
+    criteria.maxLength = this.maxLength();
+    criteria.minRating = this.minRating();
+    criteria.selectedGeneres = [...this.selectedGeneres()];
+    criteria.releaseFrom = !this.ngbReleaseFrom()
+      ? null
+      : new Date(
+          this.ngbReleaseFrom()!.year,
+          this.ngbReleaseFrom()!.month,
+          this.ngbReleaseFrom()!.day,
+        );
+    criteria.releaseTo = !this.ngbReleaseTo()
+      ? null
+      : new Date(
+          this.ngbReleaseTo()!.year,
+          this.ngbReleaseTo()!.month,
+          this.ngbReleaseTo()!.day,
+        );
+    criteria.searchTerm.searchPhrase.phrase = this.phrase();
+    criteria.searchTerm.searchPhrase.otherWordsInPhrase =
+      this.otherWordsInPhrase();
+    criteria.searchTerm.searchStrings = this.createSearchStrings();
+    return criteria;
   }
 
   private createSearchStrings(): SearchString[] {
@@ -170,20 +193,19 @@ export class FilterMoviesComponent implements OnInit {
 
   public addToSelectedGenere(genere: Genere): void {
     if (
-      this.filterCriteria.selectedGeneres.length < 2 &&
-      this.filterCriteria.selectedGeneres.filter(
-        (myGen) => genere.id === myGen.id,
-      ).length === 0
+      this.selectedGeneres().length < 2 &&
+      this.selectedGeneres().filter((myGen) => genere.id === myGen.id)
+        .length === 0
     ) {
+      this.selectedGeneres.set([...this.selectedGeneres(), genere]);
       this.selectedGeneresStr.set(
         `${this.selectedGeneresStr()} ${genere.name}`.trim(),
       );
-      this.filterCriteria.selectedGeneres.push(genere);
     }
   }
 
   public resetSelectedGeneres(): void {
-    this.filterCriteria.selectedGeneres = [];
+    this.selectedGeneres.set([]);
     this.selectedGeneresStr.set("");
   }
 
@@ -198,19 +220,17 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public resetFilters(): void {
-    this.filterCriteria.releaseFrom = null;
-    this.filterCriteria.releaseTo = null;
-    this.filterCriteria.selectedGeneres = [];
+    this.movieTitle.set("");
+    this.movieActor.set("");
+    this.minLength.set(0);
+    this.maxLength.set(0);
+    this.minRating.set(0);
+    this.phrase.set("");
+    this.otherWordsInPhrase.set(null);
+    this.selectedGeneres.set([]);
     this.selectedGeneresStr.set("");
     this.closeResult.set("");
     this.generes.set([]);
-    this.filterCriteria.movieTitle = "";
-    this.filterCriteria.movieActor = "";
-    this.filterCriteria.minLength = 0;
-    this.filterCriteria.maxLength = 0;
-    this.filterCriteria.minRating = 0;
-    this.filterCriteria.searchTerm.searchPhrase.phrase = "";
-    this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
-    this.filterCriteria.searchTerm.searchStrings = [];
+    this.searchWords = "";
   }
 }

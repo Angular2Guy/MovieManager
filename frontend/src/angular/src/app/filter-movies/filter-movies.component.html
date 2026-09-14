@@ -66,7 +66,8 @@
             <label for="title" class="form-label" i18n="@@title">Title</label>
             <input
               type="text"
-              [(ngModel)]="filterCriteria.movieTitle"
+              [ngModel]="movieTitle()"
+              (ngModelChange)="movieTitle.set($event)"
               name="title"
               class="form-control"
               id="title"
@@ -78,7 +79,8 @@
             <label for="actor" class="form-label" i18n="@@actor">Actor</label>
             <input
               type="text"
-              [(ngModel)]="filterCriteria.movieActor"
+              [ngModel]="movieActor()"
+              (ngModelChange)="movieActor.set($event)"
               name="actor"
               class="form-control"
               id="actor"
@@ -141,7 +143,8 @@
                   >
                   <input
                     type="number"
-                    [(ngModel)]="filterCriteria.minLength"
+                    [ngModel]="minLength()"
+                    (ngModelChange)="minLength.set($event)"
                     name="minLength"
                     class="form-control"
                     id="min-length"
@@ -158,7 +161,8 @@
                     >
                     <input
                       type="number"
-                      [(ngModel)]="filterCriteria.maxLength"
+                      [ngModel]="maxLength()"
+                      (ngModelChange)="maxLength.set($event)"
                       name="maxLength"
                       class="form-control"
                       id="max-length"
@@ -173,7 +177,8 @@
         </div>
                   <ngb-rating
                     id="rating"
-                    [(ngModel)]="filterCriteria.minRating"
+                    [ngModel]="minRating()"
+                    (ngModelChange)="minRating.set($event)"
                     name="minRating"
                     [rate]="0"
                   ></ngb-rating>
@@ -197,7 +202,8 @@
                           >
                           <input
                             type="number"
-                            [(ngModel)]="filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase"
+                            [ngModel]="otherWordsInPhrase()"
+                            (ngModelChange)="otherWordsInPhrase.set($event)"
                             name="otherWordsInPhrase"
                             class="form-control"
                             id="otherWordsInPhrase"
@@ -213,7 +219,8 @@
                           popoverTitle="Phrase search"
                           rows="2"
                           id="overview"
-                          [(ngModel)]="filterCriteria.searchTerm.searchPhrase.phrase"
+                          [ngModel]="phrase()"
+                          (ngModelChange)="phrase.set($event)"
                           name="phrase"
                           class="form-control"
                         ></textarea>

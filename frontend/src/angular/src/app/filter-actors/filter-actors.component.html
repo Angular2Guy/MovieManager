@@ -69,7 +69,8 @@
               name="genderMale"
               id="genderMale"
               [value]="gender.Male"
-              [(ngModel)]="filterCriteria.gender"
+              [ngModel]="actorGender()"
+              (ngModelChange)="actorGender.set($event)"
               />
             <label class="form-check-label ms-1" for="genderMale" i18n="@@male"
               >Male</label
@@ -80,7 +81,8 @@
                 name="genderFemale"
                 id="genderFemale"
                 [value]="gender.Female"
-                [(ngModel)]="filterCriteria.gender"
+                [ngModel]="actorGender()"
+                (ngModelChange)="actorGender.set($event)"
                 />
               <label class="form-check-label ms-1" for="genderFemale" i18n="@@female"
                 >Female</label
@@ -91,7 +93,8 @@
                   name="genderUnknown"
                   id="genderUnknown"
                   [value]="gender.Unknown"
-                  [(ngModel)]="filterCriteria.gender"
+                  [ngModel]="actorGender()"
+                  (ngModelChange)="actorGender.set($event)"
                   />
                 <label
                   class="form-check-label ms-1"
@@ -104,7 +107,8 @@
                   <label for="actor" class="form-label" i18n="@@actor">Actor</label>
                   <input
                     type="text"
-                    [(ngModel)]="filterCriteria.name"
+                    [ngModel]="name()"
+                    (ngModelChange)="name.set($event)"
                     name="actor"
                     class="form-control"
                     id="actor"
@@ -121,7 +125,8 @@
                     >
                     <input
                       type="text"
-                      [(ngModel)]="filterCriteria.movieCharacter"
+                      [ngModel]="movieCharacter()"
+                      (ngModelChange)="movieCharacter.set($event)"
                       name="movieCharacter"
                       class="form-control"
                       id="movie-character"
@@ -135,7 +140,8 @@
         </div>
                     <ngb-rating
                       id="popularity"
-                      [(ngModel)]="filterCriteria.popularity"
+                      [ngModel]="popularity()"
+                      (ngModelChange)="popularity.set($event)"
                       name="popularity"
                       [rate]="0"
                     ></ngb-rating>
@@ -159,7 +165,8 @@
                             >
                             <input
                               type="number"
-                              [(ngModel)]="filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase"
+                              [ngModel]="otherWordsInPhrase()"
+                              (ngModelChange)="otherWordsInPhrase.set($event)"
                               name="otherWordsInPhrase"
                               class="form-control"
                               id="otherWordsInPhrase"
@@ -175,7 +182,8 @@
                             popoverTitle="Phrase search"
                             rows="2"
                             id="bio"
-                            [(ngModel)]="filterCriteria.searchTerm.searchPhrase.phrase"
+                            [ngModel]="phrase()"
+                            (ngModelChange)="phrase.set($event)"
                             name="phrase"
                             class="form-control"
                           ></textarea>
