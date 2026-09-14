@@ -10,22 +10,22 @@
     </div>
   </div>
   <div class="row">
-    <div class="col" i18n="@@actorName">Name: {{ actor?.name }}</div>
+    <div class="col" i18n="@@actorName">Name: {{ actor()?.name }}</div>
   </div>
   <div class="row">
     <div class="col" i18n="@@actorBirthday">
       Birthday:
-      {{ $safeNavigationMigration(actor?.birthday) | date: "dd.MM.yyyy" }}
+      {{ $safeNavigationMigration(actor()?.birthday) | date: "dd.MM.yyyy" }}
     </div>
   </div>
   <div class="row">
     <div class="col" i18n="@@actorBiography">
-      Biography: {{ actor?.biography }}
+      Biography: {{ actor()?.biography }}
     </div>
   </div>
   <div class="row">
     <div class="col">
-      @switch ($safeNavigationMigration(actor?.gender)) {
+      @switch ($safeNavigationMigration(actor()?.gender)) {
         @case (gender.Female) {
           <span i18n="@@actorGenderFemale">Gender: Female</span>
         }
@@ -40,13 +40,13 @@
   </div>
   <div class="row">
     <div class="col" i18n="@@actorPlaceOfBirth">
-      Place of birth: {{ actor?.place_of_birth }}
+      Place of birth: {{ actor()?.place_of_birth }}
     </div>
   </div>
   <div class="row">
     <div class="col">
       <span i18n="@@actorCast">Cast:</span>
-      @for (cast of actor?.myCasts; track cast) {
+      @for (cast of actor()?.myCasts; track cast) {
         <ul>
           <li>
             {{ cast.character }} -

@@ -104,7 +104,7 @@
                         Generes
                       </button>
                       <div ngbDropdownMenu aria-labelledby="dropdownGeneres">
-                        @for (myGenere of generes; track myGenere) {
+                        @for (myGenere of generes(); track myGenere) {
                           <button
                             ngbDropdownItem
                             (click)="addToSelectedGenere(myGenere)"
@@ -114,11 +114,11 @@
                         }
                       </div>
                     </div>
-                    @if (selectedGeneresStr.length > 0) {
+                    @if (selectedGeneresStr().length > 0) {
                       <div
                         class="selected-generes"
                         >
-                        <div class="ms-1">{{ selectedGeneresStr }}</div>
+                        <div class="ms-1">{{ selectedGeneresStr() }}</div>
                         <div
                           class="ms-1 btn-close"
                           (click)="resetSelectedGeneres()"
@@ -183,7 +183,7 @@
                     type="button"
                   i18n="@@filterMoviesSwitchFilter">Switch filter</button>
                 </div>
-                @switch (filterType) {
+                @switch (filterType()) {
                   @case (FullTextFilter.PhraseFilter) {
                     <div class="mb-3">
                       <div class="overview-label-input">
@@ -278,7 +278,7 @@
                       >
           Open<br />Filters
         </button>
-                    @if (filtering) {
+                    @if (filtering()) {
                       <div
                         class="info-text filter-text"
                         i18n="@@filterMoviesFilteringMovies"
@@ -286,12 +286,12 @@
           Filtering Movies
         </div>
                     }
-                    @if (filtering) {
+                    @if (filtering()) {
                       <div class="info-text filter-text">
                         <img src="assets/svg/spinner.svg" />
                       </div>
                     }
-                    @if (!filtering && filteredMovies.length === 0) {
+                    @if (!filtering() && filteredMovies().length === 0) {
                       <div
                         class="info-text"
                         i18n="@@filterMoviesNoMoviesFound"
@@ -299,7 +299,7 @@
           No Movies found. Try different filter settings.
         </div>
                     }
-                    @if (!filtering && filteredMovies.length > 0) {
+                    @if (!filtering() && filteredMovies().length > 0) {
                       <table class="table">
                         <tr>
                           <th i18n="@@title">Title</th>
@@ -307,7 +307,7 @@
                           <th i18n="@@generes">Generes</th>
                           <th i18n="@@overview">Overview</th>
                         </tr>
-                        @for (movie of filteredMovies; track movie) {
+                        @for (movie of filteredMovies(); track movie) {
                           <tr
                             (click)="selectMovie(movie)"
                             class="import-item"

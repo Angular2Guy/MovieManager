@@ -145,7 +145,7 @@
                       type="button"
                     i18n="@@filterActorsSwitchFilter">Switch filter</button>
                   </div>
-                  @switch (filterType) {
+                  @switch (filterType()) {
                     @case (FullTextFilter.PhraseFilter) {
                       <div class="mb-3">
                         <div class="bio-label-input">
@@ -240,7 +240,7 @@
                         >
           Open<br />Filters
         </button>
-                      @if (filtering) {
+                      @if (filtering()) {
                         <div
                           class="info-text filter-text"
                           i18n="@@filterActorsFilteringActors"
@@ -248,12 +248,12 @@
           Filtering Actors
         </div>
                       }
-                      @if (filtering) {
+                      @if (filtering()) {
                         <div class="info-text filter-text">
                           <img src="assets/svg/spinner.svg" />
                         </div>
                       }
-                      @if (!filtering && filteredActors.length === 0) {
+                      @if (!filtering() && filteredActors().length === 0) {
                         <div
                           class="info-text"
                           i18n="@@filterActorsNoActorsFound"
@@ -261,7 +261,7 @@
           No Actors found. Try different filter settings.
         </div>
                       }
-                      @if (!filtering && filteredActors.length > 0) {
+                      @if (!filtering() && filteredActors().length > 0) {
                         <table class="table">
                           <tr>
                             <th i18n="@@name">Name</th>
@@ -269,7 +269,7 @@
                             <th i18n="@@gender">Gender</th>
                             <th i18n="@@filterActorsBiography">Biography</th>
                           </tr>
-                          @for (actor of filteredActors; track actor) {
+                          @for (actor of filteredActors(); track actor) {
                             <tr
                               (click)="selectActor(actor)"
                               class="import-item"

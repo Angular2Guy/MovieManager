@@ -16,6 +16,7 @@ import {
   OnInit,
   inject,
   ChangeDetectionStrategy,
+  signal,
 } from "@angular/core";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { QueryParam } from "../model/common";
@@ -36,13 +37,13 @@ enum ImportState {
   selector: "app-movie-import",
   imports: [CommonModule, RouterModule],
   templateUrl: "./movie-import.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./movie-import.component.scss"],
 })
 export class MovieImportComponent implements OnInit {
   protected ImportState = ImportState;
-  protected importState = ImportState.Idle;
-  protected importMovies: Movie[] = [];
+  protected importState = signal(ImportState.Idle);
+  protected importMovies = signal<Movie[]>([]);
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
@@ -54,7 +55,7 @@ export class MovieImportComponent implements OnInit {
   ngOnInit(): void {
     this.activeRoute.queryParamMap.subscribe((queryParamMap) => {
       if (!!queryParamMap.get(QueryParam.MovieName)) {
-        this.importState = ImportState.MoviesLoading;
+        this.importState.set(ImportState.MoviesLoading);
         this.loadMatchingMovies(
           decodeURIComponent(queryParamMap.get(QueryParam.MovieName) ?? ''),
         );
@@ -73,21 +74,21 @@ export class MovieImportComponent implements OnInit {
       .importMovieByTitle(movieTitle)
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((m) => {
-        this.importMovies = this.addNums(m);
-        this.importState = ImportState.Idle;
+        this.importMovies.set(this.addNums(m));
+        this.importState.set(ImportState.Idle);
       });
   }
 
   importSelMovie(movie: Movie) {
-    this.importState = ImportState.Importing;
-    this.importMovies = [];
+    this.importState.set(ImportState.Importing);
+    this.importMovies.set([]);
     this.moviesService
       .importMovieByMovieDbId(movie.movie_id)
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((imported) => {
-        this.importState = imported
+        this.importState.set(imported
           ? ImportState.ImportSuccess
-          : ImportState.ImportFailed;
+          : ImportState.ImportFailed);
         const timeoutMs = imported ? 3000 : 6000;
         setTimeout(() => this.router.navigate(["search"]), timeoutMs);
       });

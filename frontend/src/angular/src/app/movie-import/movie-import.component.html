@@ -5,7 +5,7 @@
         <button class="btn btn-primary back-btn" (click)="back()" i18n="@@back">
           Back
         </button>
-        @if (importState === ImportState.Importing) {
+        @if (importState() === ImportState.Importing) {
           <div
             class="info-text"
             i18n="@@movieImportImporting"
@@ -13,7 +13,7 @@
           Importing...
         </div>
         }
-        @if (importState === ImportState.MoviesLoading) {
+        @if (importState() === ImportState.MoviesLoading) {
           <div
             class="info-text"
             i18n="@@movieImportMoviesLoading"
@@ -21,7 +21,7 @@
           Movies loading...
         </div>
         }
-        @if (importState === ImportState.Idle && importMovies.length === 0) {
+        @if (importState() === ImportState.Idle && importMovies().length === 0) {
           <div
             class="info-text"
             i18n="@@movieImportNoMoviesFound"
@@ -29,7 +29,7 @@
           No Movies found
         </div>
         }
-        @if (importState === ImportState.ImportSuccess) {
+        @if (importState() === ImportState.ImportSuccess) {
           <div
             class="info-text success-text"
             i18n="@@movieImportSuccess"
@@ -37,7 +37,7 @@
           Movie import successful. Redirecting back.
         </div>
         }
-        @if (importState === ImportState.ImportFailed) {
+        @if (importState() === ImportState.ImportFailed) {
           <div
             class="info-text failure-text"
             i18n="@@movieImportFailed"
@@ -45,19 +45,19 @@
           Movie import failed. Please try again later. Redirecting back.
         </div>
         }
-        @if (!(importState === ImportState.Idle)) {
+        @if (!(importState() === ImportState.Idle)) {
           <div class="info-text">
             <img src="assets/svg/spinner.svg" />
           </div>
         }
-        @if (importMovies.length > 0) {
+        @if (importMovies().length > 0) {
           <table class="table">
             <tr>
               <th i18n="@@title">Title</th>
               <th i18n="@@release">Release</th>
               <th i18n="@@overview">Overview</th>
             </tr>
-            @for (movie of importMovies; track movie) {
+            @for (movie of importMovies(); track movie) {
               <tr
                 (click)="importSelMovie(movie)"
                 class="import-movie"

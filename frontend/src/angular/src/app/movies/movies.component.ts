@@ -16,6 +16,7 @@ import {
   OnInit,
   inject,
   ChangeDetectionStrategy,
+  signal,
 } from "@angular/core";
 import { MoviesService } from "../services/movies.service";
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
@@ -28,12 +29,12 @@ import { CommonModule } from "@angular/common";
   selector: "app-movies",
   imports: [RouterModule, CommonModule],
   templateUrl: "./movies.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./movies.component.scss"],
 })
 export class MoviesComponent implements OnInit {
-  protected movie!: Movie | null;
-  protected delMovie = false;
+  protected movie = signal<Movie | null>(null);
+  protected delMovie = signal(false);
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
   private readonly destroy: DestroyRef = inject(DestroyRef);
@@ -47,7 +48,7 @@ export class MoviesComponent implements OnInit {
   ngOnInit() {
     this.movieService
       .findMovieById(Number(this.route.snapshot.paramMap.get("id")))
-      .subscribe((movie) => (this.movie = movie));
+      .subscribe((movie) => this.movie.set(movie));
     this.backParam = !this.route.snapshot.queryParams?.back
       ? QueryParam.Empty
       : this.route.snapshot.queryParams?.back;
@@ -55,16 +56,16 @@ export class MoviesComponent implements OnInit {
 
   deleteMovie() {
     console.log(
-      "delete movie id: " + this.movie?.id + " title: " + this.movie?.title,
+      "delete movie id: " + this.movie()?.id + " title: " + this.movie()?.title,
     );
-    this.delMovie = true;
+    this.delMovie.set(true);
     this.movieService
-      .deleteMovieById(this.movie?.id || -1)
+      .deleteMovieById(this.movie()?.id || -1)
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((result) => {
-        this.delMovie = false;
+        this.delMovie.set(false);
         if (!result) {
-          console.log("Delete of movie id: " + this.movie?.id + " failed.");
+          console.log("Delete of movie id: " + this.movie()?.id + " failed.");
         } else {
           this.router.navigateByUrl("/search");
         }

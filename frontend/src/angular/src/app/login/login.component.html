@@ -1,7 +1,7 @@
 <div
   class="modal fade backdrop static"
-  [class.show]="showModal"
-  [class.authModal]="showModal"
+  [class.show]="showModal()"
+  [class.authModal]="showModal()"
   id="exampleModal"
   tabindex="-1"
   role="dialog"
@@ -19,7 +19,7 @@
           Login / Signin
         </h5>
       </div>
-      @if (!waitingForResponse) {
+      @if (!waitingForResponse()) {
         <div
           class="modal-body"
           [formGroup]="loginFormGroup"
@@ -53,20 +53,20 @@
             (keyup.escape)="cancelUser()"
             />
           <br />
-          @if (modalMsg.trim().length > 0) {
+          @if (modalMsg().trim().length > 0) {
             <div
           [ngClass]="
-            modalMsgType === MessageType.Error
+            modalMsgType() === MessageType.Error
               ? 'alert alert-danger'
               : 'alert alert-info'
           "
               >
-              {{ modalMsg }}
+              {{ modalMsg() }}
             </div>
           }
         </div>
       }
-      @if (!waitingForResponse) {
+      @if (!waitingForResponse()) {
         <div class="modal-footer">
           <button
             type="button"
@@ -96,7 +96,7 @@
         </button>
         </div>
       }
-      @if (waitingForResponse) {
+      @if (waitingForResponse()) {
         <div
           class="d-flex justify-content-center align-items-center spinner-container"
           >

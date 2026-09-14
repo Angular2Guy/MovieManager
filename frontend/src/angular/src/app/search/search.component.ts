@@ -12,14 +12,17 @@
  */
 import {
   Component,
-  OnInit,
   HostListener,
   ViewChild,
   ElementRef,
-  AfterViewInit,
   DestroyRef,
   inject,
   ChangeDetectionStrategy,
+  signal,
+  computed,
+  effect,
+  OnInit,
+  Signal,
 } from "@angular/core";
 import { Movie } from "../model/movie";
 import { Actor } from "../model/actor";
@@ -40,7 +43,7 @@ import {
 import { ActivatedRoute, Router, RouterModule } from "@angular/router";
 import { QueryParam } from "../model/common";
 import { TokenService } from "ngx-simple-charts/base-service";
-import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { CommonModule } from "@angular/common";
 import { LoginComponent } from "../login/login.component";
 
@@ -54,28 +57,28 @@ import { LoginComponent } from "../login/login.component";
     LoginComponent,
   ],
   templateUrl: "./search.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./search.component.scss"],
 })
 export class SearchComponent implements OnInit {
   @ViewChild("movies") moviesRef!: ElementRef;
-  protected generes!: Genere[];
+  protected generes = signal<Genere[]>([]);
   protected movieTitle = new FormControl("");
-  protected movies!: Observable<Movie[]>;
+  protected movies: Signal<Movie[]> = signal<Movie[]>([]);
   protected movieActor = new FormControl("");
-  protected actors!: Observable<Actor[]>;
+  protected actors: Signal<Actor[]> = signal<Actor[]>([]);
   protected importMovies: Movie[] = [];
   protected importMovieTitle = new FormControl("");
-  protected actorsLoading = false;
-  protected moviesLoading = false;
-  protected importMoviesLoading = false;
-  protected showMenu = false;
-  protected moviesByGenere: Movie[] = [];
-  protected moviesByGenLoading = false;
-  protected scrollMovies: Movie[] = [];
-  protected scMoviesPageEnd = 1;
-  protected loading = false;
-  protected allMoviesLoaded = false;
+  protected actorsLoading = signal(false);
+  protected moviesLoading = signal(false);
+  protected importMoviesLoading = signal(false);
+  protected showMenu = signal(false);
+  protected moviesByGenere = signal<Movie[]>([]);
+  protected moviesByGenLoading = signal(false);
+  protected scrollMovies = signal<Movie[]>([]);
+  protected scMoviesPageEnd = signal(1);
+  protected loading = signal(false);
+  protected allMoviesLoaded = signal(false);
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
@@ -106,22 +109,22 @@ export class SearchComponent implements OnInit {
   }
 
   dropDown() {
-    this.showMenu = !this.showMenu;
-    if (this.moviesByGenere.length > 0) {
-      this.showMenu = false;
+    this.showMenu.set(!this.showMenu());
+    if (this.moviesByGenere().length > 0) {
+      this.showMenu.set(false);
     }
-    this.moviesByGenere = [];
+    this.moviesByGenere.set([]);
   }
 
   showGenere(id: number) {
-    this.showMenu = false;
-    this.moviesByGenLoading = true;
+    this.showMenu.set(false);
+    this.moviesByGenLoading.set(true);
     this.movieService
       .findMoviesByGenereId(id)
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((res) => {
-        this.moviesByGenere = res;
-        this.moviesByGenLoading = false;
+        this.moviesByGenere.set(res);
+        this.moviesByGenLoading.set(false);
       });
   }
 
@@ -134,47 +137,51 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.actors = this.movieActor.valueChanges.pipe(
-      filter((name: string | null) => !!name && name.length > 2),
-      map((name: string | null) => name ?? ''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      tap(() => (this.actorsLoading = true)),
-      switchMap((name: string) =>
-        iif(
-          () => name.length > 2,
-          this.actorService
-            .findActorByName(name)
-            .pipe(catchError((error) => this.handleRxJsProblem(error))),
-          of([]),
+    this.actors = toSignal(
+      this.movieActor.valueChanges.pipe(
+        filter((name: string | null) => !!name && name.length > 2),
+        map((name: string | null) => name ?? ''),
+        debounceTime(400),
+        distinctUntilChanged(),
+        tap(() => this.actorsLoading.set(true)),
+        switchMap((name: string) =>
+          iif(
+            () => name.length > 2,
+            this.actorService
+              .findActorByName(name)
+              .pipe(catchError((error) => this.handleRxJsProblem(error))),
+            of([]),
+          ),
         ),
+        tap(() => this.actorsLoading.set(false)),
       ),
-      tap(() => (this.actorsLoading = false)),
-      takeUntilDestroyed(this.destroy),
+      { initialValue: [] },
     );
-    this.movies = this.movieTitle.valueChanges.pipe(
-      filter((title: string | null) => !!title && title.length > 2),
-      map((title: string | null) => title ?? ''),
-      debounceTime(400),
-      distinctUntilChanged(),
-      tap(() => (this.moviesLoading = true)),
-      switchMap((title: string) =>
-        iif(
-          () => title.length > 2,
-          this.movieService
-            .findMovieByTitle(title)
-            .pipe(catchError((error) => this.handleRxJsProblem(error))),
-          of([]),
+    this.movies = toSignal(
+      this.movieTitle.valueChanges.pipe(
+        filter((title: string | null) => !!title && title.length > 2),
+        map((title: string | null) => title ?? ''),
+        debounceTime(400),
+        distinctUntilChanged(),
+        tap(() => this.moviesLoading.set(true)),
+        switchMap((title: string) =>
+          iif(
+            () => title.length > 2,
+            this.movieService
+              .findMovieByTitle(title)
+              .pipe(catchError((error) => this.handleRxJsProblem(error))),
+            of([]),
+          ),
         ),
+        tap(() => this.moviesLoading.set(false)),
       ),
-      tap(() => (this.moviesLoading = false)),
-      takeUntilDestroyed(this.destroy),
+      { initialValue: [] },
     );
     if (!!this.tokenService.userId) {
       this.movieService
         .allGeneres()
         .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe((res) => (this.generes = res));
+        .subscribe((res) => this.generes.set(res));
     }
     this.route.url.subscribe(() => {
       if (!!this.tokenService.userId) {
@@ -190,24 +197,24 @@ export class SearchComponent implements OnInit {
   }
 
   fetchMore() {
-    if (this.allMoviesLoaded || this.loading) {
+    if (this.allMoviesLoaded() || this.loading()) {
       return;
     }
-    this.loading = true;
+    this.loading.set(true);
     this.movieService
-      .findMoviesByPage(this.scMoviesPageEnd)
+      .findMoviesByPage(this.scMoviesPageEnd())
       .pipe(
         catchError((error) => this.handleRxJsProblem(error)),
         takeUntilDestroyed(this.destroy),
       )
       .subscribe((res) => {
         if (res.length > 0) {
-          this.scrollMovies = this.scrollMovies.concat(res);
-          this.scMoviesPageEnd += 1;
+          this.scrollMovies.set(this.scrollMovies().concat(res));
+          this.scMoviesPageEnd.set(this.scMoviesPageEnd() + 1);
         } else {
-          this.allMoviesLoaded = true;
+          this.allMoviesLoaded.set(true);
         }
-        this.loading = false;
+        this.loading.set(false);
       });
   }
 
@@ -216,20 +223,20 @@ export class SearchComponent implements OnInit {
       this.movieService
         .allGeneres()
         .pipe(takeUntilDestroyed(this.destroy))
-        .subscribe((res) => (this.generes = res));
+        .subscribe((res) => this.generes.set(res));
       this.initScrollMovies();
     }
   }
 
   private initScrollMovies() {
-    this.loading = false;
-    this.allMoviesLoaded = false;
+    this.loading.set(false);
+    this.allMoviesLoaded.set(false);
     this.movieService
-      .findMoviesByPage(this.scMoviesPageEnd)
+      .findMoviesByPage(this.scMoviesPageEnd())
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((res) => {
-        this.scrollMovies = this.scrollMovies.concat(res);
-        this.scMoviesPageEnd += 1;
+        this.scrollMovies.set(this.scrollMovies().concat(res));
+        this.scMoviesPageEnd.set(this.scMoviesPageEnd() + 1);
         this.scroll({} as Event);
       });
   }

@@ -52,11 +52,11 @@
             </div>
             @if (movieTitle.value) {
               <div class="searchList my-dropdown-menu">
-                @if (moviesLoading) {
+                @if (moviesLoading()) {
                   <span i18n="@@loading">Loading</span>
                 }
-                @for (movie of movies | async; track movie) {
-                  @if (!moviesLoading) {
+                @for (movie of movies(); track movie) {
+                  @if (!moviesLoading()) {
                     <a
                       class="dropdown-item"
                       [routerLink]="['/movie', movie.id]"
@@ -87,11 +87,11 @@
                 </div>
                 @if (movieActor.value) {
                   <div class="searchList my-dropdown-menu">
-                    @if (actorsLoading) {
+                    @if (actorsLoading()) {
                       <span 1i8n="@@loading">Loading</span>
                     }
-                    @for (actor of actors | async; track actor) {
-                      @if (!actorsLoading) {
+                    @for (actor of actors(); track actor) {
+                      @if (!actorsLoading()) {
                         <a
                           class="dropdown-item"
                           [routerLink]="['/actor', actor.id]"
@@ -112,8 +112,8 @@
                       >
             Generes
           </button>
-                    <div class="dropdown-menu my-dropdown-menu" [class.show]="showMenu">
-                      @for (gen of generes; track gen) {
+                    <div class="dropdown-menu my-dropdown-menu" [class.show]="showMenu()">
+                      @for (gen of generes(); track gen) {
                         <a
                           class="dropdown-item my-dropdown-item"
                           (click)="showGenere(gen.id)"
@@ -123,16 +123,16 @@
                       </div>
                     </div>
                     <div
-                      [style.display]="moviesByGenLoading ? 'block' : 'none'"
+                      [style.display]="moviesByGenLoading() ? 'block' : 'none'"
                       class="searchList my-dropdown-menu my-genere-menu-margin"
                       >
                       <span i18n="@@loading">Loading</span>
                     </div>
-                    @if (moviesByGenere.length > 0) {
+                    @if (moviesByGenere().length > 0) {
                       <div
                         class="searchList my-dropdown-menu my-genere-menu-margin"
                         >
-                        @for (movie of moviesByGenere; track movie) {
+                        @for (movie of moviesByGenere(); track movie) {
                           <a
                             class="dropdown-item my-dropdown-item"
                             [routerLink]="['/movie', movie.id]"
@@ -165,7 +165,7 @@
                             </tr>
                           </thead>
                           <tbody #container>
-                            @for (movie of scrollMovies; track movie) {
+                            @for (movie of scrollMovies(); track movie) {
                               <tr
                                 (dblclick)="movieDetails(movie)"
                                 class="import-movie"

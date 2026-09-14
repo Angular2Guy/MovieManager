@@ -10,7 +10,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
  */
-import { Component, ChangeDetectionStrategy } from "@angular/core";
+import { Component, ChangeDetectionStrategy, signal } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { TokenService } from "ngx-simple-charts/base-service";
 
@@ -18,11 +18,11 @@ import { TokenService } from "ngx-simple-charts/base-service";
   selector: "app-root",
   imports: [RouterModule],
   templateUrl: "./app.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
-  protected title = "app";
+  protected title = signal("app");
 
   constructor(
     private tokenService: TokenService,

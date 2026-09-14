@@ -18,6 +18,7 @@ import {
   DestroyRef,
   inject,
   ChangeDetectionStrategy,
+  signal,
 } from "@angular/core";
 import { UsersService } from "../services/users.service";
 import {
@@ -47,19 +48,19 @@ enum MessageType {
   selector: "app-login",
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: "./login.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./login.component.scss"],
 })
 export class LoginComponent implements OnInit {
   @Output() loginClosed = new EventEmitter<boolean>();
   protected ControlName = ControlName;
   protected MessageType = MessageType;
-  protected showModal = true;
+  protected showModal = signal(true);
   protected loginFormGroup: FormGroup;
-  protected modalMsg = "";
-  protected modalMsgType = MessageType.Error;
-  protected tillNextLogin = 0;
-  protected waitingForResponse = false;
+  protected modalMsg = signal("");
+  protected modalMsgType = signal(MessageType.Error);
+  protected tillNextLogin = signal(0);
+  protected waitingForResponse = signal(false);
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
@@ -82,14 +83,12 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.showModal = !this.tokenService.userId;
+    this.showModal.set(!this.tokenService.userId);
     this.loginFormGroup.markAllAsTouched();
-    //  console.log(this.loginFormGroup.invalid || this.loginFormGroup.controls[ControlName.loginName].untouched || this.loginFormGroup.controls[ControlName.password].untouched);
   }
 
   loginInvalid(): boolean {
     const result = this.loginFormGroup.invalid;
-    //console.log(result);
     return result;
   }
 
@@ -99,7 +98,6 @@ export class LoginComponent implements OnInit {
       !this.loginFormGroup.controls[ControlName.MovieDbKey].value ||
       (this.loginFormGroup.controls[ControlName.MovieDbKey].value as string)
         .length < 2;
-    //console.log(loginResult+' '+signinResult);
     return loginResult || signinResult;
   }
 
@@ -107,8 +105,8 @@ export class LoginComponent implements OnInit {
     if (this.loginInvalid()) {
       return;
     }
-    this.waitingForResponse = true;
-    this.modalMsg = "";
+    this.waitingForResponse.set(true);
+    this.modalMsg.set("");
     this.userService
       .login(
         this.loginFormGroup.controls[ControlName.LoginName].value,
@@ -117,12 +115,12 @@ export class LoginComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((myTillNextLogin: number) => {
         const res = myTillNextLogin <= 0;
-        this.tillNextLogin = myTillNextLogin;
-        this.showModal = !res;
-        this.modalMsgType = MessageType.Error;
-        this.modalMsg = res ? "" : $localize`:@@loginErrorMsg:Login Failed.`;
+        this.tillNextLogin.set(myTillNextLogin);
+        this.showModal.set(!res);
+        this.modalMsgType.set(MessageType.Error);
+        this.modalMsg.set(res ? "" : $localize`:@@loginErrorMsg:Login Failed.`);
         this.loginClosed.emit(res);
-        this.waitingForResponse = false;
+        this.waitingForResponse.set(false);
       });
   }
 
@@ -131,12 +129,12 @@ export class LoginComponent implements OnInit {
     this.loginFormGroup.controls[ControlName.Password].setValue("");
     this.loginFormGroup.controls[ControlName.MovieDbKey].setValue("");
     this.loginFormGroup.controls[ControlName.EmailAddress].setValue("");
-    this.modalMsg = "";
+    this.modalMsg.set("");
   }
 
   signinUser() {
-    this.modalMsg = "";
-    this.waitingForResponse = true;
+    this.modalMsg.set("");
+    this.waitingForResponse.set(true);
     this.userService
       .signin(
         this.loginFormGroup.controls[ControlName.LoginName].value,
@@ -146,11 +144,11 @@ export class LoginComponent implements OnInit {
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe((res: boolean) => {
         this.cancelUser();
-        this.modalMsgType = res ? MessageType.Info : MessageType.Error;
-        this.modalMsg = res
+        this.modalMsgType.set(res ? MessageType.Info : MessageType.Error);
+        this.modalMsg.set(res
           ? $localize`:@@SigninSuccessMsg:Signin successful. Please Login.`
-          : $localize`:@@SigninFailedMsg:Signin failed.`;
-        this.waitingForResponse = false;
+          : $localize`:@@SigninFailedMsg:Signin failed.`);
+        this.waitingForResponse.set(false);
       });
   }
 }

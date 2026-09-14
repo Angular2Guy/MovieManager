@@ -16,6 +16,7 @@ import {
   OnInit,
   inject,
   ChangeDetectionStrategy,
+  signal,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import {
@@ -50,19 +51,19 @@ import { CommonModule } from "@angular/common";
     ReactiveFormsModule,
   ],
   templateUrl: "./filter-actors.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./filter-actors.component.scss"],
 })
 export class FilterActorsComponent implements OnInit {
   protected gender = Gender;
-  protected filtering = false;
-  protected filteredActors: Actor[] = [];
+  protected filtering = signal(false);
+  protected filteredActors = signal<Actor[]>([]);
   protected ngbBirthdayFrom: NgbDateStruct | null = null;
   protected ngbBirthdayTo: NgbDateStruct | null = null;
-  protected closeResult = "";
+  protected closeResult = signal("");
   protected filterCriteria = new ActorFilterCriteria();
   protected FullTextFilter = FulltextFilter;
-  protected filterType = FulltextFilter.PhraseFilter;
+  protected filterType = signal(FulltextFilter.PhraseFilter);
   protected searchWords = "";
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
@@ -83,10 +84,10 @@ export class FilterActorsComponent implements OnInit {
       .open(content, { ariaLabelledBy: "offcanvas-basic-title" })
       .result.then(
         (result) => {
-          this.closeResult = `Closed with: ${result}`;
+          this.closeResult.set(`Closed with: ${result}`);
         },
         (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+          this.closeResult.set(`Dismissed ${this.getDismissReason(reason)}`);
         },
       );
   }
@@ -112,7 +113,7 @@ export class FilterActorsComponent implements OnInit {
     this.filterCriteria.searchTerm.searchPhrase.phrase = "";
     this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = null;
     this.filterCriteria.searchTerm.searchStrings = [];
-    this.closeResult = "";
+    this.closeResult.set("");
   }
 
   public showFilterMovies(): void {
@@ -121,14 +122,14 @@ export class FilterActorsComponent implements OnInit {
 
   public switchFilters(): void {
     this.filterCriteria.searchTerm = new SearchTerm();
-    this.filterType =
-      this.filterType === this.FullTextFilter.PhraseFilter
+    this.filterType.set(
+      this.filterType() === this.FullTextFilter.PhraseFilter
         ? this.FullTextFilter.WordFilter
-        : this.FullTextFilter.PhraseFilter;
+        : this.FullTextFilter.PhraseFilter,
+    );
   }
 
   private getDismissReason(reason: unknown): void {
-    //console.log(this.filterCriteria);
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
     } else {
@@ -155,7 +156,7 @@ export class FilterActorsComponent implements OnInit {
         .findActorsByCriteria(this.filterCriteria)
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
-          next: (result) => (this.filteredActors = result),
+          next: (result) => this.filteredActors.set(result),
           error: (failed) => {
             console.log(failed);
             this.router.navigate(["/"]);
@@ -170,7 +171,6 @@ export class FilterActorsComponent implements OnInit {
       [Operator.NOT.toString(), Operator.NOT],
       [Operator.OR.toString(), Operator.OR],
     ]);
-    //console.log(this.searchWords.split(' '));
     const searchWords = this.searchWords
       .split(" ")
       .map((str) => str.trim())

@@ -16,6 +16,7 @@ import {
   OnInit,
   inject,
   ChangeDetectionStrategy,
+  signal,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import {
@@ -53,20 +54,20 @@ import { CommonModule } from "@angular/common";
     NgbPopoverModule,
   ],
   templateUrl: "./filter-movies.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./filter-movies.component.scss"],
 })
 export class FilterMoviesComponent implements OnInit {
-  protected filteredMovies: Movie[] = [];
-  protected filtering = false;
-  protected selectedGeneresStr = "";
-  protected generes: Genere[] = [];
-  protected closeResult = "";
+  protected filteredMovies = signal<Movie[]>([]);
+  protected filtering = signal(false);
+  protected selectedGeneresStr = signal("");
+  protected generes = signal<Genere[]>([]);
+  protected closeResult = signal("");
   protected filterCriteria = new MovieFilterCriteria();
   protected ngbReleaseFrom: NgbDateStruct | null = null;
   protected ngbReleaseTo: NgbDateStruct | null = null;
   protected FullTextFilter = FulltextFilter;
-  protected filterType = FulltextFilter.PhraseFilter;
+  protected filterType = signal(FulltextFilter.PhraseFilter);
   protected searchWords = "";
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
@@ -83,7 +84,7 @@ export class FilterMoviesComponent implements OnInit {
       .allGeneres()
       .pipe(takeUntilDestroyed(this.destroy))
       .subscribe({
-        next: (myGeneres) => (this.generes = myGeneres),
+        next: (myGeneres) => this.generes.set(myGeneres),
         error: (failed) => this.router.navigate(["/"]),
       });
   }
@@ -94,20 +95,21 @@ export class FilterMoviesComponent implements OnInit {
       .open(content, { ariaLabelledBy: "offcanvas-basic-title" })
       .result.then(
         (result) => {
-          this.closeResult = `Closed with: ${result}`;
+          this.closeResult.set(`Closed with: ${result}`);
         },
         (reason) => {
-          this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+          this.closeResult.set(`Dismissed ${this.getDismissReason(reason)}`);
         },
       );
   }
 
   public switchFilters(): void {
     this.filterCriteria.searchTerm = new SearchTerm();
-    this.filterType =
-      this.filterType === this.FullTextFilter.PhraseFilter
+    this.filterType.set(
+      this.filterType() === this.FullTextFilter.PhraseFilter
         ? this.FullTextFilter.WordFilter
-        : this.FullTextFilter.PhraseFilter;
+        : this.FullTextFilter.PhraseFilter,
+    );
   }
 
   public back(): void {
@@ -115,7 +117,6 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   private getDismissReason(reason: unknown): void {
-    //console.log(this.filterCriteria);
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
     } else {
@@ -142,7 +143,7 @@ export class FilterMoviesComponent implements OnInit {
         .findMoviesByCriteria(this.filterCriteria)
         .pipe(takeUntilDestroyed(this.destroy))
         .subscribe({
-          next: (result) => (this.filteredMovies = result),
+          next: (result) => this.filteredMovies.set(result),
           error: (failed) => {
             console.log(failed);
             this.router.navigate(["/"]);
@@ -157,7 +158,6 @@ export class FilterMoviesComponent implements OnInit {
       [Operator.NOT.toString(), Operator.NOT],
       [Operator.OR.toString(), Operator.OR],
     ]);
-    //console.log(this.searchWords.split(' '));
     const searchWords = this.searchWords
       .split(" ")
       .map((str) => str.trim())
@@ -175,15 +175,16 @@ export class FilterMoviesComponent implements OnInit {
         (myGen) => genere.id === myGen.id,
       ).length === 0
     ) {
-      this.selectedGeneresStr = `${this.selectedGeneresStr} ${genere.name}`;
-      this.selectedGeneresStr = this.selectedGeneresStr.trim();
+      this.selectedGeneresStr.set(
+        `${this.selectedGeneresStr()} ${genere.name}`.trim(),
+      );
       this.filterCriteria.selectedGeneres.push(genere);
     }
   }
 
   public resetSelectedGeneres(): void {
     this.filterCriteria.selectedGeneres = [];
-    this.selectedGeneresStr = "";
+    this.selectedGeneresStr.set("");
   }
 
   public selectMovie(movie: Movie): void {
@@ -200,9 +201,9 @@ export class FilterMoviesComponent implements OnInit {
     this.filterCriteria.releaseFrom = null;
     this.filterCriteria.releaseTo = null;
     this.filterCriteria.selectedGeneres = [];
-    this.selectedGeneresStr = "";
-    this.closeResult = "";
-    this.generes = [];
+    this.selectedGeneresStr.set("");
+    this.closeResult.set("");
+    this.generes.set([]);
     this.filterCriteria.movieTitle = "";
     this.filterCriteria.movieActor = "";
     this.filterCriteria.minLength = 0;

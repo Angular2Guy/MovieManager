@@ -15,6 +15,7 @@ import {
   OnInit,
   inject,
   ChangeDetectionStrategy,
+  signal,
 } from "@angular/core";
 import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { ActivatedRoute, RouterModule } from "@angular/router";
@@ -27,12 +28,12 @@ import { CommonModule } from "@angular/common";
   selector: "app-actors",
   imports: [CommonModule, RouterModule],
   templateUrl: "./actors.component.html",
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrls: ["./actors.component.scss"],
 })
 export class ActorsComponent implements OnInit {
   protected gender = Gender;
-  protected actor: Actor | null = null;
+  protected actor = signal<Actor | null>(null);
   protected backParam = QueryParam.Empty;
   protected queryParam = QueryParam;
   private readonly destroy: DestroyRef = inject(DestroyRef);
@@ -46,7 +47,7 @@ export class ActorsComponent implements OnInit {
     this.actorService
       .findActorById(Number(this.route.snapshot.paramMap.get("id")))
       .pipe(takeUntilDestroyed(this.destroy))
-      .subscribe((actor) => (this.actor = actor));
+      .subscribe((actor) => this.actor.set(actor));
     this.backParam = !this.route.snapshot.queryParams?.back
       ? QueryParam.Empty
       : this.route.snapshot.queryParams?.back;
