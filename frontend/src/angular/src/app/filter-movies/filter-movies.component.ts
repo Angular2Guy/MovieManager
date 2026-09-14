@@ -64,8 +64,8 @@ export class FilterMoviesComponent implements OnInit {
   protected generes = signal<Genere[]>([]);
   protected closeResult = signal("");
   protected filterCriteria = new MovieFilterCriteria();
-  protected ngbReleaseFrom: NgbDateStruct | null = null;
-  protected ngbReleaseTo: NgbDateStruct | null = null;
+  protected ngbReleaseFrom = signal<NgbDateStruct | null>(null);
+  protected ngbReleaseTo = signal<NgbDateStruct | null>(null);
   protected FullTextFilter = FulltextFilter;
   protected filterType = signal(FulltextFilter.PhraseFilter);
   protected searchWords = "";
@@ -120,19 +120,19 @@ export class FilterMoviesComponent implements OnInit {
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
     } else {
-      this.filterCriteria.releaseFrom = !this.ngbReleaseFrom
+      this.filterCriteria.releaseFrom = !this.ngbReleaseFrom()
         ? null
         : new Date(
-            this.ngbReleaseFrom.year,
-            this.ngbReleaseFrom.month,
-            this.ngbReleaseFrom.day,
+            this.ngbReleaseFrom()!.year,
+            this.ngbReleaseFrom()!.month,
+            this.ngbReleaseFrom()!.day,
           );
-      this.filterCriteria.releaseTo = !this.ngbReleaseTo
+      this.filterCriteria.releaseTo = !this.ngbReleaseTo()
         ? null
         : new Date(
-            this.ngbReleaseTo.year,
-            this.ngbReleaseTo.month,
-            this.ngbReleaseTo.day,
+            this.ngbReleaseTo()!.year,
+            this.ngbReleaseTo()!.month,
+            this.ngbReleaseTo()!.day,
           );
       this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = !this
         .filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase

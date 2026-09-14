@@ -25,7 +25,8 @@
               <input
                 id="releasedBefore"
                 class="form-control"
-                [(ngModel)]="ngbBirthdayFrom"
+                [ngModel]="ngbBirthdayFrom()"
+                (ngModelChange)="ngbBirthdayFrom.set($event)"
                 placeholder="yyyy-mm-dd"
                 name="dpFrom"
                 ngbDatepicker
@@ -45,7 +46,8 @@
               <div class="input-group">
                 <input
                   id="releasedAfter"
-                  [(ngModel)]="ngbBirthdayTo"
+                  [ngModel]="ngbBirthdayTo()"
+                  (ngModelChange)="ngbBirthdayTo.set($event)"
                   class="form-control"
                   placeholder="yyyy-mm-dd"
                   name="dpTo"

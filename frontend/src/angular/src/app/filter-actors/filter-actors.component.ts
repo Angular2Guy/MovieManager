@@ -58,8 +58,8 @@ export class FilterActorsComponent implements OnInit {
   protected gender = Gender;
   protected filtering = signal(false);
   protected filteredActors = signal<Actor[]>([]);
-  protected ngbBirthdayFrom: NgbDateStruct | null = null;
-  protected ngbBirthdayTo: NgbDateStruct | null = null;
+  protected ngbBirthdayFrom = signal<NgbDateStruct | null>(null);
+  protected ngbBirthdayTo = signal<NgbDateStruct | null>(null);
   protected closeResult = signal("");
   protected filterCriteria = new ActorFilterCriteria();
   protected FullTextFilter = FulltextFilter;
@@ -133,19 +133,19 @@ export class FilterActorsComponent implements OnInit {
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
     } else {
-      this.filterCriteria.birthdayFrom = !this.ngbBirthdayFrom
+      this.filterCriteria.birthdayFrom = !this.ngbBirthdayFrom()
         ? null
         : new Date(
-            this.ngbBirthdayFrom.year,
-            this.ngbBirthdayFrom.month,
-            this.ngbBirthdayFrom.day,
+            this.ngbBirthdayFrom()!.year,
+            this.ngbBirthdayFrom()!.month,
+            this.ngbBirthdayFrom()!.day,
           );
-      this.filterCriteria.birthdayTo = !this.ngbBirthdayTo
+      this.filterCriteria.birthdayTo = !this.ngbBirthdayTo()
         ? null
         : new Date(
-            this.ngbBirthdayTo.year,
-            this.ngbBirthdayTo.month,
-            this.ngbBirthdayTo.day,
+            this.ngbBirthdayTo()!.year,
+            this.ngbBirthdayTo()!.month,
+            this.ngbBirthdayTo()!.day,
           );
       this.filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase = !this
         .filterCriteria.searchTerm.searchPhrase.otherWordsInPhrase

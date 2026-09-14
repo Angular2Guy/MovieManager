@@ -25,7 +25,8 @@
               <input
                 id="releasedBefore"
                 class="form-control"
-                [(ngModel)]="ngbReleaseFrom"
+                [ngModel]="ngbReleaseFrom()"
+                (ngModelChange)="ngbReleaseFrom.set($event)"
                 placeholder="yyyy-mm-dd"
                 name="dpFrom"
                 ngbDatepicker
@@ -45,7 +46,8 @@
               <div class="input-group">
                 <input
                   id="releasedAfter"
-                  [(ngModel)]="ngbReleaseTo"
+                  [ngModel]="ngbReleaseTo()"
+                  (ngModelChange)="ngbReleaseTo.set($event)"
                   class="form-control"
                   placeholder="yyyy-mm-dd"
                   name="dpTo"
