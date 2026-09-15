@@ -73,7 +73,7 @@ export class FilterMoviesComponent implements OnInit {
   protected maxLength = signal(0);
   protected minRating = signal(0);
   protected phrase = signal("");
-  protected otherWordsInPhrase = signal<number | null>(null);
+  protected otherWordsInPhrase = signal(0);
   protected searchWords = "";
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
@@ -96,7 +96,7 @@ export class FilterMoviesComponent implements OnInit {
   }
 
   public open(content: unknown) {
-    this.otherWordsInPhrase.set(null);
+    this.otherWordsInPhrase.set(0);
     this.offcanvasService
       .open(content, { ariaLabelledBy: "offcanvas-basic-title" })
       .result.then(
@@ -111,7 +111,7 @@ export class FilterMoviesComponent implements OnInit {
 
   public switchFilters(): void {
     this.phrase.set("");
-    this.otherWordsInPhrase.set(null);
+    this.otherWordsInPhrase.set(0);
     this.filterType.set(
       this.filterType() === this.FullTextFilter.PhraseFilter
         ? this.FullTextFilter.WordFilter
@@ -126,6 +126,9 @@ export class FilterMoviesComponent implements OnInit {
   private getDismissReason(reason: unknown): void {
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
+    } else if (!this.hasActiveFilter()) {
+      this.filteredMovies.set([]);
+      return;
     } else {
       this.filtering.set(true);
       const criteria = this.buildCriteria();
@@ -144,6 +147,22 @@ export class FilterMoviesComponent implements OnInit {
           },
         });
     }
+  }
+
+  private hasActiveFilter(): boolean {
+    return (
+      this.movieTitle().length > 0 ||
+      this.movieActor().length > 0 ||
+      this.minLength() !== 0 ||
+      this.maxLength() !== 0 ||
+      this.minRating() !== 0 ||
+      this.selectedGeneres().length > 0 ||
+      this.ngbReleaseFrom() !== null ||
+      this.ngbReleaseTo() !== null ||
+      this.phrase().length > 0 ||
+      this.otherWordsInPhrase() !== 0 ||
+      this.searchWords.length > 0
+    );
   }
 
   private buildCriteria(): MovieFilterCriteria {
@@ -226,7 +245,7 @@ export class FilterMoviesComponent implements OnInit {
     this.maxLength.set(0);
     this.minRating.set(0);
     this.phrase.set("");
-    this.otherWordsInPhrase.set(null);
+    this.otherWordsInPhrase.set(0);
     this.selectedGeneres.set([]);
     this.selectedGeneresStr.set("");
     this.closeResult.set("");

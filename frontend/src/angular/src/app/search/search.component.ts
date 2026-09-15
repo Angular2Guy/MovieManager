@@ -62,11 +62,50 @@ import { LoginComponent } from "../login/login.component";
 })
 export class SearchComponent implements OnInit {
   @ViewChild("movies") moviesRef!: ElementRef;
+  private readonly destroy: DestroyRef = inject(DestroyRef);
   protected generes = signal<Genere[]>([]);
   protected movieTitle = new FormControl("");
-  protected movies: Signal<Movie[]> = signal<Movie[]>([]);
+  protected movies: Signal<Movie[]> = toSignal(
+    this.movieTitle.valueChanges.pipe(takeUntilDestroyed(this.destroy),
+      filter((title: string | null) => !!title && title.length > 2),
+      map((title: string | null) => title ?? ''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      tap(() => this.moviesLoading.set(true)),
+      switchMap((title: string) =>
+        iif(
+          () => title.length > 2,
+          this.movieService
+            .findMovieByTitle(title)
+            .pipe(catchError((error) => this.handleRxJsProblem(error))),
+          of([]),
+        ),
+      ),
+      tap(() => this.moviesLoading.set(false)),
+    ),
+    { initialValue: [] },
+  );
   protected movieActor = new FormControl("");
-  protected actors: Signal<Actor[]> = signal<Actor[]>([]);
+  protected actors: Signal<Actor[]> = toSignal(
+    this.movieActor.valueChanges.pipe(takeUntilDestroyed(this.destroy),
+      filter((name: string | null) => !!name && name.length > 2),
+      map((name: string | null) => name ?? ''),
+      debounceTime(400),
+      distinctUntilChanged(),
+      tap(() => this.actorsLoading.set(true)),
+      switchMap((name: string) =>
+        iif(
+          () => name.length > 2,
+          this.actorService
+            .findActorByName(name)
+            .pipe(catchError((error) => this.handleRxJsProblem(error))),
+          of([]),
+        ),
+      ),
+      tap(() => this.actorsLoading.set(false)),
+    ),
+    { initialValue: [] },
+  );
   protected importMovies: Movie[] = [];
   protected importMovieTitle = new FormControl("");
   protected actorsLoading = signal(false);
@@ -79,7 +118,6 @@ export class SearchComponent implements OnInit {
   protected scMoviesPageEnd = signal(1);
   protected loading = signal(false);
   protected allMoviesLoaded = signal(false);
-  private readonly destroy: DestroyRef = inject(DestroyRef);
 
   constructor(
     private actorService: ActorsService,
@@ -137,46 +175,6 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.actors = toSignal(
-      this.movieActor.valueChanges.pipe(
-        filter((name: string | null) => !!name && name.length > 2),
-        map((name: string | null) => name ?? ''),
-        debounceTime(400),
-        distinctUntilChanged(),
-        tap(() => this.actorsLoading.set(true)),
-        switchMap((name: string) =>
-          iif(
-            () => name.length > 2,
-            this.actorService
-              .findActorByName(name)
-              .pipe(catchError((error) => this.handleRxJsProblem(error))),
-            of([]),
-          ),
-        ),
-        tap(() => this.actorsLoading.set(false)),
-      ),
-      { initialValue: [] },
-    );
-    this.movies = toSignal(
-      this.movieTitle.valueChanges.pipe(
-        filter((title: string | null) => !!title && title.length > 2),
-        map((title: string | null) => title ?? ''),
-        debounceTime(400),
-        distinctUntilChanged(),
-        tap(() => this.moviesLoading.set(true)),
-        switchMap((title: string) =>
-          iif(
-            () => title.length > 2,
-            this.movieService
-              .findMovieByTitle(title)
-              .pipe(catchError((error) => this.handleRxJsProblem(error))),
-            of([]),
-          ),
-        ),
-        tap(() => this.moviesLoading.set(false)),
-      ),
-      { initialValue: [] },
-    );
     if (!!this.tokenService.userId) {
       this.movieService
         .allGeneres()

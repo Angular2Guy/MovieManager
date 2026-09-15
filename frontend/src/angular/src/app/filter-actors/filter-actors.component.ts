@@ -68,7 +68,7 @@ export class FilterActorsComponent implements OnInit {
   protected popularity = signal(0);
   protected movieCharacter = signal("");
   protected phrase = signal("");
-  protected otherWordsInPhrase = signal<number | null>(null);
+  protected otherWordsInPhrase = signal(0);
   protected searchWords = "";
   private readonly destroy: DestroyRef = inject(DestroyRef);
 
@@ -84,7 +84,7 @@ export class FilterActorsComponent implements OnInit {
   }
 
   public open(content: unknown) {
-    this.otherWordsInPhrase.set(null);
+    this.otherWordsInPhrase.set(0);
     this.offcanvasService
       .open(content, { ariaLabelledBy: "offcanvas-basic-title" })
       .result.then(
@@ -114,7 +114,7 @@ export class FilterActorsComponent implements OnInit {
     this.popularity.set(0);
     this.movieCharacter.set("");
     this.phrase.set("");
-    this.otherWordsInPhrase.set(null);
+    this.otherWordsInPhrase.set(0);
     this.searchWords = "";
     this.closeResult.set("");
   }
@@ -125,7 +125,7 @@ export class FilterActorsComponent implements OnInit {
 
   public switchFilters(): void {
     this.phrase.set("");
-    this.otherWordsInPhrase.set(null);
+    this.otherWordsInPhrase.set(0);
     this.filterType.set(
       this.filterType() === this.FullTextFilter.PhraseFilter
         ? this.FullTextFilter.WordFilter
@@ -136,6 +136,9 @@ export class FilterActorsComponent implements OnInit {
   private getDismissReason(reason: unknown): void {
     if (reason === OffcanvasDismissReasons.ESC) {
       return this.resetFilters();
+    } else if (!this.hasActiveFilter()) {
+      this.filteredActors.set([]);
+      return;
     } else {
       this.filtering.set(true);
       const criteria = this.buildCriteria();
@@ -154,6 +157,21 @@ export class FilterActorsComponent implements OnInit {
           },
         });
     }
+  }
+
+  private hasActiveFilter(): boolean {
+    return (
+      this.name().length > 0 ||
+      this.actorGender() !== Gender.Unknown ||
+      this.dead() ||
+      this.popularity() !== 0 ||
+      this.movieCharacter().length > 0 ||
+      this.ngbBirthdayFrom() !== null ||
+      this.ngbBirthdayTo() !== null ||
+      this.phrase().length > 0 ||
+      this.otherWordsInPhrase() !== 0 ||
+      this.searchWords.length > 0
+    );
   }
 
   private buildCriteria(): ActorFilterCriteria {
