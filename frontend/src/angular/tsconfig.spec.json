@@ -2,9 +2,10 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
-    "types": ["jasmine", "node"]
+    "types": ["vitest/globals", "node"],
+    "typeRoots": ["./node_modules/@types", "./node_modules"]
   },
-  "files": ["src/test.ts", "src/polyfills.ts"],
+  "files": ["src/test-setup.ts", "src/polyfills.ts"],
   "include": ["src/**/*.spec.ts", "src/**/*.d.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {
