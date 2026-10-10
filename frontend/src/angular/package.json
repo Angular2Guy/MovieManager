@@ -29,7 +29,7 @@
     "@angular/localize": "^22.0.1",
     "@angular/platform-browser": "^22.0.1",
     "@angular/platform-browser-dynamic": "^22.0.1",
-    "@angular/router": "^22.0.1",
+    "@angular/router": "^22.2.0",
     "@ng-bootstrap/ng-bootstrap": "^21.0.0",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.2",
