@@ -40,7 +40,7 @@ public class DataMigrationService {
 
 	@Async
 	public CompletableFuture<Long> encryptUserKeys() {
-		List<User> migratedUsers = this.userRepository.findOpenMigrations(1L).stream().map(myUser -> updateUser(myUser))
+		List<User> migratedUsers = this.userRepository.findOpenMigrations(1L).stream().map(this::updateUser)
 				.collect(Collectors.toList());
 		this.userRepository.saveAll(migratedUsers);
 		return CompletableFuture.completedFuture(Integer.valueOf(migratedUsers.size()).longValue());

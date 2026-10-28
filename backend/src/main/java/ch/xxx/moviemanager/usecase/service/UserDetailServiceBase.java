@@ -29,6 +29,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import com.google.crypto.tink.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,10 +39,6 @@ import org.springframework.security.access.AuthorizationServiceException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.google.crypto.tink.DeterministicAead;
-import com.google.crypto.tink.InsecureSecretKeyAccess;
-import com.google.crypto.tink.KeysetHandle;
-import com.google.crypto.tink.TinkJsonProtoKeysetFormat;
 import com.google.crypto.tink.daead.DeterministicAeadConfig;
 
 import ch.xxx.moviemanager.domain.common.Role;
@@ -93,7 +90,7 @@ public class UserDetailServiceBase {
 	public void init() throws GeneralSecurityException {
 		DeterministicAeadConfig.register();
 		KeysetHandle handle = TinkJsonProtoKeysetFormat.parseKeyset(this.tinkJsonKey, InsecureSecretKeyAccess.get());
-		this.daead = handle.getPrimitive(DeterministicAead.class);
+		this.daead = handle.getPrimitive(RegistryConfiguration.get(), DeterministicAead.class);
 	}
 
 	public void cleanup() {
@@ -219,7 +216,7 @@ public class UserDetailServiceBase {
 
 	public Boolean logout(String bearerStr) {
 		Optional<RevokedToken> revokedTokenOpt = this.logoutToken(bearerStr).stream()
-				.peek(revokedToken -> this.revokedTokenRepository.save(revokedToken)).findAny();
+				.peek(this.revokedTokenRepository::save).findAny();
 		return revokedTokenOpt.isPresent();
 	}
 
@@ -259,7 +256,7 @@ public class UserDetailServiceBase {
 	private UserDto loginHelp(Optional<User> entityOpt, String passwd) {
 		UserDto user = new UserDto();
 		Optional<Role> myRole = entityOpt.stream().flatMap(myUser -> Arrays.stream(Role.values())
-				.filter(role1 -> Role.USERS.equals(role1)).filter(role1 -> role1.name().equals(myUser.getRoles())))
+				.filter(Role.USERS::equals).filter(role1 -> role1.name().equals(myUser.getRoles())))
 				.findAny();
 		if (myRole.isPresent() && entityOpt.get().isEnabled()
 				&& this.passwordEncoder.matches(passwd, entityOpt.get().getPassword())) {

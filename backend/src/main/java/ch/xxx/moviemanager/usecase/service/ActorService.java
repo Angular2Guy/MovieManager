@@ -84,8 +84,7 @@ public class ActorService {
 		final User user = this.auds.getCurrentUser(bearerStr);
 		Optional<Actor> result = this.actorRep.findById(id)
 				.filter(myActor -> myActor.getUsers().stream().anyMatch(myUser -> user.getId().equals(myUser.getId())))
-				.filter(myActor -> myActor.getCasts().stream().filter(c -> c.getMovie().getUsers().contains(user))
-						.findFirst().isPresent());
+				.filter(myActor -> myActor.getCasts().stream().anyMatch(c -> c.getMovie().getUsers().contains(user)));
 		return result;
 	}
 
@@ -102,7 +101,7 @@ public class ActorService {
 			// remove dublicates
 			results = results.isEmpty() ? ftActors : List.copyOf(CommonUtils.filterDublicates(results));
 		}
-		return results.subList(0, results.size() > 50 ? 50 : results.size());
+		return results.subList(0, Math.min(results.size(), 50));
 	}
 
 	public List<Actor> findActorsBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {

@@ -257,7 +257,7 @@ public class MovieService {
 	private Movie createNewMovie(List<Genere> generes, MovieDto movieDto) {
 		LOG.info("creating new Movie");
 		final var result2 = this.mapper.convert(movieDto);
-		movieDto.getGenres().stream().map(myGenere -> myGenere.getId()).forEach(genId -> {
+		movieDto.getGenres().stream().map(GenereDto::getId).forEach(genId -> {
 			generes.stream().filter(myGenere -> genId.equals(myGenere.getGenereId())).findFirst()
 					.ifPresent(myResult -> {
 						result2.getGeneres().add(myResult);
@@ -293,7 +293,7 @@ public class MovieService {
 			// remove dublicates
 			results = results.isEmpty() ? ftMovies : List.copyOf(CommonUtils.filterDublicates(results));
 		}
-		return results.subList(0, results.size() > 50 ? 50 : results.size());
+		return results.subList(0, Math.min(results.size(), 50));
 	}
 
 	public List<Movie> findMoviesBySearchTerm(String bearerStr, SearchTermDto searchTermDto) {
