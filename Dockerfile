@@ -1,5 +1,5 @@
 #FROM eclipse-temurin:25.0.3_9-jdk-alpine
-FROM eclipse-temurin:25.0.3_9-jdk-jammy
+FROM eclipse-temurin:25.0.5.1_2-jdk-jammy
 WORKDIR /application
 
 ARG JAR_FILE=extracted/*.jar
