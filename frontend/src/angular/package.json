@@ -11,7 +11,6 @@
     "test-coverage": "vitest run --coverage",
     "test-local": "vitest --watch",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "prebuild": "rimraf ./dist && mkdirp ./dist",
     "postbuild": "npm run deploy",
     "predeploy": "rimraf ../../../backend/src/main/resources/static/*",
@@ -41,7 +40,6 @@
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.8.0",
     "@analogjs/vitest-angular": "^2.8.0",
-    "@angular-devkit/build-angular": "^22.0.1",
     "@angular-eslint/builder": "^22.0.0",
     "@angular-eslint/eslint-plugin": "^22.0.0",
     "@angular-eslint/eslint-plugin-template": "^22.0.0",
